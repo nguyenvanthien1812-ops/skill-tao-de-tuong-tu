@@ -4,7 +4,7 @@
   "release_date": "2026-09-27",
   "description": "Skill tạo đề thi Toán & Vật lý tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt, hình vẽ 300 DPI siêu nét",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
-  "github_repo": "PLACEHOLDER/tao-de-toan-tuong-tu",
+  "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
     "2.2.0": [
       "Nâng cấp chuẩn hiển thị in ấn: Cỡ chữ 14pt cho toàn bộ văn bản và công thức MathType OLE",

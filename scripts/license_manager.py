@@ -54,7 +54,7 @@ EQIDAQAB
 -----END PUBLIC KEY-----"""
 
 # URL danh sách license bị thu hồi (tác giả cập nhật trên GitHub khi cần)
-REVOCATION_URL = "https://raw.githubusercontent.com/PLACEHOLDER/tao-de-toan-tuong-tu/main/revoked.json"
+REVOCATION_URL = "https://raw.githubusercontent.com/nguyenvanthien1812-ops/skill-tao-de-tuong-tu/main/revoked.json"
 
 SKILL_NAME = "tao-de-toan-tuong-tu"
 

@@ -44,8 +44,8 @@ PROTECTED_FILES = {
 }
 
 # Cấu hình mặc định
-GITHUB_USER = "PLACEHOLDER"           # Ví dụ: "nguyenvanA"
-GITHUB_REPO = "tao-de-toan-tuong-tu"  # Tên repo trên GitHub
+GITHUB_USER = "nguyenvanthien1812-ops"  # Tài khoản GitHub của Thầy
+GITHUB_REPO = "skill-tao-de-tuong-tu"   # Tên repo trên GitHub
 
 # Đọc cấu hình từ github_config.json nếu có
 if os.path.exists(CONFIG_FILE):
