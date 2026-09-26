@@ -1,0 +1,40 @@
+# ─── BẢO MẬT & BẢN QUYỀN (TUYỆT ĐỐI KHÔNG ĐẨY LÊN GITHUB) ─────────────────────
+license.key
+*.pem
+private_key.pem
+danh_sach_license_da_cap.json
+machine_id.txt
+MA_MAY_CUA_BAN.txt
+config.json
+github_config.json
+QUAN_LY_BAN_QUYEN_TAC_GIA/
+
+# ─── PYTHON CACHE & MÔI TRƯỜNG ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# ─── FILE KẾT QUẢ ĐỀ THI & FILE TẠM WORD ──────────────────────────────────────
+~$*.docx
+~$_*.docx
+_temp_*.docx
+*_DE_HOC_SINH_*.docx
+*_LOI_GIAI_*.docx
+*_WORD_EQ*.docx
+*_MATHTYPE_*.docx
+hinh_ve_*/
+bo_*_ma_de*/
+*.xlsx
+*.zip
+
+# ─── FILE TẠM HỆ THỐNG ────────────────────────────────────────────────────────
+*.tmp
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini

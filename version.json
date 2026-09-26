@@ -1,0 +1,38 @@
+{
+  "name": "tao-de-toan-tuong-tu",
+  "version": "2.2.0",
+  "release_date": "2026-09-27",
+  "description": "Skill tạo đề thi Toán & Vật lý tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt, hình vẽ 300 DPI siêu nét",
+  "author": "Antigravity Assistant & Thầy Cô Giáo",
+  "github_repo": "PLACEHOLDER/tao-de-toan-tuong-tu",
+  "changelog": {
+    "2.2.0": [
+      "Nâng cấp chuẩn hiển thị in ấn: Cỡ chữ 14pt cho toàn bộ văn bản và công thức MathType OLE",
+      "Đồ thị hình vẽ siêu nét 300 DPI: Đường nét đậm rõ (lw=2.2 - 2.4), nhãn x, y đặt sát mũi tên trục tọa độ, font số tọa độ 12-13pt in ra không bị mờ",
+      "Bảng biến thiên đóng khung full viền 100% chuẩn SGK và đề thi quốc gia",
+      "Nâng cấp thiết kế phương án bẫy trắc nghiệm câu hỏi (tính toán cực trị và giao điểm chuẩn xác)",
+      "Cơ chế Tự Động Cập Nhật (cap_nhat_tu_dong.bat) bảo vệ vĩnh viễn license.key bản quyền của giáo viên",
+      "Bộ cài đặt 1-Click tự động tải và cài ngầm Python 3.12 nếu máy tính chưa có"
+    ],
+    "2.1.0": [
+      "Mở rộng hỗ trợ toàn diện môn VẬT LÝ (cấp THCS 6-9 và THPT 10-12)",
+      "Tích hợp thư viện vẽ hình vật lý 300 DPI: Thấu kính quang học, đồ thị dao động x-t, sơ đồ mạch điện, phân tích vectơ lực",
+      "Kiểm định định luật vật lý (bảo toàn cơ năng, khúc xạ ánh sáng, định luật Ohm, p-V)",
+      "Dùng chung hệ thống bản quyền License Key RSA 2048 offline và bộ cài 1-Click"
+    ],
+    "2.0.0": [
+      "Xuất đồng thời bản Đề Học Sinh và Lời Giải Chi Tiết riêng biệt",
+      "Tạo bộ 4 mã đề hoán vị + phiếu trả lời bong bóng (bubble sheet) chụp ảnh chấm thi",
+      "Xuất Excel tổng hợp đáp án 4 mã đề có tô màu",
+      "Tích hợp cơ chế Self-Healing tự động cài thư viện khi thiếu",
+      "Thêm openpyxl vào danh sách thư viện bắt buộc",
+      "Xóa toàn bộ file nháp temp sau khi xuất OLE"
+    ],
+    "1.0.0": [
+      "Phát hành lần đầu",
+      "Hỗ trợ xuất MathType OLE qua Backend API Cloud",
+      "Vẽ hình kỹ thuật 300 DPI bằng Matplotlib",
+      "Smart Fallback sang Word Equation OMML"
+    ]
+  }
+}
