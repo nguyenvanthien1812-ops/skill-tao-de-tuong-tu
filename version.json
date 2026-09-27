@@ -1,11 +1,19 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "release_date": "2026-09-27",
   "description": "Skill tạo đề thi Toán & Vật lý tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt, hình vẽ 300 DPI siêu nét",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "2.3.0": [
+      "Khắc phục triệt để lỗi hình vẽ không khớp với câu hỏi hoặc số liệu đề bài",
+      "Triển khai 4 Quy Tắc Vàng Khớp Tuyệt Đối Giữa Hình Vẽ & Đề Bài (Visual & Mathematical Consistency Protocol)",
+      "Quy tắc Miền xác định và 2 đầu mút đoạn kín [a; b]: Khóa cứng 2 đầu mút và cực trị bằng CubicHermiteSpline, có chấm tròn to nổi bật và đường gióng nét đứt",
+      "Quy tắc Gióng nhãn trục đối xứng (Opposite Semi-Axis Projection Rule) kết hợp white bounding box (w_box) triệt tiêu 100% tình trạng nhãn số bị đường nét đứt, trục hay đường cong cắt ngang thân",
+      "Chuẩn hóa tọa độ nguyên sạch cho giao điểm trục Ox, Oy và các điểm cực trị (Câu 2, Câu 8, Câu 10, Phần III Câu 3)",
+      "Hàm phân thức bậc 1/1 và bậc 2/1: Tiệm cận nét đứt chuẩn xác, giao điểm cách xa gốc O chống va chạm chữ"
+    ],
     "2.2.0": [
       "Nâng cấp chuẩn hiển thị in ấn: Cỡ chữ 14pt cho toàn bộ văn bản và công thức MathType OLE",
       "Đồ thị hình vẽ siêu nét 300 DPI: Đường nét đậm rõ (lw=2.2 - 2.4), nhãn x, y đặt sát mũi tên trục tọa độ, font số tọa độ 12-13pt in ra không bị mờ",

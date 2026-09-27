@@ -118,6 +118,17 @@ Lưu toàn bộ hình ảnh vào thư mục `hinh_ve_<ma_de>/` với định d�
    - **Bảng biến thiên (BBT)**: Kẻ đầy đủ khung viền bao quanh (full bordered) 100% giống đề thi quốc gia; đủ hàng $x$, $y'$, $y$, vạch đôi $\parallel$, mũi tên $\nearrow \searrow$, font chữ đậm nét 13pt.
    - **Hình học không gian**: Cạnh thấy nét liền (`k-`, `lw=1.8`), cạnh khuất nét đứt (`k--`, `lw=1.5`).
 
+4. **4 Quy Tắc Vàng Khớp Tuyệt Đối Giữa Hình Vẽ & Đề Bài (Visual & Mathematical Consistency Protocol)**:
+   - **Quy tắc Miền xác định và 2 đầu mút đoạn kín $[a; b]$**: Khi đề bài khảo sát trên đoạn kín $[a; b]$, đồ thị **bắt buộc phải chấm dứt chính xác tại $x = a$ và $x = b$** (dùng `np.linspace(a, b, 400)`), không kéo dài vô tận sang 2 phía. Luôn đánh dấu chấm tròn nổi bật (`ko`, `ms=5.5`) tại 2 đầu mút $(a; f(a))$, $(b; f(b))$ và kẻ đường gióng nét đứt tới cả 2 trục.
+   - **Quy tắc Gióng nhãn trục đối xứng (Opposite Semi-Axis Projection Rule)**:
+     * Điểm có $x < 0 \implies$ nhãn tung độ gióng sang phía $x > 0$ của trục $Oy$.
+     * Điểm có $x > 0 \implies$ nhãn tung độ gióng sang phía $x < 0$ của trục $Oy$.
+     * Điểm có $y < 0 \implies$ nhãn hoành độ gióng lên phía $y > 0$ của trục $Ox$.
+     * Điểm có $y > 0 \implies$ nhãn hoành độ gióng xuống phía $y < 0$ của trục $Ox$.
+     * Nhãn trên đường gióng nét đứt hoặc tiệm cận: Bắt buộc dùng `bbox=dict(boxstyle='square,pad=0.12', fc='white', ec='none')` tạo cửa sổ trắng sạch, chống đường nét cắt ngang thân chữ số.
+   - **Quy tắc Giao điểm & Tọa độ nguyên sạch**: Khi câu hỏi yêu cầu xác định "Giao điểm với trục hoành Ox" hoặc "Giao điểm với trục tung Oy", hàm số hoặc spline phải đi qua chính xác các tọa độ nguyên đó (ví dụ $(3; 0)$, $(0; 2)$). Nhãn số của giao điểm đặt lệch theo hướng ngược chiều độ dốc tiếp tuyến để đường cong không cắt qua chữ.
+   - **Quy tắc Tiệm cận và Tâm đối xứng**: Tiệm cận đứng $x = x_0$ và ngang $y = y_0$ kẻ nét đứt `lw=1.2`. Giao điểm với các trục phải cách xa gốc $O$ tối thiểu $|x| \ge 1.0$ hoặc $|y| \ge 1.0$ để nhãn không va chạm với chữ $O$.
+
 ### Bước 4: Đóng gói Word chuẩn cỡ chữ 14pt và kết nối Backend MathType OLE
 Sử dụng thư viện [docx_math_builder.py](./scripts/docx_math_builder.py):
 

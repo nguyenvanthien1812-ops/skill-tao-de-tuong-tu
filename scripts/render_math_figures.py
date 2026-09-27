@@ -5,48 +5,68 @@ import os
 
 plt.rcParams['font.family'] = 'Times New Roman'
 
+w_box = dict(boxstyle='square,pad=0.12', fc='white', ec='none')
+
 def setup_axes(ax, xlim, ylim):
-    """Thiết lập hệ trục tọa độ Oxy chuẩn SGK Việt Nam: Nét đậm, x và y sát mũi tên"""
+    """
+    Thiết lập hệ trục tọa độ Oxy chuẩn SGK Việt Nam & Đề thi Quốc Gia:
+    - Trục Ox và Oy nét đậm 1.3pt
+    - Đầu mũi tên nhọn đẹp: arrowstyle='-|> ', mutation_scale=12
+    - Nhãn 'x' và 'y' in đậm nghiêng, đặt sát ngay đầu mũi tên
+    - Gốc tọa độ 'O' thoáng đãng, không bị đè bởi đường gióng
+    """
     dx = xlim[1] - xlim[0]
     dy = ylim[1] - ylim[0]
     
     # Trục Ox và Oy nét đậm rõ ràng
-    ax.axhline(0, color='black', linewidth=1.2)
-    ax.axvline(0, color='black', linewidth=1.2)
+    ax.axhline(0, color='black', linewidth=1.3)
+    ax.axvline(0, color='black', linewidth=1.3)
     
-    # Mũi tên trục x
-    ax.annotate('', xy=(xlim[1], 0), xytext=(xlim[1] - 0.09*dx, 0),
-                arrowprops=dict(arrowstyle='->', color='black', lw=1.3))
-    # Nhãn x in nghiêng đặt sát đầu mũi tên
-    ax.text(xlim[1] - 0.03*dx, -0.07*dy, 'x', fontsize=13, fontstyle='italic', ha='center', va='top')
+    # Mũi tên trục x & nhãn x sát đầu mũi tên
+    ax.annotate('', xy=(xlim[1], 0), xytext=(xlim[1] - 0.08*dx, 0),
+                arrowprops=dict(arrowstyle='-|> ', color='black', lw=1.3, mutation_scale=12))
+    ax.text(xlim[1] - 0.03*dx, -0.07*dy, 'x', fontsize=13, fontweight='bold', fontstyle='italic')
     
-    # Mũi tên trục y
-    ax.annotate('', xy=(0, ylim[1]), xytext=(0, ylim[1] - 0.09*dy),
-                arrowprops=dict(arrowstyle='->', color='black', lw=1.3))
-    # Nhãn y in nghiêng đặt sát đầu mũi tên
-    ax.text(-0.06*dx, ylim[1] - 0.03*dy, 'y', fontsize=13, fontstyle='italic', ha='right', va='center')
+    # Mũi tên trục y & nhãn y sát đầu mũi tên
+    ax.annotate('', xy=(0, ylim[1]), xytext=(0, ylim[1] - 0.08*dy),
+                arrowprops=dict(arrowstyle='-|> ', color='black', lw=1.3, mutation_scale=12))
+    ax.text(0.04*dx, ylim[1] - 0.04*dy, 'y', fontsize=13, fontweight='bold', fontstyle='italic')
     
     # Gốc tọa độ O
-    ax.text(-0.05*dx, -0.06*dy, 'O', fontsize=12, fontstyle='italic')
+    ax.text(-0.06*dx, -0.07*dy, 'O', fontsize=12, fontstyle='italic')
     ax.set_xlim(xlim)
     ax.set_ylim(ylim)
     ax.axis('off')
 
-def draw_point_with_projection(ax, x, y, x_label=None, y_label=None, marker='ko', ms=4.5):
-    """Vẽ điểm và đường gióng nét đứt vuông góc tới 2 trục tọa độ đậm rõ"""
-    ax.plot([x, x, 0], [0, y, y], 'k--', lw=1.1, alpha=0.85)
+def draw_point_with_projection(ax, x, y, x_label=None, y_label=None, marker='ko', ms=5.2, use_box=True):
+    """
+    Vẽ điểm và đường gióng nét đứt vuông góc tới 2 trục tọa độ đậm rõ:
+    - Áp dụng 'Quy tắc gióng nhãn trục đối xứng' để không bao giờ bị đường nét đứt cắt ngang chữ số
+    - Sử dụng white bounding box (w_box) khi cần thiết
+    """
+    ax.plot([x, x, 0], [0, y, y], 'k--', lw=1.1)
     ax.plot(x, y, marker, markersize=ms)
+    
+    # Gióng nhãn x
     if x_label is not None:
-        ax.text(x, -0.4, str(x_label), fontsize=11, ha='center', fontweight='bold')
+        y_pos = 0.25 if y < 0 else -0.42
+        va = 'bottom' if y < 0 else 'top'
+        ax.text(x, y_pos, str(x_label), fontsize=12, ha='center', va=va, fontweight='bold',
+                bbox=w_box if use_box else None)
+        
+    # Gióng nhãn y
     if y_label is not None:
-        ax.text(0.15, y, str(y_label), fontsize=11, va='center', fontweight='bold')
+        x_pos = 0.18 if x < 0 else -0.42
+        ha = 'left' if x < 0 else 'right'
+        ax.text(x_pos, y, str(y_label), fontsize=12, ha=ha, va='center', fontweight='bold',
+                bbox=w_box if use_box else None)
 
 def plot_cubic_function(a, b, c, d, xlim, ylim, filename, marked_points=None):
-    """Vẽ đồ thị hàm số bậc ba y = ax^3 + bx^2 + cx + d nét đậm siêu rõ"""
-    fig, ax = plt.subplots(figsize=(4.0, 3.8), dpi=300)
-    x = np.linspace(xlim[0]*0.95, xlim[1]*0.95, 400)
+    """Vẽ đồ thị hàm số bậc ba y = ax^3 + bx^2 + cx + d nét đậm siêu rõ (lw=2.3)"""
+    fig, ax = plt.subplots(figsize=(4.2, 3.8), dpi=300)
+    x = np.linspace(xlim[0]*0.96, xlim[1]*0.96, 400)
     y = a*x**3 + b*x**2 + c*x + d
-    ax.plot(x, y, color='#1A365D', lw=2.3)
+    ax.plot(x, y, color='#000000', lw=2.3)
     
     if marked_points:
         for p in marked_points:
@@ -59,53 +79,72 @@ def plot_cubic_function(a, b, c, d, xlim, ylim, filename, marked_points=None):
     plt.close()
 
 def plot_rational_1_1(a, b, c, d, xlim, ylim, filename, marked_points=None):
-    """Vẽ đồ thị hàm phân thức bậc 1 / bậc 1: y = (ax + b) / (cx + d)"""
-    fig, ax = plt.subplots(figsize=(4.0, 3.8), dpi=300)
+    """Vẽ đồ thị hàm phân thức bậc 1 / bậc 1: y = (ax + b) / (cx + d) nét đậm siêu rõ"""
+    fig, ax = plt.subplots(figsize=(4.3, 3.8), dpi=300)
     x_asymp = -d / c
     y_asymp = a / c
     
-    # Hai nhánh
-    eps = 0.2
-    x1 = np.linspace(xlim[0], x_asymp - eps, 300)
+    # Hai nhánh đồ thị
+    eps = 0.22
+    x1 = np.linspace(xlim[0]*0.96, x_asymp - eps, 300)
     y1 = (a*x1 + b) / (c*x1 + d)
-    ax.plot(x1, y1, color='#1A365D', lw=1.6)
+    ax.plot(x1, y1, color='#000000', lw=2.3)
     
-    x2 = np.linspace(x_asymp + eps, xlim[1], 300)
+    x2 = np.linspace(x_asymp + eps, xlim[1]*0.96, 300)
     y2 = (a*x2 + b) / (c*x2 + d)
-    ax.plot(x2, y2, color='#1A365D', lw=1.6)
+    ax.plot(x2, y2, color='#000000', lw=2.3)
     
-    # Tiệm cận đứng và ngang
-    ax.axvline(x_asymp, color='gray', linestyle='--', lw=1)
-    ax.axhline(y_asymp, color='gray', linestyle='--', lw=1)
-    ax.text(x_asymp + 0.1, ylim[0] + 0.5, f'{x_asymp:.0f}' if x_asymp.is_integer() else f'{x_asymp:.1f}', fontsize=9)
-    ax.text(0.12, y_asymp + 0.1, f'{y_asymp:.0f}' if y_asymp.is_integer() else f'{y_asymp:.1f}', fontsize=9)
+    # Tiệm cận đứng và ngang có white bbox chống đè chữ
+    ax.axvline(x_asymp, color='black', linestyle='--', lw=1.2)
+    ax.axhline(y_asymp, color='black', linestyle='--', lw=1.2)
+    
+    lbl_x = f'{x_asymp:.0f}' if float(x_asymp).is_integer() else f'{x_asymp:.1f}'
+    lbl_y = f'{y_asymp:.0f}' if float(y_asymp).is_integer() else f'{y_asymp:.1f}'
+    ax.text(x_asymp, -0.45, lbl_x, fontsize=12, fontweight='bold', ha='center', bbox=w_box)
+    ax.text(-0.45, y_asymp, lbl_y, fontsize=12, fontweight='bold', va='center', bbox=w_box)
     
     if marked_points:
         for p in marked_points:
             px, py = p['x'], p['y']
-            ax.plot(px, py, 'ko', markersize=3.5)
+            ax.plot(px, py, 'ko', markersize=5.2)
             if 'xl' in p:
-                ax.text(px - 0.2, 0.25, str(p['xl']), fontsize=9)
+                ax.text(px, 0.25 if py < 0 else -0.42, str(p['xl']), fontsize=12, fontweight='bold', ha='center')
             if 'yl' in p:
-                ax.text(0.12, py - 0.2, str(p['yl']), fontsize=9)
+                ax.text(0.18 if px < 0 else -0.42, py, str(p['yl']), fontsize=12, fontweight='bold', va='center')
                 
     setup_axes(ax, xlim, ylim)
     plt.tight_layout()
     plt.savefig(filename, dpi=300, bbox_inches='tight')
     plt.close()
 
-def plot_bounded_spline(x_knots, y_knots, d_knots, xlim, ylim, filename, annotations=None):
-    """Vẽ đường cong chuẩn xác trên đoạn kín [a; b] có cực trị xác định (dùng Hermite Spline)"""
-    fig, ax = plt.subplots(figsize=(4.2, 3.5), dpi=300)
-    spline = CubicHermiteSpline(x_knots, y_knots, d_knots)
-    xs = np.linspace(x_knots[0], x_knots[-1], 400)
-    ys = spline(xs)
-    ax.plot(xs, ys, color='#C53030', lw=1.8)
-    
-    if annotations:
-        for item in annotations:
-            draw_point_with_projection(ax, item['x'], item['y'], item.get('xl'), item.get('yl'))
-            
+def plot_bounded_interval_extrema(xs_knots, ys_knots, ds_knots, xlim, ylim, filename,
+                                  endpoints=None, extrema=None):
+    """
+    Vẽ đồ thị hàm số chuẩn xác trên đoạn kín [a; b] có giá trị lớn nhất M và nhỏ nhất m:
+    - Đường cong chỉ vẽ chính xác trong [a; b]
+    - 2 đầu mút và các điểm cực trị có chấm tròn to (ms=5.5) và đường gióng nét đứt chuẩn xác
+    - Nhãn tọa độ tuân thủ 100% 'Quy tắc gióng nhãn trục đối xứng'
+    """
+    fig, ax = plt.subplots(figsize=(4.5, 3.8), dpi=300)
+    spline = CubicHermiteSpline(xs_knots, ys_knots, ds_knots)
+    xs = np.linspace(xs_knots[0], xs_knots[-1], 400)
+    ax.plot(xs, spline(xs), color='#1A365D', lw=2.4)
+
+    # Vẽ các điểm mấu chốt (đầu mút + cực trị)
+    all_points = (endpoints or []) + (extrema or [])
+    for pt in all_points:
+        px, py = pt['x'], pt['y']
+        xl, yl = pt.get('xl'), pt.get('yl')
+        ax.plot([px, px, 0], [0, py, py], 'k--', lw=1.1)
+        ax.plot(px, py, 'ko', markersize=5.5)
+        if xl is not None:
+            y_pos = 0.25 if py < 0 else -0.42
+            ax.text(px, y_pos, str(xl), fontsize=12, fontweight='bold', ha='center')
+        if yl is not None:
+            # Nhãn y đặt phía đối xứng so với vị trí điểm x để tránh cắt vào đường nét đứt
+            x_pos = 0.18 if px < 0 else -0.42
+            ax.text(x_pos, py, str(yl), fontsize=12, fontweight='bold', va='center', bbox=w_box)
+
     setup_axes(ax, xlim, ylim)
     plt.tight_layout()
     plt.savefig(filename, dpi=300, bbox_inches='tight')
