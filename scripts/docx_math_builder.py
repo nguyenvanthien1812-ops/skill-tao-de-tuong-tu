@@ -215,6 +215,100 @@ def add_aligned_choices(doc, choices, mode='omml'):
         _remove_table_borders(table)
 
 
+# ─── BỐ CỤC 2 CỘT THÔNG MINH TIẾT KIỆM GIẤY (Smart Side-by-Side) ─────────────
+
+def set_cell_margins(cell, top=0, bottom=0, left=60, right=60):
+    """Thiết lập padding cho ô trong bảng để tối ưu khoảng cách."""
+    tcPr = cell._tc.get_or_add_tcPr()
+    tcMar = OxmlElement('w:tcMar')
+    for m, val in [('top', top), ('bottom', bottom), ('left', left), ('right', right)]:
+        node = OxmlElement(f'w:{m}')
+        node.set(qn('w:w'), str(val))
+        node.set(qn('w:type'), 'dxa')
+        tcMar.append(node)
+    tcPr.append(tcMar)
+
+
+def add_side_by_side_question(doc, q_label, q_text, choices=None, sub_items=None,
+                              img_path=None, img_width=Inches(2.25),
+                              mode='omml', font_size=14,
+                              left_w=Inches(4.5), right_w=Inches(2.3),
+                              choices_layout='2col'):
+    """
+    Bố cục 2 cột thông minh tiết kiệm giấy in (Smart Side-by-Side Layout):
+    - Cột trái: Tiêu đề câu hỏi, nội dung câu hỏi, và các phương án A, B, C, D (hoặc các ý a, b, c, d).
+    - Cột phải: Hình vẽ minh họa căn giữa theo chiều dọc.
+    - Tự động xóa border, căn chỉnh lề ô sát gọn, tiết kiệm 35-45% không gian trang giấy.
+    - Áp dụng khi: Hình dạng gần vuông hoặc đứng (aspect ratio <= 1.35) như đồ thị hàm số,
+      hình học không gian, sơ đồ lực.
+    - KHÔNG áp dụng khi: Bảng biến thiên (BBT) rộng hoặc hình ghép ngang phức hợp.
+    """
+    table = doc.add_table(rows=1, cols=2)
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    table.autofit = False
+    _remove_table_borders(table)
+
+    table.columns[0].width = left_w
+    table.columns[1].width = right_w
+
+    cell_l = table.cell(0, 0)
+    cell_r = table.cell(0, 1)
+    cell_l.width = left_w
+    cell_r.width = right_w
+    set_cell_margins(cell_l)
+    set_cell_margins(cell_r)
+    cell_l.vertical_alignment = WD_ALIGN_VERTICAL.TOP
+    cell_r.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+
+    # 1. Câu hỏi & dẫn đề
+    p0 = cell_l.paragraphs[0]
+    p0.paragraph_format.space_before = Pt(4)
+    p0.paragraph_format.space_after = Pt(3)
+    if q_label:
+        r_lbl = p0.add_run(q_label)
+        r_lbl.bold = True
+        r_lbl.font.size = Pt(font_size)
+    add_math_content(p0, q_text, mode=mode, font_size=font_size)
+
+    # 2. Các ý phụ (Phần II: a, b, c, d)
+    if sub_items:
+        for item in sub_items:
+            p_item = cell_l.add_paragraph()
+            p_item.paragraph_format.space_before = Pt(0)
+            p_item.paragraph_format.space_after = Pt(2)
+            add_math_content(p_item, item, mode=mode, font_size=font_size)
+
+    # 3. Các đáp án trắc nghiệm A, B, C, D
+    if choices:
+        if choices_layout == '2col' and len(choices) == 4:
+            p_c1 = cell_l.add_paragraph()
+            p_c1.paragraph_format.space_before = Pt(2)
+            p_c1.paragraph_format.space_after = Pt(2)
+            add_math_content(p_c1, choices[0] + '          ' + choices[1], mode=mode, font_size=font_size)
+
+            p_c2 = cell_l.add_paragraph()
+            p_c2.paragraph_format.space_before = Pt(0)
+            p_c2.paragraph_format.space_after = Pt(2)
+            add_math_content(p_c2, choices[2] + '          ' + choices[3], mode=mode, font_size=font_size)
+        else:
+            for c in choices:
+                p_c = cell_l.add_paragraph()
+                p_c.paragraph_format.space_before = Pt(0)
+                p_c.paragraph_format.space_after = Pt(2)
+                add_math_content(p_c, c, mode=mode, font_size=font_size)
+
+    # 4. Hình vẽ minh họa cột phải
+    if img_path and os.path.exists(img_path):
+        p_img = cell_r.paragraphs[0]
+        p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p_img.paragraph_format.space_before = Pt(0)
+        p_img.paragraph_format.space_after = Pt(0)
+        p_img.add_run().add_picture(img_path, width=img_width)
+
+    return table
+
+
+
 # ─── Ô GHI KẾT QUẢ HỌC SINH (Phần III) ─────────────────────────────────────
 
 def add_short_answer_box(doc, question_num):

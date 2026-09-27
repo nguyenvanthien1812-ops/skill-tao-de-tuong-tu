@@ -1,11 +1,19 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "release_date": "2026-09-27",
   "description": "Skill tạo đề thi Toán & Vật lý tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt, hình vẽ 300 DPI siêu nét",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "2.4.0": [
+      "Bổ sung tính năng Bố cục 2 cột thông minh tiết kiệm giấy in (Smart Side-by-Side Layout): Câu hỏi + đáp án bên trái, hình vẽ bên phải",
+      "Tiết kiệm từ 35% đến 45% diện tích trang in A4, thu gọn tối đa số trang tài liệu phát cho học sinh",
+      "Thiết lập Bộ Tiêu Chí Xét Tính Phù Hợp (Suitability Decision Matrix):",
+      "- Phù hợp: Đồ thị hàm số Oxy (bậc ba, phân thức, bậc bốn, đoạn kín), hình học không gian dạng đứng, sơ đồ lực (Câu 1, 2, 4, 8, 10 Phần I; Câu 1 Phần II; Câu 2, 3 Phần III)",
+      "- Không ép hẹp: Bảng biến thiên (BBT) rộng (Câu 11, 12 Phần I; Câu 1 Phần III) và hình ghép ngang phức hợp (Câu 3 Tự luận) luôn giữ toàn dòng để đảm bảo tính sư phạm rõ ràng",
+      "Hỗ trợ xuất trực tiếp bảng ẩn không viền tích hợp trọn vẹn cả 2 định dạng: MathType OLE và Word Equation OMML"
+    ],
     "2.3.0": [
       "Khắc phục triệt để lỗi hình vẽ không khớp với câu hỏi hoặc số liệu đề bài",
       "Triển khai 4 Quy Tắc Vàng Khớp Tuyệt Đối Giữa Hình Vẽ & Đề Bài (Visual & Mathematical Consistency Protocol)",

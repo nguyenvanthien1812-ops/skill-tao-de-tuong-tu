@@ -144,6 +144,23 @@ Sử dụng thư viện [docx_math_builder.py](./scripts/docx_math_builder.py):
    - Chuyển toàn bộ công thức sang OMML bằng `MML2OMML.XSL` để người dùng không có MathType vẫn xem và in ấn chuẩn 100%.
 5. **Dọn dẹp file nháp tạm**: Tự động xóa file `_temp_raw_latex.docx` sau khi hoàn tất.
 
+6. **Bố Cục 2 Cột Thông Minh Tiết Kiệm Giấy In (Smart Side-by-Side Layout Protocol)**:
+   - **Mục tiêu sư phạm**: Khi in đề thi trên khổ giấy A4, đặt hình vẽ ngay phía dưới câu hỏi (full-width stacked) làm mất tới 10-12 cm chiều cao trang cho mỗi câu, khiến đề thi bị phình to tốn kém giấy in. Bằng cách xếp **câu hỏi + đáp án bên trái** và **hình vẽ bên phải** trong một bảng ẩn không viền, diện tích chiều cao trang in được **tiết kiệm từ 35% đến 45%**!
+   - **Bộ Tiêu Chí Xét Tính Phù Hợp (Suitability Decision Matrix)**:
+     * ✅ **PHÙ HỢP BỐ CỤC 2 CỘT (`is_side_by_side = True`)**:
+       - Hình dạng gần vuông hoặc đứng (tỉ lệ $W/H \le 1.35$, chiều rộng hiển thị $2.0 - 2.4$ inches): Đồ thị hàm số trên hệ tọa độ $Oxy$ (bậc ba, phân thức hữu tỉ, bậc bốn, đồ thị trên đoạn kín), hình học không gian dạng đứng, sơ đồ lực vật lý.
+       - Nội dung bên trái (dẫn đề + các đáp án A, B, C, D hoặc các ý a, b, c, d) có từ 3 đến 6 dòng chữ, vừa khít và cân xứng hoàn hảo với chiều cao của hình vẽ bên phải.
+       - Áp dụng mẫu: Câu 1, Câu 2, Câu 4, Câu 8, Câu 10 (Phần I); Câu 1 (Phần II); Câu 2, Câu 3 (Phần III).
+     * ⛔ **KHÔNG PHÙ HỢP – BẮT BUỘC ĐỂ TOÀN DÒNG (Full-Width Stacked)**:
+       - **Bảng biến thiên (BBT)**: Cần chiều ngang tối thiểu $4.0 - 4.5$ inches để hiển thị đầy đủ các cột $-\infty, x_1, x_2, +\infty$, vạch đôi $\parallel$ và mũi tên biến thiên không bị co rúm méo mó. Nếu ép BBT vào cột hẹp $2.2$ inches sẽ vi phạm nghiêm trọng chuẩn mực sư phạm. (Ví dụ: Câu 11, Câu 12 Phần I; Câu 1 Phần III).
+       - **Hình vẽ ghép ngang phức hợp (Landscape Multi-diagrams)**: Các hình gồm 2 hình con đặt ngang nhau (như sơ đồ tấm tôn phẳng $60\text{ cm}$ và hình hộp 3D bên cạnh, chiều ngang thực tế $> 4.0$ inches). Bắt buộc phải để toàn dòng để học sinh dễ quan sát. (Ví dụ: Câu 3 Tự luận).
+   - **Quy cách kỹ thuật Word DOCX**:
+     * Bảng ẩn `rows=1, cols=2`, xóa 100% đường viền (`_remove_table_borders(table)`).
+     * Cột trái: Chiều rộng $4.5$ inches ($11.4\text{ cm}$), căn lề trên `WD_ALIGN_VERTICAL.TOP`.
+     * Cột phải: Chiều rộng $2.3$ inches ($5.8\text{ cm}$), hình ảnh căn giữa theo chiều dọc `WD_ALIGN_VERTICAL.CENTER`.
+     * Bản Giáo Viên: Lời giải chi tiết được trình bày trải rộng toàn dòng ngay phía dưới bảng để thuận tiện đọc và chấm thi.
+
+
 ### Bước 5: Bàn giao và đối chiếu
 1. Cung cấp đường link trực tiếp tới cả 2 tệp `.docx` đã tạo:
    - `<MA_DE>_MATHTYPE_OLE.docx` (MathType OLE nguyên bản - khuyên dùng)
