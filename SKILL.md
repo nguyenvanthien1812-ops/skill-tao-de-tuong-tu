@@ -1,32 +1,37 @@
 ---
 name: tao-de-toan-tuong-tu
 description: >-
-  Tạo đề thi hoặc đề kiểm tra môn TOÁN và môn VẬT LÝ (KHTN lớp 6-12) tương tự (song song, cùng ma trận đặc tả) từ một đề gốc cho trước.
-  Tự động phân tích đề gốc (từ file PDF, Word DOCX hoặc ảnh chụp), thiết kế bộ số liệu mới nghiệm đẹp & chuẩn xác định luật vật lý/toán học,
-  lập trình vẽ 100% hình vẽ kỹ thuật (đồ thị hàm số, bảng biến thiên, hình không gian, sơ đồ mạch điện, thấu kính quang học, đồ thị dao động/sóng, phân tích vectơ lực)
-  chuẩn xác tuyệt đối bằng Python Matplotlib (300 DPI), và tự động kết nối Backend Converter API (https://latex2mathtypeweb.onrender.com/api/convert-docx)
+  Tạo đề thi hoặc đề kiểm tra môn TOÁN, VẬT LÝ, HÓA HỌC (và KHTN lớp 6-12) tương tự (song song, cùng ma trận đặc tả) từ một đề gốc cho trước.
+  Tự động phân tích đề gốc (từ file PDF, Word DOCX hoặc ảnh chụp), thiết kế bộ số liệu mới nghiệm đẹp & chuẩn xác định luật tự nhiên (bảo toàn khối lượng/nguyên tố/electron, định luật vật lý/toán học),
+  lập trình vẽ 100% hình vẽ kỹ thuật & thí nghiệm (đồ thị hàm số, bảng biến thiên, hình không gian 3D, sơ đồ mạch điện, thấu kính quang học, đồ thị dao động/sóng, phân tích vectơ lực, sơ đồ thí nghiệm hóa học, giản đồ năng lượng, đồ thị pH chuẩn độ)
+  chuẩn xác tuyệt đối bằng Python Matplotlib (300 DPI), dựng bảng số liệu nguyên bản (Table Grid), và tự động kết nối Backend Converter API (https://latex2mathtypeweb.onrender.com/api/convert-docx)
   để xuất trực tiếp file Word (.docx) chứa đối tượng MathType OLE nguyên bản (Equation.DSMT4) mở click đúp sửa ngay,
   kèm cơ chế Smart Fallback sang bản Word Equation (OMML) chuẩn SGK.
   Tích hợp sẵn tính năng tự động chẩn đoán và cài đặt môi trường 1-click cho giáo viên.
   Hỗ trợ xuất đồng thời bản Đề Học Sinh và bản Lời Giải Chi Tiết riêng biệt.
   Tự động tạo bộ 4 mã đề hoán vị kèm phiếu trả lời bong bóng (bubble sheet) chuẩn A4 chụp ảnh chấm thi và file Excel tổng hợp đáp án.
-  Đặc biệt: Tích hợp công nghệ chuyển đổi tệp đề thi PDF (kể cả PDF scan hoặc ảnh) sang Word không lỗi công thức toán, không lỗi hình vẽ và bảng biểu, xuất trực tiếp MathType OLE 14pt.
+  Đặc biệt: Tích hợp công nghệ chuyển đổi tệp đề thi PDF (kể cả PDF scan hoặc ảnh) sang Word không lỗi công thức khoa học (Toán, Lý, Hóa), không lỗi hình vẽ và bảng biểu, xuất trực tiếp MathType OLE 14pt.
   Kích hoạt khi người dùng yêu cầu: "tạo đề tương tự", "tạo đề tương tự từ đề gốc", "nhân bản đề thi Toán", "tạo đề vật lý tương tự",
-  "tạo đề thi môn lý", "nhân bản đề thi vật lý", "tạo đề KHTN", "tạo mã đề song song có hình vẽ và công thức chuẩn",
-  "xuất đề thi mathtype ole", "cài đặt môi trường", "cài đặt thư viện", "setup máy tạo đề", "kiểm tra môi trường", "tạo bộ 4 mã đề", "tạo phiếu trả lời",
-  "chuyển pdf sang word", "chuyển pdf sang word không lỗi", "chuyển đề thi pdf sang word mathtype", "convert pdf to word mathtype", "chuyển pdf sang word công thức toán không lỗi".
+  "tạo đề thi môn lý", "nhân bản đề thi vật lý", "tạo đề hóa học tương tự", "tạo đề thi môn hóa", "nhân bản đề hóa học", "tạo đề KHTN",
+  "tạo mã đề song song có hình vẽ và công thức chuẩn", "xuất đề thi mathtype ole", "cài đặt môi trường", "cài đặt thư viện", "setup máy tạo đề",
+  "kiểm tra môi trường", "tạo bộ 4 mã đề", "tạo phiếu trả lời", "chuyển pdf sang word", "chuyển pdf sang word không lỗi",
+  "chuyển đề thi pdf sang word mathtype", "convert pdf to word mathtype", "chuyển pdf sang word công thức toán không lỗi",
+  "chuyển đề thi hóa sang word mathtype", "chuyển đề thi lý sang word mathtype", "vẽ hình thí nghiệm hóa học", "vẽ hình học không gian 3d", "dựng bảng biểu word mathtype".
 ---
 
-# Quy Trình Tạo Đề Toán & Vật Lý Tương Tự Chuẩn Bộ GD&ĐT (Tích Hợp Backend MathType OLE & Cài Đặt 1-Click)
+# Quy Trình Tạo Đề Toán, Vật Lý & Hóa Học Tương Tự Chuẩn Bộ GD&ĐT (Tích Hợp Backend MathType OLE & Cài Đặt 1-Click)
 
-Skill này tự động hóa toàn bộ quy trình biên soạn đề kiểm tra / đề thi môn **TOÁN** và môn **VẬT LÝ** (cấp THCS lớp 6, 7, 8, 9 và THPT lớp 10, 11, 12 theo định dạng mới GDPT 2018), bảo đảm **3 tiêu chuẩn vàng**:
-1. **Khoa học chuẩn xác 100%**: Nghiệm đẹp, tham số logic, tuân thủ đúng định luật vật lý và toán học (không bị hiện tượng vô lý), 4 phương án trắc nghiệm chỉ có duy nhất 1 phương án đúng, lời giải chi tiết từng bước.
-2. **Hình vẽ kỹ thuật 300 DPI chuẩn mực**: Vẽ bằng code Python Matplotlib:
-   - **Môn Toán**: Đồ thị hàm số, bảng biến thiên, hình học không gian.
-   - **Môn Vật lý**: Đường truyền tia sáng & thấu kính, đồ thị dao động điều hòa/sóng cơ ($x-t, v-t, u-t$), sơ đồ mạch điện, giản đồ vectơ Fresnel, phân tích vectơ lực trên mặt phẳng nghiêng, đồ thị biến thiên nhiệt/khí lý tưởng $(p-V, p-T)$.
-3. **Công thức chuẩn MathType OLE & Word Equation**:
-   - Sử dụng **Backend Converter API** (`https://latex2mathtypeweb.onrender.com/api/convert-docx`) để biên dịch 100% công thức thành **MathType OLE (`Equation.DSMT4`)** nhúng nhị phân MTEF `.bin` + vector `.wmf` trực tiếp vào file Word. Giáo viên click đúp vào bất kỳ công thức nào là mở cửa sổ MathType truyền thống ngay lập tức!
+Skill này tự động hóa toàn bộ quy trình biên soạn đề kiểm tra / đề thi môn **TOÁN**, **VẬT LÝ** và **HÓA HỌC** (cấp THCS lớp 6, 7, 8, 9 và THPT lớp 10, 11, 12 theo định dạng mới GDPT 2018), bảo đảm **3 tiêu chuẩn vàng**:
+1. **Khoa học chuẩn xác 100%**: Nghiệm đẹp, tham số logic, tuân thủ đúng định luật vật lý, hóa học (bảo toàn khối lượng, nguyên tố, điện tích, electron) và toán học (không bị hiện tượng vô lý), 4 phương án trắc nghiệm chỉ có duy nhất 1 phương án đúng, lời giải chi tiết từng bước.
+2. **Hình vẽ kỹ thuật & Thí nghiệm 300 DPI chuẩn mực**: Vẽ bằng code Python Matplotlib:
+   - **Môn Toán**: Đồ thị hàm số, bảng biến thiên full khung viền, hình học không gian 3D ($S.ABCD$, lăng trụ, nón, trụ, cầu), hệ trục giải tích $Oxyz$.
+   - **Môn Vật lý**: Đường truyền tia sáng & thấu kính, đồ thị dao động điều hòa/sóng cơ ($x-t, v-t, u-t$), sơ đồ mạch điện ($R, L, C$), giản đồ vectơ Fresnel, phân tích vectơ lực trên mặt phẳng nghiêng, đồ thị biến thiên nhiệt/khí lý tưởng $(p-V, p-T)$.
+   - **Môn Hóa học**: Sơ đồ dụng cụ thí nghiệm điều chế và thu khí (dời chỗ nước/không khí), sơ đồ bình điện phân, giản đồ năng lượng phản ứng ($\Delta_r H, E_a$), đường cong chuẩn độ pH axit - bazơ.
+3. **Công thức chuẩn MathType OLE (14pt) & Word Equation**:
+   - Sử dụng **Backend Converter API** (`https://latex2mathtypeweb.onrender.com/api/convert-docx`) để biên dịch 100% công thức Toán, Lý (vectơ, chỉ số, đơn vị, hạt nhân), Hóa (công thức phân tử, ion, phức chất, mũi tên điều kiện $\xrightarrow{t^\circ, \text{xt}}$, mũi tên thuận nghịch $\rightleftharpoons$, kết tủa $\downarrow$, bay hơi $\uparrow$, font IUPAC thẳng chuẩn $\mathrm{Fe, Al, Cu}$) thành **MathType OLE (`Equation.DSMT4`)** nhúng nhị phân MTEF `.bin` + vector `.wmf` trực tiếp vào file Word. Giáo viên click đúp vào bất kỳ công thức nào là mở cửa sổ MathType truyền thống ngay lập tức!
    - Kèm cơ chế **Smart Fallback**: Luôn sinh thêm bản **Word Equation (OMML)** để mở được mượt mà trên mọi máy tính kể cả khi không cài MathType.
+4. **Bảng Biểu Nguyên Bản (Table Grid 100%)**:
+   - Tự động dựng thành bảng Word thật (`Table Grid`) có viền đầy đủ, căn lề giữa cả ngang và dọc cho các bảng thống kê Toán, bảng số liệu thực nghiệm đo đạc Vật lý, và bảng nhận biết thuốc thử Hóa học. Tuyệt đối không dùng ảnh chụp bảng, giáo viên chỉnh sửa số liệu tùy ý.
 
 ---
 
@@ -189,4 +194,35 @@ Khi người dùng cung cấp một file đề thi định dạng **PDF** (kể 
    - `<TEN_DE>_MATHTYPE_OLE.docx`: Bản đề học sinh MathType OLE nguyên bản.
    - `<TEN_DE>_LOI_GIAI_OLE.docx`: Bản giáo viên có lời giải & đáp án chính thức từ Sở GD&ĐT.
    - `<TEN_DE>_WORD_EQ.docx`: Bản dự phòng Word Equation (OMML).
+
+---
+
+## 🧪 Quy Chuẩn Biên Soạn Môn HÓA HỌC (Lớp 10, 11, 12 & KHTN)
+
+1. **Công thức & Phương trình Hóa học MathType OLE (14pt)**:
+   - **Tên nguyên tố chuẩn IUPAC GDPT 2018**: Dùng font chữ đứng chuẩn (`\mathrm{...}` hoặc `\text{...}`), tuyệt đối không để in nghiêng như ẩn số toán học (Ví dụ: $\mathrm{Fe, Al, Cu, O_2, H_2O}$, không dùng $Fe, Al, Cu$).
+   - **Phương trình 1 chiều có điều kiện**: Sử dụng `\xrightarrow{t^\circ, \text{xt}}` (ví dụ: $2\text{Al} + \text{Fe}_2\text{O}_3 \xrightarrow{t^\circ} \text{Al}_2\text{O}_3 + 2\text{Fe}$).
+   - **Phương trình thuận nghịch**: Dùng `\rightleftharpoons` cho phản ứng cân bằng hóa học (ví dụ: $\text{N}_2(g) + 3\text{H}_2(g) \rightleftharpoons 2\text{NH}_3(g)$).
+   - **Trạng thái & Hiện tượng**: Ký hiệu kết tủa $\downarrow$, khí thoát $\uparrow$, trạng thái $(s), (l), (g), (aq)$.
+   - **Nhiệt hóa học**: Enthalpy chuẩn $\Delta_r H_{298}^\circ = -92,2\text{ kJ/mol}$, $\Delta_f H_{298}^\circ$.
+   - **Hóa học hữu cơ & phức chất**: Công thức cấu tạo mạch $\text{CH}_3-\text{CH}_2-\text{OH}$, este $\text{CH}_3\text{COOC}_2\text{H}_5$, ion phức $[\text{Cu}(\text{NH}_3)_4]^{2+}$.
+2. **Hình vẽ thí nghiệm & Đồ thị Hóa học 300 DPI**:
+   - Dụng cụ điều chế thu khí (dời nước, dời không khí), bình điện phân, giản đồ năng lượng phản ứng ($\Delta_r H, E_a$), đường cong chuẩn độ pH (điểm tương đương, bước nhảy pH).
+
+---
+
+## 📊 Quy Chuẩn Bảng Biểu Đa Môn (Table Grid Nguyên Bản)
+
+1. **Môn Toán**:
+   - Bảng biến thiên (BBT): Khung viền kép hoặc full border đầy đủ, căn lề giữa, vạch đôi $\parallel$, mũi tên biến thiên $\nearrow \searrow$.
+   - Bảng mẫu số liệu ghép nhóm thống kê: Cột nhóm giá trị, tần số, tần suất, độ lệch chuẩn.
+2. **Môn Vật lý**:
+   - Bảng số liệu thực nghiệm đo đạc: Lần đo $1, 2, 3$, giá trị trung bình $\bar{X}$, sai số tuyệt đối $\Delta X$.
+   - Bảng thông số kỹ thuật thiết bị điện: Điện áp định mức $U_{đm}$, công suất $P_{đm}$, hiệu suất.
+3. **Môn Hóa học**:
+   - Bảng nhận biết & thuốc thử: Cột Mẫu thử, Thuốc thử, Hiện tượng quan sát, Phương trình ion thu gọn.
+   - Bảng nhiệt động học & hằng số: Enthalpy tạo thành $\Delta_f H_{298}^\circ$, entropy $S_{298}^\circ$, thế điện cực chuẩn $E^\circ$.
+4. **Quy cách Word DOCX**:
+   - Luôn dùng `doc.add_table(style='Table Grid')`. Căn giữa ngang `WD_TABLE_ALIGNMENT.CENTER` và căn giữa dọc `WD_ALIGN_VERTICAL.CENTER`. Khung viền sắc nét, giáo viên nhấp chuột sửa trực tiếp mọi số liệu.
+
 

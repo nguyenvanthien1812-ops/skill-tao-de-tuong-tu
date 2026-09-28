@@ -293,3 +293,163 @@ def draw_full_border_bbt(x_labels, yprime_data, y_data, arrows, filename, W=10.0
     plt.close()
 
 
+# ─── MÔN HÓA HỌC (LỚP 10 - 12 & KHTN) ────────────────────────────────────────
+
+def plot_chemistry_energy_diagram(reactants_lbl, products_lbl, delta_h_val, ea_val, filename, is_exothermic=True):
+    """
+    Vẽ giản đồ năng lượng phản ứng hóa học (Enthalpy profile diagram):
+    - Phản ứng tỏa nhiệt (is_exothermic=True): delta_h < 0
+    - Phản ứng thu nhiệt (is_exothermic=False): delta_h > 0
+    - Năng lượng hoạt hóa Ea và biến thiên enthalpy Delta_r H chuẩn 300 DPI
+    """
+    fig, ax = plt.subplots(figsize=(5.5, 3.8), dpi=300)
+    
+    # Trục tọa độ
+    ax.annotate('', xy=(0, 5.2), xytext=(0, 0), arrowprops=dict(arrowstyle='-|> ', color='black', lw=1.3))
+    ax.annotate('', xy=(5.2, 0), xytext=(0, 0), arrowprops=dict(arrowstyle='-|> ', color='black', lw=1.3))
+    ax.text(0.08, 5.0, 'Năng lượng E (kJ)', fontsize=11, fontweight='bold')
+    ax.text(3.5, -0.4, 'Tiến trình phản ứng', fontsize=11, fontweight='bold')
+    
+    # Mức năng lượng chất phản ứng và sản phẩm
+    if is_exothermic:
+        e_reac = 2.2
+        e_prod = 1.0
+        e_trans = e_reac + 2.0
+    else:
+        e_reac = 1.2
+        e_prod = 2.6
+        e_trans = e_prod + 1.8
+
+    # Đường cong phản ứng (spline mượt)
+    x_pts = [0.8, 1.4, 2.5, 3.6, 4.4]
+    y_pts = [e_reac, e_reac, e_trans, e_prod, e_prod]
+    from scipy.interpolate import pchip
+    pch = pchip(x_pts, y_pts)
+    xs = np.linspace(0.8, 4.4, 300)
+    ax.plot(xs, pch(xs), color='#C53030', lw=2.2)
+    
+    # Vạch mức năng lượng ngang
+    ax.hlines(e_reac, 0.4, 1.6, colors='black', linestyles='--', lw=1.0)
+    ax.hlines(e_prod, 3.4, 4.8, colors='black', linestyles='--', lw=1.0)
+    ax.hlines(e_trans, 1.8, 3.2, colors='gray', linestyles=':', lw=0.9)
+    
+    ax.text(1.1, e_reac + 0.15, reactants_lbl, fontsize=12, fontweight='bold', ha='center')
+    ax.text(4.0, e_prod + 0.15, products_lbl, fontsize=12, fontweight='bold', ha='center')
+    
+    # Mũi tên Ea
+    ax.annotate('', xy=(2.0, e_trans), xytext=(2.0, e_reac),
+                arrowprops=dict(arrowstyle='<->', color='#1A365D', lw=1.2))
+    ax.text(2.1, (e_trans + e_reac)/2, f'Ea = {ea_val} kJ', fontsize=10, fontweight='bold', color='#1A365D', va='center')
+    
+    # Mũi tên Delta H
+    x_dh = 3.6
+    ax.annotate('', xy=(x_dh, e_prod), xytext=(x_dh, e_reac),
+                arrowprops=dict(arrowstyle='<->', color='#2B6CB0', lw=1.2))
+    dh_text = f'Δr H = {delta_h_val} kJ'
+    ax.text(x_dh + 0.1, (e_reac + e_prod)/2, dh_text, fontsize=10, fontweight='bold', color='#2B6CB0', va='center')
+
+    ax.set_xlim(-0.2, 5.4)
+    ax.set_ylim(-0.6, 5.5)
+    ax.axis('off')
+    
+    plt.tight_layout()
+    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.close()
+
+
+def plot_ph_titration_curve(v_eq, ph_init, ph_eq, ph_end, filename, title="Đường cong chuẩn độ pH"):
+    """
+    Vẽ đồ thị chuẩn độ axit - bazơ (pH titration curve) chuẩn SGK Hóa học 11
+    """
+    fig, ax = plt.subplots(figsize=(5.5, 3.8), dpi=300)
+    
+    # Hệ trục tọa độ
+    ax.axhline(0, color='black', lw=1.2)
+    ax.axvline(0, color='black', lw=1.2)
+    ax.annotate('', xy=(v_eq * 2.1, 0), xytext=(v_eq * 2.0, 0), arrowprops=dict(arrowstyle='-|> ', color='black', lw=1.2))
+    ax.annotate('', xy=(0, 14.8), xytext=(0, 14.0), arrowprops=dict(arrowstyle='-|> ', color='black', lw=1.2))
+    
+    ax.text(v_eq * 1.9, -1.2, 'V (mL)', fontsize=11, fontweight='bold', fontstyle='italic')
+    ax.text(-v_eq * 0.15, 14.3, 'pH', fontsize=11, fontweight='bold', fontstyle='italic')
+    
+    # Hàm sigmoid mô phỏng bước nhảy pH
+    vs = np.linspace(0, v_eq * 2.0, 400)
+    k = 1.8 / (v_eq * 0.08)
+    phs = ph_init + (ph_end - ph_init) / (1 + np.exp(-k * (vs - v_eq)))
+    ax.plot(vs, phs, color='#2B6CB0', lw=2.2)
+    
+    # Điểm tương đương
+    ax.plot([v_eq, v_eq, 0], [0, ph_eq, ph_eq], 'k--', lw=1.1)
+    ax.plot(v_eq, ph_eq, 'ko', markersize=5.2)
+    ax.text(v_eq, -1.1, f'{v_eq:.0f}', fontsize=11, fontweight='bold', ha='center')
+    ax.text(-v_eq * 0.08, ph_eq, f'{ph_eq:.1f}', fontsize=11, fontweight='bold', va='center', ha='right')
+    ax.text(v_eq + 0.1*v_eq, ph_eq - 0.6, 'Điểm tương đương', fontsize=9, fontstyle='italic', color='#742A2A')
+    
+    ax.set_xlim(-v_eq * 0.15, v_eq * 2.15)
+    ax.set_ylim(-1.5, 15.0)
+    ax.grid(True, linestyle=':', alpha=0.45)
+    for sp in ['top', 'right']:
+        ax.spines[sp].set_visible(False)
+        
+    plt.tight_layout()
+    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.close()
+
+
+# ─── HÌNH HỌC KHÔNG GIAN 3D (MÔN TOÁN) ───────────────────────────────────────
+
+def plot_pyramid_s_abcd(filename, h_ratio=1.6):
+    """
+    Vẽ hình chóp S.ABCD đáy hình bình hành / chữ nhật chuẩn mực sư phạm:
+    - Cạnh thấy vẽ nét liền (lw=1.8), cạnh khuất vẽ nét đứt (lw=1.4)
+    - Các đỉnh S, A, B, C, D được định vị cân đối, chống đè chữ
+    """
+    fig, ax = plt.subplots(figsize=(4.5, 4.0), dpi=300)
+    
+    # Tọa độ các đỉnh đáy
+    A = np.array([1.2, 1.2])
+    B = np.array([0.4, 0.4])
+    C = np.array([3.4, 0.4])
+    D = np.array([4.2, 1.2])
+    
+    # Đỉnh S
+    S = np.array([1.2, 1.2 + h_ratio * 1.8])
+    
+    # Cạnh khuất (nét đứt)
+    ax.plot([A[0], D[0]], [A[1], D[1]], 'k--', lw=1.4)
+    ax.plot([A[0], B[0]], [A[1], B[1]], 'k--', lw=1.4)
+    ax.plot([S[0], A[0]], [S[1], A[1]], 'k--', lw=1.4)
+    
+    # Cạnh thấy (nét liền)
+    ax.plot([B[0], C[0]], [B[1], C[1]], 'k-', lw=1.8)
+    ax.plot([C[0], D[0]], [C[1], D[1]], 'k-', lw=1.8)
+    ax.plot([S[0], B[0]], [S[1], B[1]], 'k-', lw=1.8)
+    ax.plot([S[0], C[0]], [S[1], C[1]], 'k-', lw=1.8)
+    ax.plot([S[0], D[0]], [S[1], D[1]], 'k-', lw=1.8)
+    
+    # Chấm các đỉnh
+    pts = [('S', S, 'above'), ('A', A, 'top-left'), ('B', B, 'below-left'),
+           ('C', C, 'below-right'), ('D', D, 'right')]
+    for name, p, pos in pts:
+        ax.plot(p[0], p[1], 'ko', markersize=3.8)
+        if pos == 'above':
+            ax.text(p[0], p[1] + 0.12, name, fontsize=12, fontweight='bold', ha='center')
+        elif pos == 'top-left':
+            ax.text(p[0] - 0.22, p[1] + 0.08, name, fontsize=12, fontweight='bold', ha='right')
+        elif pos == 'below-left':
+            ax.text(p[0] - 0.18, p[1] - 0.18, name, fontsize=12, fontweight='bold', ha='right')
+        elif pos == 'below-right':
+            ax.text(p[0] + 0.12, p[1] - 0.18, name, fontsize=12, fontweight='bold', ha='left')
+        elif pos == 'right':
+            ax.text(p[0] + 0.18, p[1] + 0.05, name, fontsize=12, fontweight='bold', ha='left')
+
+    ax.set_xlim(-0.2, 4.8)
+    ax.set_ylim(-0.2, 4.6)
+    ax.axis('off')
+    
+    plt.tight_layout()
+    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.close()
+
+
+

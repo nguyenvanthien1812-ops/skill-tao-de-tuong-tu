@@ -1,11 +1,18 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "release_date": "2026-09-28",
-  "description": "Skill tạo đề thi Toán & Vật lý tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt, chuyển đổi PDF sang Word không lỗi công thức",
+  "description": "Skill tạo đề thi Toán, Vật lý, Hóa học tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt, hình học 3D, bảng biểu Table Grid nguyên bản",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "2.6.0": [
+      "Mở rộng hỗ trợ toàn diện môn HÓA HỌC (Lớp 10 - 12 & KHTN): Công thức phân tử, ion, phức chất, phương trình 1 chiều và thuận nghịch, nhiệt hóa học, hữu cơ",
+      "Chuẩn hóa tên nguyên tố theo chuẩn quốc tế IUPAC GDPT 2018 (font chữ đứng chuẩn, không bị in nghiêng như biến số)",
+      "Bổ sung thư viện vẽ đồ thị & thí nghiệm Hóa học 300 DPI: Giản đồ năng lượng phản ứng (Ea, Delta H), đường cong chuẩn độ pH",
+      "Bổ sung công cụ dựng hình học không gian 3D (Khối chóp S.ABCD, lăng trụ, nón, trụ, cầu) với nét liền/khuất sắc nét",
+      "Chuẩn hóa 100% Bảng biểu đa môn (Table Grid nguyên bản): Bảng biến thiên full khung viền, bảng đo đạc thực nghiệm vật lý, bảng nhận biết & thuốc thử hóa học, bảng số liệu thống kê"
+    ],
     "2.5.0": [
       "Bổ sung tính năng Chuyển đổi PDF đề thi sang Word chuẩn toán học & sư phạm (PDF to Math Word Converter)",
       "Giải quyết triệt để 100% các lỗi kinh điển khi convert PDF thông thường: vỡ/lỗi công thức toán, mờ hình vẽ, vỡ bảng số liệu",
