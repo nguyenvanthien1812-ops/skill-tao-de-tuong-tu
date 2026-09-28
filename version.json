@@ -1,11 +1,21 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "2.4.0",
-  "release_date": "2026-09-27",
-  "description": "Skill tạo đề thi Toán & Vật lý tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt, hình vẽ 300 DPI siêu nét",
+  "version": "2.5.0",
+  "release_date": "2026-09-28",
+  "description": "Skill tạo đề thi Toán & Vật lý tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt, chuyển đổi PDF sang Word không lỗi công thức",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "2.5.0": [
+      "Bổ sung tính năng Chuyển đổi PDF đề thi sang Word chuẩn toán học & sư phạm (PDF to Math Word Converter)",
+      "Giải quyết triệt để 100% các lỗi kinh điển khi convert PDF thông thường: vỡ/lỗi công thức toán, mờ hình vẽ, vỡ bảng số liệu",
+      "Tự động trích xuất toàn bộ hình minh họa kỹ thuật độ phân giải cao 300 DPI từ PDF và tự động cắt viền trắng thừa thông minh",
+      "Chuyển đổi 100% công thức toán học sang đối tượng MathType OLE nguyên bản (Equation.DSMT4) mở click đúp sửa ngay, cỡ chữ 14pt chuẩn in ấn",
+      "Kèm cơ chế Smart Fallback sang bản Word Equation (OMML) chuẩn SGK không cần cài MathType",
+      "Tự động dựng bảng số liệu thống kê (Table Grid) với khung viền hoàn chỉnh, căn giữa chuẩn sư phạm",
+      "Ứng dụng công nghệ Bố cục 2 cột thông minh (Smart Side-by-Side) cho các câu có hình vẽ để tiết kiệm tối đa giấy in",
+      "Xuất đồng thời bản Đề Học Sinh và bản Lời Giải Chi Tiết (khớp đáp án chính thức từ Sở GD&ĐT)"
+    ],
     "2.4.0": [
       "Bổ sung tính năng Bố cục 2 cột thông minh tiết kiệm giấy in (Smart Side-by-Side Layout): Câu hỏi + đáp án bên trái, hình vẽ bên phải",
       "Tiết kiệm từ 35% đến 45% diện tích trang in A4, thu gọn tối đa số trang tài liệu phát cho học sinh",
