@@ -1,10 +1,10 @@
 @echo off
 chcp 65001 >nul
-title Cai Dat Tu Dong 1-Click - Skill Tao De Toan
+title Cai Dat Tu Dong 1-Click - Skill Tao De Toan, Ly, Hoa
 
 echo.
 echo ====================================================================
-echo      HỆ THỐNG CÀI ĐẶT TỰ ĐỘNG 1-CLICK - SKILL TẠO ĐỀ TOÁN
+echo      HỆ THỐNG CÀI ĐẶT TỰ ĐỘNG 1-CLICK - SKILL TẠO ĐỀ TOÁN, LÝ, HÓA
 echo ====================================================================
 echo.
 
@@ -72,7 +72,7 @@ set "PY_URL=https://www.python.org/ftp/python/3.12.6/python-3.12.6-amd64.exe"
 
 echo [*] Dang tai bo cai Python tu trang chu python.org...
 if exist "%SystemRoot%\System32\curl.exe" (
-    curl.exe -L -s -o "%PY_INSTALLER%" "%PY_URL%"
+    curl.exe -L -o "%PY_INSTALLER%" "%PY_URL%"
 ) else (
     powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object System.Net.WebClient).DownloadFile('%PY_URL%', '%PY_INSTALLER%')"
 )
@@ -86,10 +86,8 @@ if not exist "%PY_INSTALLER%" (
 echo [*] Dang cai dat Python ngam vao may tinh (khong can thao tac gi)...
 start /wait "" "%PY_INSTALLER%" /quiet InstallAllUsers=0 PrependPath=1 Include_test=0 Include_pip=1 SimpleInstall=1
 
-:: Xoa file installer tam
 del "%PY_INSTALLER%" >nul 2>nul
 
-:: Quet lai de nhan dien Python vua cai
 for /d %%D in ("%LOCALAPPDATA%\Programs\Python\Python3*") do (
     if exist "%%D\python.exe" (
         set "PYTHON_EXE=%%D\python.exe"
@@ -98,7 +96,6 @@ for /d %%D in ("%LOCALAPPDATA%\Programs\Python\Python3*") do (
     )
 )
 
-:: Thu lai lenh py
 py -c "import sys" >nul 2>nul && set "PYTHON_EXE=py"
 if "%PYTHON_EXE%"=="" (
     python -c "import sys" >nul 2>nul && set "PYTHON_EXE=python"
@@ -115,22 +112,38 @@ echo [OK] Python da san sang: %PYTHON_EXE%
 %PYTHON_EXE% -c "import sys; print(f'     Phien ban: Python {sys.version.split()[0]}')"
 echo.
 
-:: ─── BƯỚC 3: TỰ ĐỘNG CÀI ĐẶT CÁC THƯ VIỆN TOÁN & HÌNH VẼ ─────────────
-echo [*] Buoc 2/3: Dang cai dat day du cac thu vien can thiet qua pip...
-echo     (matplotlib, scipy, python-docx, lxml, latex2mathml, pillow, openpyxl, cryptography...)
+:: ─── BƯỚC 3: TỰ ĐỘNG CÀI ĐẶT CÁC THƯ VIỆN TOÁN, LÝ, HÓA & HÌNH VẼ ────
+echo [*] Buoc 2/3: Kiem tra va cai dat day du cac thu vien qua pip...
+echo     (matplotlib, scipy, python-docx, lxml, latex2mathml, requests, pillow, openpyxl, cryptography, pymupdf)
 echo.
 
-%PYTHON_EXE% -m pip install --upgrade pip -q >nul 2>nul
-%PYTHON_EXE% -m pip install matplotlib scipy python-docx lxml latex2mathml requests pillow openpyxl cryptography -q
+%PYTHON_EXE% -m pip install --upgrade pip --quiet --no-warn-script-location
+%PYTHON_EXE% -m pip install matplotlib scipy python-docx lxml latex2mathml requests pillow openpyxl cryptography pymupdf --no-warn-script-location
 
+echo.
 echo [OK] Tat ca thu vien da duoc cai dat thanh cong 100%!
 echo.
 
-:: ─── BƯỚC 4: KIỂM TRA BẢN QUYỀN / LICENSE ────────────────────────────
+:: ─── BƯỚC 4: TÌM ĐƯỜNG DẪN SCRIPT LICENSE_MANAGER.PY ─────────────────
+set "LM_SCRIPT="
+if exist "%~dp0scripts\license_manager.py" (
+    set "LM_SCRIPT=%~dp0scripts\license_manager.py"
+) else if exist "%~dp0.agents\skills\tao-de-toan-tuong-tu\scripts\license_manager.py" (
+    set "LM_SCRIPT=%~dp0.agents\skills\tao-de-toan-tuong-tu\scripts\license_manager.py"
+)
+
+if "%LM_SCRIPT%"=="" (
+    echo [i] Hoan tat cai dat thu vien he thong!
+    echo.
+    pause
+    exit /b 0
+)
+
+:: ─── BƯỚC 5: KIỂM TRA BẢN QUYỀN / LICENSE ────────────────────────────
 echo [*] Buoc 3/3: Kiem tra ban quyen su dung...
 echo.
 
-%PYTHON_EXE% "%~dp0scripts\license_manager.py" --check >nul 2>nul
+%PYTHON_EXE% "%LM_SCRIPT%" --check >nul 2>nul
 if %errorlevel% equ 0 (
     echo [OK] MAY TINH DA DUOC KICH HOAT BAN QUYEN HOP LE!
     echo.
@@ -148,8 +161,7 @@ echo  CAN KICH HOAT BAN QUYEN DE SU DUNG SKILL
 echo --------------------------------------------------------------------
 echo.
 
-:: Lấy Machine ID và tự động copy vào clipboard
-%PYTHON_EXE% "%~dp0scripts\license_manager.py" --machine-id
+%PYTHON_EXE% "%LM_SCRIPT%" --machine-id
 
 echo.
 echo ====================================================================
@@ -163,7 +175,7 @@ echo.
 set /p "USER_KEY=👉 Dan ma License Key vao day roi bam Enter (hoac Enter de bo qua): "
 if not "%USER_KEY%"=="" (
     echo.
-    %PYTHON_EXE% "%~dp0scripts\license_manager.py" --activate "%USER_KEY%"
+    %PYTHON_EXE% "%LM_SCRIPT%" --activate "%USER_KEY%"
     if %errorlevel% equ 0 (
         echo.
         echo ====================================================================

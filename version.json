@@ -1,11 +1,27 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "2.6.0",
-  "release_date": "2026-09-28",
-  "description": "Skill tạo đề thi Toán, Vật lý, Hóa học tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt, hình học 3D, bảng biểu Table Grid nguyên bản",
+  "version": "2.8.0",
+  "release_date": "2026-09-30",
+  "description": "Skill tạo đề thi Toán, Vật lý, Hóa học tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt, hệ sinh thái vẽ hình toàn diện 98%+ (37 hàm Matplotlib + 80 mẫu TikZ Engine 300 DPI)",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "2.8.0": [
+      "Mở rộng toàn diện hệ thống vẽ hình Toán & Vật lý (Lớp 6 - 12) đạt độ bao phủ >=98% tất cả dạng bài có hình",
+      "Bổ sung 16 hàm Python Matplotlib mới (tổng 37 hàm): hàm mũ/log, biến đổi |f(x)| & f(|x|), biểu đồ thống kê (cột tần số, quạt tròn), trục số nghiệm BPT, hệ vectơ Oxy, so sánh 2 hàm tích phân, giao thoa sóng, phân rã hạt nhân, conic sections (elip/hypebol), ném xiên parabol, tổng Riemann tích phân, đường sức điện trường 2 điện tích, lực Lorentz bàn tay trái, đồ thị cực r=f(theta), thiết diện 3D hình chóp",
+      "Chuẩn hóa mỹ thuật đồ họa 450 DPI (Times New Roman, STIX Math), nâng cao mũi tên véc-tơ (0.18*h) chống dính chữ, chống đè nét vẽ (anti-collision) tuyệt đối",
+      "Đậm hóa ký hiệu Đạo hàm (y', f'(x), y'') và Tích phân (\\mathbf{\\int}_a^b) sắc nét tuyệt đối chuẩn in ấn A4",
+      "Xây dựng Thư Viện Mẫu TikZ 80 mẫu chuẩn hóa (references/tikz_templates.md, 3676 dòng): hình học phẳng Thales/Pythagore/phân giác, đường tròn góc nội tiếp/tâm, hình không gian thiết diện/Oxyz, mạch điện (nối tiếp, song song, Wheatstone), quang học (thấu kính, kính hiển vi), cơ học (ròng rọc, đòn bẩy), nguyên tử Bohr, đồ thị semi-log",
+      "Tích hợp bộ đọc đề đa nguồn (scripts/docx_reader.py) chuyển đổi MathType cũ và OCR ảnh chụp đề thi thành LaTeX",
+      "Bộ kiểm thử tự động (test_figures.py) đạt 54/54 PASS (100% thành công)"
+    ],
+    "2.7.0": [
+      "Tích hợp Bộ máy Render Mã TikZ & LaTeX 300 DPI chuyên sâu (scripts/tikz_renderer.py) với cơ chế Dual-Engine (Local TeX Engine + Cloud Fallback)",
+      "Hỗ trợ đầy đủ các gói đồ họa giáo dục Việt Nam: tkz-tab (Bảng biến thiên THPT Quốc Gia), tkz-euclide (Hình học phẳng), circuitikz (Mạch điện Vật lý), chemfig (Cấu tạo Hóa học), pgfplots (Đồ thị Oxy)",
+      "Tự động nhận diện cú pháp snippet, chuẩn hóa khoảng trắng tkz-tab, bọc node chemfig và standalone template",
+      "Tự động cắt sạch viền trắng (trim whitespace), hỗ trợ xuất trực tiếp vào file Word (MathType OLE và Word Equation) với bố cục 2 cột thông minh",
+      "Bổ sung PyMuPDF (fitz) vào script chẩn đoán cài đặt tự động 1-Click (check_and_setup_env.py và cai_dat_tu_dong.bat)"
+    ],
     "2.6.0": [
       "Mở rộng hỗ trợ toàn diện môn HÓA HỌC (Lớp 10 - 12 & KHTN): Công thức phân tử, ion, phức chất, phương trình 1 chiều và thuận nghịch, nhiệt hóa học, hữu cơ",
       "Chuẩn hóa tên nguyên tố theo chuẩn quốc tế IUPAC GDPT 2018 (font chữ đứng chuẩn, không bị in nghiêng như biến số)",

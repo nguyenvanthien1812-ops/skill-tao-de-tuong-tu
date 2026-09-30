@@ -22,6 +22,7 @@ REQUIRED_PACKAGES = [
     ("PIL", "pillow"),
     ("openpyxl", "openpyxl"),
     ("cryptography", "cryptography"),
+    ("fitz", "pymupdf"),
 ]
 
 OFFICE_XSL_PATHS = [
@@ -56,7 +57,7 @@ def install_package(pip_name):
         return False
 
 def check_and_install_dependencies():
-    print("[1/3] Kiểm tra các thư viện Python chuyên dụng:")
+    print("[1/4] Kiểm tra các thư viện Python chuyên dụng:")
     all_ok = True
     for module_name, pip_name in REQUIRED_PACKAGES:
         try:
@@ -70,7 +71,7 @@ def check_and_install_dependencies():
     return all_ok
 
 def check_microsoft_office():
-    print("\n[2/3] Kiểm tra Microsoft Office & MathType trên máy tính:")
+    print("\n[2/4] Kiểm tra Microsoft Office & MathType trên máy tính:")
     found_xsl = False
     for path in OFFICE_XSL_PATHS:
         if os.path.exists(path):
@@ -94,8 +95,27 @@ def check_microsoft_office():
         print("  [THÔNG TIN] Chưa phát hiện MathType cài tại thư mục chuẩn. Khi mở file Word,")
         print("              ảnh công thức vector WMF vẫn hiển thị chuẩn nét 100%.")
 
+def check_latex_compiler():
+    print("\n[3/4] Kiểm tra trình biên dịch LaTeX & TikZ Engine:")
+    try:
+        from tikz_renderer import find_latex_compiler, is_latex_available
+    except ImportError:
+        try:
+            from scripts.tikz_renderer import find_latex_compiler, is_latex_available
+        except ImportError:
+            find_latex_compiler = lambda: None
+            is_latex_available = lambda: False
+
+    compiler = find_latex_compiler()
+    if compiler:
+        print(f"  [OK] Tìm thấy trình biên dịch LaTeX: {os.path.basename(compiler)}")
+        print("       -> Sẵn sàng render hình vẽ TikZ, tkz-tab, tkz-euclide, circuitikz siêu tốc 300 DPI!")
+    else:
+        print("  [LƯU Ý] Chưa phát hiện pdflatex/xelatex trên máy.")
+        print("          Hệ thống sẽ tự động kích hoạt Cloud Fallback Engine khi render TikZ.")
+
 def check_backend_api():
-    print("\n[3/3] Kiểm tra kết nối tới Máy chủ chuyển đổi MathType OLE:")
+    print("\n[4/4] Kiểm tra kết nối tới Máy chủ chuyển đổi MathType OLE:")
     try:
         req = urllib.request.Request(
             BACKEND_API_HEALTH,
@@ -119,6 +139,7 @@ def main():
     print_banner()
     pkg_status = check_and_install_dependencies()
     check_microsoft_office()
+    check_latex_compiler()
     check_backend_api()
     
     print("\n" + "=" * 65)

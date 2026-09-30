@@ -16,11 +16,24 @@ if "%PYTHON_EXE%"=="" (
 )
 
 if "%PYTHON_EXE%"=="" (
-    echo [!] Chua tim thay Python! Vui long cai Python va tich Add python.exe to PATH.
+    echo [!] Chua tim thay Python! Vui long chay cai_dat_tu_dong.bat truoc.
     pause
     exit /b 1
 )
 
-%PYTHON_EXE% "%~dp0scripts\license_manager.py" --machine-id
+set "LM_SCRIPT="
+if exist "%~dp0scripts\license_manager.py" (
+    set "LM_SCRIPT=%~dp0scripts\license_manager.py"
+) else if exist "%~dp0.agents\skills\tao-de-toan-tuong-tu\scripts\license_manager.py" (
+    set "LM_SCRIPT=%~dp0.agents\skills\tao-de-toan-tuong-tu\scripts\license_manager.py"
+)
+
+if "%LM_SCRIPT%"=="" (
+    echo [X] Khong tim thay script license_manager.py!
+    pause
+    exit /b 1
+)
+
+%PYTHON_EXE% "%LM_SCRIPT%" --machine-id
 echo.
 pause

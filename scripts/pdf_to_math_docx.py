@@ -32,11 +32,52 @@ from docx.oxml.ns import qn
 try:
     from .docx_math_builder import (
         BACKEND_API_URL, latex_to_omml, add_math_content,
-        _remove_table_borders, set_cell_margins, add_side_by_side_question
+        _remove_table_borders, set_cell_margins, add_side_by_side_question,
+        _get_license_token, _get_machine_id_safe
     )
 except ImportError:
     # Nếu chạy standalone script
     BACKEND_API_URL = 'https://latex2mathtypeweb.onrender.com/api/convert-docx'
+    def _get_license_token():
+        try:
+            lf = Path(__file__).parent.parent / "license.key"
+            return lf.read_text(encoding="utf-8").strip() if lf.exists() else ""
+        except Exception:
+            return ""
+    def _get_machine_id_safe():
+        try:
+            _d = os.path.dirname(os.path.abspath(__file__))
+            if _d not in sys.path:
+                sys.path.insert(0, _d)
+            from license_manager import get_machine_id
+            return get_machine_id()
+        except Exception:
+            return ""
+
+# ─── LỚP A: HARD-LOCK LICENSE ────────────────────────────────────────────────
+def _require_license():
+    try:
+        _d = os.path.dirname(os.path.abspath(__file__))
+        if _d not in sys.path:
+            sys.path.insert(0, _d)
+        from license_manager import check_current_license
+        ok, payload, err = check_current_license()
+        if not ok:
+            raise PermissionError(
+                "\n╔══════════════════════════════════════════════════════════╗\n"
+                "║     ⛔  SKILL CHƯA ĐƯỢC KÍCH HOẠT BẢN QUYỀN!           ║\n"
+                "╠══════════════════════════════════════════════════════════╣\n"
+                f"║  Lý do: {err[:50]:<50} ║\n"
+                "╠══════════════════════════════════════════════════════════╣\n"
+                "║  Chạy KICH_HOAT_BAN_QUYEN.bat để kích hoạt license.    ║\n"
+                "╚══════════════════════════════════════════════════════════╝"
+            )
+        return payload
+    except ImportError:
+        return {}
+# ─────────────────────────────────────────────────────────────────────────────
+
+
 
 def trim_whitespace(im, bg_color=(255, 255, 255), pad=15):
     """Cắt bỏ viền trắng thừa xung quanh hình vẽ minh họa."""
@@ -66,17 +107,40 @@ def extract_pages_at_300dpi(pdf_path, output_dir):
     return page_paths
 
 def convert_to_mathtype_ole(in_path, out_path, api_url=BACKEND_API_URL, timeout=120):
-    """Chuyển đổi file DOCX nền chứa $LaTeX$ sang Word MathType OLE nguyên bản."""
+    """
+    Chuyển đổi file DOCX nền chứa $LaTeX$ sang Word MathType OLE nguyên bản.
+    [Lớp A] Yêu cầu license hợp lệ.
+    [Lớp E] Gửi kèm license_key + machine_id lên backend để xác thực.
+    """
+    # ─── LỚP A ───────────────────────────────────────────────────────────────
+    _require_license()
+    # ─────────────────────────────────────────────────────────────────────────
     print(f"[*] Đang gửi {os.path.basename(in_path)} tới Backend MathType Server...")
     boundary = uuid.uuid4().hex
     headers = {'Content-Type': f'multipart/form-data; boundary={boundary}'}
     with open(in_path, 'rb') as f:
         file_bytes = f.read()
+
+    # ─── LỚP E: Đính kèm thông tin license vào request ─────────────────────
+    license_token = _get_license_token()
+    machine_id    = _get_machine_id_safe()
+    # ────────────────────────────────────────────────────────────────────────
+
     body = bytearray()
     body.extend(f'--{boundary}\r\n'.encode('utf-8'))
     body.extend(f'Content-Disposition: form-data; name="file"; filename="{os.path.basename(in_path)}"\r\n'.encode('utf-8'))
     body.extend(b'Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document\r\n\r\n')
     body.extend(file_bytes)
+
+    if license_token:
+        body.extend(f'\r\n--{boundary}\r\n'.encode('utf-8'))
+        body.extend(b'Content-Disposition: form-data; name="license_key"\r\n\r\n')
+        body.extend(license_token.encode('utf-8'))
+    if machine_id:
+        body.extend(f'\r\n--{boundary}\r\n'.encode('utf-8'))
+        body.extend(b'Content-Disposition: form-data; name="machine_id"\r\n\r\n')
+        body.extend(machine_id.encode('utf-8'))
+
     body.extend(f'\r\n--{boundary}--\r\n'.encode('utf-8'))
     req = urllib.request.Request(api_url, data=body, headers=headers, method='POST')
     try:
@@ -90,6 +154,7 @@ def convert_to_mathtype_ole(in_path, out_path, api_url=BACKEND_API_URL, timeout=
         print(f"[Lỗi] Backend API không phản hồi: {e}")
         return False
     return False
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Chuyển đổi đề thi PDF sang Word chuẩn MathType OLE và Word Equation")

@@ -38,3 +38,5 @@ bo_*_ma_de*/
 .DS_Store
 Thumbs.db
 desktop.ini
+test_output_figures/
+

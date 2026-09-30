@@ -4,13 +4,11 @@ title Cap Nhat Tu Dong - Skill Tao De Toan ^& Vat Ly
 
 echo.
 echo ====================================================================
-echo        CẬP NHẬT TỰ ĐỘNG - SKILL TẠO ĐỀ TOÁN ^& VẬT LÝ
+echo        CẬP NHẬT TỰ ĐỘNG - SKILL TẠO ĐỀ TOÁN, LÝ, HÓA
 echo ====================================================================
 echo.
 
 set "PYTHON_EXE="
-
-:: Tìm kiếm Python trên máy
 py -c "import sys" >nul 2>nul && set "PYTHON_EXE=py"
 if "%PYTHON_EXE%"=="" python -c "import sys" >nul 2>nul && set "PYTHON_EXE=python"
 if "%PYTHON_EXE%"=="" (
@@ -31,8 +29,21 @@ if "%PYTHON_EXE%"=="" (
     exit /b 1
 )
 
+set "UP_SCRIPT="
+if exist "%~dp0scripts\updater.py" (
+    set "UP_SCRIPT=%~dp0scripts\updater.py"
+) else if exist "%~dp0.agents\skills\tao-de-toan-tuong-tu\scripts\updater.py" (
+    set "UP_SCRIPT=%~dp0.agents\skills\tao-de-toan-tuong-tu\scripts\updater.py"
+)
+
+if "%UP_SCRIPT%"=="" (
+    echo [X] Khong tim thay script updater.py!
+    pause
+    exit /b 1
+)
+
 echo [*] Dang kiem tra ban cap nhat moi nhat...
-"%PYTHON_EXE%" "%~dp0scripts\updater.py"
+"%PYTHON_EXE%" "%UP_SCRIPT%"
 
 echo.
 pause

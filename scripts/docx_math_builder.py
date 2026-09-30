@@ -6,11 +6,72 @@ Hỗ trợ: Xuất bản Đề Học Sinh, Lời Giải Chi Tiết, và dọn d�
 """
 
 import os
+import sys
 import uuid
 import tempfile
 import urllib.request
 import docx
 from docx import Document
+
+# ─── BẢO MẬT LỚP A: HARD-LOCK LICENSE ─────────────────────────────────────────
+def _require_license():
+    """Kiểm tra license bắt buộc trước khi thực thi pipeline xuất đề thi."""
+    try:
+        _scripts_dir = os.path.dirname(os.path.abspath(__file__))
+        if _scripts_dir not in sys.path:
+            sys.path.insert(0, _scripts_dir)
+        from license_manager import check_current_license, get_machine_id as _get_mid
+        ok, payload, err = check_current_license()
+        if not ok:
+            raise PermissionError(
+                "\n╔══════════════════════════════════════════════════════════╗\n"
+                "║     ⛔  SKILL CHƯA ĐƯỢC KÍCH HOẠT BẢN QUYỀN!           ║\n"
+                "╠══════════════════════════════════════════════════════════╣\n"
+                f"║  Lý do: {err[:50]:<50} ║\n"
+                "╠══════════════════════════════════════════════════════════╣\n"
+                "║  Bước 1: Chạy LAY_MA_MAY.bat → copy mã máy             ║\n"
+                "║  Bước 2: Gửi mã máy cho tác giả để nhận License Key    ║\n"
+                "║  Bước 3: Chạy KICH_HOAT_BAN_QUYEN.bat → dán Key vào   ║\n"
+                "╚══════════════════════════════════════════════════════════╝"
+        return payload
+    except Exception as e:
+        if isinstance(e, PermissionError):
+            raise e
+        raise PermissionError(
+            f"\n╔══════════════════════════════════════════════════════════╗\n"
+            f"║     ⛔  SKILL CHƯA ĐƯỢC KÍCH HOẠT BẢN QUYỀN!           ║\n"
+            f"╠══════════════════════════════════════════════════════════╣\n"
+            f"║  Lý do: Lỗi xác minh license ({str(e)[:30]})           ║\n"
+            f"╠══════════════════════════════════════════════════════════╣\n"
+            f"║  Bước 1: Chạy LAY_MA_MAY.bat → copy mã máy             ║\n"
+            f"║  Bước 2: Gửi mã máy cho tác giả để nhận License Key    ║\n"
+            f"║  Bước 3: Chạy KICH_HOAT_BAN_QUYEN.bat → dán Key vào   ║\n"
+            f"╚══════════════════════════════════════════════════════════╝"
+        )
+
+def _get_license_token() -> str:
+    """Lấy license key raw để gửi kèm lên backend API (Lớp E)."""
+    try:
+        _scripts_dir = os.path.dirname(os.path.abspath(__file__))
+        from pathlib import Path
+        skill_root = Path(_scripts_dir).parent
+        lf = skill_root / "license.key"
+        if lf.exists():
+            return lf.read_text(encoding="utf-8").strip()
+    except Exception:
+        pass
+    return ""
+
+def _get_machine_id_safe() -> str:
+    """Lấy machine_id để gửi kèm lên backend API (Lớp E)."""
+    try:
+        _scripts_dir = os.path.dirname(os.path.abspath(__file__))
+        if _scripts_dir not in sys.path:
+            sys.path.insert(0, _scripts_dir)
+        from license_manager import get_machine_id
+        return get_machine_id()
+    except Exception:
+        return ""
 from docx.shared import Inches, Pt, Cm, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT, WD_ALIGN_VERTICAL
@@ -382,6 +443,7 @@ def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path
                                          api_url=BACKEND_API_URL, timeout=120):
     """
     Gửi DOCX chứa $LaTeX$ lên backend → nhận về MathType OLE nguyên bản.
+    [Lớp E] Gửi kèm license_key + machine_id để server xác thực bản quyền.
     Trả về True nếu thành công, False nếu thất bại.
     """
     boundary = uuid.uuid4().hex
@@ -389,12 +451,29 @@ def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path
     with open(base_tex_docx_path, 'rb') as f:
         file_bytes = f.read()
 
+    # ─── LỚP E: Đính kèm thông tin license vào request ─────────────────────
+    license_token = _get_license_token()
+    machine_id    = _get_machine_id_safe()
+    # ────────────────────────────────────────────────────────────────────────
+
     body = bytearray()
     body.extend(f'--{boundary}\r\n'.encode())
     body.extend(f'Content-Disposition: form-data; name="file"; filename="{os.path.basename(base_tex_docx_path)}"\r\n'.encode())
     body.extend(b'Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document\r\n\r\n')
     body.extend(file_bytes)
+
+    # Thêm 2 trường license vào multipart body
+    if license_token:
+        body.extend(f'\r\n--{boundary}\r\n'.encode())
+        body.extend(b'Content-Disposition: form-data; name="license_key"\r\n\r\n')
+        body.extend(license_token.encode('utf-8'))
+    if machine_id:
+        body.extend(f'\r\n--{boundary}\r\n'.encode())
+        body.extend(b'Content-Disposition: form-data; name="machine_id"\r\n\r\n')
+        body.extend(machine_id.encode('utf-8'))
+
     body.extend(f'\r\n--{boundary}--\r\n'.encode())
+
 
     req = urllib.request.Request(api_url, data=bytes(body), headers=headers, method='POST')
     try:
@@ -422,8 +501,12 @@ def build_and_export(exam_data, output_dir, exam_code,
       3. [code]_WORD_EQ.docx          – Dự phòng Word Equation
     Tự động dọn dẹp file tạm trung gian.
     """
+    # ─── LỚP A: Kiểm tra bản quyền bắt buộc ────────────────────────────────
+    _require_license()
+    # ────────────────────────────────────────────────────────────────────────
     os.makedirs(output_dir, exist_ok=True)
     results = {}
+
 
     # Build bản đề học sinh (TeX nền → Backend OLE)
     tmp_student = os.path.join(tempfile.gettempdir(), f'_tmp_student_{exam_code}_{uuid.uuid4().hex[:8]}.docx')
