@@ -46,10 +46,23 @@ Skill này tự động hóa toàn bộ quy trình biên soạn đề kiểm tra
 
 Khi nhận được **BẤT KỲ YÊU CẦU NÀO** từ người dùng (tạo đề tương tự, làm đề thi, câu hỏi trắc nghiệm, giải toán, vẽ hình, xuất word):
 
-1. **Kiểm tra sự tồn tại của file `license.key`**:
-   - Kiểm tra file `license.key` trong thư mục của skill này (cùng thư mục với `SKILL.md`).
-   - Nếu có thể chạy lệnh terminal, chạy: `python "<ĐƯỜNG_DẪN_SKILL>/scripts/license_manager.py" --check`.
-2. **Nếu KHÔNG CÓ file `license.key` hoặc license CHƯA HỢP LỆ:**
+1. **Xác thực bản quyền trên máy tính (AUTHORITATIVE CHECK)**:
+   - **Cách 1 (Ưu tiên số 1 - Nhanh & chuẩn xác nhất)**: Dùng lệnh chạy kiểm tra qua script bản quyền:
+     Chạy lệnh terminal: `python "<ĐƯỜNG_DẪN_SKILL>/scripts/license_manager.py" --check` (hoặc kiểm tra tại `%USERPROFILE%/.gemini/config/skills/tao-de-toan-tuong-tu/scripts/license_manager.py`).
+     Nếu lệnh trả về mã exit code 0 (`HỢP LỆ`): License đã được kích hoạt thành công trên máy tính, **LẬP TỨC TIẾN HÀNH BƯỚC 1 VÀ TẠO ĐỀ NGAY**, tuyệt đối không chặn hay báo lỗi!
+   - **Cách 2 (Kiểm tra sự tồn tại của file `license.key`)**:
+     Kiểm tra file `license.key` tại một trong các vị trí sau:
+     + Trong thư mục của skill này (cùng thư mục với `SKILL.md` này).
+     + Thư mục toàn cục Antigravity: `%USERPROFILE%/.gemini/config/skills/tao-de-toan-tuong-tu/license.key`
+     + Thư mục người dùng: `%USERPROFILE%/.gemini/license.key`
+     + Thư mục làm việc hiện tại (workspace root hoặc thư mục con `tao-de-toan-tuong-tu/license.key`).
+     👉 **Nếu tìm thấy file `license.key` ở BẤT KỲ VỊ TRÍ NÀO TRÊN**, coi như đã kích hoạt thành công và tiến hành tạo đề ngay!
+   - **Cách 3 (Nếu người dùng dán trực tiếp mã License Key vào khung chat)**:
+     + Kích hoạt ngay bằng lệnh: `python "<ĐƯỜNG_DẪN_SKILL>/scripts/license_manager.py" --activate "<MÃ_KEY>"`
+     + Hoặc tạo file `license.key` với nội dung chuỗi key đó tại cả thư mục skill và thư mục `%USERPROFILE%/.gemini/config/skills/tao-de-toan-tuong-tu/license.key`.
+     + Sau đó tiến hành tạo đề ngay cho người dùng!
+
+2. **Nếu và chỉ nếu TẤT CẢ các bước kiểm tra trên đều thất bại (hoàn toàn không có file `license.key` và lệnh --check báo lỗi):**
    - **TUYỆT ĐỐI NGHIÊM CẤM:** Không được sinh bất kỳ câu hỏi nào ra khung chat, không được soạn đề thi, không được giải toán, không được viết code, không được xuất file Word hay vẽ hình.
    - **CHỈ ĐƯỢC PHÉP TRẢ LỜI DUY NHẤT thông báo sau:**
      > "⛔ **SKILL CHƯA ĐƯỢC KÍCH HOẠT BẢN QUYỀN TRÊN MÁY TÍNH NÀY!**  
@@ -57,10 +70,10 @@ Khi nhận được **BẤT KỲ YÊU CẦU NÀO** từ người dùng (tạo đ
      > Để sử dụng phần mềm tạo đề thi, thầy/cô vui lòng:  
      > 1. Nhấp đúp vào file **`LAY_MA_MAY.bat`** trong thư mục phần mềm để lấy Mã máy (Machine ID).  
      > 2. Gửi Mã máy cho tác giả để nhận License Key bản quyền.  
-     > 3. Nhấp đúp vào file **`KICH_HOAT_BAN_QUYEN.bat`** để dán Key kích hoạt và sử dụng vĩnh viễn."
-   - **DỪNG TOÀN BỘ TIẾN TRÌNH NGAY LẬP TỨC!** Không trả lời thêm bất kỳ nội dung đề thi nào.
+     > 3. Nhấp đúp vào file **`KICH_HOAT_BAN_QUYEN.bat`** để dán Key kích hoạt và sử dụng vĩnh viễn (hoặc gửi trực tiếp mã License Key vào khung chat này để em kích hoạt giúp thầy/cô)."
+   - **DỪNG TIẾN TRÌNH NGAY LẬP TỨC!** Không trả lời thêm bất kỳ nội dung đề thi nào.
 
-> Chỉ khi nào license đã được kích hoạt hợp lệ (`license.key` tồn tại và hợp lệ) thì mới được tiếp tục thực hiện các Bước 1, 2, 3 bên dưới!
+> Chỉ khi nào license đã được kích hoạt hợp lệ thì mới được tiếp tục thực hiện các Bước 1, 2, 3 bên dưới!
 
 ---
 

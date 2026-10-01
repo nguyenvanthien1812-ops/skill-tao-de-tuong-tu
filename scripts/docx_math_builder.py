@@ -53,11 +53,21 @@ def _get_license_token() -> str:
     """Lấy license key raw để gửi kèm lên backend API (Lớp E)."""
     try:
         _scripts_dir = os.path.dirname(os.path.abspath(__file__))
+        if _scripts_dir not in sys.path:
+            sys.path.insert(0, _scripts_dir)
+        from license_manager import get_license_token
+        t = get_license_token()
+        if t:
+            return t
+    except Exception:
+        pass
+    try:
         from pathlib import Path
-        skill_root = Path(_scripts_dir).parent
-        lf = skill_root / "license.key"
-        if lf.exists():
-            return lf.read_text(encoding="utf-8").strip()
+        for p in [Path(__file__).resolve().parent.parent / "license.key",
+                  Path.home() / ".gemini" / "config" / "skills" / "tao-de-toan-tuong-tu" / "license.key",
+                  Path.home() / ".gemini" / "license.key"]:
+            if p.exists():
+                return p.read_text(encoding="utf-8").strip()
     except Exception:
         pass
     return ""

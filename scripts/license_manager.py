@@ -38,8 +38,60 @@ except ImportError:
         HAS_CRYPTO = False
 
 # ─── CẤU HÌNH ────────────────────────────────────────────────────────────────
-SKILL_DIR    = Path(__file__).parent.parent  # Thư mục gốc của skill
-LICENSE_FILE = SKILL_DIR / "license.key"     # File license kích hoạt cục bộ
+SKILL_DIR    = Path(__file__).resolve().parent.parent  # Thư mục gốc của skill
+SKILL_NAME   = "tao-de-toan-tuong-tu"
+
+def get_all_license_paths() -> list[Path]:
+    """
+    Trả về danh sách tất cả các vị trí có thể lưu hoặc kiểm tra license.key:
+    1. Thư mục cục bộ của skill (nơi chứa script này)
+    2. Thư mục global Google Antigravity config (%USERPROFILE%/.gemini/config/skills/tao-de-toan-tuong-tu)
+    3. Thư mục global Antigravity builtin (%USERPROFILE%/.gemini/antigravity/skills/tao-de-toan-tuong-tu)
+    4. Thư mục người dùng toàn cục (%USERPROFILE%/.gemini/license.key)
+    5. Thư mục làm việc hiện tại (cwd) và các cấp thư mục cha/con
+    """
+    paths = []
+    
+    # 1. Thư mục skill hiện tại
+    paths.append(SKILL_DIR / "license.key")
+    
+    # 2. Thư mục người dùng toàn cục trên Windows/macOS/Linux
+    try:
+        user_home = Path.home()
+        paths.append(user_home / ".gemini" / "config" / "skills" / SKILL_NAME / "license.key")
+        paths.append(user_home / ".gemini" / "antigravity" / "skills" / SKILL_NAME / "license.key")
+        paths.append(user_home / ".gemini" / "license.key")
+    except Exception:
+        pass
+        
+    # 3. Thư mục làm việc hiện tại (cwd) và thư mục cha
+    try:
+        cwd = Path.cwd().resolve()
+        paths.append(cwd / "license.key")
+        paths.append(cwd / SKILL_NAME / "license.key")
+        paths.append(cwd / ".agents" / "skills" / SKILL_NAME / "license.key")
+        if cwd != cwd.parent:
+            paths.append(cwd.parent / "license.key")
+            paths.append(cwd.parent / SKILL_NAME / "license.key")
+    except Exception:
+        pass
+        
+    # Khử trùng lặp
+    unique_paths = []
+    seen = set()
+    for p in paths:
+        try:
+            resolved = p.resolve()
+            if resolved not in seen:
+                seen.add(resolved)
+                unique_paths.append(p)
+        except Exception:
+            if p not in unique_paths:
+                unique_paths.append(p)
+                
+    return unique_paths
+
+LICENSE_FILE = SKILL_DIR / "license.key"     # Vị trí mặc định
 
 # ⚠️  PUBLIC KEY được nhúng vào đây (Tác giả paste public_key.pem vào đây)
 # Giáo viên KHÔNG THỂ dùng public key này để TẠO license, chỉ để XÁC MINH.
@@ -55,8 +107,6 @@ EQIDAQAB
 
 # URL danh sách license bị thu hồi (tác giả cập nhật trên GitHub khi cần)
 REVOCATION_URL = "https://raw.githubusercontent.com/nguyenvanthien1812-ops/skill-tao-de-tuong-tu/main/revoked.json"
-
-SKILL_NAME = "tao-de-toan-tuong-tu"
 
 
 # ─── LẤY MACHINE ID ──────────────────────────────────────────────────────────
@@ -153,21 +203,66 @@ def verify_license_key(license_key: str) -> tuple[bool, dict, str]:
 
 
 def check_revocation(license_id: str) -> bool:
-    """Kiểm tra online xem license có bị thu hồi không. Bỏ qua nếu offline."""
+    """Kiểm tra online xem license có bị thu hồi không. Bỏ qua nếu offline hoặc mạng chậm."""
     try:
         import urllib.request
         req = urllib.request.Request(REVOCATION_URL, headers={"User-Agent": "license-checker/2.0"})
-        with urllib.request.urlopen(req, timeout=5) as resp:
+        with urllib.request.urlopen(req, timeout=1.5) as resp:
             revoked_list = json.loads(resp.read().decode("utf-8"))
         return license_id in revoked_list
     except Exception:
-        return False  # Offline → bỏ qua kiểm tra thu hồi
+        return False  # Offline hoặc timeout → bỏ qua kiểm tra thu hồi
+
+
+def get_license_token() -> str:
+    """Lấy chuỗi license key raw từ bất kỳ vị trí hợp lệ nào."""
+    for p in get_all_license_paths():
+        if p.exists():
+            try:
+                t = p.read_text(encoding="utf-8").strip()
+                if t:
+                    return t
+            except Exception:
+                continue
+    return ""
+
+
+def sync_skill_to_antigravity(license_content: str = None):
+    """Tự động đồng bộ toàn bộ file skill vào Antigravity global config."""
+    try:
+        import shutil
+        target_dir = Path.home() / ".gemini" / "config" / "skills" / SKILL_NAME
+        target_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Nếu đang chạy từ chính target_dir thì không cần copy lại code
+        if SKILL_DIR.resolve() != target_dir.resolve():
+            for item in SKILL_DIR.iterdir():
+                if item.name.startswith(".") or item.name in {"__pycache__", "test_output_figures", "dist"}:
+                    continue
+                dest = target_dir / item.name
+                try:
+                    if item.is_dir():
+                        shutil.copytree(item, dest, dirs_exist_ok=True)
+                    else:
+                        shutil.copy2(item, dest)
+                except Exception:
+                    pass
+                    
+        # Đồng bộ license.key
+        if license_content:
+            try:
+                (target_dir / "license.key").write_text(license_content.strip(), encoding="utf-8")
+                (Path.home() / ".gemini" / "license.key").write_text(license_content.strip(), encoding="utf-8")
+            except Exception:
+                pass
+    except Exception:
+        pass
 
 
 # ─── KÍCH HOẠT LICENSE ───────────────────────────────────────────────────────
 
 def activate(license_key: str) -> bool:
-    """Xác minh và lưu license key vào máy."""
+    """Xác minh và lưu license key vào máy ở tất cả các vị trí cần thiết."""
     print("[*] Đang xác minh license key ...")
     is_valid, payload, error = verify_license_key(license_key)
 
@@ -181,34 +276,70 @@ def activate(license_key: str) -> bool:
         print(f"[✗] License key đã bị TÁC GIẢ THU HỒI.\n    → Liên hệ tác giả để được hỗ trợ.")
         return False
 
-    # Lưu license
-    LICENSE_FILE.write_text(license_key.strip(), encoding="utf-8")
+    clean_key = license_key.strip()
+    
+    # Lưu license vào TẤT CẢ các vị trí khả dụng
+    saved_count = 0
+    for p in get_all_license_paths():
+        try:
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(clean_key, encoding="utf-8")
+            saved_count += 1
+        except Exception:
+            pass
+
+    # Tự động nạp vào Google Antigravity
+    sync_skill_to_antigravity(clean_key)
+
     days_left = (datetime.strptime(payload["expiry"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
                  - datetime.now(timezone.utc)).days
 
     print(f"\n[✓] KÍCH HOẠT THÀNH CÔNG!")
     print(f"    Chào mừng: {payload.get('name', '')} ({payload.get('email', '')})")
     print(f"    Hạn sử dụng: {payload['expiry']} (còn {days_left} ngày)")
-    print(f"    Skill sẵn sàng sử dụng!")
+    print(f"    Đã tự động nạp và đồng bộ vào Google Antigravity!")
+    print(f"    Skill đã sẵn sàng sử dụng 100%!")
     return True
 
 
 def check_current_license() -> tuple[bool, dict, str]:
-    """Đọc và kiểm tra license đã kích hoạt trên máy này."""
-    if not LICENSE_FILE.exists():
-        return False, {}, "Chưa kích hoạt license. Chạy: python scripts/license_manager.py --activate <KEY>"
+    """Đọc và kiểm tra license đã kích hoạt trên máy tính này (quét đa đường dẫn)."""
+    found_key = None
+    found_payload = {}
+    found_path = None
 
-    license_key = LICENSE_FILE.read_text(encoding="utf-8").strip()
-    is_valid, payload, error = verify_license_key(license_key)
+    for p in get_all_license_paths():
+        if p.exists():
+            try:
+                content = p.read_text(encoding="utf-8").strip()
+                if content:
+                    is_valid, payload, err = verify_license_key(content)
+                    if is_valid:
+                        # Kiểm tra thu hồi online
+                        lid = payload.get("license_id", "")
+                        if lid and check_revocation(lid):
+                            p.unlink(missing_ok=True)
+                            return False, payload, "License key đã bị tác giả thu hồi. Liên hệ tác giả để được hỗ trợ."
+                        found_key = content
+                        found_payload = payload
+                        found_path = p
+                        break
+            except Exception:
+                continue
 
-    if is_valid:
-        # Kiểm tra thu hồi (online, không chặn nếu offline)
-        lid = payload.get("license_id", "")
-        if lid and check_revocation(lid):
-            LICENSE_FILE.unlink(missing_ok=True)
-            return False, payload, "License key đã bị tác giả thu hồi. Liên hệ tác giả để được hỗ trợ."
+    if not found_key:
+        return False, {}, "Chưa kích hoạt license. Vui lòng chạy KICH_HOAT_BAN_QUYEN.bat hoặc dán mã bản quyền."
 
-    return is_valid, payload, error
+    # TỰ ĐỘNG ĐỒNG BỘ: Ghi bản quyền sang tất cả các vị trí chưa có
+    for p in get_all_license_paths():
+        try:
+            if not p.exists() or p.read_text(encoding="utf-8").strip() != found_key:
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_text(found_key, encoding="utf-8")
+        except Exception:
+            pass
+
+    return True, found_payload, ""
 
 
 def require_valid_license() -> dict:

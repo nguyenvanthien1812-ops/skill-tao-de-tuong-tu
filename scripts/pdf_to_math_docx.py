@@ -40,10 +40,24 @@ except ImportError:
     BACKEND_API_URL = 'https://latex2mathtypeweb.onrender.com/api/convert-docx'
     def _get_license_token():
         try:
-            lf = Path(__file__).parent.parent / "license.key"
-            return lf.read_text(encoding="utf-8").strip() if lf.exists() else ""
+            _d = os.path.dirname(os.path.abspath(__file__))
+            if _d not in sys.path:
+                sys.path.insert(0, _d)
+            from license_manager import get_license_token
+            t = get_license_token()
+            if t:
+                return t
         except Exception:
-            return ""
+            pass
+        try:
+            for p in [Path(__file__).resolve().parent.parent / "license.key",
+                      Path.home() / ".gemini" / "config" / "skills" / "tao-de-toan-tuong-tu" / "license.key",
+                      Path.home() / ".gemini" / "license.key"]:
+                if p.exists():
+                    return p.read_text(encoding="utf-8").strip()
+        except Exception:
+            pass
+        return ""
     def _get_machine_id_safe():
         try:
             _d = os.path.dirname(os.path.abspath(__file__))

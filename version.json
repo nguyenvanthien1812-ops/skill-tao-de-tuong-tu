@@ -1,11 +1,18 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "2.8.0",
-  "release_date": "2026-09-30",
+  "version": "2.8.1",
+  "release_date": "2026-10-01",
   "description": "Skill tạo đề thi Toán, Vật lý, Hóa học tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt, hệ sinh thái vẽ hình toàn diện 98%+ (37 hàm Matplotlib + 80 mẫu TikZ Engine 300 DPI)",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "2.8.1": [
+      "Khắc phục triệt để lỗi Antigravity không tìm thấy file license.key: Tích hợp cơ chế quét và đồng bộ bản quyền đa đường dẫn (Multi-path auto-sync)",
+      "Tự động đồng bộ hai chiều giữa thư mục giải nén, thư mục Antigravity global (%USERPROFILE%/.gemini/config/skills/tao-de-toan-tuong-tu) và thư mục người dùng (%USERPROFILE%/.gemini/license.key)",
+      "Tự động nạp toàn bộ skill vào Google Antigravity ngay sau khi kích hoạt hoặc cài đặt 1-Click thành công",
+      "Tối ưu tốc độ kiểm tra bản quyền (timeout 1.5s non-blocking, tránh trễ kết nối mạng)",
+      "Bổ sung cơ chế cho phép dán mã License Key trực tiếp trong khung chat Antigravity để kích hoạt tức thì"
+    ],
     "2.8.0": [
       "Mở rộng toàn diện hệ thống vẽ hình Toán & Vật lý (Lớp 6 - 12) đạt độ bao phủ >=98% tất cả dạng bài có hình",
       "Bổ sung 16 hàm Python Matplotlib mới (tổng 37 hàm): hàm mũ/log, biến đổi |f(x)| & f(|x|), biểu đồ thống kê (cột tần số, quạt tròn), trục số nghiệm BPT, hệ vectơ Oxy, so sánh 2 hàm tích phân, giao thoa sóng, phân rã hạt nhân, conic sections (elip/hypebol), ném xiên parabol, tổng Riemann tích phân, đường sức điện trường 2 điện tích, lực Lorentz bàn tay trái, đồ thị cực r=f(theta), thiết diện 3D hình chóp",

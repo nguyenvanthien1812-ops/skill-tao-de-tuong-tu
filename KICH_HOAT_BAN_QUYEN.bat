@@ -42,5 +42,16 @@ if %errorlevel% neq 0 (
 )
 
 %PYTHON_EXE% "%LM_SCRIPT%" --activate
+if %errorlevel% equ 0 (
+    echo.
+    echo [*] Dang tu dong dong bo ban quyen vao Google Antigravity...
+    set "AG_TARGET=%USERPROFILE%\.gemini\config\skills\tao-de-toan-tuong-tu"
+    if not exist "%AG_TARGET%" mkdir "%AG_TARGET%"
+    xcopy "%~dp0*" "%AG_TARGET%\" /E /I /Y /Q >nul 2>nul
+    if exist "%~dp0license.key" copy /Y "%~dp0license.key" "%AG_TARGET%\license.key" >nul 2>nul
+    if exist "%~dp0license.key" copy /Y "%~dp0license.key" "%USERPROFILE%\.gemini\license.key" >nul 2>nul
+    if exist "%AG_TARGET%\license.key" copy /Y "%AG_TARGET%\license.key" "%USERPROFILE%\.gemini\license.key" >nul 2>nul
+    echo [OK] Da dong bo vao Antigravity! Ban co the bat dau dung ngay.
+)
 echo.
 pause

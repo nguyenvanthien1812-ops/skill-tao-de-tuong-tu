@@ -146,13 +146,7 @@ echo.
 %PYTHON_EXE% "%LM_SCRIPT%" --check >nul 2>nul
 if %errorlevel% equ 0 (
     echo [OK] MAY TINH DA DUOC KICH HOAT BAN QUYEN HOP LE!
-    echo.
-    echo ====================================================================
-    echo   [HOAN TAT] MOI THU DA SAN SANG! BAN CO THE BAT DAU DUNG SKILL.
-    echo ====================================================================
-    echo.
-    pause
-    exit /b 0
+    goto :DEPLOY_ANTIGRAVITY
 )
 
 :: Nếu chưa kích hoạt bản quyền
@@ -177,13 +171,7 @@ if not "%USER_KEY%"=="" (
     echo.
     %PYTHON_EXE% "%LM_SCRIPT%" --activate "%USER_KEY%"
     if %errorlevel% equ 0 (
-        echo.
-        echo ====================================================================
-        echo   [HOAN TAT] KICH HOAT THANH CONG! SKILL DA SAN SANG SU DUNG.
-        echo ====================================================================
-        echo.
-        pause
-        exit /b 0
+        goto :DEPLOY_ANTIGRAVITY
     )
 )
 
@@ -192,3 +180,25 @@ echo [i] Sau khi co ma License Key tu tac gia, ban chi can:
 echo     Nhap dup vao file "KICH_HOAT_BAN_QUYEN.bat" de kich hoat bat cu luc nao.
 echo.
 pause
+exit /b 0
+
+:DEPLOY_ANTIGRAVITY
+echo.
+echo [*] Dang tu dong nap va dong bo skill vao Google Antigravity...
+set "AG_TARGET=%USERPROFILE%\.gemini\config\skills\tao-de-toan-tuong-tu"
+if not exist "%AG_TARGET%" mkdir "%AG_TARGET%"
+xcopy "%~dp0*" "%AG_TARGET%\" /E /I /Y /Q >nul 2>nul
+if exist "%~dp0license.key" copy /Y "%~dp0license.key" "%AG_TARGET%\license.key" >nul 2>nul
+if exist "%~dp0license.key" copy /Y "%~dp0license.key" "%USERPROFILE%\.gemini\license.key" >nul 2>nul
+if exist "%AG_TARGET%\license.key" copy /Y "%AG_TARGET%\license.key" "%USERPROFILE%\.gemini\license.key" >nul 2>nul
+
+echo.
+echo ====================================================================
+echo   🎉 [HOAN TAT 100%%] CAI DAT VA DONG BO THANH CONG!
+echo.
+echo   Moi thu da san sang! Ban chi can mo phan mem Google Antigravity
+echo   va nhan tin de tao de thi ngay lap tuc!
+echo ====================================================================
+echo.
+pause
+exit /b 0
