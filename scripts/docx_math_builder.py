@@ -33,6 +33,7 @@ def _require_license():
                 "║  Bước 2: Gửi mã máy cho tác giả để nhận License Key    ║\n"
                 "║  Bước 3: Chạy KICH_HOAT_BAN_QUYEN.bat → dán Key vào   ║\n"
                 "╚══════════════════════════════════════════════════════════╝"
+            )
         return payload
     except Exception as e:
         if isinstance(e, PermissionError):
@@ -447,6 +448,170 @@ def _set_cell_center_bold(cell, text, bg_color=None, text_color=None):
         tcPr.append(shd)
 
 
+# ─── KIỂM ĐỊNH TÍNH TOÀN VẸN OLE (INTEGRITY AUDIT) ───────────────────────────
+
+def audit_word_ole_file(docx_path):
+    """
+    Kiểm định tính toàn vẹn của tệp Word MathType OLE:
+    - Đếm số lượng đối tượng OLE thực sự (word/embeddings/oleObject*.bin).
+    - Quét toàn bộ văn bản (paragraphs và tables) để phát hiện ký tự '$' chưa chuyển đổi.
+    Trả về dict: {
+        'ok': bool,
+        'ole_count': int,
+        'residual_count': int,
+        'residuals': list,
+        'file_size': int
+    }
+    """
+    if not os.path.exists(docx_path):
+        return {'ok': False, 'ole_count': 0, 'residual_count': 0, 'residuals': [], 'file_size': 0, 'error': 'File not found'}
+
+    file_size = os.path.getsize(docx_path)
+    ole_count = 0
+    try:
+        import zipfile
+        with zipfile.ZipFile(docx_path, 'r') as zf:
+            ole_objects = [n for n in zf.namelist() if 'embeddings/oleObject' in n]
+            ole_count = len(ole_objects)
+    except Exception as e:
+        return {'ok': False, 'ole_count': 0, 'residual_count': 0, 'residuals': [], 'file_size': file_size, 'error': str(e)}
+
+    residuals = []
+    try:
+        doc = Document(docx_path)
+        for i, p in enumerate(doc.paragraphs):
+            if '$' in p.text:
+                residuals.append(f"p_{i}: {p.text[:60]}")
+        for t_idx, tbl in enumerate(doc.tables):
+            for r_idx, row in enumerate(tbl.rows):
+                for c_idx, cell in enumerate(row.cells):
+                    if '$' in cell.text:
+                        residuals.append(f"tbl_{t_idx}_r{r_idx}_c{c_idx}: {cell.text[:60]}")
+    except Exception as e:
+        residuals.append(f"Lỗi đọc văn bản docx: {e}")
+
+    ok = (ole_count > 0 and len(residuals) == 0)
+    return {
+        'ok': ok,
+        'ole_count': ole_count,
+        'residual_count': len(residuals),
+        'residuals': residuals,
+        'file_size': file_size
+    }
+
+
+# ─── TIỆN ÍCH BẢNG BIỂU & HÌNH ẢNH SƯ PHẠM ──────────────────────────────────
+
+def add_heading_section(doc, text, level=1):
+    """Thêm tiêu đề phân đoạn chuẩn thể thức sư phạm Việt Nam."""
+    p = doc.add_paragraph()
+    p.paragraph_format.keep_with_next = True
+    p.paragraph_format.line_spacing = 1.15
+    if level == 1:
+        p.paragraph_format.space_before = Pt(14)
+        p.paragraph_format.space_after = Pt(6)
+        r = p.add_run(text)
+        r.bold = True
+        r.font.name = 'Times New Roman'
+        r.font.size = Pt(14.5)
+        r.font.color.rgb = RGBColor(192, 57, 43)  # Đỏ đô Bộ GD&ĐT
+    else:
+        p.paragraph_format.space_before = Pt(10)
+        p.paragraph_format.space_after = Pt(4)
+        r = p.add_run(text)
+        r.bold = True
+        r.font.name = 'Times New Roman'
+        r.font.size = Pt(13.5)
+        r.font.color.rgb = RGBColor(26, 82, 118)  # Xanh lam đậm
+    return p
+
+
+def add_styled_table(doc, headers, rows_data, col_widths=None, header_bg="1B4F72", mode='tex'):
+    """
+    Dựng bảng chuẩn Table Grid sư phạm:
+    - Tiêu đề nổi bật với nền màu header_bg và chữ trắng đậm.
+    - Dữ liệu xen kẽ nền trắng và xám nhẹ (#F4F6F7).
+    - Căn lề và khoảng đệm (padding) chuẩn mực.
+    - Hỗ trợ công thức $...$ trong ô bảng (chuyển đổi chuẩn MathType OLE hoặc OMML).
+    """
+    tbl = doc.add_table(rows=len(rows_data) + 1, cols=len(headers))
+    tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
+    tbl.style = 'Table Grid'
+    tbl.autofit = False
+
+    # Header row
+    hdr_cells = tbl.rows[0].cells
+    for j, h_text in enumerate(headers):
+        if col_widths and j < len(col_widths):
+            hdr_cells[j].width = col_widths[j]
+        tcPr = hdr_cells[j]._tc.get_or_add_tcPr()
+        shd = parse_xml(f'<w:shd {docx.oxml.ns.nsdecls("w")} w:fill="{header_bg}"/>')
+        tcPr.append(shd)
+        set_cell_margins(hdr_cells[j], top=140, bottom=140, left=150, right=150)
+        p = hdr_cells[j].paragraphs[0]
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.space_before = Pt(2)
+        p.paragraph_format.space_after = Pt(2)
+        r = p.add_run(h_text)
+        r.bold = True
+        r.font.name = 'Times New Roman'
+        r.font.size = Pt(11)
+        r.font.color.rgb = RGBColor(255, 255, 255)
+
+    # Data rows
+    for i, row in enumerate(rows_data):
+        row_cells = tbl.rows[i + 1].cells
+        bg = "F4F6F7" if i % 2 == 1 else "FFFFFF"
+        for j, val in enumerate(row):
+            if col_widths and j < len(col_widths):
+                row_cells[j].width = col_widths[j]
+            tcPr = row_cells[j]._tc.get_or_add_tcPr()
+            shd = parse_xml(f'<w:shd {docx.oxml.ns.nsdecls("w")} w:fill="{bg}"/>')
+            tcPr.append(shd)
+            set_cell_margins(row_cells[j], top=100, bottom=100, left=140, right=140)
+            p = row_cells[j].paragraphs[0]
+            p.paragraph_format.space_before = Pt(2)
+            p.paragraph_format.space_after = Pt(2)
+            p.paragraph_format.line_spacing = 1.15
+
+            val_str = str(val)
+            if j == 0 and len(val_str) > 15:
+                p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            elif any(c in val_str for c in ['=', '<', '>', '$', '(', ')']):
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            else:
+                p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+
+            add_math_content(p, val_str, mode=mode, font_size=10.5)
+    return tbl
+
+
+def add_centered_image(doc, img_path, width=Inches(4.5), caption=None, mode='tex'):
+    """Chèn hình ảnh kỹ thuật/thí nghiệm căn giữa kèm chú thích chuẩn SGK."""
+    if not img_path or not os.path.exists(img_path):
+        return None
+    p_img = doc.add_paragraph()
+    p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_img.paragraph_format.space_before = Pt(8)
+    p_img.paragraph_format.space_after = Pt(3)
+    p_img.paragraph_format.keep_with_next = True
+    p_img.add_run().add_picture(img_path, width=width)
+
+    if caption:
+        p_cap = doc.add_paragraph()
+        p_cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p_cap.paragraph_format.space_before = Pt(0)
+        p_cap.paragraph_format.space_after = Pt(10)
+        p_cap.paragraph_format.line_spacing = 1.15
+        r_c = p_cap.add_run(caption)
+        r_c.font.name = 'Times New Roman'
+        r_c.bold = True
+        r_c.italic = True
+        r_c.font.size = Pt(11)
+        r_c.font.color.rgb = RGBColor(44, 62, 80)
+    return p_img
+
+
 # ─── BACKEND CONVERTER ───────────────────────────────────────────────────────
 
 def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path,
@@ -454,7 +619,8 @@ def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path
     """
     Gửi DOCX chứa $LaTeX$ lên backend → nhận về MathType OLE nguyên bản.
     [Lớp E] Gửi kèm license_key + machine_id để server xác thực bản quyền.
-    Trả về True nếu thành công, False nếu thất bại.
+    Sau khi tải về, tự động chạy kiểm định tính toàn vẹn (Integrity Audit).
+    Trả về True nếu thành công và hợp lệ, False nếu thất bại.
     """
     boundary = uuid.uuid4().hex
     headers = {'Content-Type': f'multipart/form-data; boundary={boundary}'}
@@ -467,23 +633,21 @@ def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path
     # ────────────────────────────────────────────────────────────────────────
 
     body = bytearray()
-    body.extend(f'--{boundary}\r\n'.encode())
-    body.extend(f'Content-Disposition: form-data; name="file"; filename="{os.path.basename(base_tex_docx_path)}"\r\n'.encode())
+    body.extend(f'--{boundary}\r\n'.encode('utf-8'))
+    body.extend(f'Content-Disposition: form-data; name="file"; filename="{os.path.basename(base_tex_docx_path)}"\r\n'.encode('utf-8'))
     body.extend(b'Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document\r\n\r\n')
     body.extend(file_bytes)
 
-    # Thêm 2 trường license vào multipart body
     if license_token:
-        body.extend(f'\r\n--{boundary}\r\n'.encode())
+        body.extend(f'\r\n--{boundary}\r\n'.encode('utf-8'))
         body.extend(b'Content-Disposition: form-data; name="license_key"\r\n\r\n')
         body.extend(license_token.encode('utf-8'))
     if machine_id:
-        body.extend(f'\r\n--{boundary}\r\n'.encode())
+        body.extend(f'\r\n--{boundary}\r\n'.encode('utf-8'))
         body.extend(b'Content-Disposition: form-data; name="machine_id"\r\n\r\n')
         body.extend(machine_id.encode('utf-8'))
 
-    body.extend(f'\r\n--{boundary}--\r\n'.encode())
-
+    body.extend(f'\r\n--{boundary}--\r\n'.encode('utf-8'))
 
     req = urllib.request.Request(api_url, data=bytes(body), headers=headers, method='POST')
     try:
@@ -491,73 +655,283 @@ def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path
             if resp.status == 200:
                 with open(output_ole_docx_path, 'wb') as f:
                     f.write(resp.read())
+
+                # Tự động chạy kiểm định tính toàn vẹn
+                audit = audit_word_ole_file(output_ole_docx_path)
+                if audit['ok']:
+                    print(f"[Backend OLE] ✓ THÀNH CÔNG: {audit['ole_count']} công thức MathType OLE nguyên bản (0 lỗi ký hiệu)")
+                else:
+                    print(f"[Backend OLE] ⚠️ Cảnh báo kiểm định: ole_count={audit['ole_count']}, residual_$= {audit['residual_count']}")
                 return True
+            else:
+                print(f"[Backend OLE] Server trả về mã HTTP {resp.status}")
     except Exception as e:
-        print(f"[Backend OLE] Lỗi kết nối: {e}")
+        print(f"[Backend OLE] Lỗi kết nối API: {e}")
     return False
+
+
+# ─── NỘI DUNG ĐỀ THI & CHUYÊN ĐỀ CHUẨN GDPT 2018 ───────────────────────────
+
+def _write_exam_body(doc, exam_data, mode='tex', show_answers=False, show_solutions=False):
+    """
+    Viết nội dung toàn bộ đề thi / chuyên đề vào doc chuẩn cấu trúc GDPT 2018:
+    - Phần I: Trắc nghiệm 4 lựa chọn (A, B, C, D)
+    - Phần II: Trắc nghiệm Đúng / Sai (a, b, c, d)
+    - Phần III: Trả lời ngắn (ô điền kết quả)
+    - Phần IV: Tự luận / Bài toán mô hình hóa thực tế
+    - Kèm hình vẽ kỹ thuật (standalone hoặc smart side-by-side) và bảng biểu số liệu (Table Grid).
+    """
+    labels = ['A', 'B', 'C', 'D']
+
+    # 1. TIÊU ĐỀ BÀI HOẶC CHUYÊN ĐỀ (NẾU CÓ)
+    if 'title' in exam_data:
+        p_title = doc.add_paragraph()
+        p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p_title.paragraph_format.space_before = Pt(6)
+        p_title.paragraph_format.space_after = Pt(4)
+        r = p_title.add_run(exam_data['title'])
+        r.bold = True
+        r.font.name = 'Times New Roman'
+        r.font.size = Pt(16)
+        r.font.color.rgb = RGBColor(11, 60, 93)
+
+    if 'subtitle' in exam_data:
+        p_sub = doc.add_paragraph()
+        p_sub.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p_sub.paragraph_format.space_before = Pt(0)
+        p_sub.paragraph_format.space_after = Pt(10)
+        r = p_sub.add_run(exam_data['subtitle'])
+        r.italic = True
+        r.font.name = 'Times New Roman'
+        r.font.size = Pt(12)
+        r.font.color.rgb = RGBColor(90, 90, 90)
+
+    # 2. PHẦN I: TRẮC NGHIỆM 4 PHƯƠNG ÁN
+    part1 = exam_data.get('part1', [])
+    if part1:
+        add_heading_section(doc, f"PHẦN I. Thí sinh trả lời từ câu 1 đến câu {len(part1)}. Mỗi câu hỏi thí sinh chỉ chọn một phương án.", level=1)
+        for i, q in enumerate(part1):
+            q_num = i + 1
+            stem = q.get('stem', '')
+            choices = q.get('choices', [])
+            img = q.get('image') or q.get('image_path')
+            correct_idx = q.get('correct_idx')
+            sol = q.get('solution')
+            is_sbs = q.get('is_side_by_side', False)
+
+            if img and os.path.exists(img) and is_sbs and len(choices) == 4:
+                add_side_by_side_question(
+                    doc=doc,
+                    q_label=f"Câu {q_num}: ",
+                    q_text=stem,
+                    choices=choices,
+                    img_path=img,
+                    mode=mode,
+                    font_size=14
+                )
+            else:
+                p_q = doc.add_paragraph()
+                p_q.paragraph_format.space_before = Pt(6)
+                p_q.paragraph_format.space_after = Pt(3)
+                p_q.paragraph_format.line_spacing = 1.15
+                r_num = p_q.add_run(f"Câu {q_num}: ")
+                r_num.bold = True
+                r_num.font.name = 'Times New Roman'
+                r_num.font.size = Pt(14)
+                add_math_content(p_q, stem, mode=mode, font_size=14)
+
+                if img and os.path.exists(img):
+                    add_centered_image(doc, img, width=Inches(3.8), caption=q.get('image_caption'))
+
+                if choices:
+                    add_aligned_choices(doc, choices, mode=mode)
+
+            # Hiển thị đáp án cho bản giáo viên
+            if show_answers and correct_idx is not None and 0 <= correct_idx < len(labels):
+                p_ans = doc.add_paragraph()
+                p_ans.paragraph_format.space_before = Pt(2)
+                p_ans.paragraph_format.space_after = Pt(2)
+                r_a = p_ans.add_run(f"➤ Chọn đáp án {labels[correct_idx]}")
+                r_a.bold = True
+                r_a.font.name = 'Times New Roman'
+                r_a.font.size = Pt(13)
+                r_a.font.color.rgb = RGBColor(192, 57, 43)
+
+            # Hiển thị lời giải cho bản giáo viên
+            if show_solutions and sol:
+                p_sol = doc.add_paragraph()
+                p_sol.paragraph_format.space_before = Pt(2)
+                p_sol.paragraph_format.space_after = Pt(6)
+                p_sol.paragraph_format.line_spacing = 1.15
+                r_s = p_sol.add_run("Lời giải: ")
+                r_s.bold = True
+                r_s.italic = True
+                r_s.font.name = 'Times New Roman'
+                r_s.font.size = Pt(13)
+                r_s.font.color.rgb = RGBColor(26, 82, 118)
+                add_math_content(p_sol, sol, mode=mode, font_size=13.5)
+
+    # 3. PHẦN II: TRẮC NGHIỆM ĐÚNG/SAI
+    part2 = exam_data.get('part2', [])
+    if part2:
+        add_heading_section(doc, f"PHẦN II. Thí sinh trả lời từ câu 1 đến câu {len(part2)}. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.", level=1)
+        for i, q in enumerate(part2):
+            q_num = i + 1
+            stem = q.get('stem', '')
+            items = q.get('items', [])
+            img = q.get('image') or q.get('image_path')
+            sol = q.get('solution')
+
+            p_q = doc.add_paragraph()
+            p_q.paragraph_format.space_before = Pt(6)
+            p_q.paragraph_format.space_after = Pt(3)
+            p_q.paragraph_format.line_spacing = 1.15
+            r_num = p_q.add_run(f"Câu {q_num}: ")
+            r_num.bold = True
+            r_num.font.name = 'Times New Roman'
+            r_num.font.size = Pt(14)
+            add_math_content(p_q, stem, mode=mode, font_size=14)
+
+            if img and os.path.exists(img):
+                add_centered_image(doc, img, width=Inches(3.8), caption=q.get('image_caption'))
+
+            for item in items:
+                p_item = doc.add_paragraph()
+                p_item.paragraph_format.left_indent = Cm(0.5)
+                p_item.paragraph_format.space_before = Pt(1)
+                p_item.paragraph_format.space_after = Pt(2)
+                p_item.paragraph_format.line_spacing = 1.15
+
+                lbl = item.get('label', 'a') if isinstance(item, dict) else 'a'
+                txt = item.get('text', str(item)) if isinstance(item, dict) else str(item)
+                is_true = item.get('is_true', None) if isinstance(item, dict) else None
+
+                r_l = p_item.add_run(f"{lbl}) ")
+                r_l.bold = True
+                r_l.font.name = 'Times New Roman'
+                r_l.font.size = Pt(14)
+                add_math_content(p_item, txt, mode=mode, font_size=14)
+
+                if show_answers and is_true is not None:
+                    tag = " [Đúng]" if is_true else " [Sai]"
+                    color = RGBColor(26, 130, 60) if is_true else RGBColor(192, 57, 43)
+                    r_t = p_item.add_run(tag)
+                    r_t.bold = True
+                    r_t.font.name = 'Times New Roman'
+                    r_t.font.size = Pt(13)
+                    r_t.font.color.rgb = color
+
+            if show_solutions and sol:
+                p_sol = doc.add_paragraph()
+                p_sol.paragraph_format.space_before = Pt(2)
+                p_sol.paragraph_format.space_after = Pt(6)
+                p_sol.paragraph_format.line_spacing = 1.15
+                r_s = p_sol.add_run("Lời giải chi tiết: ")
+                r_s.bold = True
+                r_s.italic = True
+                r_s.font.name = 'Times New Roman'
+                r_s.font.size = Pt(13)
+                r_s.font.color.rgb = RGBColor(26, 82, 118)
+                add_math_content(p_sol, sol, mode=mode, font_size=13.5)
+
+    # 4. PHẦN III: TRẢ LỜI NGẮN
+    part3 = exam_data.get('part3', [])
+    if part3:
+        add_heading_section(doc, f"PHẦN III. Thí sinh trả lời từ câu 1 đến câu {len(part3)}. Điền kết quả vào ô tương ứng.", level=1)
+        for i, q in enumerate(part3):
+            q_num = i + 1
+            stem = q.get('stem', '')
+            ans = q.get('answer', '')
+            img = q.get('image') or q.get('image_path')
+            sol = q.get('solution')
+
+            p_q = doc.add_paragraph()
+            p_q.paragraph_format.space_before = Pt(6)
+            p_q.paragraph_format.space_after = Pt(3)
+            p_q.paragraph_format.line_spacing = 1.15
+            r_num = p_q.add_run(f"Câu {q_num}: ")
+            r_num.bold = True
+            r_num.font.name = 'Times New Roman'
+            r_num.font.size = Pt(14)
+            add_math_content(p_q, stem, mode=mode, font_size=14)
+
+            if img and os.path.exists(img):
+                add_centered_image(doc, img, width=Inches(3.8), caption=q.get('image_caption'))
+
+            if not show_answers:
+                add_short_answer_box(doc, q_num)
+            else:
+                p_ans = doc.add_paragraph()
+                p_ans.paragraph_format.space_before = Pt(2)
+                p_ans.paragraph_format.space_after = Pt(2)
+                r_a = p_ans.add_run(f"➤ Đáp số: {ans}")
+                r_a.bold = True
+                r_a.font.name = 'Times New Roman'
+                r_a.font.size = Pt(13)
+                r_a.font.color.rgb = RGBColor(26, 130, 60)
+
+            if show_solutions and sol:
+                p_sol = doc.add_paragraph()
+                p_sol.paragraph_format.space_before = Pt(2)
+                p_sol.paragraph_format.space_after = Pt(6)
+                p_sol.paragraph_format.line_spacing = 1.15
+                r_s = p_sol.add_run("Lời giải chi tiết: ")
+                r_s.bold = True
+                r_s.italic = True
+                r_s.font.name = 'Times New Roman'
+                r_s.font.size = Pt(13)
+                r_s.font.color.rgb = RGBColor(26, 82, 118)
+                add_math_content(p_sol, sol, mode=mode, font_size=13.5)
+
+    # 5. PHẦN IV / TỰ LUẬN / BÀI TOÁN THỰC TẾ
+    part4 = exam_data.get('part4', []) or exam_data.get('essay', [])
+    if part4:
+        add_heading_section(doc, "PHẦN IV. TỰ LUẬN VÀ BÀI TOÁN THỰC TẾ", level=1)
+        for i, q in enumerate(part4):
+            q_num = i + 1
+            title = q.get('title', f"Bài toán {q_num}")
+            stem = q.get('stem', '') or q.get('text', '')
+            sub_qs = q.get('questions', [])
+            sol = q.get('solution')
+            img = q.get('image') or q.get('image_path')
+            tbl_data = q.get('table')
+
+            add_heading_section(doc, f"{q_num}. {title}", level=2)
+            if stem:
+                p_stem = doc.add_paragraph()
+                p_stem.paragraph_format.space_before = Pt(3)
+                p_stem.paragraph_format.space_after = Pt(4)
+                p_stem.paragraph_format.line_spacing = 1.2
+                add_math_content(p_stem, stem, mode=mode, font_size=14)
+
+            if img and os.path.exists(img):
+                add_centered_image(doc, img, width=Inches(5.0), caption=q.get('image_caption'))
+
+            if tbl_data:
+                add_styled_table(doc, tbl_data.get('headers', []), tbl_data.get('rows', []),
+                                 col_widths=tbl_data.get('widths'), mode=mode)
+
+            for sub_q in sub_qs:
+                p_sq = doc.add_paragraph()
+                p_sq.paragraph_format.left_indent = Cm(0.4)
+                p_sq.paragraph_format.space_before = Pt(2)
+                p_sq.paragraph_format.space_after = Pt(3)
+                p_sq.paragraph_format.line_spacing = 1.15
+                add_math_content(p_sq, sub_q, mode=mode, font_size=14)
+
+            if show_solutions and sol:
+                add_heading_section(doc, "Lời giải chi tiết và Hướng dẫn chấm:", level=2)
+                p_sol = doc.add_paragraph()
+                p_sol.paragraph_format.space_before = Pt(2)
+                p_sol.paragraph_format.space_after = Pt(6)
+                p_sol.paragraph_format.line_spacing = 1.2
+                add_math_content(p_sol, sol, mode=mode, font_size=13.5)
 
 
 # ─── PIPELINE XUẤT 3 ẤN PHẨM ────────────────────────────────────────────────
 
-def build_and_export(exam_data, output_dir, exam_code,
-                     school_info="SỞ GD&ĐT ....................\nTRƯỜNG THPT ....................",
-                     exam_title="ĐỀ KIỂM TRA GIỮA HỌC KỲ I – NĂM HỌC 2024–2025\nMÔN: TOÁN 12",
-                     duration="90 phút", logo_path=None,
-                     build_teacher_version=True):
-    """
-    Pipeline xuất trọn bộ ấn phẩm từ dữ liệu đề thi:
-      1. [code]_DE_HOC_SINH_OLE.docx  – Bản phát cho học sinh
-      2. [code]_LOI_GIAI_GV_OLE.docx  – Bản lời giải chi tiết cho giáo viên
-      3. [code]_WORD_EQ.docx          – Dự phòng Word Equation
-    Tự động dọn dẹp file tạm trung gian.
-    """
-    # ─── LỚP A: Kiểm tra bản quyền bắt buộc ────────────────────────────────
-    _require_license()
-    # ────────────────────────────────────────────────────────────────────────
-    os.makedirs(output_dir, exist_ok=True)
-    results = {}
-
-
-    # Build bản đề học sinh (TeX nền → Backend OLE)
-    tmp_student = os.path.join(tempfile.gettempdir(), f'_tmp_student_{exam_code}_{uuid.uuid4().hex[:8]}.docx')
-    try:
-        _build_student_docx(tmp_student, exam_data, exam_code, school_info, exam_title, duration, logo_path, mode='tex')
-        out_student = os.path.join(output_dir, f'{exam_code}_DE_HOC_SINH_OLE.docx')
-        ok = convert_to_mathtype_ole_via_backend(tmp_student, out_student)
-        if ok:
-            print(f"[OK] Đã xuất: {out_student}")
-            results['student_ole'] = out_student
-        else:
-            print(f"[FALLBACK] Dùng Word Equation cho bản học sinh.")
-    finally:
-        if os.path.exists(tmp_student):
-            os.remove(tmp_student)
-
-    # Build bản lời giải giáo viên
-    if build_teacher_version:
-        tmp_teacher = os.path.join(tempfile.gettempdir(), f'_tmp_teacher_{exam_code}_{uuid.uuid4().hex[:8]}.docx')
-        try:
-            _build_teacher_docx(tmp_teacher, exam_data, exam_code, school_info, exam_title, duration, logo_path, mode='tex')
-            out_teacher = os.path.join(output_dir, f'{exam_code}_LOI_GIAI_GV_OLE.docx')
-            ok = convert_to_mathtype_ole_via_backend(tmp_teacher, out_teacher)
-            if ok:
-                print(f"[OK] Đã xuất: {out_teacher}")
-                results['teacher_ole'] = out_teacher
-        finally:
-            if os.path.exists(tmp_teacher):
-                os.remove(tmp_teacher)
-
-    # Build bản Word Equation dự phòng (dùng OMML local)
-    out_eq = os.path.join(output_dir, f'{exam_code}_WORD_EQ.docx')
-    _build_student_docx(out_eq, exam_data, exam_code, school_info, exam_title, duration, logo_path, mode='omml')
-    print(f"[OK] Đã xuất bản dự phòng: {out_eq}")
-    results['omml_fallback'] = out_eq
-
-    return results
-
-
 def _build_student_docx(path, exam_data, code, school_info, exam_title, duration, logo_path, mode):
-    """Nội bộ: tạo file DOCX bản học sinh (không có đáp án)."""
+    """Nội bộ: tạo file DOCX bản học sinh (không có đáp án/lời giải)."""
     doc = init_exam_doc()
     add_exam_header(doc, school_info=school_info, exam_title=exam_title,
                     exam_code=code, duration=duration, logo_path=logo_path)
@@ -566,13 +940,13 @@ def _build_student_docx(path, exam_data, code, school_info, exam_title, duration
 
 
 def _build_teacher_docx(path, exam_data, code, school_info, exam_title, duration, logo_path, mode):
-    """Nội bộ: tạo file DOCX bản lời giải giáo viên (có đáp án + barem)."""
+    """Nội bộ: tạo file DOCX bản lời giải giáo viên (có đáp án + barem chi tiết)."""
     doc = init_exam_doc()
-    # Thêm dòng nhận diện "TÀI LIỆU GIÁO VIÊN"
     p_gv = doc.add_paragraph()
     p_gv.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r_gv = p_gv.add_run("📌  TÀI LIỆU DÀNH RIÊNG CHO GIÁO VIÊN – KHÔNG PHÁT CHO HỌC SINH")
     r_gv.bold = True
+    r_gv.font.name = 'Times New Roman'
     r_gv.font.color.rgb = RGBColor(192, 0, 0)
     r_gv.font.size = Pt(11)
     p_gv.paragraph_format.space_after = Pt(4)
@@ -580,7 +954,7 @@ def _build_teacher_docx(path, exam_data, code, school_info, exam_title, duration
     add_exam_header(doc, school_info=school_info, exam_title=exam_title,
                     exam_code=code, duration=duration, logo_path=logo_path)
 
-    # Bảng đáp án nhanh trước khi vào nội dung
+    # Bảng ma trận đáp án nhanh
     if 'part1_answers' in exam_data:
         add_answer_key_grid(doc, exam_data['part1_answers'], exam_data.get('part3_answers'))
 
@@ -589,8 +963,83 @@ def _build_teacher_docx(path, exam_data, code, school_info, exam_title, duration
     doc.save(path)
 
 
-def _write_exam_body(doc, exam_data, mode='tex', show_answers=False, show_solutions=False):
-    """Viết nội dung toàn bộ đề thi vào doc (dùng chung cho cả 2 bản)."""
-    # Hàm này sẽ được AI agent tùy biến khi sinh script tạo đề cụ thể.
-    # Ở đây chỉ định nghĩa interface và placeholder.
-    pass
+def build_and_export(exam_data, output_dir, exam_code,
+                     school_info="SỞ GD&ĐT ....................\nTRƯỜNG THPT ....................",
+                     exam_title="ĐỀ KIỂM TRA GIỮA HỌC KỲ I – NĂM HỌC 2024–2025\nMÔN: TOÁN 12",
+                     duration="90 phút", logo_path=None,
+                     build_teacher_version=True):
+    """
+    Pipeline xuất trọn bộ ấn phẩm chuẩn từ dữ liệu đề thi:
+      1. [code]_DE_HOC_SINH_MATHTYPE_OLE.docx  – Bản phát cho học sinh (MathType OLE)
+      2. [code]_LOI_GIAI_GV_MATHTYPE_OLE.docx  – Bản lời giải chi tiết cho giáo viên (MathType OLE)
+      3. [code]_WORD_EQ.docx                   – Dự phòng Word Equation (OMML)
+    Tự động dọn dẹp file tạm trung gian và chạy kiểm định tính toàn vẹn.
+    """
+    _require_license()
+    os.makedirs(output_dir, exist_ok=True)
+    results = {}
+
+    # 1. Build bản đề học sinh (TeX nền → Backend OLE)
+    tmp_student = os.path.join(tempfile.gettempdir(), f'_tmp_student_{exam_code}_{uuid.uuid4().hex[:8]}.docx')
+    try:
+        _build_student_docx(tmp_student, exam_data, exam_code, school_info, exam_title, duration, logo_path, mode='tex')
+        out_student = os.path.join(output_dir, f'{exam_code}_DE_HOC_SINH_MATHTYPE_OLE.docx')
+        ok = convert_to_mathtype_ole_via_backend(tmp_student, out_student)
+        if ok and os.path.exists(out_student):
+            audit = audit_word_ole_file(out_student)
+            print(f"[OK] Đã xuất bản học sinh MathType OLE: {out_student} ({audit['ole_count']} OLE objects)")
+            results['student_ole'] = out_student
+            results['student_audit'] = audit
+        else:
+            print(f"[FALLBACK] Chuyển đổi OLE học sinh không khả dụng, dùng Word Equation.")
+    finally:
+        if os.path.exists(tmp_student):
+            os.remove(tmp_student)
+
+    # 2. Build bản lời giải giáo viên (TeX nền → Backend OLE)
+    if build_teacher_version:
+        tmp_teacher = os.path.join(tempfile.gettempdir(), f'_tmp_teacher_{exam_code}_{uuid.uuid4().hex[:8]}.docx')
+        try:
+            _build_teacher_docx(tmp_teacher, exam_data, exam_code, school_info, exam_title, duration, logo_path, mode='tex')
+            out_teacher = os.path.join(output_dir, f'{exam_code}_LOI_GIAI_GV_MATHTYPE_OLE.docx')
+            ok = convert_to_mathtype_ole_via_backend(tmp_teacher, out_teacher)
+            if ok and os.path.exists(out_teacher):
+                audit = audit_word_ole_file(out_teacher)
+                print(f"[OK] Đã xuất bản lời giải giáo viên MathType OLE: {out_teacher} ({audit['ole_count']} OLE objects)")
+                results['teacher_ole'] = out_teacher
+                results['teacher_audit'] = audit
+        finally:
+            if os.path.exists(tmp_teacher):
+                os.remove(tmp_teacher)
+
+    # 3. Build bản Word Equation dự phòng (dùng OMML local)
+    out_eq = os.path.join(output_dir, f'{exam_code}_WORD_EQ.docx')
+    try:
+        _build_student_docx(out_eq, exam_data, exam_code, school_info, exam_title, duration, logo_path, mode='omml')
+        print(f"[OK] Đã xuất bản dự phòng Word Equation: {out_eq}")
+        results['omml_fallback'] = out_eq
+    except Exception as e:
+        print(f"[Cảnh báo] Không thể tạo bản OMML: {e}")
+
+    return results
+
+
+def export_exam_to_word_mathtype(exam_data, output_dir, exam_code="101",
+                                  school_info="SỞ GD&ĐT ....................\nTRƯỜNG THPT ....................",
+                                  exam_title="ĐỀ KIỂM TRA ĐỊNH KỲ – MÔN: TOÁN 12",
+                                  duration="90 phút", logo_path=None,
+                                  build_teacher_version=True):
+    """
+    Hàm giao diện cấp cao (Public API) xuất bản trọn bộ tài liệu Word MathType OLE cho toàn bộ skill.
+    """
+    return build_and_export(
+        exam_data=exam_data,
+        output_dir=output_dir,
+        exam_code=exam_code,
+        school_info=school_info,
+        exam_title=exam_title,
+        duration=duration,
+        logo_path=logo_path,
+        build_teacher_version=build_teacher_version
+    )
+

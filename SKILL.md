@@ -270,39 +270,72 @@ Agent PHẢI chọn đúng công cụ theo bảng dưới để đảm bảo đ�
    - Mũi tên phải được **nâng cao khoảng cách an toàn** (`arrow_y = p1[1] + 0.18*h`) để tách biệt hoàn toàn, **không bao giờ dính sát hay tì đè vào đỉnh chữ cái**.
 3. **Độ sắc nét của ký hiệu Đạo hàm & Tích phân**:
    - **Đạo hàm** ($y'$, $f'(x)$, $y''$): Luôn định dạng $\boldsymbol{y'}$, $\boldsymbol{f'(x)}$ cỡ chữ 15.5–16pt bold để dấu phẩy đạo hàm to, đậm, rõ nét khi in ấn A4, không bị mảnh như sợi chỉ.
-   - **Tích phân** ($\int$): Luôn dùng $\mathbf{\int}$ cỡ chữ 13.5–15pt bold với thân tích phân dày đậm, cận tích phân $\int_a^b$ rõ ràng, không dùng nét 1px mờ nhạt.
+   - **Tích phân** ($\int$): Luôn dùng $\mathbf{\int}$ cỡ chữ 13.5–15pt bold với thân tích phân dày đậm, cận tích phân $\int_a^b$ rõ ràng, không dùng nét 1px mờ nhạt.### Bước 4: Quy Chuẩn Xuất Bản File Word MathType OLE 100% (Bắt Buộc Cho Toàn Bộ Skill)
 
+> [!IMPORTANT]
+> **CHỈ THỊ XUẤT FILE WORD BẮT BUỘC TRÊN TOÀN BỘ HỆ THỐNG:**
+> Bất kỳ yêu cầu nào liên quan đến xuất file Word (tạo đề tương tự Toán/Lý/Hóa, xuất đề thi, giải bài toán thực tế, chuyển PDF sang Word, nhân bản bộ 4 mã đề) **ĐỀU BẮT BUỘC PHẢI ÁP DỤNG 100% QUY TRÌNH NÀY**.
+> Tuyệt đối không bao giờ để xuất hiện chuỗi LaTeX thô (`$ ... $`) trong file Word bàn giao cho giáo viên. Mọi công thức phải là đối tượng **MathType OLE nguyên bản (`Equation.DSMT4`)** mở nhấp đúp chuột sửa được ngay, đồng thời luôn có bản **Word Equation (OMML)** dự phòng.
 
+Sử dụng thư viện cốt lõi [docx_math_builder.py](./scripts/docx_math_builder.py):
 
-Sử dụng thư viện [docx_math_builder.py](./scripts/docx_math_builder.py):
+#### 1. Bộ Tiêu Chuẩn Thể Thức Sư Phạm & Typography Vàng:
+- **Font chữ chuẩn**: **Times New Roman 14pt** xuyên suốt toàn bộ văn bản (câu hỏi, phương án, bài giải). Tiêu đề đề thi 16pt In đậm căn giữa; bảng biểu và đầu trang 10.5–11pt.
+- **Căn lề chuẩn văn bản giáo dục**: Lề trái $2.2\text{ cm}$ (để đóng gáy tập), lề phải $2.0\text{ cm}$, lề trên $2.0\text{ cm}$, lề dưới $2.0\text{ cm}$.
+- **Khoảng cách đoạn & dãn dòng**: Line spacing $1.15 - 1.2$, `space_after = 3-4pt`, `space_before = 0pt` giúp trang in thoáng đãng, sang trọng, không bị dính chữ.
+- **Khung tiêu đề 2 cột đối xứng**: Cột trái thông tin Sở/Trường, cột phải thông tin Kỳ thi/Thời gian, đường chỉ kẻ phân cách màu sắc thanh lịch.
+- **Căn chỉnh 4 phương án A/B/C/D**: Tự động chia cột trên bảng ẩn không viền (`add_aligned_choices`):
+  - Phương án ngắn ($\le 22$ ký tự): 1 hàng 4 cột.
+  - Phương án vừa ($\le 52$ ký tự): 2 hàng 2 cột.
+  - Phương án dài: 4 dòng riêng biệt thụt lề $0.5\text{ cm}$.
+- **Bố cục 2 cột thông minh tiết kiệm giấy in (Smart Side-by-Side Layout)**:
+  - Cột trái ($4.5$ inches): Dẫn đề + phương án lựa chọn.
+  - Cột phải ($2.3$ inches): Hình vẽ kỹ thuật hoặc đồ thị căn giữa dọc.
+  - Tiết kiệm $35\% - 45\%$ diện tích trang in A4 cho nhà trường.
+- **Bảng biểu Table Grid nguyên bản**:
+  - Dòng tiêu đề đổ nền màu đậm (`#1B4F72`), chữ trắng in đậm căn giữa.
+  - Các dòng dữ liệu xen kẽ nền trắng và xám nhẹ (`#F4F6F7`), có padding lề ô $100-140\text{ dxa}$, viền sắc nét, hỗ trợ công thức toán MathType OLE bên trong ô bảng.
 
-1. **Chuẩn định dạng cỡ chữ 14pt**:
-   - Toàn bộ văn bản câu hỏi, phương án A, B, C, D, lời giải và công thức MathType OLE đều được thiết lập chuẩn **cỡ chữ 14pt (font Times New Roman)**, line spacing 1.15.
-2. **Sinh file nền tạm thời (`_temp_raw_latex.docx`)**:
-   - Chứa toàn bộ nội dung đề, đáp án, hình vẽ sắc nét, các công thức nằm trong `$ ... $`.
-   - Lưu ý: Không dùng tên file chứa chữ `MATHTYPE` để tránh người dùng click nhầm vào file nháp.
-3. **Gửi tới Backend API chuyển đổi MathType OLE**:
-   - Gọi hàm `convert_to_mathtype_ole_via_backend(base_tex, output_ole)` để gửi file DOCX nền tới `https://latex2mathtypeweb.onrender.com/api/convert-docx`.
-   - Nhận lại và lưu thành **`<MA_DE>_DE_HOC_SINH_OLE.docx`** và **`<MA_DE>_LOI_GIAI_GV_OLE.docx`**.
-4. **Sinh file dự phòng Word Equation (`<MA_DE>_WORD_EQ.docx`)**:
-   - Chuyển toàn bộ công thức sang OMML bằng `MML2OMML.XSL` để người dùng không có MathType vẫn xem và in ấn chuẩn 100%.
-5. **Dọn dẹp file nháp tạm**: Tự động xóa file `_temp_raw_latex.docx` sau khi hoàn tất.
+#### 2. Quy Trình Thực Thi 5 Bước Khép Kín:
+```text
+[Dữ liệu Đề / Bài giải]
+        │
+        ▼ (Bước 4.1: Tạo DOCX nền chuẩn định dạng chứa tag $LaTeX$)
+[_temp_raw_exam.docx]
+        │
+        ├───────────────────────────────────────────────────────┐
+        ▼ (Bước 4.2: POST qua Backend API kèm License)          ▼ (Bước 4.4: OMML Local Engine)
+[https://latex2mathtypeweb.onrender.com/api/convert-docx]     [MML2OMML.XSL Microsoft Office]
+        │                                                        │
+        ▼ (Bước 4.3: Nhận DOCX & Kiểm định Integrity Audit)      ▼
+[<TEN>_MATHTYPE_OLE.docx]                                    [<TEN>_WORD_EQ.docx]
+(100% Equation.DSMT4, 0 residual $,                          (Word Equation chuẩn SGK,
+click đúp sửa ngay bằng MathType 6/7)                         mở trên mọi máy tính)
+```
 
-6. **Bố Cục 2 Cột Thông Minh Tiết Kiệm Giấy In (Smart Side-by-Side Layout Protocol)**:
-   - **Mục tiêu sư phạm**: Khi in đề thi trên khổ giấy A4, đặt hình vẽ ngay phía dưới câu hỏi (full-width stacked) làm mất tới 10-12 cm chiều cao trang cho mỗi câu, khiến đề thi bị phình to tốn kém giấy in. Bằng cách xếp **câu hỏi + đáp án bên trái** và **hình vẽ bên phải** trong một bảng ẩn không viền, diện tích chiều cao trang in được **tiết kiệm từ 35% đến 45%**!
-   - **Bộ Tiêu Chí Xét Tính Phù Hợp (Suitability Decision Matrix)**:
-     * ✅ **PHÙ HỢP BỐ CỤC 2 CỘT (`is_side_by_side = True`)**:
-       - Hình dạng gần vuông hoặc đứng (tỉ lệ $W/H \le 1.35$, chiều rộng hiển thị $2.0 - 2.4$ inches): Đồ thị hàm số trên hệ tọa độ $Oxy$ (bậc ba, phân thức hữu tỉ, bậc bốn, đồ thị trên đoạn kín), hình học không gian dạng đứng, sơ đồ lực vật lý.
-       - Nội dung bên trái (dẫn đề + các đáp án A, B, C, D hoặc các ý a, b, c, d) có từ 3 đến 6 dòng chữ, vừa khít và cân xứng hoàn hảo với chiều cao của hình vẽ bên phải.
-       - Áp dụng mẫu: Câu 1, Câu 2, Câu 4, Câu 8, Câu 10 (Phần I); Câu 1 (Phần II); Câu 2, Câu 3 (Phần III).
-     * ⛔ **KHÔNG PHÙ HỢP – BẮT BUỘC ĐỂ TOÀN DÒNG (Full-Width Stacked)**:
-       - **Bảng biến thiên (BBT)**: Cần chiều ngang tối thiểu $4.0 - 4.5$ inches để hiển thị đầy đủ các cột $-\infty, x_1, x_2, +\infty$, vạch đôi $\parallel$ và mũi tên biến thiên không bị co rúm méo mó. Nếu ép BBT vào cột hẹp $2.2$ inches sẽ vi phạm nghiêm trọng chuẩn mực sư phạm. (Ví dụ: Câu 11, Câu 12 Phần I; Câu 1 Phần III).
-       - **Hình vẽ ghép ngang phức hợp (Landscape Multi-diagrams)**: Các hình gồm 2 hình con đặt ngang nhau (như sơ đồ tấm tôn phẳng $60\text{ cm}$ và hình hộp 3D bên cạnh, chiều ngang thực tế $> 4.0$ inches). Bắt buộc phải để toàn dòng để học sinh dễ quan sát. (Ví dụ: Câu 3 Tự luận).
-   - **Quy cách kỹ thuật Word DOCX**:
-     * Bảng ẩn `rows=1, cols=2`, xóa 100% đường viền (`_remove_table_borders(table)`).
-     * Cột trái: Chiều rộng $4.5$ inches ($11.4\text{ cm}$), căn lề trên `WD_ALIGN_VERTICAL.TOP`.
-     * Cột phải: Chiều rộng $2.3$ inches ($5.8\text{ cm}$), hình ảnh căn giữa theo chiều dọc `WD_ALIGN_VERTICAL.CENTER`.
-     * Bản Giáo Viên: Lời giải chi tiết được trình bày trải rộng toàn dòng ngay phía dưới bảng để thuận tiện đọc và chấm thi.
+1. **Bước 4.1: Xây dựng DOCX nền chứa tag `$LaTeX$`**:
+   Gọi `_build_student_docx` hoặc `_build_teacher_docx` với `mode='tex'`. Toàn bộ công thức toán, lý, hóa được bao bọc trong cặp `$ ... $`.
+2. **Bước 4.2: Gửi Backend API chuyển đổi MathType OLE**:
+   Gọi hàm `convert_to_mathtype_ole_via_backend(raw_path, ole_path)`. Hàm tự động đóng gói License Key và Machine ID để gửi tới Backend Server.
+3. **Bước 4.3: Kiểm định tính toàn vẹn bắt buộc (Integrity Audit Gate)**:
+   Hàm tự động gọi `audit_word_ole_file(ole_path)` để kiểm tra cấu trúc OpenXML:
+   - Đếm số lượng đối tượng OLE thực sự (`embeddings/oleObject*.bin`).
+   - Quét từng đoạn văn (`paragraphs`) và từng ô bảng (`tables`) để bảo đảm số lượng ký tự `$` sót lại bằng đúng 0 (`residual_count == 0`).
+   - Nếu phát hiện lỗi hoặc không có OLE, hệ thống cảnh báo và kích hoạt cơ chế khắc phục ngay lập tức.
+4. **Bước 4.4: Tạo bản Word Equation (OMML) song song**:
+   Đồng thời sinh tệp `<TEN>_WORD_EQ.docx` qua `MML2OMML.XSL` để giáo viên xem được ngay trên điện thoại hoặc máy tính chưa cài MathType.
+5. **Bước 4.5: Tự động dọn dẹp file nháp tạm**:
+   Xóa sạch các tệp trung gian `_temp_*.docx`, chỉ giữ lại các tệp ấn phẩm chính thức sạch đẹp.
+
+#### 3. Tích Hợp Hoàn Hảo Vào Bộ 4 Mã Đề (`exam_shuffler.py`):
+Khi giáo viên yêu cầu tạo bộ đề hoán vị, hàm `generate_exam_set` tự động xuất trọn gói cho mỗi mã đề:
+- `<MA_DE>_DE_HOC_SINH_MATHTYPE_OLE.docx`: Bản phát cho học sinh (MathType OLE).
+- `<MA_DE>_LOI_GIAI_GV_MATHTYPE_OLE.docx`: Bản lời giải chi tiết và barem chấm cho giáo viên (MathType OLE).
+- `<MA_DE>_WORD_EQ.docx`: Bản dự phòng Word Equation.
+- `phieu_hoc_sinh_<MA_DE>.png`: Phiếu trả lời bong bóng chuẩn A4.
+- `dap_an_giao_vien_<MA_DE>.png`: Phiếu đáp án đã tô đen để chấm thi.
+- `DAP_AN_TONG_HOP_4_MA_DE.xlsx`: Bảng ma trận tổng hợp đáp án toàn bộ mã đề.
+
 
 
 ### Bước 5: Bàn giao và đối chiếu

@@ -373,16 +373,22 @@ def export_answer_key_excel(all_keys, output_path):
     return True
 
 
-# ─── PIPELINE CHÍNH: TẠO BỘ 4 MÃ ĐỀ ─────────────────────────────────────────
+# ─── PIPELINE CHÍNH: TẠO BỘ 4 MÃ ĐỀ & XUẤT TRỌN GÓI ────────────────────────
 
 def generate_exam_set(base_exam, output_dir, base_code="201", n_variants=4,
-                      school_name="TRƯỜNG THPT ......................"):
+                      school_name="TRƯỜNG THPT ......................",
+                      exam_title="ĐỀ KIỂM TRA ĐỊNH KỲ – MÔN: TOÁN 12",
+                      duration="90 phút", logo_path=None,
+                      export_word_docs=True, build_teacher_version=True):
     """
     Tạo trọn bộ n mã đề với đầy đủ:
+      - File Word MathType OLE bản Học Sinh (100% Equation.DSMT4)
+      - File Word MathType OLE bản Lời Giải Chi Tiết Giáo Viên
+      - File Word Equation (OMML) dự phòng
       - Phiếu trả lời học sinh (PNG)
       - Phiếu đáp án giáo viên (PNG, bong bóng tô đen)
       - File Excel tổng hợp đáp án tất cả mã đề
-    Trả về dict kết quả.
+    Trả về dict kết quả trọn gói.
     """
     os.makedirs(output_dir, exist_ok=True)
     variants = generate_all_variants(base_exam, base_code=base_code, n=n_variants)
@@ -394,7 +400,7 @@ def generate_exam_set(base_exam, output_dir, base_code="201", n_variants=4,
         key = extract_answer_key(v)
         all_keys.append(key)
 
-        # Phiếu học sinh
+        # 1. Phiếu học sinh PNG
         sheet_student = os.path.join(output_dir, f'phieu_hoc_sinh_{code}.png')
         generate_bubble_sheet(
             variant_code=code,
@@ -405,7 +411,7 @@ def generate_exam_set(base_exam, output_dir, base_code="201", n_variants=4,
             school_name=school_name
         )
 
-        # Phiếu đáp án giáo viên
+        # 2. Phiếu đáp án giáo viên PNG
         sheet_key = os.path.join(output_dir, f'dap_an_giao_vien_{code}.png')
         generate_bubble_sheet(
             variant_code=code,
@@ -416,16 +422,48 @@ def generate_exam_set(base_exam, output_dir, base_code="201", n_variants=4,
             school_name=school_name
         )
 
-        results[code] = {
+        variant_res = {
             'variant': v,
             'key': key,
             'phieu_hoc_sinh': sheet_student,
             'phieu_dap_an_gv': sheet_key
         }
 
-    # Excel tổng hợp
+        # 3. Xuất file Word MathType OLE + OMML chuẩn mực
+        if export_word_docs:
+            try:
+                from .docx_math_builder import export_exam_to_word_mathtype
+            except ImportError:
+                try:
+                    from docx_math_builder import export_exam_to_word_mathtype
+                except ImportError:
+                    _scripts_dir = os.path.dirname(os.path.abspath(__file__))
+                    if _scripts_dir not in sys.path:
+                        sys.path.insert(0, _scripts_dir)
+                    from docx_math_builder import export_exam_to_word_mathtype
+
+            print(f"[*] Đang xuất tài liệu Word MathType OLE cho mã đề {code}...")
+            v_data = copy.deepcopy(v)
+            v_data['part1_answers'] = key['part1']
+            v_data['part3_answers'] = key['part3']
+            word_docs = export_exam_to_word_mathtype(
+                exam_data=v_data,
+                output_dir=output_dir,
+                exam_code=code,
+                school_info=school_name,
+                exam_title=exam_title,
+                duration=duration,
+                logo_path=logo_path,
+                build_teacher_version=build_teacher_version
+            )
+            variant_res['word_docs'] = word_docs
+
+        results[code] = variant_res
+
+    # 4. File Excel ma trận đáp án tổng hợp
     excel_path = os.path.join(output_dir, f'DAP_AN_TONG_HOP_{n_variants}_MA_DE.xlsx')
     export_answer_key_excel(all_keys, excel_path)
     results['excel'] = excel_path
 
     return results
+

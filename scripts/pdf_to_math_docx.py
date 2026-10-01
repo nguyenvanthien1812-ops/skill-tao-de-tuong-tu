@@ -33,11 +33,24 @@ try:
     from .docx_math_builder import (
         BACKEND_API_URL, latex_to_omml, add_math_content,
         _remove_table_borders, set_cell_margins, add_side_by_side_question,
-        _get_license_token, _get_machine_id_safe
+        _get_license_token, _get_machine_id_safe,
+        convert_to_mathtype_ole_via_backend, audit_word_ole_file
     )
 except ImportError:
-    # Nếu chạy standalone script
-    BACKEND_API_URL = 'https://latex2mathtypeweb.onrender.com/api/convert-docx'
+    try:
+        from docx_math_builder import (
+            BACKEND_API_URL, latex_to_omml, add_math_content,
+            _remove_table_borders, set_cell_margins, add_side_by_side_question,
+            _get_license_token, _get_machine_id_safe,
+            convert_to_mathtype_ole_via_backend, audit_word_ole_file
+        )
+    except ImportError:
+        # Nếu chạy standalone script
+        BACKEND_API_URL = 'https://latex2mathtypeweb.onrender.com/api/convert-docx'
+        def convert_to_mathtype_ole_via_backend(*args, **kwargs):
+            return False
+        def audit_word_ole_file(*args, **kwargs):
+            return {'ok': False, 'ole_count': 0}
     def _get_license_token():
         try:
             _d = os.path.dirname(os.path.abspath(__file__))
@@ -125,49 +138,12 @@ def convert_to_mathtype_ole(in_path, out_path, api_url=BACKEND_API_URL, timeout=
     Chuyển đổi file DOCX nền chứa $LaTeX$ sang Word MathType OLE nguyên bản.
     [Lớp A] Yêu cầu license hợp lệ.
     [Lớp E] Gửi kèm license_key + machine_id lên backend để xác thực.
+    Tự động kiểm định tính toàn vẹn (Integrity Audit) sau khi xuất.
     """
-    # ─── LỚP A ───────────────────────────────────────────────────────────────
     _require_license()
-    # ─────────────────────────────────────────────────────────────────────────
     print(f"[*] Đang gửi {os.path.basename(in_path)} tới Backend MathType Server...")
-    boundary = uuid.uuid4().hex
-    headers = {'Content-Type': f'multipart/form-data; boundary={boundary}'}
-    with open(in_path, 'rb') as f:
-        file_bytes = f.read()
+    return convert_to_mathtype_ole_via_backend(in_path, out_path, api_url=api_url, timeout=timeout)
 
-    # ─── LỚP E: Đính kèm thông tin license vào request ─────────────────────
-    license_token = _get_license_token()
-    machine_id    = _get_machine_id_safe()
-    # ────────────────────────────────────────────────────────────────────────
-
-    body = bytearray()
-    body.extend(f'--{boundary}\r\n'.encode('utf-8'))
-    body.extend(f'Content-Disposition: form-data; name="file"; filename="{os.path.basename(in_path)}"\r\n'.encode('utf-8'))
-    body.extend(b'Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document\r\n\r\n')
-    body.extend(file_bytes)
-
-    if license_token:
-        body.extend(f'\r\n--{boundary}\r\n'.encode('utf-8'))
-        body.extend(b'Content-Disposition: form-data; name="license_key"\r\n\r\n')
-        body.extend(license_token.encode('utf-8'))
-    if machine_id:
-        body.extend(f'\r\n--{boundary}\r\n'.encode('utf-8'))
-        body.extend(b'Content-Disposition: form-data; name="machine_id"\r\n\r\n')
-        body.extend(machine_id.encode('utf-8'))
-
-    body.extend(f'\r\n--{boundary}--\r\n'.encode('utf-8'))
-    req = urllib.request.Request(api_url, data=body, headers=headers, method='POST')
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            if resp.status == 200:
-                with open(out_path, 'wb') as f:
-                    f.write(resp.read())
-                print(f"[OK] Đã xuất thành công: {out_path}")
-                return True
-    except Exception as e:
-        print(f"[Lỗi] Backend API không phản hồi: {e}")
-        return False
-    return False
 
 
 if __name__ == '__main__':
