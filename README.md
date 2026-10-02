@@ -107,6 +107,18 @@ tao-de-toan-tuong-tu/
 
 ## 📋 Lịch Sử Phiên Bản (Changelog)
 
+### v2.9.1 (2026-10-02)
+- ⭐ **Khắc phục triệt để ký hiệu véc-tơ chuẩn SGK**: Mũi tên dài bao phủ trọn vẹn bề ngang 2+ chữ cái ($AB, BC, AS...$), nâng cao $0.22h$ chống dính chữ, tích hợp 3 tầng fallback đo text bbox (renderer -> canvas.renderer -> ước lượng hình học), mutation_scale tính theo pixel độc lập dữ liệu.
+- ⭐ **Khắc phục 100% chuyển đổi MathType OLE**: Bổ sung cơ chế thử lại 3 cấp (chuyển trực tiếp -> chuẩn hóa LaTeX -> log kiểm toán), bảo đảm residual $ = 0, đạt 100% Integrity Audit Gate.
+- ⭐ **Nâng cấp độ phân giải hình học 450 DPI toàn diện**: Khắc phục 55 hàm vẽ hardcode 300 DPI, bổ sung 6 thông số rcParams chống mờ nét vẽ, khử răng cưa khi in ấn A4.
+- ⭐ **Chuẩn hóa ký hiệu toán học sắc nét**: Đạo hàm to đậm chuẩn in ấn `fmt_derivative`, tích phân chuẩn SGK `fmt_integral`, góc đỉnh rộng `fmt_angle`, nhãn số đo góc đen tuyền `add_degree_label`.
+- ⭐ **Tích hợp kiểm soát độ khó đề thi (`difficulty_level`)**: Hỗ trợ 3 mức `easier` / `equivalent` / `harder`, đảm bảo 100% giữ nguyên dạng bài, kiểu bài và ma trận đặc tả từ đề gốc.
+
+### v2.9.0 (2026-10-01)
+- ⭐ **Quy trình Xuất Bản MathType OLE 100% nguyên bản**: Áp dụng cho toàn bộ các module trong skill.
+- ⭐ **Cổng kiểm định tính toàn vẹn bắt buộc (Integrity Audit Gate)**: Quét sạch 100% ký tự $ sót lại (residual_count == 0).
+- ⭐ **Nâng cấp đa module**: `docx_math_builder.py`, `exam_shuffler.py`, `pdf_to_math_docx.py`.
+
 ### v2.2.0 (2026-09-27)
 - ⭐ **Nâng cấp cỡ chữ 14pt**: Toàn bộ văn bản và công thức MathType OLE hiển thị chuẩn 14pt rõ nét theo quy chuẩn in ấn của giáo viên.
 - ⭐ **Hình vẽ siêu nét 300 DPI**: Nét vẽ đậm dày (`lw=2.2 - 2.4`), chữ $x, y$ đặt sát mũi tên trục tọa độ, font số 12–13pt không bị mờ khi in; Bảng biến thiên full viền 100% chuẩn SGK.

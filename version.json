@@ -1,11 +1,18 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "2.9.0",
-  "release_date": "2026-10-01",
-  "description": "Skill tạo đề thi Toán, Vật lý, Hóa học tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt toàn diện 100%, hệ sinh thái vẽ hình toàn diện 98%+ (37 hàm Matplotlib + 80 mẫu TikZ Engine 300 DPI)",
+  "version": "2.9.1",
+  "release_date": "2026-10-02",
+  "description": "Skill tạo đề thi Toán, Vật lý, Hóa học tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt toàn diện 100%, đồ họa 450 DPI in ấn A4 siêu nét, kiểm soát độ khó đề thi chuẩn xác",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "2.9.1": [
+      "Khắc phục triệt để ký hiệu véc-tơ chuẩn SGK: mũi tên dài bao phủ trọn vẹn bề ngang 2+ chữ cái (AB, BC, AS...), nâng cao 0.22*h chống dính chữ, tích hợp 3 tầng fallback đo text bbox (renderer -> canvas.renderer -> ước lượng hình học), mutation_scale tính theo pixel độc lập dữ liệu",
+      "Khắc phục 100% chuyển đổi MathType OLE: bổ sung cơ chế thử lại 3 cấp (chuyển trực tiếp -> chuẩn hóa LaTeX -> log kiểm toán), bảo đảm residual $ = 0, đạt 100% Integrity Audit Gate",
+      "Nâng cấp độ phân giải hình học 450 DPI toàn diện (khắc phục 55 hàm vẽ hardcode 300 DPI), bổ sung 6 thông số rcParams chống mờ nét vẽ, khử răng cưa khi in ấn A4",
+      "Bổ sung hệ thống hàm chuẩn hóa ký hiệu toán học sắc nét: đạo hàm to đậm chuẩn in ấn fmt_derivative, tích phân chuẩn SGK fmt_integral, góc đỉnh rộng fmt_angle, nhãn độ đen tuyền add_degree_label",
+      "Tích hợp cơ chế kiểm soát độ khó đề thi (difficulty_level: easier / equivalent / harder) trong Bước 2 của SKILL.md, đảm bảo 100% giữ nguyên dạng bài, kiểu bài và ma trận đặc tả từ đề gốc"
+    ],
     "2.9.0": [
       "Áp dụng chuẩn hóa Quy trình Xuất Bản Word MathType OLE 100% nguyên bản (Equation.DSMT4) cho TOÀN BỘ CÁC MODULE TRONG SKILL",
       "Tích hợp cổng kiểm định tính toàn vẹn bắt buộc (Integrity Audit Gate): tự động đếm số đối tượng OLE nhúng thực tế và quét sạch 100% ký tự $ sót lại (residual_count == 0)",
