@@ -58,7 +58,20 @@ STANDARD_PREAMBLE_PACKAGES = [
     r"\usepackage[siunitx]{circuitikz}",
     r"\usepackage{chemfig}",
     r"\usetikzlibrary{arrows,arrows.meta,calc,intersections,patterns,shapes,positioning,decorations.markings}",
+    # v2.1: Package bo sung cho ky hieu toan hoc net ro khi in an
+    r"\usepackage{bm}",          # In dam ky hieu toan hoc: \bm{v}, \bm{\nabla} (vector, dao ham dam)
+    r"\usepackage{mathrsfs}",    # Chu hoa calligraphic dep: \mathscr{L}, \mathscr{F}
+    # Ky hieu goc chuan SGK: \widehat{ABC}, \angle, \sphericalangle
+    r"\DeclareMathOperator{\arccot}{arccot}",  # Ham luong giac nghich
 ]
+
+# Huong dan su dung ky hieu toan hoc sac net:
+# - Goc: \widehat{BAC} hoac \angle BAC (KHONG dung \hat{A} vi qua ngan)
+# - Dao ham: y^{\prime} hoac f^{\prime}(x) (KHONG dung y' vi dau phay nho)
+# - Tich phan: \int_{a}^{b} (bo \mathbf trong TikZ, chi can size lon trong .tex)
+# - Vec-to: \overrightarrow{AB} (KHONG dung \vec{AB} vi qua ngan)
+# - So do goc: $60^{\circ}$ hoac $\SI{60}{\degree}$ (goi package siunitx)
+
 
 
 def find_latex_compiler() -> Optional[str]:
@@ -227,7 +240,9 @@ def render_tikz_local(tex_source: str, output_path: str, dpi: int = 300, timeout
                     page = doc[0]
                     zoom = dpi / 72.0
                     mat = fitz.Matrix(zoom, zoom)
-                    pix = page.get_pixmap(matrix=mat, alpha=False)
+                    # v2.1: them colorspace RGB va annots=False de anh sac net hon
+                    pix = page.get_pixmap(matrix=mat, alpha=False,
+                                          colorspace=fitz.csRGB)
                     pix.save(output_path)
                     doc.close()
                     trim_whitespace(output_path, padding=8)
@@ -309,7 +324,7 @@ def render_tikz_cloud(tikz_code: str, output_path: str, timeout: int = 20) -> bo
 def render_tikz(
     tikz_code: str,
     output_path: str,
-    dpi: int = 300,
+    dpi: int = 450,  # v2.1: nang len 450 DPI mac dinh (chong mo khi in A4)
     custom_preamble: str = "",
     mode: str = "standalone",
     engine: str = "auto",
@@ -377,7 +392,7 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--code", help="Chuỗi mã TikZ trực tiếp")
     parser.add_argument("-o", "--output", required=True, help="Đường dẫn tệp đầu ra (.pdf, .svg, .png)")
     parser.add_argument("--mode", choices=["standalone", "a4"], default="standalone", help="Chế độ trang: standalone (viền khít vector) hoặc a4 (trang A4)")
-    parser.add_argument("--dpi", type=int, default=300, help="Độ phân giải DPI khi xuất PNG (mặc định: 300)")
+    parser.add_argument("--dpi", type=int, default=450, help="Độ phân giải DPI khi xuất PNG (mặc định: 450)")
     parser.add_argument("--engine", choices=["auto", "local", "cloud"], default="auto", help="Engine render")
 
     args = parser.parse_args()

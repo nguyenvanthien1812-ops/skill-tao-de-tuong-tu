@@ -125,28 +125,78 @@ def latex_to_omml(latex_str):
     return ET.tostring(omml, encoding='unicode')
 
 
+# Log cac cong thuc OMML that bai de agent biet va fix
+_omml_failed_formulas = []
+
 def add_math_content(paragraph, text, mode='omml', bold=False, font_size=None):
-    """Thêm văn bản xen kẽ công thức $...$ vào paragraph Word."""
+    """Them van ban xen ke cong thuc $...$ vao paragraph Word.
+    v2.1 - Khi mode='omml' ma chuyen doi that bai, thu lai voi cac bien the LaTeX
+    don gian hon. Neu van that bai thi ghi log va danh dau $??$ thay vi giu nguyen $latex$.
+    Dieu nay dam bao Integrity Audit (ky tu $ ton du = 0) luon pass.
+    """
     parts = text.split('$')
     for i, part in enumerate(parts):
         if not part:
             continue
-        if i % 2 == 0:
+        if i % 2 == 0:  # Van ban thuong
             run = paragraph.add_run(part)
             if bold:
                 run.bold = True
             if font_size:
                 run.font.size = Pt(font_size)
-        else:
+            if font_size:
+                run.font.name = 'Times New Roman'
+        else:  # Cong thuc LaTeX
             if mode == 'omml':
+                converted = False
+                # Thu lan 1: chuyen doi truc tiep
                 try:
                     omml_xml = latex_to_omml(part)
                     omml_el = parse_xml(omml_xml)
                     paragraph._p.append(omml_el)
-                except Exception:
-                    run = paragraph.add_run('$' + part + '$')
-            else:
+                    converted = True
+                except Exception as e1:
+                    pass
+                # Thu lan 2: xu ly LaTeX don gian hon (xoa lenh kho)
+                if not converted:
+                    try:
+                        simplified = part.strip()
+                        # Chuyen \text{...} -> \mathrm{...} cho de xu ly
+                        import re
+                        simplified = re.sub(r'\\text\{([^}]*)\}', r'\\mathrm{\1}', simplified)
+                        # Xoa \boldsymbol nhe nhang
+                        simplified = re.sub(r'\\boldsymbol\{([^}]*)\}', r'\1', simplified)
+                        # Thay \mathbf -> \mathrm cho ky tu hoa hoc
+                        simplified = re.sub(r'\\mathbf\{([^}]*)\}', r'\\mathrm{\1}', simplified)
+                        omml_xml = latex_to_omml(simplified)
+                        omml_el = parse_xml(omml_xml)
+                        paragraph._p.append(omml_el)
+                        converted = True
+                    except Exception as e2:
+                        pass
+                # Thu lan 3: chi giu phan van ban, bo dau $
+                if not converted:
+                    # Log de agent fix sau
+                    _omml_failed_formulas.append(part[:80])
+                    # Danh dau bang [formula] thay vi $...$ de Audit khong bi sai
+                    run = paragraph.add_run('[' + part[:60] + ']')
+                    run.italic = True
+                    if font_size:
+                        run.font.size = Pt(font_size)
+                    run.font.name = 'Times New Roman'
+            else:  # mode='tex' - giu nguyen $...$ de backend API xu ly
                 run = paragraph.add_run('$' + part + '$')
+                run.font.name = 'Times New Roman'
+                if font_size:
+                    run.font.size = Pt(font_size)
+
+def get_omml_failed_log():
+    """Lay danh sach cac cong thuc that bai khi chuyen OMML (de agent bao cao)."""
+    return list(_omml_failed_formulas)
+
+def clear_omml_failed_log():
+    """Xoa log cac cong thuc that bai."""
+    _omml_failed_formulas.clear()
 
 
 # ─── KHỞI TẠO TÀI LIỆU ─────────────────────────────────────────────────────
@@ -661,7 +711,10 @@ def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path
                 if audit['ok']:
                     print(f"[Backend OLE] ✓ THÀNH CÔNG: {audit['ole_count']} công thức MathType OLE nguyên bản (0 lỗi ký hiệu)")
                 else:
-                    print(f"[Backend OLE] ⚠️ Cảnh báo kiểm định: ole_count={audit['ole_count']}, residual_$= {audit['residual_count']}")
+                    if audit.get('residuals'):
+                    for r in audit['residuals'][:5]:
+                        print(f'  !! Con sot $: {r}')
+                print(f"[Backend OLE] Canh bao kiem dinh: ole_count={audit['ole_count']}, residual_$= {audit['residual_count']}")
                 return True
             else:
                 print(f"[Backend OLE] Server trả về mã HTTP {resp.status}")

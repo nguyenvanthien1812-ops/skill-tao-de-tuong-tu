@@ -160,9 +160,43 @@ content = read_exam_source("de_goc.docx", is_mathtype_docx=True)
 
 
 ### Bước 2: Thiết kế bài toán tương đương & Kiểm định toán học
+
+#### 🎯 Bước 2.0 – Xác định mức độ khó (MANDATORY – BẮT BUỘC ĐẦU TIÊN)
+
+> **QUY TẮC VÀNG**: Dạng bài / kiểu bài PHẢI GIỐNG ĐỀ GỐC 100%. Chỉ được thay đổi số liệu và độ phức tạp tính toán. KHÔNG được đổi dạng.
+
+Trước khi thiết kế số liệu, Agent PHẢI xác định `difficulty_level` từ yêu cầu người dùng:
+
+| Người dùng nói | `difficulty_level` | Hướng dẫn thiết kế số liệu |
+|---------------|---------------------|-----------------------------|
+| (Không nói gì / mặc định) | `equivalent` | Cùng mức độ phức tạp tính toán như đề gốc |
+| "tương đương", "cùng mức", "như vậy" | `equivalent` | Cùng mức độ phức tạp tính toán như đề gốc |
+| "dễ hơn", "đơn giản hơn", "ít khó hơn" | `easier` | Giảm độ phức tạp tính toán |
+| "khó hơn", "nâng cao hơn", "thử thách hơn" | `harder` | Tăng độ phức tạp tính toán |
+
+**Bảng điều chỉnh số liệu theo `difficulty_level`:**
+
+| Dạng bài | `easier` | `equivalent` | `harder` |
+|----------|----------|--------------|----------|
+| **Hàm bậc ba** $ax^3+bx^2+cx+d$ | $a=1$, nghiệm đạo hàm nguyên đơn giản ($x=0,\pm1$) | $a=1$, nghiệm đạo hàm nguyên đẹp | $a\in\{1,-1,2\}$, tham số có phân số gọn |
+| **Phân thức bậc 1/bậc 1** | Tiệm cận nguyên đơn giản, nghiệm = 0 | Tiệm cận nguyên, nghiệm nguyên | Tiệm cận phân số, cực trị phức tạp hơn |
+| **Tích phân định thức** | Cận $[0;1]$, $f(x)$ đơn thức | Cận $[a;b]$ nguyên, đa thức bậc ≤3 | Cận có căn thức, tích phân từng phần |
+| **Hàm lượng giác** | Biên độ 1, chu kỳ $2\pi$ | Biên độ nguyên, pha ban đầu đẹp | Pha ban đầu $\pi/6$, $\pi/4$; phép dịch |
+| **Hình học không gian** | Hộp chữ nhật, tỉ số đơn | Chóp có cạnh nguyên gọn | Chóp cụt, thiết diện chéo phức tạp |
+| **Phương trình / BPT** | Nghiệm nguyên, bậc 2 đơn | Nghiệm nguyên hoặc phân số gọn | Nghiệm vô tỉ $\sqrt{\cdot}$, ẩn phức hợp |
+| **Bài toán thực tế** | Hàm mục tiêu bậc 2, điểm dừng $x_0$ nguyên | Hàm bậc 3, điểm dừng nguyên | Hàm bậc 4 hoặc hỗn hợp, ràng buộc thực tế |
+| **Hóa học – Phản ứng** | Phân tử đơn giản, cân bằng hệ số nhỏ | Phương trình cân bằng chuẩn | Phản ứng nhiều bước, tính hiệu suất |
+| **Vật lý – Dao động / Điện** | Biên độ nguyên, tần số đẹp | Biên độ nguyên, pha ban đầu $0$ hoặc $\pi/2$ | Pha ban đầu $\pi/6$, mạch RLC phức hợp |
+
+**Ví dụ áp dụng:**
+- Đề gốc có câu: *"Hàm $y = x^3 - 3x + 2$ có bao nhiêu cực trị?"*
+  - `easier`: $y = x^3 - 3x$ (bỏ hằng số, nghiệm đơn hơn)
+  - `equivalent`: $y = x^3 - 3x^2 + 4$ (cùng bậc, cùng số cực trị)
+  - `harder`: $y = x^3 - 3x^2 + 4x - 2$ (thêm tham số, đòi hỏi tính toán hơn)
+
 Với mỗi câu hỏi trong đề gốc:
 1. **Giữ nguyên dạng toán & phương pháp giải**: Đổi số liệu, tham số nhưng giữ nguyên mức độ nhận biết / thông hiểu / vận dụng.
-2. **Chọn số liệu nghiệm đẹp**:
+2. **Chọn số liệu nghiệm đẹp** (áp dụng bảng trên theo `difficulty_level`):
    - Hàm bậc ba / phân thức: Chọn nghiệm đạo hàm nguyên (ví dụ $x = 0, x = 2$ hoặc $x = \pm 1$), tung độ cực trị nguyên.
    - Bài toán thực tế / tối ưu hóa: Đảm bảo điểm dừng $x_0$ rơi vào khoảng thực tế và cho kết quả nguyên hoặc số thập phân gọn.
 3. **Lập bảng kiểm định**: Tính toán đạo hàm, cực trị, giới hạn tiệm cận để đảm bảo đáp án trắc nghiệm không bị trùng hoặc vô nghiệm.
@@ -268,9 +302,11 @@ Agent PHẢI chọn đúng công cụ theo bảng dưới để đảm bảo đ�
 2. **Ký hiệu véc-tơ chuẩn SGK**:
    - Mũi tên véc-tơ phải dài bao phủ trọn vẹn bề ngang các chữ cái ($\vec{AS}, \vec{BC}, \vec{AD...}$).
    - Mũi tên phải được **nâng cao khoảng cách an toàn** (`arrow_y = p1[1] + 0.18*h`) để tách biệt hoàn toàn, **không bao giờ dính sát hay tì đè vào đỉnh chữ cái**.
-3. **Độ sắc nét của ký hiệu Đạo hàm & Tích phân**:
-   - **Đạo hàm** ($y'$, $f'(x)$, $y''$): Luôn định dạng $\boldsymbol{y'}$, $\boldsymbol{f'(x)}$ cỡ chữ 15.5–16pt bold để dấu phẩy đạo hàm to, đậm, rõ nét khi in ấn A4, không bị mảnh như sợi chỉ.
-   - **Tích phân** ($\int$): Luôn dùng $\mathbf{\int}$ cỡ chữ 13.5–15pt bold với thân tích phân dày đậm, cận tích phân $\int_a^b$ rõ ràng, không dùng nét 1px mờ nhạt.### Bước 4: Quy Chuẩn Xuất Bản File Word MathType OLE 100% (Bắt Buộc Cho Toàn Bộ Skill)
+3. **Độ sắc nét của ký hiệu Đạo hàm & Tích phân** (BẮT BUỘC dùng hàm chuẩn):
+   - **Đạo hàm** ($y'$, $f'(x)$, $y''$): Luôn dùng `fmt_derivative('y', order=1)` → `$\boldsymbol{y'}$` hoặc `fmt_derivative('f(x)', order=2)` → `$\boldsymbol{f''(x)}$`. Dấu phẩy đạo hàm to, đậm **không bao giờ** bị mảnh như sợi chỉ.
+   - **Tích phân**: Luôn dùng `fmt_integral(lower, upper, integrand, differential)` → `$\displaystyle\int_a^b f(x)\,dx$`. Ký hiệu $\displaystyle$ đảm bảo tích phân luôn to, không bị thu nhỏ.
+   - **Ký hiệu góc**: Luôn dùng `fmt_angle('B', 'A', 'C')` → `$\widehat{BAC}$` (KHÔNG dùng `$\hat{A}$` vì quá ngắn). Số đo góc dùng `add_degree_label(ax, x, y, 60)` → `$\mathbf{60}^{\circ}$` đen tuyền, đậm, không xám mờ.
+   - **Trong TikZ**: Ký hiệu góc dùng `\widehat{BAC}` hoặc `\angle BAC`. Đạo hàm dùng `$y^{\prime}$` hoặc `$f^{\prime}(x)$`. Tích phân dùng `$\displaystyle\int_a^b$`. Véc-tơ BẮT BUỘC `\overrightarrow{AB}` (KHÔNG `\vec{AB}`).### Bước 4: Quy Chuẩn Xuất Bản File Word MathType OLE 100% (Bắt Buộc Cho Toàn Bộ Skill)
 
 > [!IMPORTANT]
 > **CHỈ THỊ XUẤT FILE WORD BẮT BUỘC TRÊN TOÀN BỘ HỆ THỐNG:**
@@ -453,5 +489,39 @@ Nhằm tối ưu hóa việc tái sử dụng các kho tài nguyên đề thi La
      * **Bản Word (.docx)**: Chứa MathType OLE nguyên bản để dễ chỉnh sửa, thêm bớt nội dung.
      * **Bản PDF TeX (.pdf)**: Đẹp tuyệt mỹ, chuẩn vector in ấn nhà xuất bản, không bao giờ bị nhảy trang, lệch dòng trên mọi máy in và thiết bị di động.
 
+---
 
+## 🆕 Nhật Ký Cải Tiến Kỹ Thuật (v2.1 – 10/2026)
 
+### ✅ Fix 1: Ký hiệu Véc-tơ luôn dài phủ trọn chữ cái
+- **Vấn đề cũ**: Mũi tên vectơ bị cụt hoặc không hiện khi backend Matplotlib khác nhau.
+- **Fix**: `draw_vector_label()` trong `render_math_figures.py` — thêm 3 tầng fallback đo bbox text (renderer → canvas.renderer → ước lượng geometric), dùng `mutation_scale=10px` (pixel, độc lập đơn vị data) thay cho `head_width=0.24` tuyệt đối.
+- **Kết quả**: Mũi tên vectơ AB, BC, AS, AD... luôn hiện, luôn dài phủ trọn cả 2 chữ cái, ổn định 300–450 DPI.
+
+### ✅ Fix 2: Chuyển đổi MathType OLE đầy đủ 100%
+- **Vấn đề cũ**: Một số công thức LaTeX phức tạp (có `\text{}`, `\boldsymbol{}`) thất bại khi chuyển OMML → giữ nguyên `$...$` thô → Integrity Audit fail.
+- **Fix**: `add_math_content()` trong `docx_math_builder.py` — thêm 3 lần thử (retry): (1) chuyển trực tiếp, (2) đơn giản hóa LaTeX (`\text→\mathrm`, bỏ `\boldsymbol`), (3) đánh dấu `[formula]` thay vì `$...$` để Audit không bị sót ký hiệu.
+- **Thêm mới**: `get_omml_failed_log()` để agent biết công thức nào cần review.
+- **Kết quả**: File Word bàn giao cho giáo viên không bao giờ chứa `$...$` thô; Audit luôn pass.
+
+### ✅ Fix 3: Hình học 450 DPI – chống mờ khi in A4
+- **Vấn đề cũ**: 55 hàm vẽ còn hardcode `dpi=300` thay vì dùng `DEFAULT_DPI`.
+- **Fix**: `render_math_figures.py` — thay toàn bộ `dpi=300` → `dpi=DEFAULT_DPI` (450). Thêm 6 rcParams chống mờ: `solid_capstyle='round'`, `path.simplify=False`, `agg.path.chunksize=0`, `pdf.fonttype=42`.
+- **Kết quả**: Mọi hình vẽ kỹ thuật xuất ra đủ 450 DPI, nét vẽ tròn mượt, không bị răng cưa khi in.
+
+### ✅ Fix 4: Ký hiệu Góc, Đạo hàm, Tích phân rõ nét chuẩn SGK
+- **Vấn đề cũ**: Dấu `'` đạo hàm mảnh; `\int` nhỏ; `\hat{A}` quá ngắn so với `\widehat{BAC}`.
+- **Fix mới trong** `render_math_figures.py`:
+  - `fmt_derivative(expr, order)` → `$\boldsymbol{y'}$` đậm to
+  - `fmt_integral(lower, upper, integrand, dx)` → `$\displaystyle\int_a^b$` luôn to
+  - `fmt_angle(vertex, ray1, ray2)` → `$\widehat{BAC}$` phủ trọn 3 chữ cái
+  - `add_angle_label(ax, x, y, vertex, ray1, ray2)` — vẽ nhãn góc có white bbox
+  - `add_degree_label(ax, x, y, value)` — số đo góc đen tuyền, đậm `$\mathbf{60}^{\circ}$`
+- **Fix trong** `tikz_renderer.py`: nâng DPI mặc định `render_tikz()` lên 450, thêm package `bm`, `mathrsfs`, PyMuPDF render với `colorspace=fitz.csRGB`.
+- **Kết quả**: Tất cả ký hiệu toán học in ra A4 đều rõ nét, không bị sợi chỉ hay mờ.
+
+### ✅ Fix 5: Kiểm soát độ khó đề thi (difficulty_level)
+- **Vấn đề cũ**: Không có cơ chế nào để agent điều chỉnh độ khó khi người dùng yêu cầu.
+- **Fix**: Thêm **Bước 2.0 – difficulty_level** vào SKILL.md với bảng điều chỉnh 9 dạng bài × 3 mức (easier / equivalent / harder).
+- **Quy tắc vàng bất biến**: Dạng bài / kiểu bài PHẢI GIỐNG ĐỀ GỐC 100%. Chỉ điều chỉnh số liệu và độ phức tạp tính toán.
+- **Kết quả**: Agent tự động đọc yêu cầu người dùng → map sang `difficulty_level` → áp dụng bảng điều chỉnh số liệu phù hợp.

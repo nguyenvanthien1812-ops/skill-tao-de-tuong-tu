@@ -66,7 +66,16 @@ def apply_sgk_style():
         'savefig.bbox': 'tight',
         'savefig.pad_inches': 0.03,
         'savefig.facecolor': 'white',
-        'savefig.transparent': False
+        'savefig.transparent': False,
+        # Chong mo khi in: tang do sac net (sharpness) va anti-aliasing cho net ve
+        'agg.path.chunksize': 0,          # 0 = chia nho tu dong (chong artifact)
+        'path.simplify': False,            # Tat simplify de giu nen tron ven
+        'path.simplify_threshold': 0.0,    # Giu tat ca diem Bezier
+        'lines.solid_capstyle': 'round',   # Dau net ve tron, khong bi gay
+        'lines.dash_capstyle': 'round',    # Dau net dut tron
+        'lines.solid_joinstyle': 'round',  # Goc liet tron (chong rang cua)
+        'pdf.fonttype': 42,                # Font TrueType trong PDF (in net hon Type 3)
+        'ps.fonttype': 42,                 # Font TrueType trong PS
     })
 
 apply_sgk_style()
@@ -142,39 +151,151 @@ def setup_axes(ax, xlim, ylim):
 
 def draw_vector_label(ax, x, y, letters, fontsize=13.5, color='black', fontweight='bold', ha='center', va='center', bbox=None):
     """
-    Vẽ nhãn véc-tơ chuẩn Sách Giáo Khoa:
-    Mũi tên vector dài bao phủ trọn vẹn bề ngang của toàn bộ các chữ cái (ví dụ: AS, BC, AD...)
-    thay vì bị cụt lủn như cú pháp \\vec{} mặc định của matplotlib.
-    Khoảng cách mũi tên được nâng cao (0.18*h) đảm bảo không bao giờ dính sát vào đỉnh chữ cái.
+    Ve nhan vec-to chuan SGK v2.1 - 3 tang fallback do bbox, mui ten phu tron chu cai.
+    Sua loi: mui ten cam, qua ngan, khong hien khi backend Agg headless.
+    mutation_scale=10px (pixel) doc lap don vi data -> on dinh 300-450 DPI.
     """
     clean_txt = str(letters).replace('$', '').replace('\\vec{', '').replace('}', '').strip()
-    
-    # Nếu là 1 ký tự đơn (như u, v, a, b, n): dùng \\vec bình thường
+
+    # Neu la 1 ky tu don (u, v, a...): dung \vec binh thuong
     if len(clean_txt) <= 1 or clean_txt.startswith('\\'):
         return ax.text(x, y, f'$\\vec{{{clean_txt}}}$', fontsize=fontsize, fontweight=fontweight,
                        color=color, ha=ha, va=va, bbox=bbox)
-    
-    # Nếu có 2 ký tự trở lên (AB, BC, AS, AD...): Vẽ chữ cái + mũi tên dài phủ trọn phía trên
+
+    # Ve chu cai truoc (2+ ky tu: AB, BC, AS, AD...)
     t = ax.text(x, y, f'${clean_txt}$', fontsize=fontsize, fontweight=fontweight,
                 color=color, ha=ha, va=va, bbox=bbox)
+
+    # ---- Do bbox qua 3 tang fallback -----------------------------------
+    bbox_data = None
+    fig = ax.get_figure()
+
+    # Tang 1: get_renderer() - hoat dong voi hau het backend
     try:
-        fig = ax.get_figure()
         fig.canvas.draw()
         renderer = fig.canvas.get_renderer()
-        bbox_t = t.get_window_extent(renderer=renderer)
+        bb = t.get_window_extent(renderer=renderer)
         inv = ax.transData.inverted()
-        p0 = inv.transform((bbox_t.x0, bbox_t.y0))
-        p1 = inv.transform((bbox_t.x1, bbox_t.y1))
-        w = p1[0] - p0[0]
-        h = p1[1] - p0[1]
-        # Nâng cao mũi tên lên 0.18*h để tách biệt hoàn toàn khỏi chữ cái, không dính nét
-        arrow_y = p1[1] + 0.18 * h
-        ax.annotate('', xy=(p1[0] + 0.02*w, arrow_y), xytext=(p0[0] - 0.02*w, arrow_y),
-                    arrowprops=dict(arrowstyle='->,head_width=0.24,head_length=0.34',
-                                    color=color, lw=1.35))
+        p0 = inv.transform((bb.x0, bb.y0))
+        p1 = inv.transform((bb.x1, bb.y1))
+        if abs(p1[0] - p0[0]) > 1e-9:
+            bbox_data = (p0, p1)
     except Exception:
         pass
+
+    # Tang 2: canvas.renderer (thuoc tinh thay the - Agg headless)
+    if bbox_data is None:
+        try:
+            renderer2 = fig.canvas.renderer
+            bb2 = t.get_window_extent(renderer=renderer2)
+            inv2 = ax.transData.inverted()
+            p0 = inv2.transform((bb2.x0, bb2.y0))
+            p1 = inv2.transform((bb2.x1, bb2.y1))
+            if abs(p1[0] - p0[0]) > 1e-9:
+                bbox_data = (p0, p1)
+        except Exception:
+            pass
+
+    # Tang 3: uoc luong hinh hoc theo fontsize + xlim (luon thanh cong)
+    if bbox_data is None:
+        xlim = ax.get_xlim()
+        ylim = ax.get_ylim()
+        dx_data = abs(xlim[1] - xlim[0])
+        dy_data = abs(ylim[1] - ylim[0])
+        n_chars = max(len(clean_txt), 1)
+        char_w = 0.022 * dx_data * (fontsize / 13.0)
+        char_h = 0.045 * dy_data * (fontsize / 13.0)
+        half_w = n_chars * char_w / 2.0
+        p0 = np.array([x - half_w, y])
+        p1 = np.array([x + half_w, y + char_h])
+        bbox_data = (p0, p1)
+
+    # ---- Ve mui ten phu tron chu cai -----------------------------------
+    p0, p1 = bbox_data
+    w = p1[0] - p0[0]
+    h = abs(p1[1] - p0[1])
+
+    # Nang mui ten 0.22*h phia tren dinh chu (khong bao gio dinh net)
+    arrow_y = p1[1] + 0.22 * h
+    # Keo dai 6% moi ben de phu vuot qua 2 chu cai bien
+    x_start = p0[0] - 0.06 * w
+    x_end   = p1[0] + 0.06 * w
+
+    # mutation_scale=10px (pixel, doc lap don vi data) -> on dinh 300-450 DPI
+    ax.annotate(
+        '',
+        xy=(x_end, arrow_y),
+        xytext=(x_start, arrow_y),
+        arrowprops=dict(
+            arrowstyle='->,head_width=0.20,head_length=0.22',
+            color=color,
+            lw=1.4,
+            mutation_scale=10,
+            shrinkA=0,
+            shrinkB=0,
+        ),
+        annotation_clip=False,
+    )
     return t
+
+# ─── KY HIEU DAO HAM & TICH PHAN CHUAN SGK (v2.1 – Ro net khi in A4) ─────
+
+def fmt_derivative(expr, order=1):
+    """
+    Dinh dang ky hieu dao ham chuan SGK, to dam ro rang khi in.
+    - order=1: y' hoac f'(x) -> dung \\boldsymbol{y'} size 15.5pt
+    - order=2: y'' hoac f''(x) -> \\boldsymbol{y''}
+    Dau phay dao ham to, dam, KHONG bi manh nhu soi chi.
+    """
+    primes = "'" * order
+    clean = str(expr).replace('$', '').strip()
+    return rf'$\boldsymbol{{{clean}{primes}}}$'
+
+
+def fmt_integral(lower='a', upper='b', integrand='f(x)', differential='x'):
+    """
+    Dinh dang ky hieu tich phan chuan SGK ro net khi in A4.
+    Su dung \\displaystyle de tich phan luon hien to, khong bi thu nho.
+    Vi du: fmt_integral('0','1','x^2','x') -> $\\displaystyle\\int_0^1 x^2\\,dx$
+    """
+    return rf'$\displaystyle\int_{{{lower}}}^{{{upper}}} {integrand}\,d{differential}$'
+
+
+def fmt_angle(vertex, ray1=None, ray2=None):
+    """
+    Dinh dang ky hieu goc chuan SGK (dung \\widehat de phủ tron 3 dinh).
+    - fmt_angle('B','A','C') -> $\\widehat{BAC}$ (goc BAC)
+    - fmt_angle('A')        -> $\\widehat{A}$ (goc dinh A don gian)
+    """
+    if ray1 and ray2:
+        return rf'$\widehat{{{ray1}{vertex}{ray2}}}$'
+    return rf'$\widehat{{{vertex}}}$'
+
+
+def add_angle_label(ax, x, y, vertex, ray1=None, ray2=None,
+                    fontsize=13, color='black', fontweight='bold',
+                    ha='center', va='center'):
+    """
+    Ve nhan goc tai vi tri (x, y) su dung ky hieu widehat chuan SGK.
+    Dung thay cho ax.text(x, y, r'$\hat{A}$') vi hat{A} qua ngan.
+    """
+    label = fmt_angle(vertex, ray1, ray2)
+    return ax.text(x, y, label, fontsize=fontsize, fontweight=fontweight,
+                   color=color, ha=ha, va=va,
+                   bbox=dict(boxstyle='square,pad=0.08', fc='white', ec='none'))
+
+
+def add_degree_label(ax, x, y, value, fontsize=12.5, color='black', ha='center', va='center'):
+    """
+    Ve so do goc (vi du: 60 do) voi ky hieu do trong ro, dam, den tuyen.
+    Dung thay cho ax.text voi color='gray' vi xam mo khi in.
+    Vi du: add_degree_label(ax, 1.5, 0.5, 60) -> hien thi '60^{\circ}' ro net.
+    """
+    label = rf'$\mathbf{{{value}}}^{{\circ}}$'
+    return ax.text(x, y, label, fontsize=fontsize, fontweight='bold',
+                   color=color, ha=ha, va=va,
+                   bbox=dict(boxstyle='square,pad=0.08', fc='white', ec='none'))
+
 
 def draw_point_with_projection(ax, x, y, x_label=None, y_label=None, marker='ko', ms=5.2, use_box=True):
     """
@@ -204,7 +325,7 @@ def draw_point_with_projection(ax, x, y, x_label=None, y_label=None, marker='ko'
 
 def plot_cubic_function(a, b, c, d, xlim, ylim, filename, marked_points=None):
     """Vẽ đồ thị hàm số bậc ba y = ax^3 + bx^2 + cx + d nét đậm siêu rõ (lw=2.3)"""
-    fig, ax = plt.subplots(figsize=(4.2, 3.8), dpi=300)
+    fig, ax = plt.subplots(figsize=(4.2, 3.8), dpi=DEFAULT_DPI)
     x = np.linspace(xlim[0]*0.96, xlim[1]*0.96, 400)
     y = a*x**3 + b*x**2 + c*x + d
     ax.plot(x, y, color='#000000', lw=2.3)
@@ -223,14 +344,14 @@ def plot_cubic_function(a, b, c, d, xlim, ylim, filename, marked_points=None):
             
     setup_axes(ax, xlim, ylim)
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight')
     plt.close()
 
 def plot_rational_1_1(a, b, c, d, xlim, ylim, filename, marked_points=None):
     """Vẽ đồ thị hàm phân thức bậc 1 / bậc 1: y = (ax + b) / (cx + d) nét đậm siêu rõ"""
     if c == 0:
         raise ValueError("Hàm phân thức bậc 1/ bậc 1 yêu cầu c != 0 (mẫu số cx + d).")
-    fig, ax = plt.subplots(figsize=(4.3, 3.8), dpi=300)
+    fig, ax = plt.subplots(figsize=(4.3, 3.8), dpi=DEFAULT_DPI)
     x_asymp = -d / c
     y_asymp = a / c
     
@@ -271,7 +392,7 @@ def plot_rational_1_1(a, b, c, d, xlim, ylim, filename, marked_points=None):
                 
     setup_axes(ax, xlim, ylim)
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight')
     plt.close()
 
 def plot_bounded_interval_extrema(xs_knots, ys_knots, ds_knots, xlim, ylim, filename,
@@ -282,7 +403,7 @@ def plot_bounded_interval_extrema(xs_knots, ys_knots, ds_knots, xlim, ylim, file
     - 2 đầu mút và các điểm cực trị có chấm tròn to (ms=5.5) và đường gióng nét đứt chuẩn xác
     - Nhãn tọa độ tuân thủ 100% 'Quy tắc gióng nhãn trục đối xứng'
     """
-    fig, ax = plt.subplots(figsize=(4.5, 3.8), dpi=300)
+    fig, ax = plt.subplots(figsize=(4.5, 3.8), dpi=DEFAULT_DPI)
     spline = CubicHermiteSpline(xs_knots, ys_knots, ds_knots)
     xs = np.linspace(xs_knots[0], xs_knots[-1], 400)
     ax.plot(xs, spline(xs), color='#1A365D', lw=2.4)
@@ -304,7 +425,7 @@ def plot_bounded_interval_extrema(xs_knots, ys_knots, ds_knots, xlim, ylim, file
 
     setup_axes(ax, xlim, ylim)
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight')
     plt.close()
 
 
@@ -315,7 +436,7 @@ def plot_harmonic_oscillation(A, T, phi, t_max, filename, x_label='t (s)', y_lab
     Vẽ đồ thị dao động điều hòa li độ - thời gian: x(t) = A * cos(omega * t + phi)
     Chuẩn SGK Vật lý 11 & 12
     """
-    fig, ax = plt.subplots(figsize=(6.2, 3.2), dpi=300)
+    fig, ax = plt.subplots(figsize=(6.2, 3.2), dpi=DEFAULT_DPI)
     omega = 2 * np.pi / T
     t = np.linspace(0, t_max, 500)
     x = A * np.cos(omega * t + phi)
@@ -341,7 +462,7 @@ def plot_harmonic_oscillation(A, T, phi, t_max, filename, x_label='t (s)', y_lab
         ax.spines[sp].set_visible(False)
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -353,7 +474,7 @@ def plot_thin_lens_optics(f, d, h, filename, lens_type='convex'):
     - d: khoảng cách vật
     - h: chiều cao vật sáng AB
     """
-    fig, ax = plt.subplots(figsize=(7.2, 3.5), dpi=300)
+    fig, ax = plt.subplots(figsize=(7.2, 3.5), dpi=DEFAULT_DPI)
     ax.axhline(0, color='black', lw=1.0)
 
     f_val = abs(f) if lens_type == 'convex' else -abs(f)
@@ -400,7 +521,7 @@ def plot_thin_lens_optics(f, d, h, filename, lens_type='convex'):
 
     ax.axis('off')
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -412,7 +533,7 @@ def draw_full_border_bbt(x_labels, yprime_data, y_data, arrows, filename, W=10.0
     - y_data: list of tuples (x_pos, y_pos, text)
     - arrows: list of tuples (start_x, start_y, end_x, end_y)
     """
-    fig, ax = plt.subplots(figsize=(6.2, 2.5), dpi=300)
+    fig, ax = plt.subplots(figsize=(6.2, 2.5), dpi=DEFAULT_DPI)
     ax.set_xlim(0, W)
     ax.set_ylim(0, H)
     ax.axis('off')
@@ -593,7 +714,7 @@ def plot_chemistry_energy_diagram(reactants_lbl, products_lbl, delta_h_val, ea_v
     - Phản ứng thu nhiệt (is_exothermic=False): delta_h > 0
     - Năng lượng hoạt hóa Ea và biến thiên enthalpy Delta_r H chuẩn 300 DPI
     """
-    fig, ax = plt.subplots(figsize=(5.5, 3.8), dpi=300)
+    fig, ax = plt.subplots(figsize=(5.5, 3.8), dpi=DEFAULT_DPI)
     
     # Trục tọa độ
     ax.annotate('', xy=(0, 5.2), xytext=(0, 0), arrowprops=dict(arrowstyle='-|> ', color='black', lw=1.3))
@@ -644,7 +765,7 @@ def plot_chemistry_energy_diagram(reactants_lbl, products_lbl, delta_h_val, ea_v
     ax.axis('off')
     
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -652,7 +773,7 @@ def plot_ph_titration_curve(v_eq, ph_init, ph_eq, ph_end, filename, title="Đư�
     """
     Vẽ đồ thị chuẩn độ axit - bazơ (pH titration curve) chuẩn SGK Hóa học 11
     """
-    fig, ax = plt.subplots(figsize=(5.5, 3.8), dpi=300)
+    fig, ax = plt.subplots(figsize=(5.5, 3.8), dpi=DEFAULT_DPI)
     
     # Hệ trục tọa độ
     ax.axhline(0, color='black', lw=1.2)
@@ -683,7 +804,7 @@ def plot_ph_titration_curve(v_eq, ph_init, ph_eq, ph_end, filename, title="Đư�
         ax.spines[sp].set_visible(False)
         
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -756,7 +877,7 @@ def plot_trig_function(func_type, a, b, c, d, xlim, ylim, filename, marked_point
     - Trục x ghi nhãn bội số của π/4, π/2, π chuẩn SGK
     - Đánh dấu điểm cực đại, cực tiểu, giao Ox
     """
-    fig, ax = plt.subplots(figsize=(8, 4), dpi=300)
+    fig, ax = plt.subplots(figsize=(8, 4), dpi=DEFAULT_DPI)
 
     # Phông chữ Times New Roman
     apply_sgk_style()
@@ -851,7 +972,7 @@ def plot_trig_function(func_type, a, b, c, d, xlim, ylim, filename, marked_point
     ax.set_ylabel('y', fontsize=11, loc='top', rotation=0)
     ax.tick_params(labelsize=9)
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -865,7 +986,7 @@ def plot_parabola(a, b, c, xlim, ylim, filename, vertex_label=True, roots_label=
     - Trục đối xứng nét đứt
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(6, 5), dpi=300)
+    fig, ax = plt.subplots(figsize=(6, 5), dpi=DEFAULT_DPI)
 
     x = np.linspace(xlim[0], xlim[1], 1000)
     y = a * x**2 + b * x + c
@@ -923,7 +1044,7 @@ def plot_parabola(a, b, c, xlim, ylim, filename, vertex_label=True, roots_label=
     ax.set_ylabel('y', fontsize=11, loc='top', rotation=0)
     ax.tick_params(labelsize=9)
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -1000,7 +1121,7 @@ def plot_cylinder(filename, show_height=True, show_radius=True):
     - Nhãn r và h
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(4, 5), dpi=300)
+    fig, ax = plt.subplots(figsize=(4, 5), dpi=DEFAULT_DPI)
     ax.set_aspect('equal')
     ax.axis('off')
 
@@ -1041,7 +1162,7 @@ def plot_cylinder(filename, show_height=True, show_radius=True):
     ax.set_xlim(-2.3, 2.8)
     ax.set_ylim(-0.7, 3.7)
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -1053,7 +1174,7 @@ def plot_cone(filename, show_height=True, show_radius=True, show_slant=False):
     - Nhãn r, h, l
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(4, 5), dpi=300)
+    fig, ax = plt.subplots(figsize=(4, 5), dpi=DEFAULT_DPI)
     ax.set_aspect('equal')
     ax.axis('off')
 
@@ -1102,7 +1223,7 @@ def plot_cone(filename, show_height=True, show_radius=True, show_slant=False):
     ax.set_xlim(-2.2, 2.5)
     ax.set_ylim(-0.8, 3.9)
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -1114,7 +1235,7 @@ def plot_sphere(filename, show_cross_section=True):
     - Tâm O, bán kính R
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(4.5, 4.5), dpi=300)
+    fig, ax = plt.subplots(figsize=(4.5, 4.5), dpi=DEFAULT_DPI)
     ax.set_aspect('equal')
     ax.axis('off')
 
@@ -1146,7 +1267,7 @@ def plot_sphere(filename, show_cross_section=True):
     ax.set_xlim(-2.8, 2.8)
     ax.set_ylim(-2.8, 2.8)
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -1251,7 +1372,7 @@ def plot_kinematics(t_values, s_values, filename,
     - Nếu truyền list of arrays thì vẽ nhiều đường với màu tự động
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(7, 4), dpi=300)
+    fig, ax = plt.subplots(figsize=(7, 4), dpi=DEFAULT_DPI)
 
     colors_cycle = ['#1A365D', '#C0392B', '#27AE60', '#8E44AD', '#D35400']
 
@@ -1286,7 +1407,7 @@ def plot_kinematics(t_values, s_values, filename,
     ax.spines[['top', 'right']].set_visible(False)
     ax.tick_params(labelsize=9)
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -1297,7 +1418,7 @@ def plot_velocity_time(segments, filename):
         t_start, t_end, v_start, v_end, label (optional), fill (optional bool)
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(7, 4), dpi=300)
+    fig, ax = plt.subplots(figsize=(7, 4), dpi=DEFAULT_DPI)
 
     colors_seg = ['#1A365D', '#C0392B', '#27AE60', '#8E44AD']
 
@@ -1338,7 +1459,7 @@ def plot_velocity_time(segments, filename):
     ax.spines[['top', 'right']].set_visible(False)
     ax.tick_params(labelsize=9)
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -1351,7 +1472,7 @@ def plot_ideal_gas_pV(T_values, V_ranges, filename):
     Giả định n=1, R=8.314 (đơn vị tùy ý, hiển thị tỉ lệ)
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(6, 5), dpi=300)
+    fig, ax = plt.subplots(figsize=(6, 5), dpi=DEFAULT_DPI)
 
     colors_T = ['#C0392B', '#E67E22', '#27AE60', '#2980B9', '#8E44AD']
     nR = 8.314  # n*R, có thể chuẩn hoá
@@ -1381,7 +1502,7 @@ def plot_ideal_gas_pV(T_values, V_ranges, filename):
                 fontsize=9, ha='right', va='top',
                 bbox=dict(boxstyle='round,pad=0.3', fc='#FAFAFA', ec='#BBBBBB'))
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -1392,7 +1513,7 @@ def plot_ideal_gas_pT(V_values, T_ranges, filename):
     - T_ranges : list 2-tuple (T_min, T_max) tương ứng mỗi V
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(6, 5), dpi=300)
+    fig, ax = plt.subplots(figsize=(6, 5), dpi=DEFAULT_DPI)
 
     colors_V = ['#C0392B', '#E67E22', '#27AE60', '#2980B9', '#8E44AD']
     nR = 8.314
@@ -1419,7 +1540,7 @@ def plot_ideal_gas_pT(V_values, T_ranges, filename):
     ax.spines[['top', 'right']].set_visible(False)
     ax.tick_params(labelsize=9)
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -1435,7 +1556,7 @@ def plot_fresnel_diagram(U_R, U_L, U_C, filename):
     - Góc φ
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(5, 5.5), dpi=300)
+    fig, ax = plt.subplots(figsize=(5, 5.5), dpi=DEFAULT_DPI)
     ax.set_aspect('equal')
 
     arrow_kw = dict(length_includes_head=True, head_width=0.06, head_length=0.08, lw=1.8)
@@ -1493,7 +1614,7 @@ def plot_fresnel_diagram(U_R, U_L, U_C, filename):
     ax.tick_params(labelsize=8)
     ax.set_title('Giản đồ Fresnel mạch RLC nối tiếp', fontsize=11, pad=6)
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -1624,7 +1745,7 @@ def plot_exponential_log(a, xlim, ylim, filename,
     ax.set_yticks([t for t in ax.get_yticks() if t != 0])
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -1748,7 +1869,7 @@ def plot_absolute_value_transform(coeffs, transform_type, xlim, ylim, filename,
                   prop={'family': 'DejaVu Serif', 'size': 10})
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -1834,7 +1955,7 @@ def plot_statistics_bar(categories, values, filename,
     ax.tick_params(axis='y', labelsize=10)
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -1905,7 +2026,7 @@ def plot_pie_chart(labels, values, filename,
 
     ax.axis('equal')
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -2013,7 +2134,7 @@ def plot_number_line_intervals(intervals, xlim, filename,
     ax.set_ylim(0, 1)
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -2184,7 +2305,7 @@ def plot_2d_vectors(vectors, filename,
                     bbox=dict(boxstyle='square,pad=0.12', fc='white', ec='none'))
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -2261,7 +2382,7 @@ def plot_function_comparison(f1_coeffs, f2_coeffs, xlim, ylim, filename,
                         fontsize=10, fontfamily='DejaVu Serif', fontweight='bold')
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -2317,7 +2438,7 @@ def plot_wave_superposition(A1, A2, T, phi_diff, t_max, filename, show_labels=Tr
     ax.tick_params(labelsize=10)
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -2381,7 +2502,7 @@ def plot_nuclear_decay(N0, half_life, t_max, filename,
     ax.set_ylim(0, N0 * 1.05)
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -2484,7 +2605,7 @@ def plot_conic_section(conic_type, a, b, xlim, ylim, filename,
                             fontfamily='DejaVu Serif')
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -2601,7 +2722,7 @@ def plot_projectile_motion(v0, angle_deg, filename, g=10.0,
     ax.spines[['top', 'right']].set_visible(False)
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -2621,7 +2742,7 @@ def plot_integral_riemann_sum(func_type, coeffs, a, b, n_rects, filename, rieman
     - Ghi nhãn tích phân xấp xỉ S và đánh dấu mốc chia x_0, ..., x_n
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(7.5, 4.8), dpi=300)
+    fig, ax = plt.subplots(figsize=(7.5, 4.8), dpi=DEFAULT_DPI)
 
     # Hàm số f(x)
     if callable(func_type):
@@ -2752,7 +2873,7 @@ def plot_electric_field_lines(q1_pos, q1_val, q2_pos, q2_val, filename, grid_siz
     - Bán kính điện tích = 0.25, viền đen
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(6.0, 5.8), dpi=300)
+    fig, ax = plt.subplots(figsize=(6.0, 5.8), dpi=DEFAULT_DPI)
 
     # Lưới tọa độ tính điện trường
     res = 220
@@ -2816,7 +2937,7 @@ def plot_electric_field_lines(q1_pos, q1_val, q2_pos, q2_val, filename, grid_siz
     ax.grid(True, linestyle=':', alpha=0.35, color='#718096')
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -2833,7 +2954,7 @@ def plot_magnetic_lorentz_force(filename, v_dir='right', b_dir='into_page', char
     - Ký hiệu góc vuông giữa v và f
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(6.0, 5.2), dpi=300)
+    fig, ax = plt.subplots(figsize=(6.0, 5.2), dpi=DEFAULT_DPI)
     w_box = dict(boxstyle='square,pad=0.12', fc='white', ec='none')
 
     is_positive = charge_type in ('positive', '+', 'pos')
@@ -2951,7 +3072,7 @@ def plot_magnetic_lorentz_force(filename, v_dir='right', b_dir='into_page', char
                  fontsize=12, fontweight='bold', fontfamily='DejaVu Serif', pad=12)
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -2965,7 +3086,7 @@ def plot_polar_graph(curve_type, a, filename, title=None):
     - Tiêu đề hình vẽ rõ ràng
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(6.0, 6.0), subplot_kw=dict(projection='polar'), dpi=300)
+    fig, ax = plt.subplots(figsize=(6.0, 6.0), subplot_kw=dict(projection='polar'), dpi=DEFAULT_DPI)
 
     theta = np.linspace(0, 2 * np.pi, 1000)
 
@@ -3006,7 +3127,7 @@ def plot_polar_graph(curve_type, a, filename, title=None):
     ax.legend(loc='upper right', bbox_to_anchor=(1.18, 1.12), fontsize=11)
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
 
 
@@ -3020,7 +3141,7 @@ def plot_3d_cross_section_pyramid(filename, cut_ratio=0.5):
     - Đỉnh S, A, B, C, D, M, N, P, Q có nhãn chữ rõ ràng với bbox trắng.
     """
     apply_sgk_style()
-    fig, ax = plt.subplots(figsize=(5.2, 5.6), dpi=300)
+    fig, ax = plt.subplots(figsize=(5.2, 5.6), dpi=DEFAULT_DPI)
     w_box = dict(boxstyle='square,pad=0.12', fc='white', ec='none')
 
     # Tọa độ các đỉnh đáy ABCD (hình bình hành trong phép chiếu song song)
@@ -3088,5 +3209,5 @@ def plot_3d_cross_section_pyramid(filename, cut_ratio=0.5):
     ax.axis('off')
 
     plt.tight_layout()
-    plt.savefig(filename, dpi=300, bbox_inches='tight', facecolor='white')
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', facecolor='white')
     plt.close()
