@@ -155,11 +155,23 @@ result = ocr_image_to_latex(["de_thi_scan.jpg", "de_thi_scan_2.jpg"])
 content = read_exam_source("de_goc.docx", is_mathtype_docx=True)
 ```
 
-2. Sau khi có nội dung đề gốc, trích xuất toàn bộ câu hỏi:
-   - Phần I: Trắc nghiệm 4 lựa chọn (12 câu).
-   - Phần II: Trắc nghiệm Đúng/Sai (2 hoặc 4 câu, mỗi câu 4 ý a, b, c, d).
-   - Phần III: Trắc nghiệm trả lời ngắn (4 hoặc 6 câu).
-   - Phần Tự luận: Khảo sát hàm số, bài toán thực tế, tối ưu hóa.
+2. Sau khi có nội dung đề gốc, trích xuất toàn bộ câu hỏi theo **cấu trúc GDPT 2018** (áp dụng cho tất cả 8 môn, lớp 6–12):
+
+   **Các phần trắc nghiệm (Toán / Vật Lý / Hóa Học / Sinh Học / KHTN / Địa Lý / KTPL):**
+   - **Phần I**: Trắc nghiệm 4 lựa chọn A/B/C/D (12 câu THPT; 16–20 câu THCS/KHTN).
+   - **Phần II**: Trắc nghiệm **Đúng/Sai** (4 câu THPT; 2–4 câu THCS) — mỗi câu gồm **4 ý a, b, c, d** theo thứ tự mức độ NB→TH→VD→VDC. Thang điểm: đúng 1 ý = 0,25đ; 2 ý = 0,5đ; 3 ý = 0,75đ; 4 ý = 1,0đ.
+   - **Phần III**: Trắc nghiệm trả lời ngắn — điền số (6 câu THPT; 4–6 câu THCS). **Đáp án bắt buộc là số nguyên hoặc thập phân ≤ 2 chữ số**.
+   - **Phần Tự luận** (đề kiểm tra học kỳ): bài toán thực tiễn, khảo sát hàm số, tình huống pháp luật, phân tích địa lý, bài nghị luận văn học. **Bắt buộc có bước phiên giải kết quả về thực tiễn**.
+
+   **Môn Ngữ Văn (cấu trúc riêng — không có trắc nghiệm A/B/C/D):**
+   - **Phần I — Đọc hiểu**: 1 ngữ liệu (văn bản văn học / nhật dụng), 4–6 câu hỏi theo 4 mức NB/TH/VD/VDC.
+   - **Phần II — Viết**: 1 bài nghị luận xã hội + 1 bài nghị luận văn học.
+
+   **Phân loại mức độ tư duy bắt buộc (GDPT 2018):**
+   - **NB** (Nhận biết): ~30% tổng câu
+   - **TH** (Thông hiểu): ~40% tổng câu
+   - **VD** (Vận dụng): ~20% tổng câu
+   - **VDC** (Vận dụng cao): ~10% tổng câu
 
 
 ### Bước 2: Thiết kế bài toán tương đương & Kiểm định toán học
@@ -203,6 +215,109 @@ Với mỗi câu hỏi trong đề gốc:
    - Hàm bậc ba / phân thức: Chọn nghiệm đạo hàm nguyên (ví dụ $x = 0, x = 2$ hoặc $x = \pm 1$), tung độ cực trị nguyên.
    - Bài toán thực tế / tối ưu hóa: Đảm bảo điểm dừng $x_0$ rơi vào khoảng thực tế và cho kết quả nguyên hoặc số thập phân gọn.
 3. **Lập bảng kiểm định**: Tính toán đạo hàm, cực trị, giới hạn tiệm cận để đảm bảo đáp án trắc nghiệm không bị trùng hoặc vô nghiệm.
+
+---
+
+### ✅ Bước 2bis: Kiểm Định Chuẩn GDPT 2018 (BẮT BUỘC TRƯỚC KHI XUẤT ĐỀ)
+
+> [!IMPORTANT]
+> **CHỈ THỊ BẮT BUỘC:** Sau khi thiết kế xong toàn bộ câu hỏi, Agent PHẢI tự kiểm tra checklist dưới đây. Nếu bất kỳ mục nào KHÔNG ĐẠT, phải sửa trước khi xuất file Word.
+
+#### Checklist Kiểm Định Tự Động (8 môn, lớp 6–12):
+
+```
+✅ CHECKLIST GDPT 2018
+══════════════════════════════════════════════════════════════════════
+
+□ [CẤU TRÚC] Đề có đủ 3 phần theo chuẩn GDPT 2018?
+  - Môn KHTN/Toán/Lý/Hóa/Sinh/Địa/KTPL: Phần I + II + III (+ Tự luận nếu là đề học kỳ)
+  - Môn Ngữ Văn: Đọc hiểu + Viết (KHÔNG có trắc nghiệm A/B/C/D)
+
+□ [ĐÚNG/SAI] Mỗi câu Phần II có ĐÚNG 4 ý a/b/c/d không?
+  - Ý a: mức NB | Ý b: mức TH | Ý c: mức VD | Ý d: mức VDC
+  - Không được tất cả 4 ý đều ĐÚNG hoặc đều SAI
+
+□ [TỈ LỆ NB/TH/VD/VDC] Tổng tỉ lệ trên toàn đề xấp xỉ 30:40:20:10 (%)?
+
+□ [TRẢ LỜI NGẮN] Tất cả đáp án Phần III là số nguyên hoặc thập phân ≤ 2 chữ số?
+
+□ [THỰC TIỄN] Có ít nhất 1–2 câu mang ngữ cảnh đời sống thực tế?
+
+□ [TỰ LUẬN] Lời giải tự luận có bước "phiên giải kết quả về thực tiễn"?
+
+□ [VALIDATOR] Gọi script kiểm định tự động:
+  python scripts/gdpt2018_validator.py (hoặc import validate_exam_gdpt2018())
+
+══════════════════════════════════════════════════════════════════════
+```
+
+#### Phương Pháp Giải Chuẩn GDPT 2018 Theo Từng Môn:
+
+**🔵 Môn Toán — Bắt buộc áp dụng Mô hình hóa toán học (4 bước):**
+```
+Bước 1 — Thực tiễn → Toán học: Đặt biến, lập hàm số mô tả tình huống
+Bước 2 — Giải toán học: Tính đạo hàm, tìm cực trị, giải PT/BPT
+Bước 3 — Kiểm tra điều kiện thực tế: Nghiệm > 0, trong miền thực tế
+Bước 4 — Phiên giải: "Vậy trong thực tế, [kết luận có ý nghĩa]."
+```
+- **Thống kê & Xác suất** (lớp 6+): Phân phối nhị thức $B(n,p)$, chuẩn $N(\mu,\sigma^2)$, kết quả phải là phân số gọn hoặc thập phân ≤ 2 chữ số.
+- **Hình học không gian**: Luôn gắn với ứng dụng thực tế (tính vật liệu, chi phí, thể tích bồn chứa).
+
+**🔴 Môn Vật Lý — Quy trình thực nghiệm 6 bước:**
+```
+1. Xác định vấn đề → 2. Giả thuyết → 3. Thiết kế thí nghiệm
+4. Đo đạc (≥3 lần) → 5. Xử lý sai số → 6. Kết luận
+```
+- **Bắt buộc ghi**: Quy ước chiều dương; giả thuyết bỏ qua (ma sát, lực cản...); phân tích lực bằng hình vẽ; đơn vị SI chuẩn $\mathrm{m/s, kg, N, Pa, J, W}$.
+- **Phân tích sai số**: $\bar{X} = \frac{1}{n}\sum x_i$; $\Delta X = \frac{1}{n}\sum|x_i - \bar{X}|$; $\delta X = \frac{\Delta X}{\bar{X}} \times 100\%$.
+- **Câu Đúng/Sai thực nghiệm**: Ít nhất 1 câu dựa trên bảng số liệu đo đạc thực.
+
+**🟢 Môn Hóa Học — Sơ đồ bảo toàn bắt buộc:**
+```
+🔵 Bảo toàn khối lượng: Σm(đầu vào) = Σm(sản phẩm)
+🔴 Bảo toàn nguyên tố: n(X) = const qua phản ứng
+🟡 Bảo toàn electron: Σe(nhường) = Σe(nhận)
+🟢 Bảo toàn điện tích: Σ(ion+) = Σ(ion−) trong dung dịch
+```
+- **Font IUPAC**: $\mathrm{Fe, Al, Cu, H_2O, Fe_2O_3}$ — KHÔNG in nghiêng.
+- **Điều kiện phản ứng**: $\xrightarrow{t^\circ, \text{xt}}$, $\xrightarrow{\text{ánh sáng}}$, trạng thái $(s)(l)(g)(aq)$, ký hiệu $\downarrow\uparrow$.
+- **Hóa học xanh**: Tính hiệu suất phản ứng $H\% = \frac{m_{SP}}{m_{LT}} \times 100\%$; liên hệ ứng dụng môi trường.
+
+**🟣 Môn Sinh Học — Quy trình khoa học 6 bước:**
+```
+Quan sát → Đặt câu hỏi → Giả thuyết → Thí nghiệm (có nhóm đối chứng)
+→ Phân tích số liệu → Kết luận & Phổ biến
+```
+- **Di truyền**: Sơ đồ lai đầy đủ P→F1→F2; tỉ lệ kiểu gen/kiểu hình; liên hệ bệnh di truyền người.
+- **Ứng dụng**: Vaccine, GMO, tế bào gốc, xử lý ô nhiễm vi sinh — phải nêu ý nghĩa thực tiễn.
+
+**🌍 Môn KHTN lớp 6–9 — Tích hợp liên môn:**
+- Mỗi câu Đúng/Sai nên kết hợp ≥ 2 phân môn (Lý+Hóa / Hóa+Sinh / Lý+Sinh).
+- Quy trình khoa học: Quan sát → Giả thuyết → Thực nghiệm → Kết luận.
+- Ngữ cảnh: Bảo vệ môi trường, tiết kiệm năng lượng, an toàn thực phẩm, sức khỏe cộng đồng.
+
+**🗺️ Môn Địa Lý — Kỹ năng phân tích biểu đồ/bản đồ chuẩn GDPT 2018:**
+```
+Bước 1: Nhận xét chung (tổng quan toàn biểu đồ)
+Bước 2: Nhận xét chi tiết (từng thành phần, giai đoạn; max/min; xu hướng tăng/giảm)
+Bước 3: Giải thích nguyên nhân
+Bước 4: Kết luận và liên hệ thực tiễn Việt Nam / Thế giới
+```
+- Câu Tự luận Địa lý: PHẢI có đề xuất giải pháp phát triển bền vững.
+
+**⚖️ Môn Kinh Tế & Pháp Luật — Giải tình huống pháp luật 5 bước:**
+```
+1. Xác định chủ thể (ai? vai trò?)
+2. Xác định quan hệ pháp lý (hợp đồng? vi phạm? tranh chấp?)
+3. Tìm quy phạm pháp luật áp dụng
+4. Áp dụng vào tình huống cụ thể
+5. Kết luận: Hành vi đúng/sai? Hậu quả pháp lý? Giải pháp bảo vệ quyền lợi?
+```
+
+**📖 Môn Ngữ Văn — Đọc hiểu và Viết theo GDPT 2018:**
+- **Đọc hiểu**: Câu hỏi theo 4 mức NB→TH→VD→VDC; phát hiện biện pháp tu từ, phân tích tác dụng, liên hệ thực tiễn.
+- **Nghị luận XH**: Giải thích → Thực trạng → Nguyên nhân/Hậu quả → Giải pháp → Liên hệ bản thân.
+- **Nghị luận VH**: Giới thiệu tác giả/tác phẩm → Phân tích luận điểm (dẫn chứng + bình) → Đánh giá nghệ thuật → Liên hệ mở rộng.
 
 ### Bước 3: Lập trình vẽ hình kỹ thuật chuẩn xác (300 DPI) & Đậm Nét Siêu Rõ
 Lưu toàn bộ hình ảnh vào thư mục `hinh_ve_<ma_de>/` với định dạng PNG độ phân giải 300 DPI:
@@ -529,6 +644,29 @@ Agent kích hoạt hệ thống biên dịch chuyên sâu [exam_translator.py](.
   * *"Barem chấm điểm"* $\rightarrow$ *"Marking Scheme / Grading Rubric"*
 - **Bảo toàn 100% công thức MathType OLE**: Toàn bộ công thức toán trong `$ ... $` được giữ nguyên vẹn và tự động làm sạch qua `sanitize_latex_for_mathtype` (luôn dùng `\Rightarrow`, `\Leftrightarrow`).
 - **Bảo toàn 100% hình vẽ kỹ thuật**: Giữ nguyên hình vẽ 450 DPI có các nhãn điểm hình học quốc tế ($A, B, C, D, E, F, H, K, M, N, O$).
+
+---
+
+## 🆕 Nhật Ký Cải Tiến Kỹ Thuật (v4.0.0 – 10/2026)
+
+### ✅ Nâng cấp 1: Tích Hợp Chuẩn GDPT 2018 Toàn Diện (8 Môn, Lớp 6–12)
+- **Phạm vi mới**: Mở rộng từ 3 môn (Toán/Lý/Hóa) lên **8 môn** (+ Sinh học, KHTN, Địa lý, Kinh tế & Pháp luật, Ngữ Văn) cho lớp 6–12.
+- **Bước 2bis**: Thêm **Checklist Kiểm Định Tự Động GDPT 2018** — bắt buộc chạy trước khi xuất file Word.
+- **Phương pháp giải mới**: Mô hình hóa Toán học 4 bước; Quy trình thực nghiệm Vật lý 6 bước; Sơ đồ bảo toàn Hóa học; Quy trình khoa học Sinh học; Giải tình huống Pháp luật 5 bước; Phân tích biểu đồ Địa lý 4 bước.
+- **Tỉ lệ NB:TH:VD:VDC** = 30:40:20:10 được giám sát và cảnh báo tự động.
+
+### ✅ Nâng cấp 2: Script Kiểm Định Tự Động `gdpt2018_validator.py`
+- **File mới**: [`scripts/gdpt2018_validator.py`](./scripts/gdpt2018_validator.py) — kiểm tra đề thi có đúng chuẩn GDPT 2018 không.
+- **8 loại kiểm tra**: Cấu trúc 3 phần; tỉ lệ NB/TH/VD/VDC; câu Đúng/Sai đủ 4 ý; đáp án ngắn số gọn; ngữ cảnh thực tiễn; tự luận có phiên giải; đặc thù từng môn; cờ tích hợp KHTN.
+- **Báo cáo trực quan**: Màu sắc ✅❌⚠️; bảng tỉ lệ NB/TH/VD/VDC; gợi ý sửa lỗi; xuất JSON.
+
+### ✅ Nâng cấp 3: Từ Điển GDPT 2018 Trong `exam_translator.py`
+- **`GDPT2018_STRUCTURE_GLOSSARY`**: 60+ thuật ngữ cấu trúc đề thi GDPT 2018 (Phần I/II/III, Đúng/Sai, Trả lời ngắn, mức độ NB/TH/VD/VDC, hóa học xanh, sơ đồ lai, biểu đồ địa lý, tình huống pháp luật, nghị luận văn học...).
+- Chuẩn tiêu đề phần thi quốc tế: "Part I: Multiple Choice / Part II: True or False / Part III: Short Answer".
+
+### ✅ Nâng cấp 4: Tài Liệu Tham Chiếu Hoàn Chỉnh
+- **`references/quy_chuan_de_thi_2025.md`**: Cập nhật đầy đủ 8 môn; thang điểm Đúng/Sai; template câu hỏi theo từng môn; ngữ cảnh thực tiễn ưu tiên.
+- **`references/gdpt2018_methods.md`** (MỚI): Phương pháp giải theo GDPT 2018 cho cả 8 môn; ma trận đặc tả chuẩn Toán 12; bảng ngữ cảnh thực tiễn đầy đủ.
 
 ---
 

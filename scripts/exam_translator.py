@@ -4,16 +4,20 @@
 Module Biên Dịch Đề Thi & Lời Giải Sang Tiếng Anh Học Thuật Chuẩn Quốc Tế
 (International Academic English & Bilingual Exam Converter)
 
-Tích hợp trong Skill Tạo Đề Thi Chuẩn Bộ GD&ĐT & Quốc Tế (v3.0.0).
+Tích hợp trong Skill Tạo Đề Thi Chuẩn Bộ GD&ĐT & Quốc Tế (v4.0.0).
 
 Tính năng:
-1. Dịch đề thi Toán, Vật lý, Hóa học sang tiếng Anh học thuật chuẩn quốc tế
+1. Dịch đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn)
+   lớp 6–12 sang tiếng Anh học thuật chuẩn quốc tế
    (phong cách Cambridge IGCSE, A-Level, IB, SAT, AP, AMC, Kangaroo).
 2. Hỗ trợ 2 chế độ xuất bản:
    - English Only: Bản tiếng Anh 100% cho trường quốc tế, chuyên Anh, thi quốc tế.
    - Bilingual: Bản song ngữ Anh - Việt (câu tiếng Việt kèm tiếng Anh in nghiêng).
 3. Bảo toàn 100% công thức MathType OLE nguyên bản (14pt) và hình vẽ kỹ thuật 450 DPI.
-4. Từ điển thuật ngữ chuyên ngành chuẩn hóa (Toán, Vật lý, Hóa học) hơn 250 thuật ngữ.
+4. Từ điển thuật ngữ chuyên ngành GDPT 2018 chuẩn hóa (8 môn) — hơn 400 thuật ngữ.
+5. Dịch chuẩn cấu trúc 3 phần GDPT 2018:
+   - Part I: Multiple Choice / Part II: True or False / Part III: Short Answer
+   - Reading Comprehension + Essay (Ngữ Văn)
 """
 
 import os
@@ -27,7 +31,80 @@ try:
 except Exception:
     pass
 
+# ─── TỪ ĐIỂN THUẬT NGỮ CẤU TRÚC ĐỀ THI GDPT 2018 (ANH - VIỆT) ──────────────
+GDPT2018_STRUCTURE_GLOSSARY = {
+    # Tên các phần thi
+    "phần i": "Part I",
+    "phần ii": "Part II",
+    "phần iii": "Part III",
+    "phần iv": "Part IV",
+    "phần tự luận": "Essay Section",
+    "phần đọc hiểu": "Reading Comprehension",
+    "phần viết": "Writing Section",
+    # Loại câu hỏi GDPT 2018
+    "trắc nghiệm nhiều phương án": "Multiple Choice",
+    "trắc nghiệm đúng sai": "True or False",
+    "trả lời ngắn": "Short Answer",
+    "câu hỏi đúng sai": "True-False Question",
+    "điền số": "Fill in the Number",
+    # Mức độ tư duy
+    "nhận biết": "Knowledge",
+    "thông hiểu": "Comprehension",
+    "vận dụng": "Application",
+    "vận dụng cao": "Higher-Order Application",
+    "mức độ nhận biết": "Knowledge level",
+    "mức độ thông hiểu": "Comprehension level",
+    "mức độ vận dụng": "Application level",
+    "mức độ vận dụng cao": "Higher-Order level",
+    # Thang điểm
+    "thang điểm": "Marking Scheme",
+    "barem chấm điểm": "Grading Rubric",
+    "đề học sinh": "Student Exam Paper",
+    "lời giải chi tiết": "Detailed Solution",
+    "đáp án": "Answer Key",
+    # Ngữ cảnh thực tiễn
+    "bài toán thực tế": "Real-world Application Problem",
+    "tình huống thực tiễn": "Real-life Scenario",
+    "ngữ cảnh đời sống": "Life Context",
+    "mô hình hóa toán học": "Mathematical Modeling",
+    "phiên giải kết quả": "Interpretation of Results",
+    # Năng lực GDPT 2018
+    "tư duy toán học": "Mathematical Thinking",
+    "năng lực tư duy": "Thinking and Reasoning Competency",
+    "năng lực giải quyết vấn đề": "Problem-Solving Competency",
+    "giao tiếp toán học": "Mathematical Communication",
+    "hóa học xanh": "Green Chemistry",
+    "hóa học bền vững": "Sustainable Chemistry",
+    "thực nghiệm vật lý": "Physics Experiment",
+    "phân tích sai số": "Error Analysis",
+    "sai số tuyệt đối": "Absolute Error",
+    "sai số tương đối": "Relative Error",
+    # Sinh học
+    "sơ đồ lai": "Punnett Square / Crossing Diagram",
+    "kiểu gen": "Genotype",
+    "kiểu hình": "Phenotype",
+    "đột biến gen": "Gene Mutation",
+    "đột biến nhiễm sắc thể": "Chromosomal Mutation",
+    # Địa lý
+    "biểu đồ cột": "Bar Chart",
+    "biểu đồ tròn": "Pie Chart",
+    "biểu đồ đường": "Line Graph",
+    "phát triển bền vững": "Sustainable Development",
+    "biến đổi khí hậu": "Climate Change",
+    # KTPL
+    "tình huống pháp luật": "Legal Scenario",
+    "quy phạm pháp luật": "Legal Norm",
+    "hợp đồng lao động": "Labor Contract",
+    # Ngữ Văn
+    "nghị luận xã hội": "Social Argumentative Essay",
+    "nghị luận văn học": "Literary Argumentative Essay",
+    "biện pháp tu từ": "Rhetorical Device",
+    "đọc hiểu": "Reading Comprehension",
+    "ngữ liệu": "Text / Passage",
+}
+
 # ─── BỘ TỪ ĐIỂN THUẬT NGỮ CHUYÊN NGÀNH ANH - VIỆT CHUẨN XÁC ────────────────
+
 
 MATH_GLOSSARY = {
     # Hình học phẳng & Không gian

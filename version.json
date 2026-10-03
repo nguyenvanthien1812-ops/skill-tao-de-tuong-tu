@@ -1,11 +1,20 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "release_date": "2026-10-03",
-  "description": "Skill tạo đề thi Toán, Vật lý, Hóa học tương tự chuẩn GDPT 2018 (Lớp 6 - 12) & Quốc tế, xuất MathType OLE 14pt toàn diện 100%, đồ họa 450 DPI in ấn A4 siêu nét, tích hợp module chuyển đổi đề thi tiếng Anh học thuật & Song ngữ chuẩn Cambridge/IB/SAT",
+  "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 tương tự chuẩn GDPT 2018, xuất MathType OLE 14pt, đồ họa 450 DPI, kiểm định tự động chuẩn GDPT 2018 (gdpt2018_validator.py), module tiếng Anh/Song ngữ, hỗ trợ tự luận",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "4.0.0": [
+      "Tích hợp chuẩn GDPT 2018 toàn diện cho 8 môn (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12.",
+      "Thêm Bước 2bis: Checklist Kiểm Định Tự Động GDPT 2018 bắt buộc trước khi xuất đề.",
+      "Tích hợp phương pháp giải chuẩn mới: Mô hình hóa Toán 4 bước, Thực nghiệm Vật Lý 6 bước, Sơ đồ bảo toàn Hóa Học, Quy trình khoa học Sinh Học, Tình huống Pháp Luật 5 bước, Phân tích biểu đồ Địa Lý 4 bước, Đọc hiểu & Nghị luận Ngữ Văn.",
+      "Tạo script mới scripts/gdpt2018_validator.py: 8 loại kiểm tra (cấu trúc, NB/TH/VD/VDC, Đúng/Sai 4 ý, trả lời ngắn số gọn, ngữ cảnh thực tiễn, tự luận phiên giải, đặc thù môn, KHTN tích hợp), báo cáo trực quan, xuất JSON.",
+      "Bổ sung GDPT2018_STRUCTURE_GLOSSARY (60+ thuật ngữ) vào exam_translator.py: 8 môn, cấu trúc 3 phần Part I/II/III, mức độ NB/TH/VD/VDC, hóa học xanh, sơ đồ lai, biểu đồ địa lý, tình huống pháp luật, nghị luận văn học.",
+      "Cập nhật references/quy_chuan_de_thi_2025.md: template câu hỏi Đúng/Sai cho 6 môn, thang điểm chuẩn, bảng phân phối NB/TH/VD/VDC.",
+      "Tạo mới references/gdpt2018_methods.md: phương pháp giải đầy đủ 8 môn + ma trận đặc tả chuẩn."
+    ],
     "3.0.0": [
       "Tích hợp cơ chế tự động Sanitize cú pháp LaTeX (sanitize_latex_for_mathtype) trong docx_math_builder.py: tự động thay \\implies -> \\Rightarrow và \\iff -> \\Leftrightarrow, loại trừ triệt để lỗi MathType nuốt mất mũi tên suy ra hoặc dính biểu thức toán học.",
       "Quy chuẩn hóa bắt buộc: 100% tài liệu xuất Word (giải bài tập, tạo đề tương tự, dịch đề, chuyển PDF sang Word) đều tự động xuất bản đối tượng MathType OLE nguyên bản (Equation.DSMT4, 14pt) và kiểm định Integrity Audit đạt 0 ký tự $ sót lại.",
