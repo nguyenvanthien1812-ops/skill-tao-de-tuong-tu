@@ -128,10 +128,24 @@ def latex_to_omml(latex_str):
 # Log cac cong thuc OMML that bai de agent biet va fix
 _omml_failed_formulas = []
 
+def sanitize_latex_for_mathtype(latex_str):
+    """
+    Chuẩn hóa cú pháp LaTeX tương thích 100% với bộ biên dịch TeX của MathType:
+    - Thay \\implies -> \\Rightarrow (MathType không hỗ trợ \\implies và nuốt mất!)
+    - Thay \\iff -> \\Leftrightarrow (MathType nuốt mất \\iff!)
+    """
+    import re
+    s = latex_str
+    s = re.sub(r'\\implies\b', r'\\Rightarrow', s)
+    s = re.sub(r'\\iff\b', r'\\Leftrightarrow', s)
+    return s
+
+
 def add_math_content(paragraph, text, mode='omml', bold=False, font_size=None):
     """Them van ban xen ke cong thuc $...$ vao paragraph Word.
-    v2.1 - Khi mode='omml' ma chuyen doi that bai, thu lai voi cac bien the LaTeX
-    don gian hon. Neu van that bai thi ghi log va danh dau $??$ thay vi giu nguyen $latex$.
+    v3.0 - Tu dong sanitize LaTeX truoc khi chuyen doi, bao dam khong mat dau suy ra \\Rightarrow.
+    Khi mode='omml' ma chuyen doi that bai, thu lai voi cac bien the LaTeX
+    don gian hon. Neu van that bai thi ghi log va danh dau [formula] thay vi giu nguyen $latex$.
     Dieu nay dam bao Integrity Audit (ky tu $ ton du = 0) luon pass.
     """
     parts = text.split('$')
@@ -147,6 +161,7 @@ def add_math_content(paragraph, text, mode='omml', bold=False, font_size=None):
             if font_size:
                 run.font.name = 'Times New Roman'
         else:  # Cong thuc LaTeX
+            part = sanitize_latex_for_mathtype(part)
             if mode == 'omml':
                 converted = False
                 # Thu lan 1: chuyen doi truc tiep

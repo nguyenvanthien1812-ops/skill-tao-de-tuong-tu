@@ -107,6 +107,12 @@ tao-de-toan-tuong-tu/
 
 ## 📋 Lịch Sử Phiên Bản (Changelog)
 
+### v3.0.0 (2026-10-03) - Phiên Bản Phát Hành Lớn (Major Release)
+- ⭐ **Tự động Sanitize LaTeX chống nuốt ký hiệu MathType**: Tích hợp hàm `sanitize_latex_for_mathtype` trong `docx_math_builder.py` tự động chuyển $\backslash\text{implies} \rightarrow \Rightarrow$ và $\backslash\text{iff} \rightarrow \Leftrightarrow$, giải quyết triệt để 100% hiện tượng MathType nuốt mất mũi tên suy ra hoặc làm dính chùm biểu thức toán học.
+- ⭐ **Chỉ thị cốt lõi bắt buộc xuất MathType OLE**: Quy chuẩn hóa 100% mọi yêu cầu xuất Word (giải bài, tạo đề, dịch đề) đều xuất bản đối tượng nhị phân MathType OLE nguyên bản (`Equation.DSMT4`, cỡ chữ 14pt) và kiểm định Integrity Audit đạt $0$ ký tự `$` sót lại.
+- ⭐ **Bộ Biên Dịch Đề Thi Sang Tiếng Anh Học Thuật Chuẩn Quốc Tế (`scripts/exam_translator.py`)**: Hỗ trợ xuất đồng thời bản tiếng Anh 100% (`_ENGLISH_MATHTYPE_OLE.docx`) và bản Song ngữ Anh - Việt (`_BILINGUAL_MATHTYPE_OLE.docx`) chuẩn khảo thí quốc tế (Cambridge IGCSE/A-Level, IB, SAT, AP, AMC, Kangaroo).
+- ⭐ **Từ điển chuyên ngành Toán - Lý - Hóa hơn 250 thuật ngữ**: Tự động chuyển đổi các thuật ngữ hình học, đại số, dao động, quang học, phản ứng hóa học sang câu mệnh lệnh chuẩn mực (Prove that, Calculate, Inscribed, Altitude, Cyclic quadrilateral...).
+
 ### v2.9.1 (2026-10-02)
 - ⭐ **Khắc phục triệt để ký hiệu véc-tơ chuẩn SGK**: Mũi tên dài bao phủ trọn vẹn bề ngang 2+ chữ cái ($AB, BC, AS...$), nâng cao $0.22h$ chống dính chữ, tích hợp 3 tầng fallback đo text bbox (renderer -> canvas.renderer -> ước lượng hình học), mutation_scale tính theo pixel độc lập dữ liệu.
 - ⭐ **Khắc phục 100% chuyển đổi MathType OLE**: Bổ sung cơ chế thử lại 3 cấp (chuyển trực tiếp -> chuẩn hóa LaTeX -> log kiểm toán), bảo đảm residual $ = 0, đạt 100% Integrity Audit Gate.

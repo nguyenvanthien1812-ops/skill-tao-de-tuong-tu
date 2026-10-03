@@ -1,11 +1,18 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "2.9.1",
-  "release_date": "2026-10-02",
-  "description": "Skill tạo đề thi Toán, Vật lý, Hóa học tương tự chuẩn GDPT 2018 (Lớp 6 - 12), xuất MathType OLE 14pt toàn diện 100%, đồ họa 450 DPI in ấn A4 siêu nét, kiểm soát độ khó đề thi chuẩn xác",
+  "version": "3.0.0",
+  "release_date": "2026-10-03",
+  "description": "Skill tạo đề thi Toán, Vật lý, Hóa học tương tự chuẩn GDPT 2018 (Lớp 6 - 12) & Quốc tế, xuất MathType OLE 14pt toàn diện 100%, đồ họa 450 DPI in ấn A4 siêu nét, tích hợp module chuyển đổi đề thi tiếng Anh học thuật & Song ngữ chuẩn Cambridge/IB/SAT",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "3.0.0": [
+      "Tích hợp cơ chế tự động Sanitize cú pháp LaTeX (sanitize_latex_for_mathtype) trong docx_math_builder.py: tự động thay \\implies -> \\Rightarrow và \\iff -> \\Leftrightarrow, loại trừ triệt để lỗi MathType nuốt mất mũi tên suy ra hoặc dính biểu thức toán học.",
+      "Quy chuẩn hóa bắt buộc: 100% tài liệu xuất Word (giải bài tập, tạo đề tương tự, dịch đề, chuyển PDF sang Word) đều tự động xuất bản đối tượng MathType OLE nguyên bản (Equation.DSMT4, 14pt) và kiểm định Integrity Audit đạt 0 ký tự $ sót lại.",
+      "Bổ sung Module Biên Dịch Đề Thi Sang Tiếng Anh Học Thuật Chuẩn Quốc Tế (scripts/exam_translator.py): Hỗ trợ xuất đồng thời bản tiếng Anh 100% (English-Only Exam) và bản Song ngữ Anh - Việt (Bilingual Exam) chuẩn phong cách khảo thí quốc tế (Cambridge IGCSE/A-Level, IB, SAT, AP, AMC, Kangaroo).",
+      "Tích hợp bộ từ điển chuyên ngành Toán - Lý - Hóa Anh - Việt chuẩn mực hơn 250 thuật ngữ và các mẫu câu mệnh lệnh sư phạm quốc tế (Prove that, Calculate, Find the maximum value...).",
+      "Bảo toàn 100% hình vẽ kỹ thuật 450 DPI và hệ thống công thức MathType OLE khi biên dịch đa ngôn ngữ."
+    ],
     "2.9.1": [
       "Khắc phục triệt để ký hiệu véc-tơ chuẩn SGK: mũi tên dài bao phủ trọn vẹn bề ngang 2+ chữ cái (AB, BC, AS...), nâng cao 0.22*h chống dính chữ, tích hợp 3 tầng fallback đo text bbox (renderer -> canvas.renderer -> ước lượng hình học), mutation_scale tính theo pixel độc lập dữ liệu",
       "Khắc phục 100% chuyển đổi MathType OLE: bổ sung cơ chế thử lại 3 cấp (chuyển trực tiếp -> chuẩn hóa LaTeX -> log kiểm toán), bảo đảm residual $ = 0, đạt 100% Integrity Audit Gate",

@@ -20,7 +20,10 @@ description: >-
   "chuyển đề thi hóa sang word mathtype", "chuyển đề thi lý sang word mathtype", "vẽ hình thí nghiệm hóa học", "vẽ hình học không gian 3d", "dựng bảng biểu word mathtype",
   "render tikz", "render code tikz", "vẽ hình tikz", "biên dịch tikz sang ảnh", "chuyển code tikz sang png", "render mã tikz",
   "đọc file docx mathtype", "chuyển mathtype sang latex", "trích xuất công thức mathtype", "đọc đề cũ mathtype",
-  "ocr ảnh đề thi", "nhận diện công thức từ ảnh", "chụp ảnh đề thi tạo đề mới", "scan đề thi tạo đề tương tự".
+  "ocr ảnh đề thi", "nhận diện công thức từ ảnh", "chụp ảnh đề thi tạo đề mới", "scan đề thi tạo đề tương tự",
+  "xuất word cho tôi", "xuất file word", "xuất word giải chi tiết", "xuất word mathtype",
+  "chuyển đề sang tiếng anh", "dịch đề sang tiếng anh", "tạo đề tiếng anh", "đề thi tiếng anh",
+  "bilingual exam", "english math exam", "dịch file sang tiếng anh", "xuất đề tiếng anh", "đề song ngữ", "bilingual math exam".
 ---
 
 
@@ -310,8 +313,16 @@ Agent PHẢI chọn đúng công cụ theo bảng dưới để đảm bảo đ�
 
 > [!IMPORTANT]
 > **CHỈ THỊ XUẤT FILE WORD BẮT BUỘC TRÊN TOÀN BỘ HỆ THỐNG:**
-> Bất kỳ yêu cầu nào liên quan đến xuất file Word (tạo đề tương tự Toán/Lý/Hóa, xuất đề thi, giải bài toán thực tế, chuyển PDF sang Word, nhân bản bộ 4 mã đề) **ĐỀU BẮT BUỘC PHẢI ÁP DỤNG 100% QUY TRÌNH NÀY**.
-> Tuyệt đối không bao giờ để xuất hiện chuỗi LaTeX thô (`$ ... $`) trong file Word bàn giao cho giáo viên. Mọi công thức phải là đối tượng **MathType OLE nguyên bản (`Equation.DSMT4`)** mở nhấp đúp chuột sửa được ngay, đồng thời luôn có bản **Word Equation (OMML)** dự phòng.
+> Bất kỳ yêu cầu nào liên quan đến xuất file Word (tạo đề tương tự Toán/Lý/Hóa, xuất đề thi, giải bài toán, xuất lời giải chi tiết, chuyển PDF sang Word, nhân bản bộ 4 mã đề, xuất bản tiếng Anh/song ngữ) **ĐỀU BẮT BUỘC PHẢI ÁP DỤNG 100% QUY TRÌNH NÀY**.
+> Tuyệt đối không bao giờ để xuất hiện chuỗi LaTeX thô (`$ ... $`) hoặc công thức gãy nát trong file Word bàn giao cho giáo viên. Mọi công thức phải là đối tượng **MathType OLE nguyên bản (`Equation.DSMT4`)** mở nhấp đúp chuột sửa được ngay, đồng thời luôn có bản **Word Equation (OMML)** dự phòng.
+
+#### ⚡ QUY TẮC VÀNG CÚ PHÁP LATEX CHUẨN MATHTYPE (ANTI-CORRUPTION RULES):
+Để công thức hiển thị hoàn mỹ 100% trong MathType OLE mà không bao giờ bị mất ký hiệu hay dính dòng:
+1. ❌ **TUYỆT ĐỐI KHÔNG DÙNG `\implies`** $\rightarrow$ ✅ **BẮT BUỘC DÙNG `\Rightarrow`**: Bộ dịch TeX của MathType không nhận diện `\implies` và sẽ nuốt mất mũi tên suy ra, làm biểu thức bị dính liền (ví dụ `$A \implies B$` biến thành `$AB$`). Luôn dùng `\Rightarrow` hoặc viết chữ "Suy ra:".
+2. ❌ **TUYỆT ĐỐI KHÔNG DÙNG `\iff`** $\rightarrow$ ✅ **BẮT BUỘC DÙNG `\Leftrightarrow`**: MathType không nhận diện `\iff`.
+3. ❌ **TUYỆT ĐỐI KHÔNG GỘP NHIỀU DÒNG VÀO 1 PARAGRAPH BẰNG `\n`** $\rightarrow$ ✅ Mỗi bước biến đổi toán học hoặc mỗi câu phải là một đoạn văn riêng biệt (`doc.add_paragraph()`). Nhét `\n` vào một text run sẽ làm xô lệch các đối tượng OLE và đè chữ lên nhau.
+4. ❌ **TUYỆT ĐỐI KHÔNG ĐỂ CÔNG THỨC Ở TIÊU ĐỀ HOẶC BẢNG BIỂU DƯỚI DẠNG TEXT THÔ** $\rightarrow$ ✅ Mọi ký hiệu toán học ở Tiêu đề câu (ví dụ `$AK = AB\sqrt{2}$`, `$\widehat{HEF} = \widehat{HCB}$`) và trong Bảng Barem điểm BẮT BUỘC PHẢI ĐƯỢC BỌC TRONG CẶP `$ ... $` để biên dịch sang MathType OLE 100%.
+5. ⚠️ **KÝ HIỆU ĐỒNG DẠNG TAM GIÁC**: MathType TeX bỏ qua `\sim`. Trong lời giải hình học, viết rõ: "$\Delta ABC$ đồng dạng với $\Delta DEF$ (g - g)" kèm tỷ số đồng dạng $\Rightarrow \frac{AB}{DE} = \frac{AC}{DF}$.
 
 Sử dụng thư viện cốt lõi [docx_math_builder.py](./scripts/docx_math_builder.py):
 
@@ -491,7 +502,51 @@ Nhằm tối ưu hóa việc tái sử dụng các kho tài nguyên đề thi La
 
 ---
 
-## 🆕 Nhật Ký Cải Tiến Kỹ Thuật (v2.1 – 10/2026)
+## 🌐 BƯỚC 6: CHUYỂN ĐỔI & BIÊN DỊCH ĐỀ THI SANG TIẾNG ANH HỌC THUẬT CHUẨN QUỐC TẾ (ACADEMIC ENGLISH & BILINGUAL EXAM CONVERTER)
+
+Khi người dùng yêu cầu: *"chuyển đề sang tiếng anh"*, *"dịch đề sang tiếng anh"*, *"tạo đề song ngữ"*, *"xuất bản tiếng anh"*, *"translate exam to English"*, *"bilingual exam"*, *"dịch file sang tiếng anh"*:
+Agent kích hoạt hệ thống biên dịch chuyên sâu [exam_translator.py](./scripts/exam_translator.py) với 2 chế độ xuất bản:
+
+### 1. Hai Chế Độ Xuất Bản Quốc Tế:
+- **Chế độ 1: Bản Tiếng Anh 100% (English-Only Exam)**:
+  - Tên file: `<TEN_DE>_ENGLISH_MATHTYPE_OLE.docx` (kèm `<TEN_DE>_ENGLISH_WORD_EQ.docx`).
+  - Phù hợp: Trường quốc tế, trường song ngữ, lớp chuyên Anh, ôn thi các kỳ thi quốc tế (AMC, Kangaroo, SASMO, ASMO, SAT Math, AP Calculus/Physics/Chemistry, IB, Cambridge IGCSE / A-Level).
+- **Chế độ 2: Bản Song Ngữ Anh - Việt (Bilingual Exam)**:
+  - Tên file: `<TEN_DE>_BILINGUAL_MATHTYPE_OLE.docx` (kèm `<TEN_DE>_BILINGUAL_WORD_EQ.docx`).
+  - Cấu trúc: Câu hỏi tiếng Việt phía trên, câu hỏi tiếng Anh in nghiêng thanh lịch ngay bên dưới; hoặc bố cục 2 cột song ngữ đối xứng.
+
+### 2. Tiêu Chuẩn Biên Dịch Ngữ Nghĩa Học Thuật:
+- **Không dịch word-by-word máy móc**: Sử dụng chuẩn câu mệnh lệnh sư phạm quốc tế:
+  * *"Cho tam giác ABC có ba góc nhọn nội tiếp (O; R)..."* $\rightarrow$ *"Let $\Delta ABC$ be an acute-angled triangle inscribed in $(O; R)$..."*
+  * *"Chứng minh: Tứ giác AEHF nội tiếp và suy ra..."* $\rightarrow$ *"Prove that: Quadrilateral $AEHF$ is cyclic, and deduce that $\widehat{HEF} = \widehat{HCB}$."*
+  * *"Tính độ dài CH theo R"* $\rightarrow$ *"Calculate the length of $CH$ in terms of $R$."*
+  * *"Tìm giá trị lớn nhất / nhỏ nhất của..."* $\rightarrow$ *"Find the maximum / minimum value of..."*
+  * *"Kẻ đường kính AK của (O)..."* $\rightarrow$ *"Draw the diameter $AK$ of $(O)$..."*
+  * *"Tia KH cắt BC tại M và cắt (O) tại điểm thứ hai là N..."* $\rightarrow$ *"The ray $KH$ intersects $BC$ at $M$ and intersects $(O)$ at a second point $N$ ($N \neq K$)..."*
+  * *"đpcm (điều phải chứng minh)"* $\rightarrow$ *"(Q.E.D.)"*
+  * *"Bước 1 / Bước 2 / Bước 3"* $\rightarrow$ *"Step 1 / Step 2 / Step 3"*
+  * *"Cách 1 / Cách 2"* $\rightarrow$ *"Method 1 / Method 2"*
+  * *"Barem chấm điểm"* $\rightarrow$ *"Marking Scheme / Grading Rubric"*
+- **Bảo toàn 100% công thức MathType OLE**: Toàn bộ công thức toán trong `$ ... $` được giữ nguyên vẹn và tự động làm sạch qua `sanitize_latex_for_mathtype` (luôn dùng `\Rightarrow`, `\Leftrightarrow`).
+- **Bảo toàn 100% hình vẽ kỹ thuật**: Giữ nguyên hình vẽ 450 DPI có các nhãn điểm hình học quốc tế ($A, B, C, D, E, F, H, K, M, N, O$).
+
+---
+
+## 🆕 Nhật Ký Cải Tiến Kỹ Thuật (v3.0.0 – 10/2026)
+
+### ✅ Nâng cấp 1: Bộ Tự Động Sanitize LaTeX Chống Nuốt Ký Hiệu MathType
+- **Vấn đề cũ**: Lệnh `\implies` và `\iff` của gói `amsmath` bị bộ dịch TeX của MathType nuốt mất khiến công thức bị mất dấu mũi tên suy ra và dính chùm vào nhau.
+- **Giải pháp v3.0**: Thêm hàm `sanitize_latex_for_mathtype()` tự động chuyển `\implies \rightarrow \Rightarrow` và `\iff \rightarrow \Leftrightarrow` trước khi gửi lên API Backend hoặc OMML.
+- **Kết quả**: 100% công thức hiển thị hoàn mỹ, không bao giờ bị mất dấu mũi tên hay dính biểu thức.
+
+### ✅ Nâng cấp 2: Chỉ Thị Tối Cao Xuất Word MathType OLE Cho Mọi Yêu Cầu
+- Bất kỳ yêu cầu nào liên quan đến xuất file Word (giải bài tập, tạo đề tương tự, dịch đề tiếng Anh, chuyển PDF sang Word), Agent **BẮT BUỘC PHẢI TỰ ĐỘNG XUẤT BẢN MATHTYPE OLE NGUYÊN BẢN (`Equation.DSMT4`, cỡ chữ 14pt)** kèm bản dự phòng Word Equation. Tuyệt đối không xuất Word thuần text.
+
+### ✅ Nâng cấp 3: Tính Năng Chuyển Đổi & Biên Dịch Đề Thi Sang Tiếng Anh Học Thuật Chuẩn Quốc Tế
+- Tích hợp module [exam_translator.py](./scripts/exam_translator.py) với hơn 250 thuật ngữ chuyên sâu Toán - Lý - Hóa.
+- Hỗ trợ xuất đồng thời bản tiếng Anh 100% (`<TEN>_ENGLISH_MATHTYPE_OLE.docx`) và bản Song ngữ Anh - Việt (`<TEN>_BILINGUAL_MATHTYPE_OLE.docx`).
+
+---
 
 ### ✅ Fix 1: Ký hiệu Véc-tơ luôn dài phủ trọn chữ cái
 - **Vấn đề cũ**: Mũi tên vectơ bị cụt hoặc không hiện khi backend Matplotlib khác nhau.
