@@ -549,7 +549,7 @@ if __name__ == "__main__":
     exporter = ExamPDFExporter(theme="teal", style_config={
         "school_name":  "TỔNG ÔN TẬP THPTQG",
         "school_dept":  "MÔN TOÁN 2026",
-        "contact_info": "Nguyễn Hữu Phúc · 0985.692.879",
+        "contact_info": "",
         "footer_left":  "TỔNG ÔN CHUYÊN ĐỀ    ÔN LUYỆN ĐỀ",
         "footer_right": "KHI BỎ CUỘC, HÃY NGHĨ ĐẾN LÍ DO BẮT ĐẦU",
     })
