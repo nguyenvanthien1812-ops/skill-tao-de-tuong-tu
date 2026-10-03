@@ -710,11 +710,10 @@ def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path
                 audit = audit_word_ole_file(output_ole_docx_path)
                 if audit['ok']:
                     print(f"[Backend OLE] ✓ THÀNH CÔNG: {audit['ole_count']} công thức MathType OLE nguyên bản (0 lỗi ký hiệu)")
-                else:
                     if audit.get('residuals'):
-                    for r in audit['residuals'][:5]:
-                        print(f'  !! Con sot $: {r}')
-                print(f"[Backend OLE] Canh bao kiem dinh: ole_count={audit['ole_count']}, residual_$= {audit['residual_count']}")
+                        for r in audit['residuals'][:5]:
+                            print(f'  !! Con sot $: {r}')
+                    print(f"[Backend OLE] Canh bao kiem dinh: ole_count={audit['ole_count']}, residual_$= {audit['residual_count']}")
                 return True
             else:
                 print(f"[Backend OLE] Server trả về mã HTTP {resp.status}")
