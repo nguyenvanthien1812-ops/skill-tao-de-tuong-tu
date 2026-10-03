@@ -1,0 +1,180 @@
+{
+  "_version": "1.0.0",
+  "_description": "Ma trận đặc tả mặc định cho 8 môn GDPT 2018 (dùng khi GV không chỉ định)",
+  
+  "math_12_thpt_90min": {
+    "display_name": "Toán 12 — THPT — 90 phút",
+    "subject": "math", "grade": 12, "level": "thpt", "duration_minutes": 90,
+    "cells": [
+      {"topic": "ham_so_bac_ba_phan_thuc", "topic_display": "Hàm số bậc ba & phân thức", "nb": 2, "th": 3, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "mu_logarithm", "topic_display": "Hàm mũ & Logarithm", "nb": 1, "th": 2, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "nguyen_ham_tich_phan", "topic_display": "Nguyên hàm & Tích phân", "nb": 1, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "xac_suat_thong_ke", "topic_display": "Xác suất & Thống kê", "nb": 1, "th": 2, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": true},
+      {"topic": "hinh_hoc_khong_gian", "topic_display": "Hình học không gian", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "bai_toan_thuc_te", "topic_display": "Bài toán thực tế tổng hợp", "nb": 0, "th": 0, "vd": 1, "vdc": 2, "part": "part1_mc", "context_required": true},
+      {"topic": "ham_so_ung_dung", "topic_display": "Ứng dụng hàm số (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "tich_phan_ung_dung", "topic_display": "Tích phân ứng dụng (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "xac_suat_tt", "topic_display": "Xác suất thống kê (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": true},
+      {"topic": "hinh_hoc_ks", "topic_display": "Hình không gian (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "trl_ngan_1", "topic_display": "Trả lời ngắn — Tích phân", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_2", "topic_display": "Trả lời ngắn — Hàm số", "nb": 1, "th": 1, "vd": 0, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_3", "topic_display": "Trả lời ngắn — Xác suất", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": true},
+      {"topic": "trl_ngan_4", "topic_display": "Trả lời ngắn — Hình học", "nb": 1, "th": 0, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_5", "topic_display": "Trả lời ngắn — Mũ/Log", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_6", "topic_display": "Trả lời ngắn — Thực tế", "nb": 0, "th": 0, "vd": 1, "vdc": 1, "part": "part3_sa", "context_required": true}
+    ]
+  },
+  
+  "physics_12_thpt_90min": {
+    "display_name": "Vật lý 12 — THPT — 90 phút",
+    "subject": "physics", "grade": 12, "level": "thpt", "duration_minutes": 90,
+    "cells": [
+      {"topic": "dao_dong", "topic_display": "Dao động cơ", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "song_co", "topic_display": "Sóng cơ", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "dien_xoay_chieu", "topic_display": "Điện xoay chiều", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": true},
+      {"topic": "dao_dong_dien_tu", "topic_display": "Dao động điện từ", "nb": 1, "th": 1, "vd": 0, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "quang_hoc", "topic_display": "Quang học", "nb": 1, "th": 1, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "luong_tu", "topic_display": "Lượng tử ánh sáng", "nb": 1, "th": 1, "vd": 0, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "hat_nhan", "topic_display": "Hạt nhân nguyên tử", "nb": 1, "th": 1, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "dao_dong_tf", "topic_display": "Dao động (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "dien_xoay_chieu_tf", "topic_display": "Điện xoay chiều (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": true},
+      {"topic": "hat_nhan_tf", "topic_display": "Hạt nhân nguyên tử (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "quang_hoc_tf", "topic_display": "Quang học (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "trl_ngan_1", "topic_display": "Trả lời ngắn — Sóng cơ", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_2", "topic_display": "Trả lời ngắn — Dao động", "nb": 1, "th": 1, "vd": 0, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_3", "topic_display": "Trả lời ngắn — Điện xoay chiều", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": true},
+      {"topic": "trl_ngan_4", "topic_display": "Trả lời ngắn — Quang học", "nb": 1, "th": 0, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_5", "topic_display": "Trả lời ngắn — Hạt nhân", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_6", "topic_display": "Trả lời ngắn — Thực nghiệm", "nb": 0, "th": 0, "vd": 1, "vdc": 1, "part": "part3_sa", "context_required": true}
+    ]
+  },
+  
+  "chemistry_11_thpt_90min": {
+    "display_name": "Hóa học 11 — THPT — 90 phút",
+    "subject": "chemistry", "grade": 11, "level": "thpt", "duration_minutes": 90,
+    "cells": [
+      {"topic": "can_bang_hoa_hoc", "topic_display": "Cân bằng hóa học", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "nitrogen_sulfur", "topic_display": "Nitrogen - Sulfur", "nb": 2, "th": 2, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": true},
+      {"topic": "carbon_silicon", "topic_display": "Carbon - Silicon", "nb": 1, "th": 1, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "dai_cuong_huu_co", "topic_display": "Đại cương hữu cơ", "nb": 2, "th": 1, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "hydrocarbon", "topic_display": "Hydrocarbon", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "dan_xuat_halogen", "topic_display": "Dẫn xuất halogen", "nb": 1, "th": 1, "vd": 0, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "alcohol_phenol", "topic_display": "Alcohol - Phenol", "nb": 1, "th": 2, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": true},
+      {"topic": "aldehyde_ketone", "topic_display": "Aldehyde - Ketone", "nb": 1, "th": 1, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "nitrogen_sulfur_tf", "topic_display": "Nitrogen-Sulfur (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": true},
+      {"topic": "hydrocarbon_tf", "topic_display": "Hydrocarbon (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "alcohol_phenol_tf", "topic_display": "Alcohol-Phenol (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "can_bang_tf", "topic_display": "Cân bằng hóa học (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "trl_ngan_1", "topic_display": "Trả lời ngắn — Cân bằng", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_2", "topic_display": "Trả lời ngắn — Hữu cơ", "nb": 1, "th": 1, "vd": 0, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_3", "topic_display": "Trả lời ngắn — Nitrogen", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": true},
+      {"topic": "trl_ngan_4", "topic_display": "Trả lời ngắn — Hydrocarbon", "nb": 1, "th": 0, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_5", "topic_display": "Trả lời ngắn — Alcohol", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_6", "topic_display": "Trả lời ngắn — Thực tiễn", "nb": 0, "th": 0, "vd": 1, "vdc": 1, "part": "part3_sa", "context_required": true}
+    ]
+  },
+  
+  "chemistry_12_thpt_90min": {
+    "display_name": "Hóa học 12 — THPT — 90 phút",
+    "subject": "chemistry", "grade": 12, "level": "thpt", "duration_minutes": 90,
+    "cells": [
+      {"topic": "este_lipid", "topic_display": "Este-Lipid", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "carbohydrate", "topic_display": "Carbohydrate", "nb": 1, "th": 2, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "amine_amino_acid", "topic_display": "Amine-Amino acid-Protein", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "polymer", "topic_display": "Polymer", "nb": 1, "th": 1, "vd": 0, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "dien_hoa_hoc", "topic_display": "Điện hóa học", "nb": 1, "th": 1, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": true},
+      {"topic": "kim_loai_dc", "topic_display": "Kim loại đại cương", "nb": 2, "th": 1, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "kim_loai_kiem", "topic_display": "Kim loại kiềm, kiềm thổ, Al", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "kim_loai_chuyen_tiep", "topic_display": "Kim loại chuyển tiếp", "nb": 1, "th": 1, "vd": 0, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "este_lipid_tf", "topic_display": "Este-Lipid (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "amine_amino_acid_tf", "topic_display": "Amino acid (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "kim_loai_kiem_tf", "topic_display": "Kim loại kiềm (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "dien_hoa_hoc_tf", "topic_display": "Điện hóa học (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": true},
+      {"topic": "trl_ngan_1", "topic_display": "Trả lời ngắn — Este", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_2", "topic_display": "Trả lời ngắn — Kim loại", "nb": 1, "th": 1, "vd": 0, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_3", "topic_display": "Trả lời ngắn — Amino acid", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_4", "topic_display": "Trả lời ngắn — Polymer", "nb": 1, "th": 0, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_5", "topic_display": "Trả lời ngắn — Điện hóa học", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": true},
+      {"topic": "trl_ngan_6", "topic_display": "Trả lời ngắn — Tổng hợp vô cơ", "nb": 0, "th": 0, "vd": 1, "vdc": 1, "part": "part3_sa", "context_required": true}
+    ]
+  },
+  
+  "biology_12_thpt_90min": {
+    "display_name": "Sinh học 12 — THPT — 90 phút",
+    "subject": "biology", "grade": 12, "level": "thpt", "duration_minutes": 90,
+    "cells": [
+      {"topic": "adn_arn_protein", "topic_display": "ADN-ARN-Protein", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "di_truyen_hoc", "topic_display": "Di truyền học", "nb": 2, "th": 3, "vd": 2, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "bien_di", "topic_display": "Biến dị", "nb": 2, "th": 2, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "tien_hoa", "topic_display": "Tiến hóa", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "sinh_thai_hoc", "topic_display": "Sinh thái học", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": true},
+      {"topic": "sinh_hoc_ung_dung", "topic_display": "Sinh học ứng dụng", "nb": 1, "th": 1, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "di_truyen_hoc_tf", "topic_display": "Di truyền học (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "tien_hoa_tf", "topic_display": "Tiến hóa (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "sinh_thai_hoc_tf", "topic_display": "Sinh thái học (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": true},
+      {"topic": "adn_arn_tf", "topic_display": "ADN-ARN (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "trl_ngan_1", "topic_display": "Trả lời ngắn — Di truyền", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_2", "topic_display": "Trả lời ngắn — ADN", "nb": 1, "th": 1, "vd": 0, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_3", "topic_display": "Trả lời ngắn — Sinh thái", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": true},
+      {"topic": "trl_ngan_4", "topic_display": "Trả lời ngắn — Tiến hóa", "nb": 1, "th": 0, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_5", "topic_display": "Trả lời ngắn — Biến dị", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_6", "topic_display": "Trả lời ngắn — Phả hệ", "nb": 0, "th": 0, "vd": 1, "vdc": 1, "part": "part3_sa", "context_required": true}
+    ]
+  },
+  
+  "khtn_8_thcs_45min": {
+    "display_name": "Khoa học tự nhiên 8 — THCS — 45 phút",
+    "subject": "khtn", "grade": 8, "level": "thcs", "duration_minutes": 45,
+    "cells": [
+      {"topic": "chat_va_su_bien_doi", "topic_display": "Chất và sự biến đổi (Hóa)", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false, "integration": true},
+      {"topic": "nang_luong_su_bien_doi", "topic_display": "Năng lượng & biến đổi (Lý)", "nb": 2, "th": 2, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false, "integration": true},
+      {"topic": "vat_song", "topic_display": "Vật sống (Sinh)", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false, "integration": true},
+      {"topic": "trai_dat_bau_troi", "topic_display": "Trái đất & bầu trời", "nb": 2, "th": 1, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false, "integration": true},
+      {"topic": "chat_bien_doi_tf", "topic_display": "Chất và sự biến đổi (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false, "integration": true},
+      {"topic": "nang_luong_tf", "topic_display": "Năng lượng (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false, "integration": true},
+      {"topic": "vat_song_tf", "topic_display": "Vật sống (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false, "integration": true},
+      {"topic": "trai_dat_tf", "topic_display": "Trái đất (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false, "integration": true},
+      {"topic": "trl_ngan_1", "topic_display": "Trả lời ngắn — Hóa", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false, "integration": true},
+      {"topic": "trl_ngan_2", "topic_display": "Trả lời ngắn — Lý", "nb": 1, "th": 1, "vd": 0, "vdc": 0, "part": "part3_sa", "context_required": false, "integration": true},
+      {"topic": "trl_ngan_3", "topic_display": "Trả lời ngắn — Sinh", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false, "integration": true},
+      {"topic": "trl_ngan_4", "topic_display": "Trả lời ngắn — TH1", "nb": 1, "th": 0, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false, "integration": true},
+      {"topic": "trl_ngan_5", "topic_display": "Trả lời ngắn — TH2", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false, "integration": true},
+      {"topic": "trl_ngan_6", "topic_display": "Trả lời ngắn — VDC", "nb": 0, "th": 0, "vd": 1, "vdc": 1, "part": "part3_sa", "context_required": true, "integration": true}
+    ]
+  },
+  
+  "geography_12_thpt_90min": {
+    "display_name": "Địa lý 12 — THPT — 90 phút",
+    "subject": "geography", "grade": 12, "level": "thpt", "duration_minutes": 90,
+    "cells": [
+      {"topic": "vi_tri_tu_nhien", "topic_display": "Vị trí địa lý - Tự nhiên", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "dan_cu", "topic_display": "Dân cư", "nb": 2, "th": 1, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "nong_nghiep", "topic_display": "Nông nghiệp", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "cong_nghiep", "topic_display": "Công nghiệp", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "dich_vu", "topic_display": "Dịch vụ", "nb": 1, "th": 1, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "vung_kinh_te", "topic_display": "Vùng kinh tế", "nb": 2, "th": 2, "vd": 1, "vdc": 1, "part": "part1_mc", "context_required": false},
+      {"topic": "bien_dao", "topic_display": "Biển đảo", "nb": 1, "th": 1, "vd": 1, "vdc": 0, "part": "part1_mc", "context_required": false},
+      {"topic": "vung_kinh_te_tf", "topic_display": "Vùng kinh tế (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "tu_nhien_tf", "topic_display": "Tự nhiên (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "nong_nghiep_tf", "topic_display": "Nông nghiệp (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "cong_nghiep_tf", "topic_display": "Công nghiệp (Đúng/Sai)", "nb": 1, "th": 1, "vd": 1, "vdc": 1, "part": "part2_tf", "context_required": false},
+      {"topic": "trl_ngan_1", "topic_display": "Trả lời ngắn — Tự nhiên", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_2", "topic_display": "Trả lời ngắn — Dân cư", "nb": 1, "th": 1, "vd": 0, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_3", "topic_display": "Trả lời ngắn — Vùng kinh tế", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_4", "topic_display": "Trả lời ngắn — Kỹ năng biểu đồ", "nb": 1, "th": 0, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_5", "topic_display": "Trả lời ngắn — Kỹ năng atlat", "nb": 0, "th": 1, "vd": 1, "vdc": 0, "part": "part3_sa", "context_required": false},
+      {"topic": "trl_ngan_6", "topic_display": "Trả lời ngắn — Biển đảo", "nb": 0, "th": 0, "vd": 1, "vdc": 1, "part": "part3_sa", "context_required": false},
+      {"topic": "bai_tu_luan", "topic_display": "Nhận xét biểu đồ (Tự luận)", "nb": 0, "th": 1, "vd": 1, "vdc": 1, "part": "essay", "context_required": true}
+    ]
+  },
+  
+  "literature_12_thpt_90min": {
+    "display_name": "Ngữ văn 12 — THPT — 90 phút",
+    "subject": "literature", "grade": 12, "level": "thpt", "duration_minutes": 90,
+    "cells": [
+      {"topic": "doc_hieu", "topic_display": "Đọc hiểu (thơ/văn xuôi)", "nb": 2, "th": 2, "vd": 1, "vdc": 0, "part": "essay", "context_required": true},
+      {"topic": "nghi_luan_xh", "topic_display": "Nghị luận xã hội", "nb": 0, "th": 1, "vd": 1, "vdc": 1, "part": "essay", "context_required": true},
+      {"topic": "nghi_luan_vh", "topic_display": "Nghị luận văn học", "nb": 0, "th": 0, "vd": 1, "vdc": 2, "part": "essay", "context_required": false}
+    ]
+  }
+}

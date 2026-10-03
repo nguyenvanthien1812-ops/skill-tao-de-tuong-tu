@@ -123,6 +123,76 @@ Khi nhận được **BẤT KỲ YÊU CẦU NÀO** từ người dùng (tạo đ
 
 ## Các Bước Thực Hiện Chi Tiết
 
+### 🆕 Bước 0.5: Tạo Đề Từ Ma Trận Đặc Tả (Không Cần Đề Gốc)
+
+> [!TIP]
+> **Khi nào dùng:** Giáo viên muốn tạo đề mới hoàn toàn từ đầu theo ma trận đặc tả — không cần có đề gốc để "tương tự".
+
+**Kích hoạt khi giáo viên nói:**
+- *"tạo đề Toán 12"* / *"tạo đề Hóa 11, 90 phút"* → Dùng ma trận mặc định GDPT 2018
+- *"tạo theo ma trận này: [bảng]"* → Parse bảng Markdown trong chat
+- *"tải file ma trận"* (kèm file Excel/Word) → Đọc bảng từ file
+
+**Quy trình thực hiện:**
+
+```python
+from scripts.exam_from_matrix import MatrixParser, ExamGenerator, ReviewInterface
+
+# 1. Parse ma trận (tự động nhận diện định dạng)
+parser = MatrixParser()
+
+# Từ bảng trong chat (Markdown)
+matrix = parser.from_text(user_message)
+
+# Từ file Excel/Word đính kèm
+matrix = parser.from_excel("ma_tran.xlsx")   # hoặc from_docx("ma_tran.docx")
+
+# Chỉ nói tên môn → dùng ma trận mặc định
+matrix = parser.get_default(subject="math", grade=12, duration_minutes=90)
+matrix = parser.from_natural_language("tạo đề Toán 12, 90 phút, khó hơn một chút")
+
+# 2. Sinh câu hỏi theo từng ô ma trận
+generator = ExamGenerator(subject=matrix["subject"], grade=matrix["grade"])
+
+# Sinh + review từng câu (GV xem và quyết định giữ/sinh lại/bỏ)
+exam_data = generator.generate_full_exam(matrix, review_mode=True)
+
+# 3. Kiểm định chuẩn GDPT 2018
+from scripts.gdpt2018_validator import validate_exam_gdpt2018
+result = validate_exam_gdpt2018(exam_data, subject=matrix["subject"])
+```
+
+**Giao diện Review Từng Câu (GV không cần biết lệnh — Agent xử lý):**
+
+```
+🔄 Đang sinh câu 1/12 — Hàm số bậc ba [VD] ...
+
+📝 CÂU 1 [VD — Hàm số & đồ thị]:
+   Cho hàm số $y = x^3 - 3x + 2$. Mệnh đề nào sau đây ĐÚNG?
+   A. Hàm số đồng biến trên $(-1; 1)$
+   B. Hàm số có giá trị cực đại bằng 4         ← Đáp án đúng
+   C. Hàm số không có điểm cực trị
+   D. Hàm số luôn đồng biến trên $\mathbb{R}$
+   ✅ Ngữ cảnh thực tiễn: Không | Mức: VD
+
+👉 [Enter] Giữ lại  |  [r] Sinh lại câu này  |  [e] Sửa thủ công  |  [s] Bỏ qua
+```
+
+**Ma trận mặc định có sẵn** (file `references/default_matrices.json`):
+
+| Khóa | Môn | Lớp | Thời gian |
+|:-----|:----|:----|:---------|
+| `math_12_thpt_90min` | Toán | 12 | 90 phút |
+| `physics_12_thpt_90min` | Vật Lý | 12 | 90 phút |
+| `chemistry_11_thpt_90min` | Hóa Học | 11 | 90 phút |
+| `chemistry_12_thpt_90min` | Hóa Học | 12 | 90 phút |
+| `biology_12_thpt_90min` | Sinh Học | 12 | 90 phút |
+| `khtn_8_thcs_45min` | KHTN | 8 | 45 phút |
+| `geography_12_thpt_90min` | Địa Lý | 12 | 90 phút |
+| `literature_12_thpt_90min` | Ngữ Văn | 12 | 90 phút |
+
+---
+
 ### Bước 1: Tiếp nhận và phân tích đề gốc
 
 **Sử dụng thư viện [docx_reader.py](./scripts/docx_reader.py) để đọc mọi định dạng đề gốc:**
@@ -716,7 +786,88 @@ Thầy/cô muốn bắt đầu với điều gì?
 
 ---
 
-## 🧪 Quy Chuẩn Biên Soạn Môn HÓA HỌC (Lớp 10, 11, 12 & KHTN)
+## 🎓 Bước 7: Chấm Bài Tự Luận Bằng AI
+
+> [!TIP]
+> **Khi nào dùng:** Học sinh nộp bài chụp ảnh → AI đọc → chấm theo rubric GDPT 2018 → GV xác nhận điểm cuối cùng. Đặc biệt mạnh cho **Văn, Địa, KTPL, Sinh học**.
+
+**Kích hoạt khi giáo viên nói:**
+- *"chấm bài này"* + gửi ảnh → Tự động OCR + chấm
+- *"chấm cả lớp"* + nhiều ảnh → Chấm hàng loạt + xuất Excel
+- *"tạo rubric cho câu 3"* → Tự động tạo rubric từ đáp án
+
+**Quy trình:**
+
+```python
+from scripts.essay_grader import EssayOCR, RubricEngine, AIGrader
+from scripts.grading_report import GradingReport
+
+api_key = os.getenv("GEMINI_API_KEY")   # Lấy từ env var
+
+# 1. OCR ảnh bài làm học sinh
+ocr = EssayOCR(api_key=api_key)
+result = ocr.ocr_image("bai_lam_hs.jpg")
+student_text = result["text"]
+
+# 2. Lấy rubric (hoặc tự tạo từ đáp án)
+rubric_engine = RubricEngine(subject="math")
+rubric = rubric_engine.get_rubric("math", "tinh_toan_thuc_te", total_points=5.0)
+# Hoặc tự tạo: rubric = rubric_engine.create_auto_rubric(model_answer, 5.0, "math")
+
+# 3. Chấm điểm
+grader = AIGrader(api_key=api_key)
+grading = grader.grade_essay(
+    student_answer=student_text,
+    model_answer="[đáp án chuẩn]",
+    rubric=rubric,
+    subject="math"
+)
+
+# 4. Hiển thị kết quả cho GV xem + xác nhận
+report = GradingReport([grading], subject="math")
+print(report.to_chat_summary("Học sinh A"))
+
+# 5. Xuất báo cáo (sau khi GV xác nhận điểm)
+report.to_word_feedback("Học sinh A", "feedback_hs_a.docx")
+report.to_excel([grading1, grading2, ...], "bang_diem_lop_10a.xlsx")
+```
+
+**Giao diện kết quả chấm trong chat:**
+
+```
+📊 KẾT QUẢ CHẤM — Câu 3 (5 điểm) — Học sinh: Nguyễn Văn A
+
+✅ Lập mô hình toán học:     0.5/0.5  — Đặt biến x = số SP, lập đúng P(x)
+⚠️  Giải toán học:            1.2/1.5  — Sai dấu bước tính f'(x) = 3x² - 3
+✅ Kiểm tra điều kiện:        0.5/0.5  — Loại nghiệm âm, đúng miền
+❌ Kết luận thực tiễn:        0.0/0.5  — Thiếu phiên giải ý nghĩa thực tế
+
+🎯 Tổng AI gợi ý: 2.2/3.0 (73.3%) — Xếp loại: Đạt
+
+💬 Điểm mạnh: Tính toán chính xác, trình bày rõ ràng
+⚠️  Cần cải thiện: Bổ sung bước kết luận thực tiễn (bắt buộc GDPT 2018)
+
+GV xác nhận điểm này không? [Enter] Đồng ý 2.2đ | [n] Nhập điểm khác
+```
+
+**Rubric có sẵn** (file `references/rubric_templates.json`):
+
+| Môn | Loại câu tự luận |
+|:----|:----------------|
+| Toán | `tinh_toan_thuc_te`, `chung_minh` |
+| Văn | `nghi_luan_xa_hoi`, `nghi_luan_van_hoc`, `doc_hieu` |
+| Địa | `nhan_xet_bieu_do`, `giai_thich_hien_tuong` |
+| KTPL | `tinh_huong_phap_luat`, `phan_tich_kinh_te` |
+| Lý | `thi_nghiem`, `tinh_toan` |
+| Hóa | `bao_toan`, `thi_nghiem_mo_ta` |
+| Sinh | `lai_sinh_hoc`, `giai_thich_hien_tuong` |
+| KHTN | `tich_hop_lien_mon` |
+
+> [!IMPORTANT]
+> **AI chỉ GỢI Ý điểm — GV quyết định cuối cùng.** Agent PHẢI hỏi GV xác nhận trước khi lưu điểm chính thức.
+
+---
+
 
 1. **Công thức & Phương trình Hóa học MathType OLE (14pt)**:
    - **Tên nguyên tố chuẩn IUPAC GDPT 2018**: Dùng font chữ đứng chuẩn (`\mathrm{...}` hoặc `\text{...}`), tuyệt đối không để in nghiêng như ẩn số toán học (Ví dụ: $\mathrm{Fe, Al, Cu, O_2, H_2O}$, không dùng $Fe, Al, Cu$).

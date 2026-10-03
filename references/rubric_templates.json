@@ -1,0 +1,183 @@
+{
+  "_version": "1.0.0",
+  "_description": "Rubric chấm bài tự luận chuẩn GDPT 2018",
+  
+  "math": {
+    "tinh_toan_thuc_te": {
+      "display": "Bài toán tính toán thực tế",
+      "criteria": [
+        {"id": "mo_hinh_hoa", "name": "Lập mô hình toán học", "weight": 0.15,
+         "indicators": ["Đặt biến đúng", "Lập hàm/phương trình đúng", "Nêu điều kiện"]},
+        {"id": "tinh_toan", "name": "Giải toán học", "weight": 0.50,
+         "indicators": ["Đạo hàm/biến đổi đúng", "Tìm nghiệm đúng", "Không lỗi tính"]},
+        {"id": "kiem_tra_dkien", "name": "Kiểm tra điều kiện thực tế", "weight": 0.15,
+         "indicators": ["Loại nghiệm không hợp lý", "Kiểm tra miền giá trị"]},
+        {"id": "phien_giai", "name": "Kết luận thực tiễn", "weight": 0.20,
+         "indicators": ["Kết luận có ý nghĩa thực tế", "Đủ đơn vị", "Câu trả lời hoàn chỉnh"]}
+      ]
+    },
+    "chung_minh": {
+      "display": "Bài chứng minh",
+      "criteria": [
+        {"id": "gia_thiet_ket_luan", "name": "Xác định giả thiết, kết luận", "weight": 0.10, "indicators": ["Viết đúng giả thiết", "Viết đúng kết luận"]},
+        {"id": "hinh_ve", "name": "Vẽ hình minh họa", "weight": 0.20, "indicators": ["Vẽ đúng tỉ lệ", "Đủ các điểm/đường nét", "Rõ ràng"]},
+        {"id": "lap_luan", "name": "Lập luận chứng minh", "weight": 0.50, "indicators": ["Trình bày logic", "Áp dụng định lý chính xác", "Không ngắt quãng tư duy"]},
+        {"id": "ket_luan", "name": "Kết luận bài toán", "weight": 0.20, "indicators": ["Đúc kết đúng yêu cầu đề bài", "Hoàn thành chứng minh"]}
+      ]
+    }
+  },
+  
+  "literature": {
+    "nghi_luan_xa_hoi": {
+      "display": "Nghị luận xã hội",
+      "criteria": [
+        {"id": "mo_bai", "name": "Mở bài", "weight": 0.10,
+         "indicators": ["Dẫn dắt tự nhiên", "Nêu rõ vấn đề", "Không sao chép đề"]},
+        {"id": "giai_thich", "name": "Giải thích vấn đề", "weight": 0.20,
+         "indicators": ["Định nghĩa đúng", "Ví dụ minh họa", "Ngôn ngữ trong sáng"]},
+        {"id": "thuc_trang", "name": "Thực trạng & Dẫn chứng", "weight": 0.25,
+         "indicators": ["Dẫn chứng cụ thể", "Đa chiều", "Không lan man"]},
+        {"id": "nguyen_nhan_hq", "name": "Nguyên nhân & Hệ quả", "weight": 0.20,
+         "indicators": ["Phân tích sâu", "Liên hệ thực tiễn VN"]},
+        {"id": "giai_phap", "name": "Giải pháp & Phản biện", "weight": 0.15,
+         "indicators": ["Giải pháp khả thi", "Có góc nhìn phản biện"]},
+        {"id": "ket_bai", "name": "Kết bài", "weight": 0.10,
+         "indicators": ["Khẳng định lại", "Liên hệ bản thân", "Không trùng mở bài"]}
+      ]
+    },
+    "nghi_luan_van_hoc": {
+      "display": "Nghị luận văn học",
+      "criteria": [
+        {"id": "mo_bai_vh", "name": "Mở bài", "weight": 0.10, "indicators": ["Giới thiệu tác giả, tác phẩm", "Nêu vị trí đoạn trích/vấn đề"]},
+        {"id": "phan_tich", "name": "Phân tích/Cảm nhận", "weight": 0.50, "indicators": ["Khai thác nghệ thuật", "Nêu nội dung sâu sắc", "Trích dẫn đúng"]},
+        {"id": "danh_gia", "name": "Đánh giá chung", "weight": 0.20, "indicators": ["Tổng kết giá trị tư tưởng", "Tổng kết giá trị nghệ thuật"]},
+        {"id": "ket_bai_vh", "name": "Kết bài", "weight": 0.20, "indicators": ["Khẳng định giá trị tác phẩm", "Nêu cảm nghĩ cá nhân"]}
+      ]
+    },
+    "doc_hieu": {
+      "display": "Đọc hiểu",
+      "criteria": [
+        {"id": "nhan_biet", "name": "Nhận biết", "weight": 0.30, "indicators": ["Xác định đúng thể thơ/phương thức biểu đạt", "Chỉ ra chi tiết đúng"]},
+        {"id": "thong_hieu", "name": "Thông hiểu", "weight": 0.40, "indicators": ["Hiểu ý nghĩa câu nói/hình ảnh", "Lý giải hợp lý"]},
+        {"id": "van_dung", "name": "Vận dụng", "weight": 0.30, "indicators": ["Rút ra bài học", "Nêu quan điểm cá nhân thuyết phục"]}
+      ]
+    }
+  },
+  
+  "geography": {
+    "nhan_xet_bieu_do": {
+      "display": "Nhận xét biểu đồ",
+      "criteria": [
+        {"id": "nhan_xet_chung", "name": "Nhận xét chung", "weight": 0.20, "indicators": ["Nêu xu hướng tổng thể", "Đánh giá mức độ tăng/giảm chung"]},
+        {"id": "chi_tiet", "name": "Nhận xét chi tiết", "weight": 0.30, "indicators": ["So sánh các số liệu", "Nêu điểm cao nhất/thấp nhất", "Có số liệu minh họa"]},
+        {"id": "nguyen_nhan", "name": "Giải thích nguyên nhân", "weight": 0.30, "indicators": ["Vận dụng kiến thức lý thuyết", "Lý giải logic nguyên nhân dẫn đến xu hướng"]},
+        {"id": "ket_luan_geo", "name": "Kết luận", "weight": 0.20, "indicators": ["Đúc kết vấn đề", "Đề xuất giải pháp (nếu có)"]}
+      ]
+    },
+    "giai_thich_hien_tuong": {
+      "display": "Giải thích hiện tượng địa lý",
+      "criteria": [
+        {"id": "mo_ta", "name": "Mô tả hiện tượng", "weight": 0.30, "indicators": ["Nêu đúng biểu hiện", "Không gian, thời gian xuất hiện"]},
+        {"id": "giai_thich_nguyen_nhan", "name": "Giải thích nguyên nhân", "weight": 0.50, "indicators": ["Vận dụng quy luật tự nhiên/kinh tế xã hội", "Lập luận chặt chẽ"]},
+        {"id": "he_qua", "name": "Hệ quả và giải pháp", "weight": 0.20, "indicators": ["Đánh giá tác động", "Đề xuất biện pháp thực tiễn"]}
+      ]
+    }
+  },
+  
+  "economics_law": {
+    "tinh_huong_phap_luat": {
+      "display": "Xử lý tình huống pháp luật",
+      "criteria": [
+        {"id": "nhan_dien", "name": "Nhận diện vấn đề", "weight": 0.15, "indicators": ["Chỉ ra hành vi", "Xác định quan hệ pháp luật"]},
+        {"id": "can_cu", "name": "Căn cứ pháp lý", "weight": 0.25, "indicators": ["Nêu điều luật áp dụng", "Trích dẫn nguyên tắc"]},
+        {"id": "phan_tich_tinh_huong", "name": "Phân tích hành vi", "weight": 0.30, "indicators": ["Đánh giá tính hợp pháp", "Phân tích lỗi"]},
+        {"id": "giai_quyet", "name": "Hướng giải quyết", "weight": 0.20, "indicators": ["Đề xuất cách xử lý", "Trách nhiệm pháp lý"]},
+        {"id": "bai_hoc", "name": "Bài học rút ra", "weight": 0.10, "indicators": ["Bài học cho cá nhân/cộng đồng"]}
+      ]
+    },
+    "phan_tich_kinh_te": {
+      "display": "Phân tích tình huống kinh tế",
+      "criteria": [
+        {"id": "nhan_dien_kt", "name": "Nhận diện hiện tượng kinh tế", "weight": 0.20, "indicators": ["Xác định đúng chủ thể", "Nêu hiện tượng (lạm phát, cung cầu...)"]},
+        {"id": "phan_tich_co_che", "name": "Phân tích cơ chế hoạt động", "weight": 0.40, "indicators": ["Vận dụng quy luật kinh tế", "Giải thích cơ chế vận hành"]},
+        {"id": "danh_gia_tac_dong", "name": "Đánh giá tác động", "weight": 0.25, "indicators": ["Phân tích tích cực", "Phân tích tiêu cực"]},
+        {"id": "ung_xu", "name": "Cách ứng xử", "weight": 0.15, "indicators": ["Đề xuất quyết định kinh tế phù hợp", "Giải pháp quản lý"]}
+      ]
+    }
+  },
+  
+  "physics": {
+    "thi_nghiem": {
+      "display": "Bài tập thực nghiệm vật lý",
+      "criteria": [
+        {"id": "muc_dich", "name": "Mục đích thí nghiệm", "weight": 0.10, "indicators": ["Xác định đại lượng cần đo", "Nêu mục tiêu cốt lõi"]},
+        {"id": "co_so", "name": "Cơ sở lý thuyết", "weight": 0.15, "indicators": ["Viết đúng công thức", "Nêu nguyên lý hoạt động"]},
+        {"id": "dung_cu", "name": "Dụng cụ và bố trí", "weight": 0.15, "indicators": ["Liệt kê đủ dụng cụ", "Sơ đồ lắp ráp đúng"]},
+        {"id": "tien_hanh", "name": "Các bước tiến hành", "weight": 0.20, "indicators": ["Trình bày trình tự hợp lý", "Đảm bảo an toàn"]},
+        {"id": "xu_ly", "name": "Xử lý số liệu", "weight": 0.25, "indicators": ["Tính toán chính xác", "Vẽ đồ thị đúng", "Tính sai số"]},
+        {"id": "ket_luan_tn", "name": "Kết luận và biện luận", "weight": 0.15, "indicators": ["Xác nhận giả thuyết", "Phân tích nguyên nhân sai số"]}
+      ]
+    },
+    "tinh_toan": {
+      "display": "Bài tập tính toán vật lý",
+      "criteria": [
+        {"id": "tom_tat", "name": "Tóm tắt và đổi đơn vị", "weight": 0.10, "indicators": ["Ký hiệu đúng", "Đổi hệ SI đúng"]},
+        {"id": "cong_thuc", "name": "Viết công thức", "weight": 0.20, "indicators": ["Viết đúng định luật/công thức gốc", "Biến đổi tương đương"]},
+        {"id": "thay_so", "name": "Thay số và tính toán", "weight": 0.50, "indicators": ["Quá trình thay số đúng", "Tính toán không sai sót"]},
+        {"id": "ket_qua", "name": "Kết quả và đơn vị", "weight": 0.20, "indicators": ["Đáp số chính xác", "Đơn vị chuẩn"]}
+      ]
+    }
+  },
+  
+  "chemistry": {
+    "bao_toan": {
+      "display": "Bài tập bảo toàn Hóa học",
+      "criteria": [
+        {"id": "viet_pt", "name": "Viết phương trình/sơ đồ", "weight": 0.20, "indicators": ["Viết đúng sơ đồ phản ứng", "Xác định sự thay đổi số oxi hóa"]},
+        {"id": "ap_dung_bao_toan", "name": "Áp dụng định luật bảo toàn", "weight": 0.40, "indicators": ["Thiết lập hệ phương trình đúng", "Sử dụng đúng bảo toàn (e/khối lượng/nguyên tố)"]},
+        {"id": "giai_he", "name": "Giải hệ phương trình", "weight": 0.25, "indicators": ["Tìm nghiệm chính xác", "Biện luận hợp lý"]},
+        {"id": "ket_luan_hoa", "name": "Kết luận yêu cầu", "weight": 0.15, "indicators": ["Trả lời đúng câu hỏi", "Đơn vị đúng"]}
+      ]
+    },
+    "thi_nghiem_mo_ta": {
+      "display": "Mô tả hiện tượng thí nghiệm",
+      "criteria": [
+        {"id": "hien_tuong", "name": "Nêu hiện tượng", "weight": 0.40, "indicators": ["Mô tả đúng màu sắc, trạng thái", "Không bỏ sót hiện tượng"]},
+        {"id": "giai_thich_hien_tuong_hoa", "name": "Giải thích", "weight": 0.30, "indicators": ["Nêu lý do xảy ra hiện tượng", "Lập luận logic"]},
+        {"id": "phuong_trinh", "name": "Phương trình hóa học", "weight": 0.30, "indicators": ["Viết đúng chất", "Cân bằng chính xác", "Nêu điều kiện (nếu có)"]}
+      ]
+    }
+  },
+  
+  "biology": {
+    "lai_sinh_hoc": {
+      "display": "Bài tập quy luật di truyền",
+      "criteria": [
+        {"id": "quy_uoc", "name": "Biện luận và quy ước gen", "weight": 0.25, "indicators": ["Biện luận tính trạng trội lặn", "Quy ước ký hiệu gen đúng"]},
+        {"id": "kieu_gen_P", "name": "Xác định kiểu gen P", "weight": 0.20, "indicators": ["Dựa vào kiểu hình/tỉ lệ đời con để tìm KG P"]},
+        {"id": "so_do_lai", "name": "Viết sơ đồ lai", "weight": 0.40, "indicators": ["Viết P, G, F", "Xác định đúng giao tử", "Tổ hợp đúng ở đời con"]},
+        {"id": "ket_qua_lai", "name": "Kết luận tỉ lệ", "weight": 0.15, "indicators": ["Tính đúng tỉ lệ kiểu gen", "Tính đúng tỉ lệ kiểu hình"]}
+      ]
+    },
+    "giai_thich_hien_tuong": {
+      "display": "Giải thích hiện tượng sinh học",
+      "criteria": [
+        {"id": "co_so_sinh", "name": "Cơ sở sinh học", "weight": 0.30, "indicators": ["Nêu khái niệm/cơ chế", "Đảm bảo tính khoa học"]},
+        {"id": "phan_tich_sinh", "name": "Phân tích hiện tượng", "weight": 0.50, "indicators": ["Áp dụng cơ sở vào thực tiễn", "Lập luận nhân quả chặt chẽ"]},
+        {"id": "y_nghia", "name": "Ý nghĩa/Ứng dụng", "weight": 0.20, "indicators": ["Nêu vai trò đối với sinh giới", "Ứng dụng trong nông/y học"]}
+      ]
+    }
+  },
+  
+  "khtn": {
+    "tich_hop_lien_mon": {
+      "display": "Bài tập KHTN Tích hợp",
+      "criteria": [
+        {"id": "phan_tich_de", "name": "Phân tích vấn đề", "weight": 0.20, "indicators": ["Nhận diện kiến thức các phân môn liên quan", "Xác định mối liên hệ"]},
+        {"id": "kien_thuc_mon_1", "name": "Vận dụng môn thứ nhất", "weight": 0.30, "indicators": ["Giải quyết một phần vấn đề", "Lập luận/tính toán đúng"]},
+        {"id": "kien_thuc_mon_2", "name": "Vận dụng môn thứ hai", "weight": 0.30, "indicators": ["Sử dụng kết quả/kết nối", "Lập luận/tính toán đúng"]},
+        {"id": "tong_hop", "name": "Tổng hợp kết luận", "weight": 0.20, "indicators": ["Câu trả lời toàn diện", "Thể hiện rõ tư duy liên môn"]}
+      ]
+    }
+  }
+}

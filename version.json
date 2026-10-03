@@ -1,12 +1,26 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "release_date": "2026-10-03",
-  "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 tương tự chuẩn GDPT 2018, xuất MathType OLE 14pt, đồ họa 450 DPI, kiểm định tự động chuẩn GDPT 2018 (gdpt2018_validator.py), module tiếng Anh/Song ngữ, hỗ trợ tự luận",
+  "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Tạo đề từ ma trận đặc tả (không cần đề gốc). Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge (không cần cài LaTeX), kiểm định tự động GDPT 2018.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
-    "4.0.0": [
+    "5.0.0": [
+      "TÍNH NĂNG MỚI: Tạo đề từ ma trận đặc tả (scripts/exam_from_matrix.py) — không cần đề gốc. GV nhập ma trận bất kỳ (bảng chat, Excel, Word, nói tự nhiên), AI sinh từng câu hỏi theo ô ma trận, GV review + nút Sinh lại câu này trước khi xuất.",
+      "TÍNH NĂNG MỚI: Chấm bài tự luận bằng AI (scripts/essay_grader.py) — GV chụp ảnh bài làm HS → OCR Gemini Vision → chấm theo rubric GDPT 2018 → AI gợi ý điểm từng tiêu chí → GV xác nhận điểm cuối cùng.",
+      "TÍNH NĂNG MỚI: Xuất báo cáo chấm (scripts/grading_report.py) — Word feedback cho HS, Excel bảng điểm cả lớp, PDF báo cáo.",
+      "DỮ LIỆU MỚI: references/default_matrices.json — 8 ma trận đặc tả mặc định GDPT 2018 (Toán/Lý/Hóa 11&12/Sinh/KHTN 8/Địa/Văn 12).",
+      "DỮ LIỆU MỚI: references/rubric_templates.json — Rubric chấm tự luận cho 8 môn × nhiều loại câu (nghị luận, nhận xét biểu đồ, tình huống pháp luật, sơ đồ lai, thí nghiệm...).",
+      "CẬP NHẬT SKILL.md: Bước 0.5 (Tạo đề từ ma trận), Bước 7 (Chấm tự luận AI). Help menu cập nhật đầy đủ."
+    ],
+    "4.1.1": [
+      "Chuyển phương thức xuất PDF từ LaTeX sang Chrome/Edge headless làm mặc định — giáo viên không cần cài MikTeX.",
+      "Edge/Chrome tự động phát hiện (100% Windows 10/11 có sẵn Edge), LaTeX giữ làm fallback.",
+      "Giữ LaTeX fallback nếu xelatex/pdflatex có trong PATH.",
+      "Bỏ thông tin cá nhân khỏi test data (contact_info = rỗng)."
+    ],
+    "4.1.0": [
       "Tích hợp chuẩn GDPT 2018 toàn diện cho 8 môn (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12.",
       "Thêm Bước 2bis: Checklist Kiểm Định Tự Động GDPT 2018 bắt buộc trước khi xuất đề.",
       "Tích hợp phương pháp giải chuẩn mới: Mô hình hóa Toán 4 bước, Thực nghiệm Vật Lý 6 bước, Sơ đồ bảo toàn Hóa Học, Quy trình khoa học Sinh Học, Tình huống Pháp Luật 5 bước, Phân tích biểu đồ Địa Lý 4 bước, Đọc hiểu & Nghị luận Ngữ Văn.",
