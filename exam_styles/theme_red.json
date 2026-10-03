@@ -1,0 +1,16 @@
+{
+  "theme": "red",
+  "name": "Red — Nổi bật",
+  "description": "Màu đỏ nổi bật. Phù hợp đề thi ôn luyện cường độ cao.",
+  "color_primary": "C0392B",
+  "color_secondary": "7B241C",
+  "color_solution_bg": "FDECEA",
+  "color_question": "C0392B",
+  "school_name": "Tên Trường",
+  "school_dept": "Môn Học",
+  "contact_info": "",
+  "footer_left": "Tên Trường",
+  "footer_right": "Chúc em làm bài tốt!",
+  "logo_path": "",
+  "watermark": false
+}

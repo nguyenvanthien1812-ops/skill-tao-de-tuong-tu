@@ -1,0 +1,16 @@
+{
+  "theme": "minimal",
+  "name": "Minimal — Tiết kiệm mực",
+  "description": "Trắng đen tối giản. Tiết kiệm mực in tối đa. Phù hợp in số lượng lớn.",
+  "color_primary": "2C2C2C",
+  "color_secondary": "1A1A1A",
+  "color_solution_bg": "F5F5F5",
+  "color_question": "2C2C2C",
+  "school_name": "Tên Trường",
+  "school_dept": "Môn Học",
+  "contact_info": "",
+  "footer_left": "Tên Trường",
+  "footer_right": "Chúc em làm bài tốt!",
+  "logo_path": "",
+  "watermark": false
+}

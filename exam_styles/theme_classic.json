@@ -1,0 +1,16 @@
+{
+  "theme": "classic",
+  "name": "Classic — Truyền thống",
+  "description": "Xanh dương truyền thống chuẩn SGK Việt Nam.",
+  "color_primary": "1A5276",
+  "color_secondary": "154360",
+  "color_solution_bg": "EBF5FB",
+  "color_question": "1A5276",
+  "school_name": "Tên Trường",
+  "school_dept": "Môn Học",
+  "contact_info": "",
+  "footer_left": "Tên Trường",
+  "footer_right": "Chúc em làm bài tốt!",
+  "logo_path": "",
+  "watermark": false
+}

@@ -1,0 +1,16 @@
+{
+  "theme": "purple",
+  "name": "Purple — Sáng tạo",
+  "description": "Màu tím sáng tạo, trầm ấm. Phù hợp các cụm trường THCS, chuyên.",
+  "color_primary": "6C3483",
+  "color_secondary": "4A235A",
+  "color_solution_bg": "F5EEF8",
+  "color_question": "6C3483",
+  "school_name": "Tên Trường",
+  "school_dept": "Môn Học",
+  "contact_info": "",
+  "footer_left": "Tên Trường",
+  "footer_right": "Chúc em làm bài tốt!",
+  "logo_path": "",
+  "watermark": false
+}

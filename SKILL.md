@@ -100,22 +100,23 @@ Khi nhận được **BẤT KỲ YÊU CẦU NÀO** từ người dùng (tạo đ
 ## Kiến Trúc Pipeline Xử Lý
 
 ```text
-[Đề gốc PDF / DOCX]
+[Đề gốc PDF / DOCX / Ảnh chụp]
         │
         ▼ (Phân tích ma trận dạng toán & OCR trích xuất)
-[Thiết kế số liệu đề mới nghiệm đẹp & Lập trình vẽ hình 300 DPI]
+[Thiết kế số liệu đề mới nghiệm đẹp & Lập trình vẽ hình 450 DPI]
         │
         ▼ (Đóng gói DOCX nền chứa tag $LaTeX$ + Hình ảnh sắc nét)
 [_temp_raw_latex.docx]
         │
-        ├───────────────────────────────────────────────────────┐
-        ▼ (POST qua Backend API)                                 ▼ (Chuyển đổi Client-side)
-[https://latex2mathtypeweb.onrender.com/api/convert-docx]     [MML2OMML.XSL Word Engine]
-        │                                                        │
-        ▼ (200 OK)                                               ▼
-[<MA_DE>_MATHTYPE_OLE.docx]                              [<MA_DE>_WORD_EQUATION.docx]
-(Công thức MathType OLE xịn 100%,                        (Công thức Word Equation chuẩn SGK,
-click đúp mở MathType 6.x/7.x)                           mở trên mọi máy tính không cần MathType)
+        ├─────────────────────────────────┬──────────────────────────────┐
+        ▼ (POST qua Backend API)          ▼ (Chuyển đổi Client-side)    ▼ (Sinh LaTeX)
+[latex2mathtypeweb.onrender.com]   [MML2OMML.XSL Word Engine]   [pdf_exam_exporter.py]
+        │                                 │                              │
+        ▼                                 ▼                              ▼ (xelatex/pdflatex ×2)
+[MA_DE_MATHTYPE_OLE.docx]      [MA_DE_WORD_EQUATION.docx]    [MA_DE_DE_HOC_SINH.pdf]
+(Công thức MathType OLE xịn,   (Mở trên mọi máy, không        [MA_DE_LOI_GIAI_GV.pdf]
+ click đúp mở MathType 6/7)     cần cài MathType)             (Đẹp như sách, chuẩn in ấn,
+                                                                6 theme màu, tùy chỉnh)
 ```
 
 ---
@@ -526,6 +527,192 @@ Khi người dùng cung cấp một file đề thi định dạng **PDF** (kể 
    - `<TEN_DE>_MATHTYPE_OLE.docx`: Bản đề học sinh MathType OLE nguyên bản.
    - `<TEN_DE>_LOI_GIAI_OLE.docx`: Bản giáo viên có lời giải & đáp án chính thức từ Sở GD&ĐT.
    - `<TEN_DE>_WORD_EQ.docx`: Bản dự phòng Word Equation (OMML).
+
+---
+
+## 🖨️ Bước 5: Xuất PDF Đẹp Chuẩn In Ấn Qua LaTeX (TÙY CHỌN — KHUYÊN DÙNG)
+
+> [!TIP]
+> **KHI NÀO DÙNG:** Giáo viên muốn in ấn hoàn hảo, không bao giờ lệch font. PDF từ LaTeX đẹp như sách giáo khoa, chuẩn vector 600 DPI, in trên bất kỳ máy nào đều giống nhau.
+
+### 5.1 Cách Kích Hoạt (Giáo Viên Không Cần Biết Lệnh)
+
+Agent **TỰ ĐỘNG GỢI Ý** sau khi tạo đề xong. Giáo viên cũng có thể nói:
+- *"xuất pdf"*, *"in ra"*, *"tạo pdf"*, *"in đẹp"*, *"pdf như sách"*
+- *"cả word và pdf"*, *"xuất cả hai"*
+
+### 5.2 Cú Pháp Gọi Script
+
+```python
+from scripts.pdf_exam_exporter import ExamPDFExporter, export_exam_pdf
+
+# Cách 1 — 1-click, cả 2 bản
+results = export_exam_pdf(
+    exam_data=exam_data,   # Dict chuẩn (tương thích gdpt2018_validator.py)
+    meta={
+        "series_name":    "TỔNG ÔN TẬP THPTQG\nMÔN TOÁN 2026",
+        "exam_code":      "0103",
+        "exam_title":     "ĐỀ THI TỐT NGHIỆP THPT",
+        "subject":        "Toán",
+        "grade":          12,
+        "school_year":    "2025 -- 2026",
+        "duration_minutes": 90,
+    },
+    output_dir="output/",
+    basename="MA_DE_0103",
+    theme="teal",           # Hoặc: navy / red / minimal / purple / classic
+    style_config={          # Tùy chỉnh thêm (nếu có)
+        "school_name":  "Tên Trường",
+        "contact_info": "📞 0912.345.678",
+        "footer_right": "Chúc em làm bài tốt!",
+    },
+)
+# Kết quả:
+# output/MA_DE_0103_DE_HOC_SINH.pdf  ← Phát cho học sinh
+# output/MA_DE_0103_LOI_GIAI_GV.pdf  ← Giáo viên có lời giải
+
+# Cách 2 — Tùy chỉnh từ chat
+exporter = ExamPDFExporter(theme='teal')
+exporter.apply_chat_command("đổi tên trường là THPT Chu Văn An")
+exporter.apply_chat_command("thêm logo logo_truong.png")
+exporter.apply_chat_command("dùng theme đỏ")
+exporter.save_profile("co_lan_thpt_chu_van_an")  # Lưu để dùng lại
+results = exporter.export_both(exam_data, meta, output_dir="output/")
+```
+
+### 5.3 Hệ Thống 6 Theme Màu Sắc
+
+| Theme | Màu chính | Phù hợp |
+|:------|:---------|:--------|
+| `teal` | 🟢 Xanh teal #1A7070 | Mặc định — chuyên nghiệp (như ảnh mẫu) |
+| `navy` | 🔵 Xanh navy #1B3A6B | Thi học kỳ, tốt nghiệp — trang trọng |
+| `red` | 🔴 Đỏ #C0392B | Ôn luyện cường độ cao — nổi bật |
+| `minimal` | ⚫ Trắng đen #2C2C2C | In số lượng lớn — tiết kiệm mực |
+| `purple` | 🟣 Tím #6C3483 | Trường THCS, chuyên — sáng tạo |
+| `classic` | 🔷 Xanh dương #1A5276 | Chuẩn SGK truyền thống Việt Nam |
+
+### 5.4 Tùy Chỉnh Qua Chat Tự Nhiên
+
+Agent nhận diện và áp dụng ngay các lệnh:
+
+| Giáo viên nói | Agent làm |
+|:-------------|:---------|
+| *"dùng theme đỏ"* | Chuyển sang theme `red` |
+| *"đổi tên trường là Nguyễn Trãi"* | Cập nhật header |
+| *"thêm logo logo.png"* | Chèn logo vào header |
+| *"bỏ lời giải đi, chỉ in đề thôi"* | Xuất bản học sinh (no solution) |
+| *"in 2 cột"* | Layout 2 cột tiết kiệm giấy |
+| *"thêm watermark bản nháp"* | Chèn "BẢN NHÁP" chìm mờ |
+| *"lưu style này lại"* | `save_profile(teacher_name)` |
+| *"dùng style hôm trước"* | `load_teacher_profile(name)` |
+
+### 5.5 Yêu Cầu Kỹ Thuật
+
+- **LaTeX cần cài**: MikTeX (Windows) hoặc TeX Live (Linux/Mac)
+- **Trình biên dịch**: xelatex (ưu tiên) hoặc pdflatex (fallback)
+- **Cài MikTeX**: https://miktex.org/download (miễn phí, 1-click)
+- **Script kiểm tra**: `python scripts/check_and_setup_env.py` — tự kiểm tra và hướng dẫn cài
+
+---
+
+## 🤖 Hệ Thống UX Chủ Động (Proactive UX) — BẮT BUỘC ÁP DỤNG
+
+> [!IMPORTANT]
+> **CHỈ THỊ UX BẮT BUỘC:** Agent PHẢI chủ động gợi ý tính năng, hiển thị menu sau task, và hỗ trợ lệnh trợ giúp. Giáo viên KHÔNG cần biết lệnh — Agent là giao diện.
+
+### 6.1 Post-Task Menu (Sau Khi Tạo Đề Xong)
+
+**Sau MỖI LẦN tạo đề hoặc xuất file xong**, Agent PHẢI hiển thị:
+
+```
+✅ Đã tạo đề [Môn] [Lớp] mã [XXXX] xong!
+
+📦 Bạn muốn xuất định dạng nào?
+  [1] 📄 Word MathType OLE (.docx) — sửa được công thức, có lời giải tách bạch
+  [2] 🖨️  PDF đẹp chuẩn in ấn (.pdf) — không bao giờ lệch font, 6 theme màu
+  [3] 📦 Cả Word + PDF cùng lúc (khuyên dùng)
+
+💡 Tuỳ chỉnh thêm? Nói tự nhiên:
+  → "dùng theme đỏ" / "đổi tên trường" / "thêm logo" / "trắng đen tiết kiệm mực"
+  → "dịch sang tiếng Anh" / "tạo bộ 4 mã đề" / "trộn đề"
+
+(Hoặc gõ số 1/2/3, hoặc nói tự nhiên điều bạn muốn)
+```
+
+### 6.2 Contextual Suggestions (Gợi Ý Theo Ngữ Cảnh)
+
+| Khi giáo viên nói... | Agent tự gợi ý thêm... |
+|:---------------------|:----------------------|
+| *"xuất word"* | 💡 "Bạn có muốn xuất thêm PDF đẹp để in luôn không?" |
+| *"in ra"* / *"in đề"* | 🖨️ Tự động gợi ý PDF LaTeX |
+| *"đẹp hơn"* / *"xấu quá"* | 🎨 Gợi ý đổi theme hoặc PDF |
+| *"lệch font"* / *"bị lỗi khi in"* | 📄 Giải thích và gợi ý PDF |
+| *"bộ 4 mã đề"* | 🔄 Kèm gợi ý xuất PDF tất cả 4 mã |
+| *"dịch tiếng Anh"* | 🌐 Gợi ý xuất cả bản Anh và song ngữ |
+
+### 6.3 Help Command Handler
+
+**Khi giáo viên nói:** *"trợ giúp"* / *"?"* / *"có tính năng gì"* / *"help"* / *"hướng dẫn"*
+
+Agent PHẢI hiển thị menu đầy đủ:
+
+```
+🎯 TÔI CÓ THỂ GIÚP THẦY/CÔ:
+══════════════════════════════════════════════════════
+
+📋 TẠO ĐỀ THI (8 môn, lớp 6–12)
+   • Tạo đề tương tự từ đề gốc (PDF/Word/ảnh chụp)
+   • Tạo đề từ ma trận đặc tả
+   • Kiểm định chuẩn GDPT 2018 tự động
+   → Nói: "tạo đề giống cái này" / "tạo đề Toán 12"
+
+📄 XUẤT TÀI LIỆU
+   • Word MathType OLE (sửa được công thức click đúp)
+   • PDF đẹp chuẩn in ấn (6 theme màu, không lệch font) ← MỚI
+   • Cả Word + PDF cùng lúc
+   → Nói: "xuất word" / "xuất pdf" / "cả hai"
+
+🎨 TUỲ CHỈNH PDF
+   • 6 theme: Teal / Navy / Đỏ / Trắng đen / Tím / Classic
+   • Đổi tên trường, logo, footer, màu sắc
+   • Lưu style riêng để dùng lại
+   → Nói: "dùng theme đỏ" / "đổi tên trường là..."
+
+📚 BỘ ĐỀ & TRỘN ĐỀ
+   • Tạo bộ 4 mã đề hoán vị
+   • Phiếu trả lời bong bóng (bubble sheet)
+   • File Excel tổng hợp đáp án 4 mã
+   → Nói: "tạo bộ 4 mã đề"
+
+🌐 NGÔN NGỮ
+   • Dịch đề sang tiếng Anh chuẩn Cambridge/IB
+   • Bản song ngữ Anh-Việt
+   → Nói: "dịch sang tiếng Anh" / "song ngữ"
+
+🔄 CHUYỂN ĐỔI FILE
+   • PDF đề thi → Word MathType OLE (không lỗi công thức)
+   • Đọc file Word có MathType OLE cũ → LaTeX
+   → Nói: "chuyển pdf sang word" / "đọc file mathtype"
+
+══════════════════════════════════════════════════════
+💬 Nói tự nhiên điều bạn cần — tôi hiểu không cần lệnh!
+```
+
+### 6.4 Onboarding (Lần Đầu Sử Dụng)
+
+Khi phát hiện đây là lần đầu giáo viên dùng (không có lịch sử), Agent giới thiệu ngắn:
+
+```
+👋 Chào thầy/cô! Em là trợ lý tạo đề thi thông minh.
+
+3 điều thầy/cô thường dùng nhất:
+  📝 "tạo đề giống đề này" → tạo đề tương tự từ file/ảnh
+  🖨️  "xuất pdf đẹp"        → PDF chuẩn in ấn như sách
+  🌐 "dịch tiếng Anh"      → bản English/Song ngữ
+
+Gõ "trợ giúp" bất lúc nào để xem toàn bộ tính năng.
+Thầy/cô muốn bắt đầu với điều gì?
+```
 
 ---
 

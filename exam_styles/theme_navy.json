@@ -1,0 +1,16 @@
+{
+  "theme": "navy",
+  "name": "Navy — Trang trọng",
+  "description": "Xanh nước biển trang trọng. Phù hợp đề thi học kỳ, thi tốt nghiệp.",
+  "color_primary": "1B3A6B",
+  "color_secondary": "0D1F3C",
+  "color_solution_bg": "EEF2F8",
+  "color_question": "1B3A6B",
+  "school_name": "Tên Trường",
+  "school_dept": "Môn Học",
+  "contact_info": "",
+  "footer_left": "Tên Trường",
+  "footer_right": "Chúc em làm bài tốt!",
+  "logo_path": "",
+  "watermark": false
+}

@@ -1,0 +1,16 @@
+{
+  "theme": "teal",
+  "name": "Teal — Chuyên nghiệp (Mặc định)",
+  "description": "Xanh teal chuyên nghiệp chuẩn như ảnh mẫu. Phù hợp mọi loại đề thi.",
+  "color_primary": "1A7070",
+  "color_secondary": "2C3E50",
+  "color_solution_bg": "F0F4F4",
+  "color_question": "1A7070",
+  "school_name": "Tên Trường",
+  "school_dept": "Môn Học",
+  "contact_info": "",
+  "footer_left": "Tên Trường // Tổ chuyên môn",
+  "footer_right": "Chúc em làm bài tốt!",
+  "logo_path": "",
+  "watermark": false
+}
