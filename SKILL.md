@@ -390,6 +390,119 @@ Bước 4: Kết luận và liên hệ thực tiễn Việt Nam / Thế giới
 - **Nghị luận XH**: Giải thích → Thực trạng → Nguyên nhân/Hậu quả → Giải pháp → Liên hệ bản thân.
 - **Nghị luận VH**: Giới thiệu tác giả/tác phẩm → Phân tích luận điểm (dẫn chứng + bình) → Đánh giá nghệ thuật → Liên hệ mở rộng.
 
+---
+
+> [!IMPORTANT]
+> ### ⛔ CHECKLIST BẮT BUỘC KIỂM TRA LỜI GIẢI TRƯỚC KHI XUẤT (GDPT 2018)
+>
+> Agent PHẢI tự rà soát từng mục dưới đây. **Nếu bất kỳ mục nào CHƯA ĐẠT → phải sửa ngay, KHÔNG được xuất file.**
+>
+> #### 🔵 Toán — Lời Giải Tự Luận / Phần III:
+> ```
+> □ Có đặt biến rõ ràng + điều kiện biến (x > 0, n ∈ ℕ*, ...)?
+> □ Lập hàm số/phương trình mô tả đúng bài toán?
+> □ Giải toán học đầy đủ (tính f'(x), tìm nghiệm, xét dấu...)?
+> □ Kiểm tra nghiệm trong miền thực tế?
+> □ CÓ câu kết luận "Vậy trong thực tế, [ý nghĩa kết quả]."? ← THIẾU NHIỀU NHẤT
+> □ Kết quả Phần III là số nguyên hoặc thập phân ≤ 2 chữ số?
+> ```
+>
+> #### 🔴 Vật Lý — Lời Giải:
+> ```
+> □ Ghi "Chọn chiều dương là..." ở đầu lời giải?   ← THIẾU NHIỀU NHẤT
+> □ Ghi "Bỏ qua [ma sát/lực cản/...]" nếu bài không cho số liệu đó?
+> □ Có sơ đồ/hình phân tích lực (kể cả mô tả bằng text)?
+> □ Đơn vị kết quả ghi đúng hệ SI (m/s, kg, N, Pa, J, W, Hz, T)?
+> □ Có câu nhận xét ý nghĩa vật lý: "Dấu âm có nghĩa... / Kết quả này cho thấy..."?
+> □ Câu thực nghiệm: Có bảng số liệu + phân tích sai số (ΔX, δX%)?
+> ```
+>
+> #### 🟢 Hóa Học — Lời Giải:
+> ```
+> □ Bài hỗn hợp: ĐÃ lập sơ đồ bảo toàn trước khi tính?  ← THIẾU NHIỀU NHẤT
+>   (bảo toàn khối lượng / nguyên tố / electron / điện tích)
+> □ Phương trình hóa học CÓ điều kiện phản ứng (t°, xt, as, p)?
+> □ Phương trình CÓ trạng thái chất (s)(l)(g)(aq)?
+> □ Phương trình CÓ ký hiệu ↓ (kết tủa), ↑ (khí)?
+> □ Font IUPAC: tên nguyên tố THẲNG ĐỨNG \mathrm{Fe, Al, Cu} — KHÔNG in nghiêng?
+> □ Có nhắc đến ứng dụng / ý nghĩa thực tế của phản ứng (Hóa học xanh)?
+> □ Nếu có hiệu suất: ghi rõ H=...% áp dụng cho chất nào?
+> ```
+>
+> #### 🟣 Sinh Học — Lời Giải:
+> ```
+> □ Sơ đồ lai đầy đủ: P (kiểu gen) → Giao tử P → F1 (kiểu gen + kiểu hình)?
+> □ Tỉ lệ kiểu gen + kiểu hình ghi dạng phân số (1:2:1, 3:1, 9:3:3:1)?
+> □ Có liên hệ ứng dụng thực tiễn (y học, nông nghiệp, môi trường)?
+> □ Bài thực nghiệm: có nhóm đối chứng + nhóm thực nghiệm?
+> ```
+>
+> #### 🗺️ Địa Lý — Lời Giải Tự Luận:
+> ```
+> □ Bước 1: Nhận xét CHUNG trước (xu hướng tổng quan)?
+> □ Bước 2: Nhận xét CHI TIẾT (max/min/tăng/giảm từng thành phần)?
+> □ Bước 3: Giải thích NGUYÊN NHÂN?
+> □ Bước 4: Kết luận + ĐỀ XUẤT GIẢI PHÁP phát triển bền vững?  ← THIẾU NHIỀU NHẤT
+> ```
+>
+> #### ⚖️ KTPL — Lời Giải Tình Huống:
+> ```
+> □ Bước 1: Xác định đủ các CHỦ THỂ trong tình huống (tên, vai trò)?
+> □ Bước 2: Xác định LOẠI QUAN HỆ PHÁP LÝ (hợp đồng/vi phạm/tranh chấp)?
+> □ Bước 3: Chỉ ra QUY PHẠM PHÁP LUẬT áp dụng (điều, khoản luật cụ thể)?
+> □ Bước 4: ÁP DỤNG quy phạm vào tình huống?
+> □ Bước 5: KẾT LUẬN hành vi đúng/sai + hậu quả pháp lý + giải pháp?  ← THIẾU NHIỀU NHẤT
+> ```
+>
+> #### 📝 Câu Đúng/Sai (Tất cả môn) — Bắt buộc đúng thứ tự:
+> ```
+> □ Ý a = mức NB (nhận biết thuần túy từ lý thuyết)
+> □ Ý b = mức TH (suy luận, so sánh)
+> □ Ý c = mức VD (tính toán, áp dụng công thức)
+> □ Ý d = mức VDC (kết luận mở, tình huống mới, phản biện)
+> □ Không được: tất cả 4 ý đều ĐÚNG hoặc đều SAI
+> □ Đáp án mỗi ý phải CÓ LỜI GIẢI giải thích tại sao Đúng/Sai
+> ```
+
+---
+
+### 📋 Bảng So Sánh "Cũ vs Mới" — Những Lỗi Phổ Biến Nhất
+
+> [!WARNING]
+> Các mẫu lời giải CŨ dưới đây **nghiêm cấm** xuất hiện trong đề/lời giải của skill.
+
+#### ❌ Toán — Lời Giải Cũ vs ✅ Mới:
+
+| ❌ **Cách cũ (CHƯƠNG TRÌNH 2006)** | ✅ **Cách mới (GDPT 2018)** |
+|:----------------------------------|:--------------------------|
+| Tính ra x = 500, kết luận "Vậy x = 500." | **"Vậy trong thực tế, để chi phí nhỏ nhất là 120 triệu đồng, doanh nghiệp cần sản xuất đúng 500 sản phẩm/ngày."** |
+| Giải xác suất bằng liệt kê toàn bộ | Dùng phân phối nhị thức $X \sim B(n, p)$, tính $P(X=k) = \binom{n}{k}p^k(1-p)^{n-k}$ |
+| Hình học không gian chỉ tính V, S | Gắn ngữ cảnh: "Một bể nước có hình chóp... cần bao nhiêu vật liệu để sản xuất?" |
+
+#### ❌ Vật Lý — Lời Giải Cũ vs ✅ Mới:
+
+| ❌ **Cách cũ** | ✅ **Cách mới** |
+|:-------------|:--------------|
+| Áp dụng công thức F = ma, tính ra F = 10 N. | **"Chọn chiều dương là chiều chuyển động. Bỏ qua ma sát. Theo định luật II Newton: F = ma = 2×5 = 10 N. Dấu dương cho thấy lực cùng chiều chuyển động."** |
+| Cho bảng số liệu, tính trung bình cộng. | Tính đủ: $\bar{X}$, $\Delta X$, $\delta X\%$, viết kết quả $X = \bar{X} \pm \Delta X$ (đơn vị). |
+| Bài tập điện xoay chiều không nhắc ứng dụng. | Liên hệ: "Đây là nguyên lý hoạt động của máy phát điện / động cơ điện trong công nghiệp." |
+
+#### ❌ Hóa Học — Lời Giải Cũ vs ✅ Mới:
+
+| ❌ **Cách cũ** | ✅ **Cách mới** |
+|:-------------|:--------------|
+| Viết PT: `Fe + HCl → FeCl2 + H2↑` | **`$\mathrm{Fe_{(s)} + 2HCl_{(aq)} \rightarrow FeCl_2{(aq)} + H_2\uparrow_{(g)}}$`** (font thẳng, trạng thái, ký hiệu khí) |
+| Tính trực tiếp n(Fe) = 0.1 mol, m = 5.6g. | **Lập sơ đồ bảo toàn nguyên tố Fe trước:** $n_{\mathrm{Fe}}(\text{đầu}) = n_{\mathrm{Fe}}(\text{sản phẩm})$, sau đó tính. |
+| Kết luận: "Vậy m = 5.6g." | **"Vậy m = 5.6g. Phản ứng này ứng dụng trong xử lý nước thải axit công nghiệp."** |
+| Phương trình không ghi điều kiện. | Bắt buộc: `$\xrightarrow{t^\circ, \text{xt}}$` hoặc `$\xrightarrow{\text{ánh sáng}}$` |
+
+#### ❌ Địa Lý — Lời Giải Cũ vs ✅ Mới:
+
+| ❌ **Cách cũ** | ✅ **Cách mới** |
+|:-------------|:--------------|
+| "GDP năm 2020 là X tỉ USD, năm 2023 là Y tỉ USD, tăng Z%." | **B1 Chung:** "Nhìn chung GDP tăng liên tục giai đoạn 2020-2023." → **B2 Chi tiết:** "Tốc độ tăng nhanh nhất năm... Thấp nhất năm... do..." → **B3 Nguyên nhân** → **B4: Đề xuất chính sách thu hút đầu tư / phát triển bền vững."** |
+| Nhận xét biểu đồ không có đề xuất giải pháp. | Câu tự luận Địa lý PHẢI có Bước 4: Đề xuất giải pháp. |
+
 ### Bước 3: Lập trình vẽ hình kỹ thuật chuẩn xác (300 DPI) & Đậm Nét Siêu Rõ
 Lưu toàn bộ hình ảnh vào thư mục `hinh_ve_<ma_de>/` với định dạng PNG độ phân giải 300 DPI:
 1. Sử dụng thư viện trợ giúp: [render_math_figures.py](./scripts/render_math_figures.py).
