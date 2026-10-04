@@ -158,6 +158,21 @@ if __name__ == '__main__':
         sys.exit(1)
 
     print(f"[*] Bắt đầu xử lý file PDF: {pdf_file}")
-    out_dir = os.path.join(args.out, "pdf_extracted_pages")
-    extract_pages_at_300dpi(pdf_file, out_dir)
-    print("[*] Sẵn sàng chuyển đổi các trang thành văn bản Word chuẩn!")
+    try:
+        from pdf_to_word_v2 import convert_pdf_to_word
+    except ImportError:
+        try:
+            from .pdf_to_word_v2 import convert_pdf_to_word
+        except ImportError:
+            import sys
+            sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+            from pdf_to_word_v2 import convert_pdf_to_word
+
+    res = convert_pdf_to_word(pdf_file, args.out)
+    if res.get("ole_docx"):
+        print(f"[OK] File MathType OLE đã sẵn sàng: {res['ole_docx']}")
+    elif res.get("word_eq_docx"):
+        print(f"[OK] File Word Equation đã sẵn sàng: {res['word_eq_docx']}")
+    else:
+        print(f"[OK] Đã xuất file: {res.get('raw_docx')}")
+

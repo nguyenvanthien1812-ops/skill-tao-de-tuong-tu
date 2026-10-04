@@ -13,9 +13,15 @@ Sử dụng:
 """
 
 from __future__ import annotations
+import sys
 import json
 from dataclasses import dataclass, field
 from typing import Optional
+
+try:
+    sys.stdout.reconfigure(encoding='utf-8')
+except Exception:
+    pass
 
 # ─────────────────────────────────────────────────────────────────────
 # Cấu hình chuẩn GDPT 2018 theo môn và cấp học
@@ -285,6 +291,9 @@ def validate_exam_gdpt2018(
 
     # ── 7. Kiểm tra đặc thù theo môn ────────────────────────────────
     _check_subject_specific(exam_data, subject_key, level_cfg, issues)
+
+    # ── 7bis. Kiểm định phương pháp giải chuẩn GDPT 2018 ───────────
+    _check_solution_methodology(exam_data, subject_key, issues)
 
     # ── 8. Tổng kết ──────────────────────────────────────────────────
     error_count   = sum(1 for i in issues if i.severity == "error")
@@ -690,6 +699,109 @@ def _check_subject_specific(
                     "— cần 2 bài (Nghị luận xã hội + Nghị luận văn học)."
                 ),
             ))
+
+def _check_solution_methodology(
+    exam_data: dict,
+    subject_key: str,
+    issues: list,
+) -> None:
+    """
+    Kiểm định phương pháp giải theo chuẩn GDPT 2018 (Solution Methodology Audit).
+    Ngăn chặn việc giáo viên/AI sử dụng phương pháp giải cũ (chương trình 2006).
+    """
+    all_items = []
+    for q in exam_data.get("part1_mc", []):
+        all_items.append(("part1", q.get("id", "?"), q))
+    for q in exam_data.get("part2_tf", []):
+        all_items.append(("part2", q.get("id", "?"), q))
+    for q in exam_data.get("part3_sa", []):
+        all_items.append(("part3", q.get("id", "?"), q))
+    for q in exam_data.get("essay", []):
+        all_items.append(("essay", q.get("id", "?"), q))
+
+    # 1. TOÁN (Math)
+    if subject_key == "math":
+        for part, qid, q in all_items:
+            sol = q.get("solution", "")
+            has_ctx = q.get("has_context", False) or part == "essay" or q.get("level") in ("VD", "VDC")
+            if has_ctx and sol:
+                sol_lower = sol.lower()
+                real_keywords = [
+                    "trong thực tế", "thực tiễn", "vậy để", "kết luận",
+                    "cần sản xuất", "chi phí nhỏ nhất là", "thể tích cần",
+                    "diện tích cần", "vậy sau", "vậy thời gian"
+                ]
+                if not any(kw in sol_lower for kw in real_keywords):
+                    issues.append(ValidationIssue(
+                        severity="warning",
+                        code="GDPT-SOL-M01",
+                        message=f"{part.upper()}, Câu {qid}: Bài toán thực tế/ứng dụng chưa có câu kết luận phiên giải thực tiễn ('Vậy trong thực tế, ...').",
+                        location=f"{part.upper()}, Câu {qid}",
+                        suggestion="Bổ sung bước 4: 'Vậy trong thực tế, để... cần...'.",
+                    ))
+
+    # 2. VẬT LÝ (Physics)
+    elif subject_key == "physics":
+        has_direction_stated = False
+        has_si_units = False
+        for part, qid, q in all_items:
+            sol = q.get("solution", "").lower()
+            if any(kw in sol for kw in ["chiều dương", "gốc thời gian", "gốc toạ độ", "chiều dòng điện", "chọn chiều"]):
+                has_direction_stated = True
+            if any(u in sol for u in ["m/s", "km/h", "kg", "rad/s", "n", "j", "w", "hz", "v", "a", "pa", "t"]):
+                has_si_units = True
+
+        if not has_direction_stated and len(all_items) > 0:
+            issues.append(ValidationIssue(
+                severity="warning",
+                code="GDPT-SOL-P01",
+                message="Môn Vật Lý: Lời giải các bài toán chuyển động/lực nên nêu rõ quy ước ('Chọn chiều dương là...').",
+                suggestion="Ghi rõ quy ước chiều dương và mốc thời gian ở đầu lời giải.",
+            ))
+
+    # 3. HÓA HỌC (Chemistry)
+    elif subject_key == "chemistry":
+        has_conservation = False
+        for part, qid, q in all_items:
+            sol = q.get("solution", "").lower()
+            if any(kw in sol for kw in ["bảo toàn", "btkl", "bte", "btnt", "bảo toàn khối lượng", "bảo toàn electron", "bảo toàn nguyên tố"]):
+                has_conservation = True
+
+        if not has_conservation and len(all_items) > 0:
+            issues.append(ValidationIssue(
+                severity="warning",
+                code="GDPT-SOL-C01",
+                message="Môn Hóa Học: Bài toán tính toán hỗn hợp cần lập sơ đồ bảo toàn (khối lượng/nguyên tố/electron) theo chuẩn GDPT 2018 thay vì tính truyền thống.",
+                suggestion="Lập sơ đồ bảo toàn trước khi tính toán số mol hoặc khối lượng.",
+            ))
+
+    # 4. ĐỊA LÝ (Geography)
+    elif subject_key == "geography":
+        for part, qid, q in all_items:
+            if part == "essay":
+                sol = q.get("solution", "").lower()
+                if not any(kw in sol for kw in ["giải pháp", "đề xuất", "định hướng", "chính sách", "phát triển bền vững"]):
+                    issues.append(ValidationIssue(
+                        severity="warning",
+                        code="GDPT-SOL-G01",
+                        message=f"Tự luận Địa lý, Câu {qid}: Thiếu Bước 4 (Đề xuất giải pháp / định hướng phát triển bền vững).",
+                        location=f"Tự luận, Câu {qid}",
+                        suggestion="Bổ sung bước đề xuất giải pháp phát triển bền vững ở cuối lời giải.",
+                    ))
+
+    # 5. KINH TẾ & PHÁP LUẬT (Economics & Law)
+    elif subject_key == "economics_law":
+        for part, qid, q in all_items:
+            if part == "essay":
+                sol = q.get("solution", "").lower()
+                if not any(kw in sol for kw in ["quy định", "căn cứ", "theo luật", "hành vi", "hậu quả", "bảo vệ quyền lợi"]):
+                    issues.append(ValidationIssue(
+                        severity="warning",
+                        code="GDPT-SOL-E01",
+                        message=f"Tình huống KTPL, Câu {qid}: Cần nêu rõ căn cứ quy phạm pháp luật và giải pháp bảo vệ quyền lợi.",
+                        location=f"Tự luận, Câu {qid}",
+                        suggestion="Áp dụng quy trình 5 bước giải quyết tình huống pháp luật GDPT 2018.",
+                    ))
 
 
 # ─────────────────────────────────────────────────────────────────────

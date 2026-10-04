@@ -17,7 +17,9 @@ description: >-
   "tạo mã đề song song có hình vẽ và công thức chuẩn", "xuất đề thi mathtype ole", "cài đặt môi trường", "cài đặt thư viện", "setup máy tạo đề",
   "kiểm tra môi trường", "tạo bộ 4 mã đề", "tạo phiếu trả lời", "chuyển pdf sang word", "chuyển pdf sang word không lỗi",
   "chuyển đề thi pdf sang word mathtype", "convert pdf to word mathtype", "chuyển pdf sang word công thức toán không lỗi",
-  "chuyển đề thi hóa sang word mathtype", "chuyển đề thi lý sang word mathtype", "vẽ hình thí nghiệm hóa học", "vẽ hình học không gian 3d", "dựng bảng biểu word mathtype",
+  "chuyển pdf sang word chống xô lệch", "chuyển pdf bằng hybrid render", "kiểm tra phương pháp giải", "giải theo phương pháp mới",
+  "phương pháp giải gdpt 2018", "chuyển đề thi hóa sang word mathtype", "chuyển đề thi lý sang word mathtype",
+  "vẽ hình thí nghiệm hóa học", "vẽ hình học không gian 3d", "dựng bảng biểu word mathtype",
   "render tikz", "render code tikz", "vẽ hình tikz", "biên dịch tikz sang ảnh", "chuyển code tikz sang png", "render mã tikz",
   "đọc file docx mathtype", "chuyển mathtype sang latex", "trích xuất công thức mathtype", "đọc đề cũ mathtype",
   "ocr ảnh đề thi", "nhận diện công thức từ ảnh", "chụp ảnh đề thi tạo đề mới", "scan đề thi tạo đề tương tự",
@@ -226,6 +228,44 @@ result = ocr_image_to_latex(["de_thi_scan.jpg", "de_thi_scan_2.jpg"])
 content = read_exam_source("de_goc.docx", is_mathtype_docx=True)
 ```
 
+---
+
+### 🔄 Bước 1.2: Chuyển Đổi PDF Sang Word Không Lỗi (Hybrid Render v2 — Chống Xô Lệch Bảng Biểu & Hình Ảnh)
+
+> [!TIP]
+> **Khi nào dùng:** Giáo viên gửi file PDF đề thi, kế hoạch bài dạy (KHBD), tài liệu chuyên môn và yêu cầu:
+> *"chuyển pdf sang word"*, *"convert pdf to word mathtype"*, *"chuyển pdf sang word không lỗi bảng biểu"*, *"chuyển đề thi pdf sang word mathtype ole"*, *"chuyển kế hoạch bài dạy sang word"*.
+
+#### Chiến lược Hybrid Render v2:
+1. **Bảng biểu (Table Grid) chống xô lệch 100%**: Thay vì trích xuất text bảng làm mất viền, xô lệch hàng cột hay tràn lề, hệ thống tự động render vùng bảng thành ảnh **300 DPI** sắc nét từ chính file PDF gốc. Bảng giữ nguyên 100% bố cục, màu sắc, viền kẻ, không bao giờ lệch trang.
+2. **Hình ảnh kỹ thuật & thí nghiệm**: Tự động crop trực tiếp từ trang PDF render 300 DPI tại đúng tọa độ `bbox`, bảo toàn 100% độ sắc nét khi in ấn.
+3. **Văn bản & Tiêu đề**: Trích xuất text theo thứ tự đọc tự nhiên từ trên xuống dưới (sort theo tọa độ $y_0$), tự động phân tầng tiêu đề Heading 1 (14pt bold), Heading 2 (12pt bold) và nội dung (Times New Roman 12pt).
+4. **Công thức Toán / Ký hiệu Hóa**: Bọc mã LaTeX và tự động gửi Backend Converter API (`https://latex2mathtypeweb.onrender.com/api/convert-docx`) để xuất đối tượng **MathType OLE (`Equation.DSMT4`)** nhấp đúp mở sửa ngay trong Word, kèm bản Word Equation (`_WORD_EQ.docx`) dự phòng.
+
+#### Lệnh thực thi nhanh:
+```python
+from scripts.pdf_to_word_v2 import convert_pdf_to_word
+
+# Chuyển đổi 1-click
+result = convert_pdf_to_word(
+    pdf_path="D:/duong_dan/de_thi.pdf",
+    out_dir="D:/duong_dan/thu_muc_xuat",
+    table_as_image=True  # Giữ bảng 300 DPI chống xô lệch
+)
+
+# File xuất ra:
+# 📄 <tên_file>_MATHTYPE_OLE.docx (Công thức MathType OLE xịn)
+# 📄 <tên_file>_WORD_EQ.docx     (Bản dự phòng Word Equation)
+# 🖼️ <tên_file>_imgs/            (Thư mục chứa toàn bộ hình ảnh)
+```
+
+Hoặc chạy dòng lệnh terminal:
+```powershell
+python scripts/pdf_to_word_v2.py "D:\duong_dan\de_thi.pdf" "D:\duong_dan\xuat"
+```
+
+---
+
 2. Sau khi có nội dung đề gốc, trích xuất toàn bộ câu hỏi theo **cấu trúc GDPT 2018** (áp dụng cho tất cả 8 môn, lớp 6–12):
 
    **Các phần trắc nghiệm (Toán / Vật Lý / Hóa Học / Sinh Học / KHTN / Địa Lý / KTPL):**
@@ -316,8 +356,16 @@ Với mỗi câu hỏi trong đề gốc:
 
 □ [TỰ LUẬN] Lời giải tự luận có bước "phiên giải kết quả về thực tiễn"?
 
-□ [VALIDATOR] Gọi script kiểm định tự động:
-  python scripts/gdpt2018_validator.py (hoặc import validate_exam_gdpt2018())
+□ [PHƯƠNG PHÁP GIẢI GDPT 2018] Lời giải TUYỆT ĐỐI không dùng phương pháp cũ (2006):
+  - Toán: Đủ 4 bước mô hình hóa + câu kết luận phiên giải thực tế ("Vậy trong thực tế, ...")
+  - Vật Lý: Quy ước chiều dương + mốc thời gian + đơn vị SI + nhận xét ý nghĩa vật lý
+  - Hóa Học: Lập sơ đồ bảo toàn (KL/NT/e/ĐT) trước khi tính + trạng thái chất + điều kiện phản ứng
+  - Địa Lý: Đủ 4 bước phân tích (nhận xét chung → chi tiết → nguyên nhân → giải pháp phát triển bền vững)
+  - KTPL: Đủ 5 bước giải quyết tình huống pháp luật
+
+□ [VALIDATOR BẮT BUỘC] Chạy script kiểm định tự động trước khi xuất đề:
+  python scripts/gdpt2018_validator.py (hoặc gọi validate_exam_gdpt2018(exam_data))
+  Validator tự động kiểm tra cả cấu trúc đề VÀ phương pháp giải của từng câu!
 
 ══════════════════════════════════════════════════════════════════════
 ```
