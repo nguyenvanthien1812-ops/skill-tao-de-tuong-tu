@@ -195,6 +195,115 @@ result = validate_exam_gdpt2018(exam_data, subject=matrix["subject"])
 
 ---
 
+### 🗣️ Luồng Hội Thoại Thông Minh — AI Hỏi Đúng Thứ Gì Còn Thiếu
+
+> [!IMPORTANT]
+> Agent KHÔNG được yêu cầu giáo viên cung cấp mọi thứ cùng một lúc. Phải **suy luận thông minh** từ những gì đã có, chỉ hỏi thêm những gì thực sự THIẾU và có thể ảnh hưởng đến chất lượng đề.
+
+#### Quy Tắc Suy Luận Tự Động (trước khi hỏi):
+
+```
+1. Đã có môn + lớp? → Suy luận chương trình (THPT: lớp 10-12, THCS: lớp 6-9)
+2. Đã có bộ sách? → Nếu không, hỏi 1 câu duy nhất: "Trường đang dùng bộ sách nào: Kết Nối / Chân Trời / Cánh Diều?"
+3. Đã có thời gian? → Nếu không, suy luận từ loại đề:
+   - Kiểm tra 1 tiết = 45 phút
+   - Kiểm tra giữa kỳ = 60-75 phút
+   - Kiểm tra cuối kỳ / thi = 90 phút
+4. Đã có phạm vi? → Nếu không, hỏi "Đề kiểm tra chương/học kỳ nào?"
+5. Đã có ma trận? → Nếu không, hỏi "Thầy/cô có sẵn ma trận không, hay muốn dùng ma trận mặc định GDPT 2018?"
+```
+
+#### Mẫu Câu Hỏi AI Theo Từng Tình Huống:
+
+**Tình huống A — Giáo viên chỉ nói tên môn:**
+> GV: *"Tạo đề Toán 12 cho tôi"*
+>
+> AI hỏi 1 câu gộp (tối đa 3 thông tin còn thiếu):
+> ```
+> Em cần thêm một vài thông tin để ra đề chuẩn cho thầy/cô:
+> 1. Bộ sách đang dùng: Kết Nối Tri Thức / Chân Trời Sáng Tạo / Cánh Diều?
+> 2. Loại đề: kiểm tra 1 tiết (45'), giữa kỳ (60'), hay cuối kỳ (90')?
+> 3. Phạm vi: chương mấy / học kỳ mấy? Hay thầy/cô có sẵn ma trận đặc tả?
+>
+> (Nếu không có ma trận, em sẽ dùng ma trận chuẩn GDPT 2018 mặc định)
+> ```
+
+**Tình huống B — Giáo viên gửi kèm bảng ma trận:**
+> GV: *"Tạo đề theo ma trận này: [bảng]"*
+>
+> AI suy luận từ bảng, chỉ hỏi nếu thiếu bộ sách:
+> ```
+> Em đọc được ma trận: Toán 12, 22 câu, 90 phút. Trường đang dùng bộ sách nào
+> để em chọn đúng ngữ liệu và ký hiệu?
+> A. Kết Nối Tri Thức   B. Chân Trời Sáng Tạo   C. Cánh Diều
+> (Nếu không chắc, gõ "bất kỳ" — em sẽ dùng chuẩn chung nhất)
+> ```
+
+**Tình huống C — Giáo viên gửi file đính kèm:**
+> GV: *"Tạo đề theo file ma trận này"* + gửi file Excel/Word/ảnh
+>
+> AI đọc file, xác nhận lại ngay:
+> ```
+> Em đọc file ma trận: [tóm tắt nội dung bảng]. Đúng không thầy/cô?
+> Nếu đúng, em bắt đầu ra đề ngay — thầy/cô chỉ cần xác nhận thêm bộ sách.
+> ```
+
+**Tình huống D — Giáo viên cung cấp đầy đủ:**
+> GV: *"Tạo đề Hóa 11, 90 phút, Kết Nối, chương 1-3, theo ma trận: [bảng]"*
+>
+> AI **KHÔNG hỏi thêm** — ra đề ngay, chỉ confirm kết quả sau khi xong:
+> ```
+> ✅ Đang tạo đề Hóa 11 theo ma trận của thầy/cô...
+> [Tiến hành sinh câu hỏi ngay]
+> ```
+
+---
+
+#### Thứ Tự Ưu Tiên Hỏi (chỉ hỏi 1 lần, gộp tối đa 3 câu):
+
+```
+Bắt buộc hỏi nếu thiếu (theo thứ tự):
+  1. Bộ sách (KNTT / CTST / CD)          ← Ảnh hưởng TẤT CẢ ngữ liệu
+  2. Phạm vi / chương                    ← Ảnh hưởng NỘI DUNG câu hỏi
+
+Hỏi nếu thiếu nhưng có thể suy luận:
+  3. Thời gian làm bài                   ← Suy luận từ số câu trong ma trận
+  4. Loại đề (GK / CK / 1 tiết)         ← Suy luận từ số câu hoặc thời gian
+
+KHÔNG hỏi — tự quyết định:
+  5. Font/style Word                     ← Dùng chuẩn Times New Roman 14pt
+  6. Thứ tự câu hỏi                     ← Theo thứ tự ma trận đặc tả
+  7. Số lần shuffle                      ← Sinh 1 mã đề, nếu muốn 4 mã thì GV nói thêm
+```
+
+---
+
+#### Mẫu Câu Lệnh Chuẩn Cho Giáo Viên (đưa vào onboarding):
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 CÁC CÁCH TẠO ĐỀ TỪ MA TRẬN ĐẶC TẢ
+
+🔹 Cách 1 — Dán bảng ma trận vào chat:
+   "Tạo đề theo ma trận sau, Hóa 11 Kết Nối 90 phút:
+    [dán bảng vào đây]"
+
+🔹 Cách 2 — Gửi file kèm:
+   "Tạo đề theo file ma trận này" + đính kèm file Excel/Word/ảnh
+
+🔹 Cách 3 — Nói tóm tắt, AI hỏi phần còn thiếu:
+   "Tạo đề Toán 12 kiểm tra cuối kỳ"
+   → AI sẽ hỏi thêm bộ sách và phạm vi (1 câu gộp, không hỏi nhiều lần)
+
+🔹 Cách 4 — Đủ thông tin 1 lần, AI ra đề ngay:
+   "Tạo đề [Môn] [Lớp], [thời gian], sách [tên bộ sách],
+    chương [X-Y], theo ma trận: [bảng]"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+
+
 ### Bước 1: Tiếp nhận và phân tích đề gốc
 
 **Sử dụng thư viện [docx_reader.py](./scripts/docx_reader.py) để đọc mọi định dạng đề gốc:**
