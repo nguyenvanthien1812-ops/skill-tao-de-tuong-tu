@@ -25,7 +25,10 @@ description: >-
   "ocr ảnh đề thi", "nhận diện công thức từ ảnh", "chụp ảnh đề thi tạo đề mới", "scan đề thi tạo đề tương tự",
   "xuất word cho tôi", "xuất file word", "xuất word giải chi tiết", "xuất word mathtype",
   "chuyển đề sang tiếng anh", "dịch đề sang tiếng anh", "tạo đề tiếng anh", "đề thi tiếng anh",
-  "bilingual exam", "english math exam", "dịch file sang tiếng anh", "xuất đề tiếng anh", "đề song ngữ", "bilingual math exam".
+  "bilingual exam", "english math exam", "dịch file sang tiếng anh", "xuất đề tiếng anh", "đề song ngữ", "bilingual math exam",
+  "chuẩn hóa mathtype", "chuẩn hoá mathtype", "chuẩn hóa công thức word", "chuẩn hoá công thức word",
+  "chuyển equation sang mathtype", "chuẩn hoá file word mathtype", "sửa lỗi công thức file word", "giữ nguyên bố cục word mathtype",
+  "chuẩn hóa công thức giữ nguyên bố cục".
 ---
 
 
@@ -375,7 +378,51 @@ python scripts/pdf_to_word_v2.py "D:\duong_dan\de_thi.pdf" "D:\duong_dan\xuat"
 
 ---
 
+### 📐 Bước 1.3: Chuẩn Hóa Công Thức File Word Sang MathType OLE 100% (Bảo Toàn Tuyệt Đối Bố Cục & Hình Thức)
+
+> [!TIP]
+> **Khi nào dùng:** Giáo viên đã có một file Word được căn chỉnh lề, định dạng font, kẻ bảng biểu, chèn hình ảnh rất đẹp mắt nhưng:
+> - Công thức toán học bị lỗi, bị nhảy dòng, hoặc lẫn lộn giữa **Word Equation (OMML)** và **LaTeX**.
+> - Giáo viên muốn toàn bộ công thức trong bài trở thành **MathType OLE (`Equation.DSMT4` / `DSMT6`) 14pt** để nhấp đúp (double-click) mở cửa sổ MathType 6/7 chỉnh sửa trực tiếp.
+> - **YÊU CẦU SỐNG CÒN**: Giữ nguyên 100% bố cục, hình ảnh, bảng biểu (gộp ô, màu sắc, viền kẻ), header/footer, khoảng cách dòng của file Word gốc.
+
+#### Cơ chế Dual-Pass Engine (Bảo toàn 100% cấu trúc OOXML):
+1. **Tiền xử lý thông minh**: Quét trực tiếp `word/document.xml`, chuẩn hóa các cú pháp LaTeX (`\[...\]` → `$$...$$`, `\(...\)` → `$...$`, thay `\implies` bằng `\Rightarrow`, `\iff` bằng `\Leftrightarrow`). Giữ nguyên 100% các thẻ định dạng `<w:pPr>`, `<w:rPr>`, bảng `<w:tbl>`, hình ảnh `<w:drawing>`.
+2. **Pass 1 — LaTeX sang MathType OLE**: Gửi file DOCX lên Backend Converter Server (`https://latex2mathtypeweb.onrender.com/api/convert-docx`) để biên dịch toàn bộ các công thức LaTeX `$LaTeX$` thành đối tượng MathType OLE (`Equation.DSMT4`, cỡ 14pt chuẩn SGK).
+3. **Pass 2 — Word Equation (OMML) sang MathType OLE**: Tự động kích hoạt module `omml_converter` quét toàn bộ các công thức `<m:oMath>` / `<m:oMathPara>` còn sót lại trong tài liệu và chuyển đổi trực tiếp thành MathType OLE (`Equation.DSMT6`). Hệ thống tự động kiểm tra và đánh số tránh xung đột tệp nhúng (`word/embeddings/oleObjectN.bin`).
+4. **Kiểm định tính toàn vẹn (Integrity Audit)**: Kiểm tra số lượng OLE object sau khi xuất bản để báo cáo chính xác cho giáo viên.
+
+#### Lệnh thực thi 1-Click (Python & CLI):
+```python
+from scripts.standardize_word_mathtype import standardize_doc_to_mathtype
+
+# Chuẩn hóa 1-click giữ nguyên 100% bố cục
+result = standardize_doc_to_mathtype(
+    input_path="C:/duong_dan/de_thi_da_chinh_dep.docx",
+    output_path="C:/duong_dan/de_thi_da_chinh_dep_MATHTYPE_OLE.docx"  # (Tùy chọn, mặc định tự tạo hậu tố)
+)
+print(f"Đã chuẩn hóa {result['ole_count']} công thức MathType OLE thành công!")
+```
+
+Hoặc chạy dòng lệnh PowerShell:
+```powershell
+python scripts/standardize_word_mathtype.py "C:\duong_dan\de_thi_da_chinh_dep.docx"
+```
+
+#### 💡 Mẹo Thao Tác Trực Tiếp Trong Microsoft Word (3 Cú Click):
+Nếu giáo viên muốn chuyển đổi trực tiếp ngay trên máy tính đã cài đặt Word và MathType:
+1. Mở file Word cần chuẩn hóa.
+2. Trên thanh công cụ (Ribbon), chọn thẻ **MathType**.
+3. Bấm vào nút **Convert Equations** (Chuyển đổi công thức).
+4. Tại hộp thoại hiện ra, tích chọn cả 2 mục:
+   - ✅ **Microsoft Word 2007 and later (OMML) equations**
+   - ✅ **TeX code** (với delimiter `$...$` hoặc `$$...$$`)
+5. Bấm nút **Convert**. Toàn bộ công thức trong tài liệu sẽ tự động chuyển thành MathType OLE trong vài giây mà không xê dịch một milimet bố cục nào!
+
+---
+
 2. Sau khi có nội dung đề gốc, trích xuất toàn bộ câu hỏi theo **cấu trúc GDPT 2018** (áp dụng cho tất cả 8 môn, lớp 6–12):
+
 
    **Các phần trắc nghiệm (Toán / Vật Lý / Hóa Học / Sinh Học / KHTN / Địa Lý / KTPL):**
    - **Phần I**: Trắc nghiệm 4 lựa chọn A/B/C/D (12 câu THPT; 16–20 câu THCS/KHTN).
