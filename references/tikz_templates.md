@@ -3671,5 +3671,241 @@ result = subprocess.run(
 
 ---
 
-*Tổng cộng: **80 mẫu TikZ** (39 Toán + 22 Vật lý + 13 Hóa học + 3 phụ lục Toán + 3 phụ lục khác)*  
-*File được tạo tự động bởi Antigravity AI — phiên bản 1.3 (cập nhật 2026-09)*
+#### Mẫu T41 — Miền nghiệm hệ bất phương trình bậc nhất hai ẩn (Toán 10 GDPT 2018)
+
+**Lớp áp dụng:** 10  
+**Kết quả:** Hệ trục Oxy, các đường thẳng biên $d_1, d_2, d_3$, các vùng gạch bỏ nửa mặt phẳng không thỏa mãn (chuẩn SGK), để trắng miền nghiệm đa giác $OABC$; đánh dấu tọa độ các đỉnh phục vụ bài toán quy hoạch tuyến tính (tìm Max/Min $F = ax + by$).
+
+```latex
+% ===== T41: Miền nghiệm hệ bất phương trình bậc nhất 2 ẩn =====
+% Hệ: x >= 0, y >= 0, x + y <= 4, 2x + y <= 6
+\begin{tikzpicture}[line width=0.9pt, font=\small, >=stealth]
+  % --- Hệ trục tọa độ Oxy ---
+  \draw[->, line width=1.1pt] (-1, 0) -- (5.5, 0) node[below=2pt] {$x$};
+  \draw[->, line width=1.1pt] (0, -1) -- (5.5, 0) node[left=2pt] {$y$};
+  \node[below left=2pt] at (0, 0) {$O$};
+
+  % --- Vạch chia và số trên trục ---
+  \foreach \x in {1, 2, 3, 4} \draw (\x, 2pt) -- (\x, -2pt) node[below=2pt, font=\footnotesize] {$\x$};
+  \foreach \y in {1, 2, 3, 4} \draw (2pt, \y) -- (-2pt, \y) node[left=2pt, font=\footnotesize] {$\y$};
+
+  % --- Gạch bỏ các nửa mặt phẳng không thỏa mãn (Chuẩn SGK: Miền nghiệm để trắng) ---
+  % 1. x < 0: gạch nửa mặt phẳng bên trái Oy
+  \fill[pattern=north east lines, pattern color=blue!30] (-1, -1) rectangle (0, 5.2);
+  % 2. y < 0: gạch nửa mặt phẳng phía dưới Ox
+  \fill[pattern=north west lines, pattern color=teal!30] (-1, -1) rectangle (5.2, 0);
+
+  % 3. x + y > 4: gạch phía trên đường d1: x + y = 4
+  \fill[pattern=north east lines, pattern color=orange!35]
+      (0, 4) -- (4, 0) -- (5.2, 0) -- (5.2, 5.2) -- (0, 5.2) -- cycle;
+
+  % --- Các đường biên ---
+  % d1: x + y = 4 (qua (0,4) và (4,0))
+  \draw[line width=1.3pt, blue!75!black] (-0.5, 4.5) -- (4.8, -0.8) node[right, font=\footnotesize] {$d_1: x+y=4$};
+
+  % --- Tọa độ các đỉnh miền nghiệm đa giác OAB ---
+  \coordinate (O) at (0, 0);
+  \coordinate (A) at (4, 0);
+  \coordinate (B) at (0, 4);
+
+  % Điểm đỉnh nổi bật
+  \fill[purple!80!black] (O) circle (2pt);
+  \fill[purple!80!black] (A) circle (2pt);
+  \fill[purple!80!black] (B) circle (2pt);
+
+  % Nhãn đỉnh
+  \node[above right=2pt, purple!80!black, font=\footnotesize\bfseries] at (A) {$A(4;0)$};
+  \node[above right=2pt, purple!80!black, font=\footnotesize\bfseries] at (B) {$B(0;4)$};
+
+  % Hộp chú thích miền nghiệm
+  \node[draw, rounded corners=3pt, fill=white, font=\scriptsize, inner sep=3pt]
+        at (3.2, 4.5) {Miền trắng (tam giác $OAB$): Miền nghiệm chung};
+\end{tikzpicture}
+```
+
+---
+
+#### Mẫu T42 — Sơ đồ cây xác suất có điều kiện & Bayes (Toán 11 & 12 GDPT 2018)
+
+**Lớp áp dụng:** 11–12  
+**Kết quả:** Sơ đồ cây phân cấp hoàn chỉnh (Tree diagram) phục vụ bài toán công thức xác suất toàn phần và công thức Bayes; các nhánh có nhãn xác suất $P(A)$, $P(B|A)$, các nút biến cố bo góc đẹp mắt.
+
+```latex
+% ===== T42: Sơ đồ cây xác suất (Xác suất có điều kiện & Bayes) =====
+\begin{tikzpicture}[
+  grow=right,
+  sloped,
+  level 1/.style={sibling distance=3.2cm, level distance=3.6cm},
+  level 2/.style={sibling distance=1.6cm, level distance=3.6cm},
+  edge from parent/.style={draw=blue!60!black, line width=1.1pt},
+  every node/.style={font=\small},
+  event/.style={rectangle, rounded corners=3pt, fill=blue!8, draw=blue!40, line width=0.8pt, inner sep=4pt, text=black, font=\small\bfseries},
+  root_node/.style={rectangle, rounded corners=4pt, fill=blue!80!black, text=white, inner sep=5pt, font=\small\bfseries},
+  prob/.style={font=\footnotesize\bfseries, text=gray!80!black, above=2pt}
+]
+  \node[root_node] {Phép thử}
+    child {
+      node[event] {$A$}
+      child {
+        node[event] {$B$}
+        edge from parent node[prob] {$P(B|A) = 0{,}7$}
+      }
+      child {
+        node[event] {$\overline{B}$}
+        edge from parent node[prob, below=2pt] {$P(\overline{B}|A) = 0{,}3$}
+      }
+      edge from parent node[prob, below=2pt] {$P(A) = 0{,}6$}
+    }
+    child {
+      node[event] {$\overline{A}$}
+      child {
+        node[event] {$B$}
+        edge from parent node[prob] {$P(B|\overline{A}) = 0{,}2$}
+      }
+      child {
+        node[event] {$\overline{B}$}
+        edge from parent node[prob, below=2pt] {$P(\overline{B}|\overline{A}) = 0{,}8$}
+      }
+      edge from parent node[prob] {$P(\overline{A}) = 0{,}4$}
+    };
+\end{tikzpicture}
+```
+
+---
+
+#### Mẫu T43 — Phác họa đồ thị hàm số từ bảng biến thiên (Toán 12)
+
+**Lớp áp dụng:** 12  
+**Kết quả:** Đồ thị hàm số bậc ba phác họa từ các mốc cực trị của BBT với tiếp tuyến nằm ngang tại điểm uốn / cực trị; đường gióng tọa độ nét đứt chuẩn SGK.
+
+```latex
+% ===== T43: Phác họa đồ thị từ bảng biến thiên =====
+\begin{tikzpicture}[line width=0.9pt, font=\small, >=stealth]
+  % Hệ trục tọa độ Oxy
+  \draw[->, line width=1.1pt] (-3.2, 0) -- (3.5, 0) node[below=2pt] {$x$};
+  \draw[->, line width=1.1pt] (0, -2.5) -- (0, 4.5) node[left=2pt] {$y$};
+  \node[below left=2pt] at (0, 0) {$O$};
+
+  % Đồ thị hàm số bậc 3: y = x^3 - 3x + 1
+  % Cực đại tại (-1; 3), Cực tiểu tại (1; -1)
+  \draw[line width=1.5pt, blue!85!black, domain=-2.3:2.3, samples=100, smooth]
+      plot (\x, {\x*\x*\x - 3*\x + 1});
+
+  % Gióng tọa độ điểm cực đại (-1; 3)
+  \draw[dashed, gray!70] (-1, 0) -- (-1, 3) -- (0, 3);
+  \fill[blue!85!black] (-1, 3) circle (2pt);
+  \node[below=2pt, font=\footnotesize] at (-1, 0) {$-1$};
+  \node[right=2pt, font=\footnotesize] at (0, 3) {$3$};
+
+  % Gióng tọa độ điểm cực tiểu (1; -1)
+  \draw[dashed, gray!70] (1, 0) -- (1, -1) -- (0, -1);
+  \fill[blue!85!black] (1, -1) circle (2pt);
+  \node[above=2pt, font=\footnotesize] at (1, 0) {$1$};
+  \node[left=2pt, font=\footnotesize] at (0, -1) {$-1$};
+
+  % Giao điểm Oy tại (0; 1)
+  \fill[black] (0, 1) circle (1.5pt);
+  \node[above right=2pt, font=\footnotesize] at (0, 1) {$1$};
+
+  % Chú thích tên đồ thị
+  \node[right, blue!85!black, font=\footnotesize\bfseries] at (1.8, 3.8) {$(C): y = f(x)$};
+\end{tikzpicture}
+```
+
+---
+
+#### Mẫu T44 — Diện tích hình phẳng giới hạn bởi 2 đường cong (Toán 12 Ứng dụng Tích Phân)
+
+**Lớp áp dụng:** 12  
+**Kết quả:** Hệ trục Oxy, 2 đường cong $y = f(x)$ và $y = g(x)$ cắt nhau tại 2 điểm $x = a, x = b$; phần diện tích hình phẳng giữa hai đường được tô màu/gạch sọc; công thức tính tích phân đi kèm.
+
+```latex
+% ===== T44: Diện tích hình phẳng giữa 2 đường cong (Ứng dụng Tích phân) =====
+% f(x) = -x^2 + 4, g(x) = x + 2 (giao điểm tại x = -2 và x = 1)
+\begin{tikzpicture}[line width=0.9pt, font=\small, >=stealth]
+  % Hệ trục tọa độ Oxy
+  \draw[->, line width=1.1pt] (-3.2, 0) -- (3.2, 0) node[below=2pt] {$x$};
+  \draw[->, line width=1.1pt] (0, -1.2) -- (0, 5.2) node[left=2pt] {$y$};
+  \node[below left=2pt] at (0, 0) {$O$};
+
+  % Miền diện tích hình phẳng S (tô màu xanh nhạt có viền)
+  \fill[teal!20, domain=-2:1, samples=60, smooth]
+      plot (\x, {-\x*\x + 4}) -- plot[domain=1:-2] (\x, {\x + 2}) -- cycle;
+
+  % Đường cong f(x) = -x^2 + 4
+  \draw[line width=1.4pt, blue!80!black, domain=-2.6:2.6, samples=100, smooth]
+      plot (\x, {-\x*\x + 4}) node[right=2pt, font=\footnotesize] {$y = -x^2+4$};
+
+  % Đường thẳng g(x) = x + 2
+  \draw[line width=1.3pt, red!80!black, domain=-2.8:2.2]
+      plot (\x, {\x + 2}) node[above left=2pt, font=\footnotesize] {$y = x+2$};
+
+  % Gióng tọa độ giao điểm
+  % Giao điểm 1: (-2; 0)
+  \draw[dashed, gray] (-2, 0) -- (-2, 0);
+  \fill[black] (-2, 0) circle (2pt) node[below=2pt, font=\footnotesize] {$-2$};
+
+  % Giao điểm 2: (1; 3)
+  \draw[dashed, gray] (1, 0) -- (1, 3);
+  \fill[black] (1, 3) circle (2pt);
+  \node[below=2pt, font=\footnotesize] at (1, 0) {$1$};
+
+  % Nhãn miền S
+  \node[font=\bfseries, teal!80!black] at (-0.4, 2.3) {$S$};
+\end{tikzpicture}
+```
+
+---
+
+#### Mẫu T45 — Đồ thị hàm phân thức bậc hai / bậc nhất có tiệm cận xiên (Toán 12 GDPT 2018)
+
+**Lớp áp dụng:** 12  
+**Kết quả:** Đồ thị hàm số $y = \frac{x^2 - x + 1}{x - 1} = x + \frac{1}{x-1}$ với tiệm cận đứng $x = 1$, tiệm cận xiên $y = x$, hai nhánh hypebol xiên tách rời mượt mà, tọa độ điểm cực trị và tâm đối xứng $I(1; 1)$.
+
+```latex
+% ===== T45: Đồ thị hàm phân thức bậc 2 / bậc 1 có tiệm cận xiên =====
+% y = (x^2 - x + 1) / (x - 1) = x + 1/(x - 1)
+\begin{tikzpicture}[line width=0.9pt, font=\small, >=stealth]
+  % Hệ trục tọa độ Oxy
+  \draw[->, line width=1.1pt] (-2.5, 0) -- (4.5, 0) node[below=2pt] {$x$};
+  \draw[->, line width=1.1pt] (0, -3.5) -- (0, 5.5) node[left=2pt] {$y$};
+  \node[below left=2pt] at (0, 0) {$O$};
+
+  % Tiệm cận đứng x = 1
+  \draw[dashed, line width=1.1pt, orange!80!black] (1, -3.2) -- (1, 5.2) node[above, font=\footnotesize] {$x=1$};
+
+  % Tiệm cận xiên y = x
+  \draw[dashed, line width=1.1pt, orange!80!black] (-2.2, -2.2) -- (4.2, 4.2) node[above right, font=\footnotesize] {$y=x$};
+
+  % Tâm đối xứng I(1; 1)
+  \fill[orange!80!black] (1, 1) circle (2pt);
+  \node[below right=2pt, font=\footnotesize] at (1, 1) {$I(1;1)$};
+
+  % Nhánh trái: x < 1 (domain: -2.3 đến 0.7)
+  \draw[line width=1.4pt, blue!85!black, domain=-2.2:0.75, samples=80, smooth]
+      plot (\x, {(\x*\x - \x + 1)/(\x - 1)});
+
+  % Nhánh phải: x > 1 (domain: 1.25 đến 4.2)
+  \draw[line width=1.4pt, blue!85!black, domain=1.25:4.2, samples=80, smooth]
+      plot (\x, {(\x*\x - \x + 1)/(\x - 1)});
+
+  % Điểm cực đại (0; -1)
+  \fill[blue!85!black] (0, -1) circle (2pt);
+  \node[left=2pt, font=\footnotesize] at (0, -1) {$-1$};
+
+  % Điểm cực tiểu (2; 3)
+  \draw[dashed, gray] (2, 0) -- (2, 3) -- (0, 3);
+  \fill[blue!85!black] (2, 3) circle (2pt);
+  \node[below=2pt, font=\footnotesize] at (2, 0) {$2$};
+  \node[left=2pt, font=\footnotesize] at (0, 3) {$3$};
+
+  % Vạch số 1 trên Ox
+  \node[below=2pt, font=\footnotesize] at (1, 0) {$1$};
+\end{tikzpicture}
+```
+
+---
+
+*Tổng cộng: **85 mẫu TikZ** (44 Toán + 22 Vật lý + 13 Hóa học + 3 phụ lục Toán + 3 phụ lục khác)*  
+*File được cập nhật tích hợp mẫu hình GDPT 2018 (Miền nghiệm BPT, Sơ đồ cây, Tiệm cận xiên, Tích phân diện tích) — phiên bản 2.0 (2026-10)*
+

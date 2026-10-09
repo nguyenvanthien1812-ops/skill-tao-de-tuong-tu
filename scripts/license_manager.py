@@ -206,8 +206,11 @@ def check_revocation(license_id: str) -> bool:
     """Kiểm tra online xem license có bị thu hồi không. Bỏ qua nếu offline hoặc mạng chậm."""
     try:
         import urllib.request
-        req = urllib.request.Request(REVOCATION_URL, headers={"User-Agent": "license-checker/2.0"})
-        with urllib.request.urlopen(req, timeout=1.5) as resp:
+        import time
+        cache_buster = f"?t={int(time.time())}"
+        url = REVOCATION_URL + cache_buster
+        req = urllib.request.Request(url, headers={"User-Agent": "license-checker/2.0"})
+        with urllib.request.urlopen(req, timeout=2.5) as resp:
             revoked_list = json.loads(resp.read().decode("utf-8"))
         return license_id in revoked_list
     except Exception:
@@ -318,8 +321,13 @@ def check_current_license() -> tuple[bool, dict, str]:
                         # Kiểm tra thu hồi online
                         lid = payload.get("license_id", "")
                         if lid and check_revocation(lid):
-                            p.unlink(missing_ok=True)
-                            return False, payload, "License key đã bị tác giả thu hồi. Liên hệ tác giả để được hỗ trợ."
+                            for p_del in get_all_license_paths():
+                                try:
+                                    if p_del.exists():
+                                        p_del.unlink(missing_ok=True)
+                                except Exception:
+                                    pass
+                            return False, payload, "License key đã bị tác giả thu hồi. Vui lòng liên hệ tác giả để được hỗ trợ."
                         found_key = content
                         found_payload = payload
                         found_path = p

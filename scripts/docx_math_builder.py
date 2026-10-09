@@ -94,6 +94,21 @@ import lxml.etree as ET
 
 BACKEND_API_URL = 'https://latex2mathtypeweb.onrender.com/api/convert-docx'
 
+def _prewarm_backend_async():
+    """Tự động đánh thức máy chủ Render ngầm trong background thread để triệt tiêu thời gian chờ 60s."""
+    import threading
+    def _ping():
+        try:
+            import urllib.request
+            req = urllib.request.Request('https://latex2mathtypeweb.onrender.com', headers={'User-Agent': 'prewarm-daemon/1.0'})
+            with urllib.request.urlopen(req, timeout=10):
+                pass
+        except Exception:
+            pass
+    threading.Thread(target=_ping, daemon=True).start()
+
+_prewarm_backend_async()
+
 XSL_PATHS = [
     r'C:\Program Files (x86)\Microsoft Office\root\Office16\MML2OMML.XSL',
     r'C:\Program Files\Microsoft Office\root\Office16\MML2OMML.XSL',
@@ -715,6 +730,7 @@ def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path
     body.extend(f'\r\n--{boundary}--\r\n'.encode('utf-8'))
 
     req = urllib.request.Request(api_url, data=bytes(body), headers=headers, method='POST')
+    print("[*] Đang kết nối Backend MathType Server để nhúng công thức OLE 14pt...")
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             if resp.status == 200:

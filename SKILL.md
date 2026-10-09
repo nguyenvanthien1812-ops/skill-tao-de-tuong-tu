@@ -3,7 +3,7 @@ name: tao-de-toan-tuong-tu
 description: >-
   Tạo đề thi hoặc đề kiểm tra môn TOÁN, VẬT LÝ, HÓA HỌC (và KHTN lớp 6-12) tương tự (song song, cùng ma trận đặc tả) từ một đề gốc cho trước.
   Tự động phân tích đề gốc (từ file PDF, Word DOCX hoặc ảnh chụp), thiết kế bộ số liệu mới nghiệm đẹp & chuẩn xác định luật tự nhiên (bảo toàn khối lượng/nguyên tố/electron, định luật vật lý/toán học),
-  lập trình vẽ 100% hình vẽ kỹ thuật & thí nghiệm (đồ thị hàm số, bảng biến thiên, hình không gian 3D, sơ đồ mạch điện, thấu kính quang học, đồ thị dao động/sóng, phân tích vectơ lực, sơ đồ thí nghiệm hóa học, giản đồ năng lượng, đồ thị pH chuẩn độ)
+  lập trình vẽ 100% hình vẽ kỹ thuật & thí nghiệm (đồ thị hàm số bao gồm bậc 1/1 và bậc 2/1 có tiệm cận xiên, miền nghiệm hệ bất phương trình bậc nhất 2 ẩn quy hoạch tuyến tính, sơ đồ cây xác suất có điều kiện & Bayes, bảng biến thiên full khung viền, phác họa đồ thị từ BBT, hình không gian 3D, sơ đồ mạch điện, thấu kính quang học, đồ thị dao động/sóng, phân tích vectơ lực, sơ đồ thí nghiệm hóa học, giản đồ năng lượng, đồ thị pH chuẩn độ)
   chuẩn xác tuyệt đối bằng Python Matplotlib & Bộ máy Biên dịch TikZ Engine (tkz-tab, tkz-euclide, circuitikz, chemfig, pgfplots 300 DPI), dựng bảng số liệu nguyên bản (Table Grid), và tự động kết nối Backend Converter API (https://latex2mathtypeweb.onrender.com/api/convert-docx)
   để xuất trực tiếp file Word (.docx) chứa đối tượng MathType OLE nguyên bản (Equation.DSMT4) mở click đúp sửa ngay,
   kèm cơ chế Smart Fallback sang bản Word Equation (OMML) chuẩn SGK.
@@ -21,6 +21,8 @@ description: >-
   "phương pháp giải gdpt 2018", "chuyển đề thi hóa sang word mathtype", "chuyển đề thi lý sang word mathtype",
   "vẽ hình thí nghiệm hóa học", "vẽ hình học không gian 3d", "dựng bảng biểu word mathtype",
   "render tikz", "render code tikz", "vẽ hình tikz", "biên dịch tikz sang ảnh", "chuyển code tikz sang png", "render mã tikz",
+  "vẽ miền nghiệm", "hệ bất phương trình 2 ẩn", "quy hoạch tuyến tính", "vẽ sơ đồ cây", "sơ đồ cây xác suất",
+  "phác họa đồ thị từ bảng", "nhận diện đồ thị", "vẽ tiệm cận xiên", "vẽ phân thức bậc 2 trên bậc 1",
   "đọc file docx mathtype", "chuyển mathtype sang latex", "trích xuất công thức mathtype", "đọc đề cũ mathtype",
   "ocr ảnh đề thi", "nhận diện công thức từ ảnh", "chụp ảnh đề thi tạo đề mới", "scan đề thi tạo đề tương tự",
   "xuất word cho tôi", "xuất file word", "xuất word giải chi tiết", "xuất word mathtype",
@@ -28,7 +30,9 @@ description: >-
   "bilingual exam", "english math exam", "dịch file sang tiếng anh", "xuất đề tiếng anh", "đề song ngữ", "bilingual math exam",
   "chuẩn hóa mathtype", "chuẩn hoá mathtype", "chuẩn hóa công thức word", "chuẩn hoá công thức word",
   "chuyển equation sang mathtype", "chuẩn hoá file word mathtype", "sửa lỗi công thức file word", "giữ nguyên bố cục word mathtype",
-  "chuẩn hóa công thức giữ nguyên bố cục".
+  "chuẩn hóa công thức giữ nguyên bố cục", "tôi muốn chuyển pdf sang word", "hướng dẫn chuyển pdf sang word",
+  "hướng dẫn tôi tạo đề", "hướng dẫn tạo đề tương tự", "làm sao để chuyển pdf sang word", "cách chuyển pdf sang word",
+  "tôi muốn tạo đề tương tự", "làm sao để tạo đề tương tự", "hướng dẫn sử dụng skill", "cách dùng skill".
 ---
 
 
@@ -37,7 +41,7 @@ description: >-
 Skill này tự động hóa toàn bộ quy trình biên soạn đề kiểm tra / đề thi môn **TOÁN**, **VẬT LÝ** và **HÓA HỌC** (cấp THCS lớp 6, 7, 8, 9 và THPT lớp 10, 11, 12 theo định dạng mới GDPT 2018), bảo đảm **3 tiêu chuẩn vàng**:
 1. **Khoa học chuẩn xác 100%**: Nghiệm đẹp, tham số logic, tuân thủ đúng định luật vật lý, hóa học (bảo toàn khối lượng, nguyên tố, điện tích, electron) và toán học (không bị hiện tượng vô lý), 4 phương án trắc nghiệm chỉ có duy nhất 1 phương án đúng, lời giải chi tiết từng bước.
 2. **Hình vẽ kỹ thuật & Thí nghiệm 300 DPI chuẩn mực**: Vẽ bằng code Python Matplotlib:
-   - **Môn Toán**: Đồ thị hàm số, bảng biến thiên full khung viền, hình học không gian 3D ($S.ABCD$, lăng trụ, nón, trụ, cầu), hệ trục giải tích $Oxyz$.
+   - **Môn Toán**: Đồ thị hàm số (bậc 3, bậc 4, phân thức bậc 1/1 và bậc 2/1 tiệm cận xiên), miền nghiệm hệ bất phương trình bậc nhất 2 ẩn (quy hoạch tuyến tính), sơ đồ cây xác suất (Bayes), bảng biến thiên full khung viền, phác họa đồ thị từ BBT, hình học không gian 3D ($S.ABCD$, lăng trụ, nón, trụ, cầu), hệ trục giải tích $Oxyz$.
    - **Môn Vật lý**: Đường truyền tia sáng & thấu kính, đồ thị dao động điều hòa/sóng cơ ($x-t, v-t, u-t$), sơ đồ mạch điện ($R, L, C$), giản đồ vectơ Fresnel, phân tích vectơ lực trên mặt phẳng nghiêng, đồ thị biến thiên nhiệt/khí lý tưởng $(p-V, p-T)$.
    - **Môn Hóa học**: Sơ đồ dụng cụ thí nghiệm điều chế và thu khí (dời chỗ nước/không khí), sơ đồ bình điện phân, giản đồ năng lượng phản ứng ($\Delta_r H, E_a$), đường cong chuẩn độ pH axit - bazơ.
 3. **Công thức chuẩn MathType OLE (14pt) & Word Equation**:
@@ -82,6 +86,158 @@ Khi nhận được **BẤT KỲ YÊU CẦU NÀO** từ người dùng (tạo đ
    - **DỪNG TIẾN TRÌNH NGAY LẬP TỨC!** Không trả lời thêm bất kỳ nội dung đề thi nào.
 
 > Chỉ khi nào license đã được kích hoạt hợp lệ thì mới được tiếp tục thực hiện các Bước 1, 2, 3 bên dưới!
+
+---
+
+## 🧭 BƯỚC 0.1: BỘ ĐIỀU HƯỚNG & HƯỚNG DẪN THÔNG MINH CHO GIÁO VIÊN (SMART ONBOARDING & PROMPT TEMPLATES)
+
+### ⚠️ QUY TẮC BẮT BUỘC KHI NHẬN CÂU LỆNH ĐƠN GIẢN HOẶC CHƯA CÓ FILE ĐẦU VÀO:
+
+Khi giáo viên đưa ra các câu lệnh ngắn, đơn giản hoặc mới chỉ nêu ý định tổng quát:
+- *"tôi muốn chuyển pdf sang word"*, *"chuyển đề pdf sang word"*, *"convert pdf to word"*, *"chuyển file pdf này sang docx"*
+- *"tôi muốn tạo đề tương tự"*, *"tạo đề tương tự"*, *"tạo đề song song"*, *"nhân bản đề thi"*
+- *"chuẩn hóa công thức word"*, *"sửa lỗi công thức file word"*, *"chuyển equation sang mathtype"*
+- *"trộn đề thi"*, *"tạo 4 mã đề"*, *"tạo phiếu tô trắc nghiệm"*
+- *"dịch đề sang tiếng anh"*, *"tạo đề song ngữ"*, *"chuyển đề sang tiếng anh"*
+**MÀ TRONG NGỮ CẢNH CHƯA CÓ FILE ĐÍNH KÈM HOẶC CHƯA CÓ ĐƯỜNG DẪN TỆP CỤ THỂ**:
+
+1. **TUYỆT ĐỐI NGHIÊM CẤM:**
+   - ❌ Không được trả lời cộc lốc hoặc máy móc: *"Bạn hãy gửi file đi"*, *"Tôi cần file để xử lý"*.
+   - ❌ Không được tự ý bịa đặt nội dung đề thi, không tự bịa tên file ngẫu nhiên để làm bừa khi chưa có file nguồn.
+   - ❌ Không được dừng phản hồi lửng lơ khiến giáo viên bối rối không biết thao tác tiếp theo.
+
+2. **CHỈ THỊ TỐI CAO DÀNH CHO AGENT:**
+   - **Thao tác 1 (Nhận diện thư mục làm việc thực tế)**: Agent phải xác định chính xác đường dẫn thư mục làm việc hiện tại (`Current Working Directory` / Workspace Path — ví dụ: `d:\skill-quan-trong` hoặc thư mục workspace đang mở) và **điền trực tiếp đường dẫn này** vào câu trả lời gửi giáo viên, tuyệt đối không viết chung chung là "thư mục làm việc".
+   - **Thao tác 2 (Xuất bản hướng dẫn tận tâm & chuyên nghiệp)**: Trả lời giáo viên bằng văn phong sư phạm ân cần, lịch sự, cung cấp chi tiết **2 CÁCH ĐƯA FILE VÀO** kèm theo **MẪU CÂU LỆNH (PROMPT) CHUẨN VÀNG** đã soạn sẵn đầy đủ bộ tiêu chí "3 KHÔNG LỖI" để giáo viên chỉ việc Copy - Paste.
+
+---
+
+### 📌 HƯỚNG DẪN CHI TIẾT CÁCH LẤY ĐƯỜNG DẪN FILE TRÊN WINDOWS (DÀNH CHO GIÁO VIÊN):
+Khi file đề thi của giáo viên đang nằm ở nơi khác (Desktop, Downloads, Zalo, ổ D, ổ E...) mà không nằm trong thư mục làm việc, Agent hướng dẫn Thầy/Cô lấy đường dẫn file cực kỳ dễ dàng theo 3 cách:
+- **Cách 1 (Phổ biến trên mọi Windows 7, 10, 11 - Khuyên dùng)**:  
+  1. Tìm đến file PDF hoặc Word trên máy tính.  
+  2. Nhấn giữ phím **`Shift`** trên bàn phím, đồng thời **nhấp chuột phải** vào file.  
+  3. Chọn dòng **"Copy as path"** (hoặc tiếng Việt: **"Sao chép dưới dạng đường dẫn"**).  
+  👉 Đường dẫn đầy đủ đã được copy vào bộ nhớ, Thầy/Cô chỉ cần vào khung chat bấm `Ctrl + V`.
+- **Cách 2 (Dành cho Windows 11 siêu nhanh 1 giây)**:  
+  Nhấp chọn file -> Bấm tổ hợp phím **`Ctrl + Shift + C`** để copy ngay đường dẫn.
+- **Cách 3 (Kéo thả trực tiếp)**:  
+  Mở thư mục chứa file và kéo thả chuột trực tiếp file đó vào ô nhập tin nhắn của Antigravity.
+
+---
+
+### 🎯 KỊCH BẢN PHẢN HỒI MẪU THEO TỪNG CHỨC NĂNG (AGENT DÙNG ĐỂ TRẢ LỜI NGAY CHO GIÁO VIÊN):
+
+#### 1️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn chuyển pdf sang word" (hoặc câu lệnh ngắn tương tự)
+Agent xuất ngay phản hồi:
+> "Dạ chào Thầy/Cô! Để em chuyển đổi file PDF sang Word chuẩn 100% không lỗi công thức và hình vẽ, Thầy/Cô chọn 1 trong 2 cách cực kỳ đơn giản sau nhé:
+> 
+> 📂 **Cách 1: Copy file PDF vào thư mục làm việc của phần mềm (Tiện lợi nhất)**
+> * Thầy/Cô hãy copy file PDF cần chuyển vào thư mục đang làm việc này của em:  
+>   👉 `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` *(Thầy/Cô dán file vào đây hoặc kéo thả file trực tiếp vào khung chat này)*.
+> * Sau đó, Thầy/Cô chỉ cần copy mẫu câu lệnh bên dưới, sửa lại tên file và gửi cho em:
+>   ```text
+>   Em hãy chuyển đổi file PDF [ten_file_cua_thay_co.pdf] trong thư mục làm việc sang Word giúp tôi.
+>   Yêu cầu bắt buộc:
+>   1. Nội dung phải chuẩn 100% file PDF gốc, tuyệt đối không được sai nội dung, câu từ hay kiến thức khoa học.
+>   2. Chuẩn 100% công thức ở dạng MathType OLE (Equation.DSMT4, cỡ chữ 14pt, nhấp đúp chuột sửa được), không được lỗi bất kỳ công thức nào.
+>   3. Hình vẽ và bảng biểu không lỗi: hình ảnh trích xuất sắc nét 300 DPI đúng vị trí câu hỏi, bảng biểu dựng chuẩn Table Grid có viền đầy đủ, chống xô lệch hàng cột và không tràn mép giấy.
+>   ```
+> 
+> 📂 **Cách 2: File PDF đang ở nơi khác (Desktop, Downloads, Zalo, ổ D, ổ E...)**
+> * Thầy/Cô không cần copy file đi đâu cả, chỉ cần lấy đường dẫn file bằng cách:  
+>   👉 **Nhấn giữ phím Shift + Nhấp chuột phải vào file PDF -> Chọn "Copy as path"** *(hoặc "Sao chép dưới dạng đường dẫn")*. *(Trên Windows 11 có thể bấm nhanh `Ctrl + Shift + C`)*.
+> * Sau đó, dán đường dẫn vào câu lệnh mẫu bên dưới và gửi cho em:
+>   ```text
+>   Em hãy chuyển đổi file PDF tại đường dẫn: "[Dán đường dẫn vừa copy vào đây]" sang file Word giúp tôi.
+>   Yêu cầu bắt buộc:
+>   1. Nội dung phải chuẩn 100% file gốc, tuyệt đối không được sai nội dung, câu từ hay kiến thức.
+>   2. Chuẩn 100% toàn bộ công thức ở dạng MathType OLE nguyên bản 14pt, không lỗi ký hiệu.
+>   3. Hình ảnh trích xuất sắc nét 300 DPI và bảng biểu dựng chuẩn Table Grid không xô lệch.
+>   ```"
+
+---
+
+#### 2️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn tạo đề tương tự" (hoặc "tạo đề song song", "nhân bản đề thi"...)
+Agent xuất ngay phản hồi:
+> "Dạ chào Thầy/Cô! Để em hỗ trợ tạo đề thi tương tự (song song, cùng cấu trúc ma trận đặc tả chuẩn GDPT 2018), Thầy/Cô cung cấp file đề gốc theo 1 trong 2 cách sau nhé:
+> 
+> 📂 **Cách 1: Copy file đề gốc vào thư mục làm việc**
+> * Copy file đề gốc (`.pdf`, `.docx` hoặc ảnh chụp) vào thư mục: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>`.
+> * Sau đó gửi câu lệnh mẫu:
+>   ```text
+>   Dựa vào file đề gốc: "[ten_de_goc.pdf]" trong thư mục làm việc, em hãy tạo giúp tôi 1 đề thi tương tự (song song, cùng cấu trúc ma trận đặc tả và độ khó chuẩn GDPT 2018).
+>   Yêu cầu bắt buộc:
+>   1. Nội dung và kiến thức phải chuẩn xác 100%: số liệu mới được thiết kế nghiệm đẹp, tuân thủ đúng định luật khoa học (Toán, Lý, Hóa), 4 phương án trắc nghiệm chỉ có duy nhất 1 đáp án đúng.
+>   2. Lập trình vẽ mới 100% hình vẽ kỹ thuật & thí nghiệm sắc nét 300 DPI chèn đúng câu hỏi.
+>   3. Xuất đồng thời 2 file Word: Bản Đề Học Sinh và Bản Lời Giải Chi Tiết, 100% công thức ở dạng MathType OLE 14pt nhấp đúp sửa được, bảng biểu dựng Table Grid chuẩn mực.
+>   ```
+> 
+> 📂 **Cách 2: File đề gốc ở thư mục khác hoặc ảnh chụp điện thoại**
+> * Lấy đường dẫn file: Nhấn giữ `Shift` + chuột phải vào file đề -> Chọn `"Copy as path"` (hoặc kéo thả ảnh chụp đề vào ô chat).
+> * Sau đó gửi câu lệnh mẫu:
+>   ```text
+>   Em hãy phân tích đề thi từ file: "[Dán đường dẫn file đề gốc hoặc ảnh chụp]" và tạo giúp tôi 1 đề tương tự cùng cấu trúc ma trận.
+>   Yêu cầu bắt buộc:
+>   1. Bảo toàn 100% chuẩn kiến thức khoa học, số liệu mới nghiệm đẹp, lời giải chi tiết từng bước.
+>   2. Vẽ hình kỹ thuật mới sắc nét 300 DPI và xuất file Word MathType OLE 14pt không lỗi công thức.
+>   ```"
+
+---
+
+#### 3️⃣ KHI GIÁO VIÊN NÓI: "chuẩn hóa công thức word" (hoặc "sửa lỗi công thức file word", "chuyển equation sang mathtype"...)
+Agent xuất ngay phản hồi:
+> "Dạ chào Thầy/Cô! Để em chuẩn hóa toàn bộ công thức trong file Word sang MathType OLE 14pt mà không làm xô lệch bố cục trang, Thầy/Cô làm như sau:
+> 
+> 📂 **Cách 1: Copy file Word vào thư mục làm việc**
+> * Copy file Word cần sửa vào: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>`.
+> * Sau đó gửi câu lệnh mẫu:
+>   ```text
+>   Em hãy chuẩn hóa toàn bộ công thức trong file Word "[ten_file.docx]" trong thư mục sang MathType OLE giúp tôi.
+>   Yêu cầu bắt buộc:
+>   1. Giữ nguyên 100% nội dung đề gốc, bố cục trang, bảng biểu và hình ảnh có sẵn.
+>   2. Chuyển toàn bộ công thức Word Equation (OMML) hoặc công thức lỗi sang chuẩn 100% MathType OLE 14pt đồng bộ, nhấp đúp chuột sửa được ngay.
+>   3. Bảng biểu và hình vẽ không bị xô lệch, không mất định dạng ban đầu của văn bản.
+>   ```
+> 
+> 📂 **Cách 2: File Word đang ở thư mục khác**
+> * Lấy đường dẫn file: Nhấn giữ `Shift` + chuột phải vào file Word -> Chọn `"Copy as path"`.
+> * Sau đó gửi câu lệnh mẫu:
+>   ```text
+>   Em hãy đọc file Word tại đường dẫn: "[Dán đường dẫn file Word]" và chuẩn hóa tất cả công thức sang MathType OLE 14pt, bảo toàn nguyên vẹn 100% nội dung, bảng biểu và bố cục văn bản gốc.
+>   ```"
+
+---
+
+#### 4️⃣ KHI GIÁO VIÊN NÓI: "trộn đề thi" (hoặc "tạo 4 mã đề", "tạo phiếu tô trắc nghiệm"...)
+Agent xuất ngay phản hồi:
+> "Dạ chào Thầy/Cô! Để trộn bộ 4 mã đề hoán vị chuẩn Bộ GD&ĐT kèm phiếu tô trắc nghiệm A4 và file Excel đáp án, Thầy/Cô cung cấp file đề nguồn theo 1 trong 2 cách:
+> * **Cách 1**: Copy file đề vào thư mục: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>`
+> * **Cách 2**: Lấy đường dẫn file đề: Giữ `Shift` + chuột phải vào file -> Chọn `"Copy as path"`.
+> * Sau đó gửi câu lệnh mẫu:
+>   ```text
+>   Em hãy xáo trộn file đề "[Tên file trong thư mục HOẶC đường dẫn file bên ngoài]" thành bộ 4 mã đề hoán vị (101, 102, 103, 104) giúp tôi.
+>   Yêu cầu bắt buộc:
+>   1. Nội dung các câu hỏi và kiến thức không được sai lệch, bảo toàn đáp án đúng của từng câu.
+>   2. Giữ nguyên 100% công thức MathType OLE và hình vẽ sắc nét trong từng mã đề hoán vị.
+>   3. Tự động xuất kèm file PDF Phiếu trả lời trắc nghiệm chuẩn A4 để quét chấm thi và file Excel tổng hợp ma trận đáp án của cả 4 mã đề.
+>   ```"
+
+---
+
+#### 5️⃣ KHI GIÁO VIÊN NÓI: "dịch đề sang tiếng anh" (hoặc "tạo đề song ngữ", "chuyển đề sang tiếng anh"...)
+Agent xuất ngay phản hồi:
+> "Dạ chào Thầy/Cô! Để biên dịch đề thi sang Tiếng Anh học thuật chuẩn quốc tế hoặc đề Song ngữ Anh - Việt, Thầy/Cô cung cấp file đề nguồn theo 1 trong 2 cách:
+> * **Cách 1**: Copy file đề vào thư mục: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>`
+> * **Cách 2**: Lấy đường dẫn file đề: Giữ `Shift` + chuột phải vào file -> Chọn `"Copy as path"`.
+> * Sau đó gửi câu lệnh mẫu:
+>   ```text
+>   Em hãy biên dịch file đề thi "[Tên file trong thư mục HOẶC đường dẫn file bên ngoài]" sang Tiếng Anh học thuật chuẩn quốc tế giúp tôi.
+>   Yêu cầu bắt buộc:
+>   1. Dịch chuẩn xác 100% thuật ngữ chuyên ngành Toán, Vật lý, Hóa học; không làm sai lệch nội dung kiến thức hay ý nghĩa khoa học của bài toán.
+>   2. Toàn bộ công thức giữ nguyên chuẩn 100% MathType OLE 14pt, hình vẽ và bảng biểu không lỗi.
+>   3. Xuất đồng thời 2 bản Word: 1 bản Đề Tiếng Anh hoàn toàn và 1 bản Đề Song Ngữ Anh - Việt đối chiếu.
+>   ```"
 
 ---
 
@@ -195,6 +351,17 @@ result = validate_exam_gdpt2018(exam_data, subject=matrix["subject"])
 | `khtn_8_thcs_45min` | KHTN | 8 | 45 phút |
 | `geography_12_thpt_90min` | Địa Lý | 12 | 90 phút |
 | `literature_12_thpt_90min` | Ngữ Văn | 12 | 90 phút |
+
+🖼️ **Bộ ảnh trực quan hiển thị ma trận (cho GV xem và chọn ngay):**
+- [Xem Poster Tổng Mục 8 Ma Trận](file:///d:/skill-quan-trong/.agents/skills/tao-de-toan-tuong-tu/references/matrix_previews/DANH_MUC_8_MA_TRAN_CHUAN.png)
+- [Chi tiết Ma Trận Toán 12](file:///d:/skill-quan-trong/.agents/skills/tao-de-toan-tuong-tu/references/matrix_previews/math_12_thpt_90min.png)
+- [Chi tiết Ma Trận Vật Lý 12](file:///d:/skill-quan-trong/.agents/skills/tao-de-toan-tuong-tu/references/matrix_previews/physics_12_thpt_90min.png)
+- [Chi tiết Ma Trận Hóa Học 12](file:///d:/skill-quan-trong/.agents/skills/tao-de-toan-tuong-tu/references/matrix_previews/chemistry_12_thpt_90min.png)
+- [Chi tiết Ma Trận Hóa Học 11](file:///d:/skill-quan-trong/.agents/skills/tao-de-toan-tuong-tu/references/matrix_previews/chemistry_11_thpt_90min.png)
+- [Chi tiết Ma Trận Sinh Học 12](file:///d:/skill-quan-trong/.agents/skills/tao-de-toan-tuong-tu/references/matrix_previews/biology_12_thpt_90min.png)
+- [Chi tiết Ma Trận KHTN 8](file:///d:/skill-quan-trong/.agents/skills/tao-de-toan-tuong-tu/references/matrix_previews/khtn_8_thcs_45min.png)
+- [Chi tiết Ma Trận Địa Lý 12](file:///d:/skill-quan-trong/.agents/skills/tao-de-toan-tuong-tu/references/matrix_previews/geography_12_thpt_90min.png)
+- [Chi tiết Ma Trận Ngữ Văn 12](file:///d:/skill-quan-trong/.agents/skills/tao-de-toan-tuong-tu/references/matrix_previews/literature_12_thpt_90min.png)
 
 ---
 

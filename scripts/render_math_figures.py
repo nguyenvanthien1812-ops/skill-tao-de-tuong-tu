@@ -395,6 +395,82 @@ def plot_rational_1_1(a, b, c, d, xlim, ylim, filename, marked_points=None):
     plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight')
     plt.close()
 
+
+def plot_rational_2_1(a, b, c, d, e, xlim, ylim, filename, marked_points=None, show_asymptotes=True):
+    """
+    Vẽ đồ thị hàm phân thức bậc 2 / bậc 1: y = (ax^2 + bx + c) / (dx + e) (Toán 12 GDPT 2018).
+    - Tiệm cận đứng: x = -e / d
+    - Tiệm cận xiên: y = mx + n với m = a/d, n = (b - m*e) / d
+    - Tự động lấy mẫu 2 nhánh mượt mà, vẽ đường tiệm cận nét đứt chuẩn SGK
+    """
+    if d == 0:
+        raise ValueError("Mẫu số dx + e yêu cầu d != 0.")
+    if a == 0:
+        return plot_rational_1_1(b, c, d, e, xlim, ylim, filename, marked_points)
+
+    fig, ax = plt.subplots(figsize=(4.5, 4.0), dpi=DEFAULT_DPI)
+    x_asymp = -e / d
+    m = a / d
+    n = (b - m * e) / d
+
+    def f(x):
+        return (a * x**2 + b * x + c) / (d * x + e)
+
+    x_min, x_max = xlim[0] * 0.96, xlim[1] * 0.96
+    y_min, y_max = ylim[0], ylim[1]
+    H = y_max - y_min
+
+    # Nhánh trái
+    if x_min < x_asymp:
+        xs1 = np.linspace(x_min, x_asymp - 0.04, 400)
+        ys1 = f(xs1)
+        mask1 = (ys1 >= y_min - 0.35 * H) & (ys1 <= y_max + 0.35 * H)
+        if np.any(mask1):
+            ax.plot(xs1[mask1], ys1[mask1], color='#000000', lw=2.3)
+
+    # Nhánh phải
+    if x_max > x_asymp:
+        xs2 = np.linspace(x_asymp + 0.04, x_max, 400)
+        ys2 = f(xs2)
+        mask2 = (ys2 >= y_min - 0.35 * H) & (ys2 <= y_max + 0.35 * H)
+        if np.any(mask2):
+            ax.plot(xs2[mask2], ys2[mask2], color='#000000', lw=2.3)
+
+    # Đường tiệm cận
+    if show_asymptotes:
+        # Tiệm cận đứng
+        if xlim[0] <= x_asymp <= xlim[1]:
+            ax.axvline(x_asymp, color='black', linestyle='--', lw=1.2)
+            lbl_x = f'{x_asymp:.0f}' if float(x_asymp).is_integer() else f'{x_asymp:.1f}'
+            ax.text(x_asymp, -0.45, lbl_x, fontsize=12, fontweight='bold', ha='center', bbox=w_box)
+
+        # Tiệm cận xiên y = mx + n
+        xs_slant = np.array([xlim[0], xlim[1]])
+        ys_slant = m * xs_slant + n
+        ax.plot(xs_slant, ys_slant, color='black', linestyle='--', lw=1.2)
+
+    if marked_points:
+        for p in marked_points:
+            if isinstance(p, (tuple, list)):
+                px, py = p[0], p[1]
+                xl = str(px) if len(p) < 3 else str(p[2])
+                yl = str(py) if len(p) < 4 else str(p[3])
+            else:
+                px, py = p['x'], p['y']
+                xl = p.get('xl')
+                yl = p.get('yl')
+            ax.plot(px, py, 'ko', markersize=5.2)
+            if xl is not None:
+                ax.text(px, 0.25 if py < 0 else -0.42, str(xl), fontsize=12, fontweight='bold', ha='center')
+            if yl is not None:
+                ax.text(0.18 if px < 0 else -0.42, py, str(yl), fontsize=12, fontweight='bold', va='center')
+
+    setup_axes(ax, xlim, ylim)
+    plt.tight_layout()
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight')
+    plt.close()
+
+
 def plot_bounded_interval_extrema(xs_knots, ys_knots, ds_knots, xlim, ylim, filename,
                                   endpoints=None, extrema=None):
     """
@@ -702,6 +778,897 @@ def draw_bbt_sgk(x_cols, interval_signs, y_data, filename, critical_zeros=None, 
 
     plt.tight_layout()
     plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight', pad_inches=0.03, facecolor='white')
+    plt.close()
+
+
+# ─── BỔ SUNG TỪ CHĐ MATH STUDIO (Giai đoạn 1-3) ──────────────────────────────
+#  Nguồn tham chiếu thuật toán: CHĐ Math Studio by Chân Đức
+#  (D:\skill-quan-trong\chd-math-studio-main\chd-math-studio-main)
+#  Port thuật toán JS/Typst → Python/Matplotlib 450 DPI
+
+import math as _math
+from itertools import combinations as _combinations
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# GIAI ĐOẠN 1: Miền Nghiệm Hệ Bất Phương Trình Bậc Nhất 2 Ẩn
+# Dạng bài: Toán 10 GDPT 2018 — Quy hoạch tuyến tính, Max/Min F(x,y)=ax+by
+# ──────────────────────────────────────────────────────────────────────────────
+
+def _parse_linear_ineq(expr_str):
+    """
+    Parser BPT bậc nhất 2 ẩn an toàn — không dùng eval().
+    Nhận: "2*x + y <= 4", "x/2 + y >= 1", "x > -2*y + 3", "−x ≥ 1"
+    Trả về: dict {'a': float, 'b': float, 'c': float, 'strict': bool}
+    đại diện cho ax + by ≤ c (đã chuẩn hóa vector pháp tuyến)
+    """
+    try:
+        import sympy as _sp
+    except ImportError:
+        raise ImportError("Cần cài sympy: pip install sympy")
+
+    # Chuẩn hóa ký tự unicode
+    s = str(expr_str).strip()
+    s = s.replace('≤', '<=').replace('≥', '>=').replace('−', '-')
+    s = s.replace('×', '*').replace('·', '*')
+
+    # Tách tại dấu so sánh (thứ tự quan trọng: <= trước <)
+    strict = False
+    sign_mul = 1  # +1 nếu ≤, -1 nếu ≥
+    for op in ('<=', '>=', '<', '>'):
+        if op in s:
+            parts = s.split(op, 1)
+            if len(parts) == 2:
+                strict = (op in ('<', '>'))
+                sign_mul = -1 if op.startswith('>') else 1
+                lhs_str, rhs_str = parts[0].strip(), parts[1].strip()
+                break
+    else:
+        raise ValueError(f"Không tìm thấy dấu so sánh trong: '{expr_str}'")
+
+    x, y = _sp.symbols('x y')
+    try:
+        lhs = _sp.sympify(lhs_str, locals={'x': x, 'y': y})
+        rhs = _sp.sympify(rhs_str, locals={'x': x, 'y': y})
+    except Exception as e:
+        raise ValueError(f"Biểu thức không hợp lệ: {e}")
+
+    # Kiểm tra chỉ bậc nhất
+    diff = _sp.expand(lhs - rhs)
+    for sym in diff.free_symbols:
+        if sym not in (x, y):
+            raise ValueError(f"Chỉ chấp nhận biến x và y, tìm thấy: {sym}")
+    poly = _sp.Poly(diff, x, y)
+    if poly.total_degree() > 1:
+        raise ValueError("Chỉ nhận biểu thức bậc nhất theo x, y")
+
+    # Rút gọn về ax + by ≤ c
+    coeffs = poly.as_dict()
+    a = float(coeffs.get((1, 0), 0)) * sign_mul
+    b = float(coeffs.get((0, 1), 0)) * sign_mul
+    c = -float(coeffs.get((0, 0), 0)) * sign_mul
+
+    norm = _math.hypot(a, b)
+    if norm < 1e-12:
+        raise ValueError("Sau rút gọn, biểu thức không phụ thuộc x hoặc y")
+
+    return {
+        'a': a / norm, 'b': b / norm, 'c': c / norm,
+        'strict': strict,
+        'source': expr_str.strip()
+    }
+
+
+def _clip_segment_bpt(start, end, planes):
+    """
+    Thuật toán Liang-Barsky: cắt đoạn [start, end] theo danh sách nửa mặt phẳng ax+by≤c.
+    Trả về [(x1,y1), (x2,y2)] hoặc None nếu đoạn bị loại hoàn toàn.
+    """
+    lo, hi = 0.0, 1.0
+    dx = end[0] - start[0]
+    dy = end[1] - start[1]
+    for p in planes:
+        a, b, c = p['a'], p['b'], p['c']
+        q = c - a * start[0] - b * start[1]
+        d = a * dx + b * dy
+        if abs(d) < 1e-12:
+            if q < -1e-9:
+                return None
+        else:
+            t = q / d
+            if d > 0:
+                hi = min(hi, t)
+            else:
+                lo = max(lo, t)
+        if lo > hi:
+            return None
+    if hi - lo < 1e-10:
+        return None
+    return [
+        (start[0] + lo * dx, start[1] + lo * dy),
+        (start[0] + hi * dx, start[1] + hi * dy)
+    ]
+
+
+def _lighten_hex(hex_color, factor=0.42):
+    """Pha nhạt màu hex: factor=0 → giữ nguyên, factor=1 → trắng hoàn toàn."""
+    hex_color = hex_color.lstrip('#')
+    r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+    r2 = int(r * (1 - factor) + 255 * factor)
+    g2 = int(g * (1 - factor) + 255 * factor)
+    b2 = int(b * (1 - factor) + 255 * factor)
+    return f'#{r2:02x}{g2:02x}{b2:02x}'
+
+
+def _find_boundary_intersections(planes, xmin, xmax, ymin, ymax):
+    """
+    Tìm tất cả giao điểm giữa các đường biên của hệ BPT (và cả 4 cạnh khung).
+    Trả về list các dict {'x', 'y'} nằm trong khung nhìn.
+    """
+    bounds_planes = [
+        {'a': -1, 'b': 0, 'c': -xmin},  # x >= xmin
+        {'a':  1, 'b': 0, 'c':  xmax},  # x <= xmax
+        {'a':  0, 'b': -1, 'c': -ymin}, # y >= ymin
+        {'a':  0, 'b':  1, 'c':  ymax}, # y <= ymax
+    ]
+    all_planes = planes + bounds_planes
+    result = []
+    for i, j in _combinations(range(len(all_planes)), 2):
+        pi, pj = all_planes[i], all_planes[j]
+        det = pi['a'] * pj['b'] - pj['a'] * pi['b']
+        if abs(det) < 1e-12:
+            continue
+        ix = (pi['c'] * pj['b'] - pj['c'] * pi['b']) / det
+        iy = (pi['a'] * pj['c'] - pj['a'] * pi['c']) / det
+        if not (_math.isfinite(ix) and _math.isfinite(iy)):
+            continue
+        # Chỉ giữ điểm trong khung nhìn
+        if xmin - 1e-8 <= ix <= xmax + 1e-8 and ymin - 1e-8 <= iy <= ymax + 1e-8:
+            # Kiểm tra không trùng điểm đã có
+            if not any(_math.hypot(p['x'] - ix, p['y'] - iy) < 1e-7 for p in result):
+                result.append({'x': ix, 'y': iy})
+    return result
+
+
+def plot_linear_inequalities(
+    inequalities,
+    xlim=(-1, 6),
+    ylim=(-1, 6),
+    filename='mien_nghiem.png',
+    reverse=False,
+    show_intersections=True,
+    title='',
+    figsize=(5.0, 4.8),
+):
+    """
+    Vẽ miền nghiệm hệ bất phương trình bậc nhất 2 ẩn (Toán 10 GDPT 2018).
+    Thuật toán Liang-Barsky Half-Plane Clipping — dịch từ CHĐ Math Studio.
+
+    Tham số:
+        inequalities: list of dict hoặc list of str
+            Dạng dict: {'expr': '2*x + y <= 4', 'color': '#2755df', 'enabled': True}
+            Dạng str:  '2*x + y <= 4'  (dùng màu mặc định theo thứ tự)
+        xlim, ylim: tuple (min, max) của khung nhìn
+        reverse: False = gạch vùng LOẠI (chuẩn SGK), True = gạch vùng NGHIỆM
+        show_intersections: True = hiển thị tọa độ đỉnh đa giác miền nghiệm
+        title: tiêu đề hình (để trống nếu không cần)
+
+    Ví dụ:
+        plot_linear_inequalities([
+            {'expr': 'x >= 0',       'color': '#2755df'},
+            {'expr': 'y >= 0',       'color': '#188779'},
+            {'expr': 'x + y <= 4',   'color': '#d06b38'},
+        ], xlim=(-0.5, 5), ylim=(-0.5, 5), filename='mien_nghiem.png')
+    """
+    # Bảng màu mặc định nếu không chỉ định màu
+    _default_colors = ['#2755df', '#188779', '#d06b38', '#9333ea',
+                       '#dc2626', '#0891b2', '#65a30d', '#c026d3']
+
+    xmin, xmax = xlim
+    ymin, ymax = ylim
+
+    # Chuẩn hóa input
+    normalized = []
+    for idx, item in enumerate(inequalities):
+        if isinstance(item, str):
+            normalized.append({'expr': item, 'color': _default_colors[idx % len(_default_colors)], 'enabled': True})
+        elif isinstance(item, dict):
+            normalized.append({
+                'expr': item.get('expr', item.get('formula', '')),
+                'color': item.get('color', _default_colors[idx % len(_default_colors)]),
+                'enabled': item.get('enabled', True),
+            })
+
+    # Parse các BPT đang bật
+    active = []
+    for item in normalized:
+        if not item['enabled']:
+            continue
+        parsed = _parse_linear_ineq(item['expr'])
+        parsed['color'] = item['color']
+        active.append(parsed)
+
+    # Tạo figure
+    fig, ax = plt.subplots(figsize=figsize, dpi=DEFAULT_DPI)
+    ax.set_xlim(xmin, xmax)
+    ax.set_ylim(ymin, ymax)
+    ax.set_aspect('equal', adjustable='box')
+    ax.axis('off')
+
+    W = xmax - xmin
+    H = ymax - ymin
+
+    # ── Lưới nền nhạt & Ticks trục ──
+    tick_step_x = max(1, int(W / 8))
+    tick_step_y = max(1, int(H / 8))
+    x_ticks = [x for x in np.arange(_math.ceil(xmin), xmax + 0.01, tick_step_x) if xmin < x < xmax - 0.06 * W]
+    y_ticks = [y for y in np.arange(_math.ceil(ymin), ymax + 0.01, tick_step_y) if ymin < y < ymax - 0.06 * H]
+    for xt in x_ticks:
+        ax.plot([xt, xt], [ymin, ymax], color='#e9edf4', lw=0.7, zorder=0)
+    for yt in y_ticks:
+        ax.plot([xmin, xmax], [yt, yt], color='#e9edf4', lw=0.7, zorder=0)
+
+    # ── Trục tọa độ ──
+    setup_axes(ax, (xmin, xmax), (ymin, ymax))
+
+    # Nhãn số trên trục
+    ox = max(xmin, min(xmax, 0))
+    oy = max(ymin, min(ymax, 0))
+    for xt in x_ticks:
+        if abs(xt) > 1e-9:
+            ax.text(xt, oy - 0.06 * H, f'${int(xt) if xt == int(xt) else xt}$',
+                    fontsize=10, ha='center', va='top', color='#778397', fontweight='bold')
+    for yt in y_ticks:
+        if abs(yt) > 1e-9:
+            ax.text(ox - 0.04 * W, yt, f'${int(yt) if yt == int(yt) else yt}$',
+                    fontsize=10, ha='right', va='center', color='#778397', fontweight='bold')
+
+    # ── Bounds planes cho clipping ──
+    bounds_planes = [
+        {'a': -1, 'b': 0, 'c': -xmin},
+        {'a':  1, 'b': 0, 'c':  xmax},
+        {'a':  0, 'b': -1, 'c': -ymin},
+        {'a':  0, 'b':  1, 'c':  ymax},
+    ]
+
+    # ── Hatch (gạch chéo) ──
+    hatch_spacing = max(10, int(_math.hypot(W, H) * 8))  # ~13px tại 600px
+    hatch_step = (xmax - xmin) / hatch_spacing
+
+    for idx, ineq in enumerate(active):
+        # Nửa mặt phẳng bị loại: đảo dấu pháp tuyến
+        excluded_plane = [{'a': -ineq['a'], 'b': -ineq['b'], 'c': -ineq['c']}]
+        slope = -1 if idx % 2 == 0 else 1
+        color_pale = _lighten_hex(ineq['color'], factor=0.55)
+
+        clip_planes = bounds_planes + (excluded_plane if not reverse else [])
+
+        for k in range(-hatch_spacing, hatch_spacing * 2):
+            offset = k * hatch_step
+            x1, y1 = xmin, ymax + offset
+            x2, y2 = xmax, ymax + offset + slope * W
+
+            if reverse:
+                # Gạch miền nghiệm chung: cắt theo TẤT CẢ nửa mặt phẳng thỏa mãn
+                clip_all = bounds_planes + [{'a': p['a'], 'b': p['b'], 'c': p['c']} for p in active]
+                seg = _clip_segment_bpt((x1, y1), (x2, y2), clip_all)
+                if seg:
+                    ax.plot([seg[0][0], seg[1][0]], [seg[0][1], seg[1][1]],
+                            color=color_pale, lw=0.85, zorder=1)
+                break  # chỉ cần vẽ 1 lần cho reverse
+            else:
+                seg = _clip_segment_bpt((x1, y1), (x2, y2), clip_planes)
+                if seg:
+                    ax.plot([seg[0][0], seg[1][0]], [seg[0][1], seg[1][1]],
+                            color=color_pale, lw=0.85, zorder=1)
+
+    # Nếu reverse: vẽ hatch chung một lần
+    if reverse and active:
+        color_pale = _lighten_hex(active[0]['color'], factor=0.55)
+        clip_all = bounds_planes + [{'a': p['a'], 'b': p['b'], 'c': p['c']} for p in active]
+        for k in range(-hatch_spacing * 2, hatch_spacing * 2):
+            offset = k * hatch_step
+            x1, y1 = xmin, ymax + offset
+            x2, y2 = xmax, ymax + offset - W  # slope -1
+            seg = _clip_segment_bpt((x1, y1), (x2, y2), clip_all)
+            if seg:
+                ax.plot([seg[0][0], seg[1][0]], [seg[0][1], seg[1][1]],
+                        color=color_pale, lw=0.85, zorder=1)
+
+    # ── Vẽ đường biên ──
+    xmid = (xmin + xmax) / 2
+    ymid = (ymin + ymax) / 2
+    span = 2 * _math.hypot(W, H)
+
+    for ineq in active:
+        a, b, c = ineq['a'], ineq['b'], ineq['c']
+        norm2 = a * a + b * b
+        d = (c - a * xmid - b * ymid) / norm2
+        cx = xmid + a * d
+        cy = ymid + b * d
+        p1 = (cx - b * span, cy + a * span)
+        p2 = (cx + b * span, cy - a * span)
+        seg = _clip_segment_bpt(p1, p2, bounds_planes)
+        if seg:
+            ls = '--' if ineq['strict'] else '-'
+            ax.plot([seg[0][0], seg[1][0]], [seg[0][1], seg[1][1]],
+                    color=ineq['color'], lw=2.0, ls=ls, zorder=3)
+
+    # ── Giao điểm đỉnh miền nghiệm ──
+    if show_intersections and active:
+        intersections = _find_boundary_intersections(
+            [{'a': p['a'], 'b': p['b'], 'c': p['c']} for p in active],
+            xmin, xmax, ymin, ymax
+        )
+        # Lọc những điểm thỏa mãn TẤT CẢ BPT (nằm trong/trên miền nghiệm)
+        vertex_pts = []
+        for pt in intersections:
+            px, py = pt['x'], pt['y']
+            in_region = all(
+                p['a'] * px + p['b'] * py <= p['c'] + 1e-7
+                for p in active
+            )
+            if in_region:
+                vertex_pts.append((px, py))
+
+        used_boxes = []
+        for px, py in vertex_pts:
+            # Format tọa độ
+            def _fmt(v):
+                if abs(v - round(v)) < 1e-6:
+                    return str(int(round(v)))
+                return f'{v:.2f}'.rstrip('0').rstrip('.')
+            label = f'$({_fmt(px)};\\ {_fmt(py)})$'
+            w_est = len(label) * 0.07 * (xmax - xmin)
+            h_est = 0.07 * (ymax - ymin)
+
+            # Chống đè: thử 4 vị trí
+            candidates = [
+                (px + 0.05 * W, py + 0.06 * H),
+                (px + 0.05 * W, py - 0.10 * H),
+                (px - 0.22 * W, py + 0.06 * H),
+                (px - 0.22 * W, py - 0.10 * H),
+            ]
+            lx, ly = candidates[0]
+            for cx2, cy2 in candidates:
+                overlap = any(
+                    abs(cx2 - bx) < w_est and abs(cy2 - by) < h_est
+                    for bx, by in used_boxes
+                )
+                if not overlap:
+                    lx, ly = cx2, cy2
+                    break
+            used_boxes.append((lx, ly))
+
+            # Chấm tím tại đỉnh
+            ax.plot(px, py, 'o', color='#6d28d9', ms=4.5, zorder=5)
+            # Hộp nhãn tọa độ
+            ax.text(lx, ly, label, fontsize=9.5, color='#4c1d95',
+                    ha='left', va='center', zorder=6,
+                    bbox=dict(boxstyle='round,pad=0.25', fc='white', ec='#e4dcf8', lw=0.8))
+
+    # ── Chú thích danh sách BPT (góc trên phải, tránh đè nhãn góc trái dưới) ──
+    legend_x_start = xmax - 0.03 * W
+    legend_y_start = ymax - 0.06 * H
+    line_h = 0.065 * H
+    for idx, ineq in enumerate(active):
+        ly = legend_y_start - idx * line_h
+        ls = '--' if ineq['strict'] else '-'
+        ax.plot([legend_x_start - 0.10 * W, legend_x_start - 0.03 * W], [ly, ly],
+                color=ineq['color'], lw=2.0, ls=ls, zorder=4)
+        # Chuẩn hóa ký hiệu hiển thị: thay >= bằng ≥, <= bằng ≤
+        display_src = (ineq['source']
+                       .replace('>=', '≥').replace('<=', '≤')
+                       .replace('> ', '> ').replace('< ', '< '))
+        ax.text(legend_x_start - 0.12 * W, ly, display_src,
+                fontsize=8.5, color=ineq['color'], va='center', ha='right',
+                fontweight='bold',
+                bbox=dict(boxstyle='round,pad=0.12', fc='white', ec='none', alpha=0.85))
+
+    # ── Chú thích miền trắng / miền gạch ──
+    note = ('Vùng gạch: miền nghiệm chung' if reverse
+            else 'Vùng trắng: miền nghiệm chung')
+    ax.text((xmin + xmax) / 2, ymax - 0.04 * H, note,
+            fontsize=9.5, ha='center', va='top', color='#24334b',
+            style='italic')
+
+    # ── Tiêu đề ──
+    if title and title.strip():
+        ax.set_title(title, fontsize=13, fontweight='bold', color='#24334b', pad=8)
+
+    plt.tight_layout(pad=0.4)
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight',
+                pad_inches=0.05, facecolor='white')
+    plt.close()
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# GIAI ĐOẠN 2: Sơ Đồ Cây Xác Suất Tự Động
+# Dạng bài: Toán 11-12 — Xác suất có điều kiện, Bayes, Tổng-Nhân
+# ──────────────────────────────────────────────────────────────────────────────
+
+def _parse_probability_tree(tree_text):
+    """
+    Parse cú pháp thụt lề thành cấu trúc cây nút.
+    Mỗi dòng: [indent]tên_nút | xác_suất_nhánh
+    Nút gốc không có '|'.
+    """
+    lines = [l for l in tree_text.split('\n') if l.strip()]
+    if not lines:
+        raise ValueError("Nội dung sơ đồ cây trống.")
+    if len(lines) > 40:
+        raise ValueError("Sơ đồ cây tối đa 40 nút.")
+
+    nodes = []
+    stack = []  # [(depth, node_dict)]
+
+    for i, raw in enumerate(lines):
+        # Đếm độ thụt lề (2 dấu cách = 1 cấp)
+        stripped = raw.lstrip(' ')
+        spaces = len(raw) - len(stripped)
+        depth = spaces // 2
+
+        if i == 0 and depth != 0:
+            raise ValueError("Nút gốc phải ở cột 0 (không thụt lề).")
+
+        parts = stripped.split('|', 1)
+        label = parts[0].strip()
+        edge_label = parts[1].strip() if len(parts) > 1 else ''
+
+        if not label:
+            raise ValueError(f"Dòng {i+1}: tên nút trống.")
+
+        node = {
+            'label': label,
+            'edge': edge_label,
+            'depth': depth,
+            'children': [],
+            'x': 0.0, 'y': 0.0,
+        }
+
+        # Gắn vào cha
+        while stack and stack[-1][0] >= depth:
+            stack.pop()
+        if stack:
+            stack[-1][1]['children'].append(node)
+        nodes.append(node)
+        stack.append((depth, node))
+
+    return nodes[0], nodes  # root, all_nodes
+
+
+def plot_probability_tree(
+    tree_text,
+    filename='so_do_cay.png',
+    title='Sơ đồ cây',
+    root_color='#2755df',
+    node_fill='#f0f4ff',
+    node_border='#dbe3f3',
+    edge_color='#9aaccb',
+    label_color='#24334b',
+    prob_color='#778397',
+    figsize=None,
+):
+    """
+    Vẽ sơ đồ cây xác suất tự động từ cú pháp thụt lề (Toán 11-12 GDPT 2018).
+    Thuật toán layout dịch từ CHĐ Math Studio.
+
+    Tham số:
+        tree_text: chuỗi thụt lề, mỗi cấp 2 dấu cách, nhãn nhánh sau '|'
+        filename: đường dẫn file xuất (PNG)
+        title: tiêu đề hình
+
+    Ví dụ:
+        plot_probability_tree(
+            '''Phép thử
+  A | 0.6
+    B | 0.7
+    B̄ | 0.3
+  Ā | 0.4
+    B | 0.2
+    B̄ | 0.8''',
+            filename='cay_xac_suat.png'
+        )
+    """
+    root, all_nodes = _parse_probability_tree(tree_text)
+
+    leaves = [n for n in all_nodes if not n['children']]
+    n_leaves = max(len(leaves), 1)
+    max_depth = max(n['depth'] for n in all_nodes)
+
+    # Kích thước canvas tự động (tăng chiều ngang để không bị cấn lề phải)
+    fig_h = max(3.6, n_leaves * 0.72 + 1.1)
+    fig_w = max(5.8, (max_depth + 1) * 2.3)
+    if figsize:
+        fig_w, fig_h = figsize
+
+    fig, ax = plt.subplots(figsize=(fig_w, fig_h), dpi=DEFAULT_DPI)
+    ax.set_xlim(0, fig_w)
+    ax.set_ylim(0, fig_h)
+    ax.axis('off')
+
+    # ── Thuật toán gán tọa độ Y (từ CHĐ Math Studio) ──
+    leaf_counter = [0]
+
+    def assign_y(node):
+        if not node['children']:
+            leaf_counter[0] += 1
+            node['y'] = 0.65 + (leaf_counter[0] - 0.5) * (fig_h - 1.2) / n_leaves
+        else:
+            for child in node['children']:
+                assign_y(child)
+            node['y'] = sum(c['y'] for c in node['children']) / len(node['children'])
+
+    assign_y(root)
+
+    # ── Kích thước box & Căn lề an toàn chống cắt mép ──
+    box_w = min(1.35, (fig_w - 1.6) / (max_depth + 1) * 0.75)
+    box_h = min(0.42, (fig_h - 1.2) / n_leaves * 0.60)
+    x_margin_l = box_w / 2 + 0.45
+    x_margin_r = box_w / 2 + 0.45
+    x_span = fig_w - x_margin_l - x_margin_r
+
+    for node in all_nodes:
+        node['x'] = x_margin_l + node['depth'] * x_span / max(max_depth, 1)
+
+    label_fs = max(8.0, min(12, box_w * 7.5))
+    edge_fs = max(7.5, min(11, box_w * 7.0))
+
+    def _fmt_tree_lbl(lbl):
+        s = str(lbl).strip()
+        if s.endswith('_bar'):
+            return rf'$\overline{{{s[:-4]}}}$'
+        if len(s) == 2 and s[1] == '\u0304':
+            return rf'$\overline{{{s[0]}}}$'
+        if len(s) == 1 and s in ('A', 'B', 'C', 'D', 'M', 'N'):
+            return rf'${s}$'
+        if s in ('Ā', 'B̄', 'C̄', 'D̄', 'M̄', 'N̄'):
+            return rf'$\overline{{{s[0]}}}$'
+        return s
+
+    def _fmt_edge_lbl(lbl):
+        s = str(lbl).strip()
+        if not s:
+            return ''
+        if '/' in s and not s.startswith('$'):
+            p = s.split('/')
+            if len(p) == 2 and p[0].strip().isdigit() and p[1].strip().isdigit():
+                return rf'$\frac{{{p[0].strip()}}}{{{p[1].strip()}}}$'
+        try:
+            float(s)
+            return rf'${s}$'
+        except ValueError:
+            pass
+        return s
+
+    # ── Vẽ cạnh (edges) ──
+    for node in all_nodes:
+        for child in node['children']:
+            x1 = node['x'] + box_w / 2
+            x2 = child['x'] - box_w / 2
+            y1, y2 = node['y'], child['y']
+            ax.plot([x1, x2], [y1, y2], color=edge_color, lw=1.5, zorder=1)
+
+            # Nhãn xác suất giữa cạnh (lùi xuống để không đè đường nối)
+            if child['edge']:
+                mx = (x1 + x2) / 2
+                my = (y1 + y2) / 2
+                offset = -0.12 * (fig_h / 5)
+                edge_text = _fmt_edge_lbl(child['edge'])
+                ax.text(mx, my + offset, edge_text,
+                        fontsize=edge_fs, color=prob_color, ha='center', va='top',
+                        fontweight='bold',
+                        bbox=dict(boxstyle='round,pad=0.15', fc='white', ec='none'))
+
+    # ── Vẽ các nút ──
+    from matplotlib.patches import FancyBboxPatch as _FBP
+
+    for node in all_nodes:
+        cx, cy = node['x'], node['y']
+        is_root = (node is root)
+        fill = root_color if is_root else node_fill
+        border = root_color if is_root else node_border
+        text_col = 'white' if is_root else label_color
+
+        rect = _FBP(
+            (cx - box_w / 2, cy - box_h / 2),
+            box_w, box_h,
+            boxstyle='round,pad=0.08',
+            facecolor=fill, edgecolor=border, linewidth=1.1, zorder=2
+        )
+        ax.add_patch(rect)
+
+        formatted_lbl = _fmt_tree_lbl(node['label'])
+        ax.text(cx, cy, formatted_lbl,
+                fontsize=label_fs, color=text_col,
+                ha='center', va='center', fontweight='bold', zorder=3)
+
+    # ── Tiêu đề ──
+    if title and title.strip():
+        ax.text(fig_w / 2, fig_h - 0.28, title,
+                fontsize=13, fontweight='bold', color='#24334b',
+                ha='center', va='top')
+
+    plt.tight_layout(pad=0.3)
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight',
+                pad_inches=0.08, facecolor='white')
+    plt.close()
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# GIAI ĐOẠN 3: Phác Họa Đồ Thị Từ Bảng Biến Thiên (Smoothstep Hermite)
+# Dạng bài: Câu nhận diện đồ thị từ BBT — phổ biến trong đề TN THPT
+# ──────────────────────────────────────────────────────────────────────────────
+
+def _parse_bbt_value(val_str):
+    """Chuyển nhãn BBT ('−∞', '+∞', '3', '1/2', 'sqrt(2)'...) thành float."""
+    s = str(val_str).strip().replace('−', '-').replace('–', '-')
+    if s in ('+∞', '+inf', 'inf', '+oo'):
+        return float('inf')
+    if s in ('-∞', '-inf', '-oo'):
+        return float('-inf')
+    if s in ('', '||'):
+        return float('nan')
+    try:
+        import sympy as _sp
+        return float(_sp.sympify(s))
+    except Exception:
+        try:
+            return float(eval(s.replace('^', '**')))
+        except Exception:
+            return float('nan')
+
+
+def _bbt_interpolate(x, xs_finite, left_vals, right_vals, signs, scale_x, scale_y):
+    """
+    Nội suy đường cong từ bảng biến thiên dùng Smoothstep Hermite.
+    Dịch từ src/drawing.js — hàm illustration() của CHĐ Math Studio.
+    """
+    n = len(xs_finite)
+    if n < 2:
+        return float('nan')
+
+    # Tìm khoảng chứa x
+    idx = -1
+    for i in range(n - 1):
+        xa, xb = xs_finite[i], xs_finite[i + 1]
+        in_left = (xa == -float('inf') or x > xa)
+        in_right = (xb == float('inf') or x < xb)
+        if in_left and in_right:
+            idx = i
+            break
+    if idx < 0:
+        return float('nan')
+
+    if signs[idx] == '||':
+        return float('nan')
+
+    a, b = xs_finite[idx], xs_finite[idx + 1]
+    rawA = right_vals[idx]
+    rawB = left_vals[idx + 1]
+
+    if _math.isnan(rawA) or _math.isnan(rawB):
+        return float('nan')
+
+    # Tính tham số u ∈ (0, 1)
+    if not _math.isfinite(a) and not _math.isfinite(b):
+        u = 0.5 + _math.atan(x / max(scale_x, 1e-9)) / _math.pi
+    elif not _math.isfinite(a):
+        u = scale_x / (b - x + scale_x) if (b - x + scale_x) > 1e-12 else 0.99
+    elif not _math.isfinite(b):
+        u = (x - a) / (x - a + scale_x) if (x - a + scale_x) > 1e-12 else 0.99
+    else:
+        denom = b - a
+        u = (x - a) / denom if abs(denom) > 1e-12 else 0.5
+
+    u = max(1e-6, min(1 - 1e-6, u))  # Kẹp trong (0,1) để tránh log(0)
+
+    # Nội suy
+    if not _math.isfinite(rawA) and not _math.isfinite(rawB):
+        try:
+            return _math.copysign(1, rawB) * scale_y * _math.log(u / (1 - u))
+        except (ValueError, ZeroDivisionError):
+            return float('nan')
+    elif not _math.isfinite(rawA):
+        denom = u
+        return rawB + _math.copysign(1, rawA) * scale_y * (1 - u) ** 2 / max(denom, 1e-9)
+    elif not _math.isfinite(rawB):
+        denom = 1 - u
+        return rawA + _math.copysign(1, rawB) * scale_y * u ** 2 / max(denom, 1e-9)
+    else:
+        # Smoothstep cubic: H(u) = 3u² - 2u³  →  đảm bảo f'=0 tại 2 đầu mốc
+        return rawA + (rawB - rawA) * (3 * u ** 2 - 2 * u ** 3)
+
+
+def plot_graph_from_bbt(
+    points,
+    signs,
+    filename='phachinh_bbt.png',
+    xlim=None,
+    ylim=None,
+    color='#2755df',
+    title='Phác họa đồ thị từ bảng biến thiên',
+    show_asymptotes=True,
+    n_samples=800,
+):
+    """
+    Phác họa đường cong đồ thị hàm số từ bảng biến thiên (Toán 12 GDPT 2018).
+    Dùng Smoothstep Hermite để đảm bảo tiếp tuyến nằm ngang tại cực trị.
+    Dịch từ CHĐ Math Studio — src/drawing.js hàm illustration().
+
+    Tham số:
+        points: list[dict], mỗi phần tử:
+            {'x': '-inf', 'y': '+inf', 'mark': ''}        ← đầu mút
+            {'x': '-1',   'y': '3',    'mark': '0'}       ← cực trị
+            {'x': '1',    'y': '-1',   'mark': '0'}       ← cực trị
+            {'x': '+inf', 'y': '+inf', 'mark': ''}        ← đầu mút
+            {'x': '1',    'y': '+inf', 'right': '-inf', 'mark': '||'} ← tiệm cận
+        signs: list[str] — '+', '-', '0', '||' cho từng khoảng
+        filename: đường dẫn PNG xuất
+        xlim, ylim: tuple (min, max) — tự động ước lượng nếu None
+        color: màu đường đồ thị
+        title: tiêu đề (None = không vẽ tiêu đề)
+
+    Ví dụ (hàm bậc 3 y = x³ - 3x + 1):
+        plot_graph_from_bbt(
+            points=[
+                {'x': '-inf', 'y': '-inf', 'mark': ''},
+                {'x': '-1',   'y': '3',    'mark': '0'},
+                {'x': '1',    'y': '-1',   'mark': '0'},
+                {'x': '+inf', 'y': '+inf', 'mark': ''},
+            ],
+            signs=['+', '-', '+'],
+            filename='do_thi_bac3.png'
+        )
+    """
+    if len(points) < 2:
+        raise ValueError("Bảng biến thiên cần ít nhất 2 mốc.")
+    if len(signs) != len(points) - 1:
+        raise ValueError("Số dấu phải bằng số mốc trừ 1.")
+
+    # Chuyển đổi giá trị
+    xs_raw = [_parse_bbt_value(p.get('x', '')) for p in points]
+    left_vals = [_parse_bbt_value(p.get('y', '')) for p in points]
+    right_vals = [
+        _parse_bbt_value(p.get('right', p.get('y', ''))) for p in points
+    ]
+    marks = [p.get('mark', '') for p in points]
+
+    # Tính scale
+    finite_xs = [v for v in xs_raw if _math.isfinite(v)]
+    finite_ys = [v for v in left_vals + right_vals if _math.isfinite(v)]
+
+    if not finite_xs:
+        scale_x = 3.0
+    else:
+        scale_x = max(1.0, max(finite_xs) - min(finite_xs))
+    if not finite_ys:
+        scale_y = 3.0
+    else:
+        scale_y = max(1.0, max(finite_ys) - min(finite_ys))
+
+    # Tự động khung nhìn
+    if xlim is None:
+        if finite_xs:
+            x_lo = min(finite_xs) - 0.4 * scale_x
+            x_hi = max(finite_xs) + 0.4 * scale_x
+        else:
+            x_lo, x_hi = -4.0, 4.0
+        xlim = (x_lo, x_hi)
+
+    if ylim is None:
+        if finite_ys:
+            y_lo = min(finite_ys) - 0.35 * scale_y
+            y_hi = max(finite_ys) + 0.35 * scale_y
+        else:
+            y_lo, y_hi = -4.0, 4.0
+        ylim = (y_lo, y_hi)
+
+    xmin, xmax = xlim
+    ymin, ymax = ylim
+    W, H = xmax - xmin, ymax - ymin
+
+    # Chỉ dùng các mốc hữu hạn làm anchor nội suy
+    # (vô cực được xử lý bởi công thức đặc biệt)
+
+    # Vẽ
+    fig, ax = plt.subplots(figsize=(4.5, 3.8), dpi=DEFAULT_DPI)
+
+    # Lưới nhạt
+    ax.axhline(0, color='#e9edf4', lw=0.8)
+    ax.axvline(0, color='#e9edf4', lw=0.8)
+
+    # Trục tọa độ
+    setup_axes(ax, (xmin, xmax), (ymin, ymax))
+
+    # ── Tiệm cận đứng (tại mốc có mark='||') ──
+    if show_asymptotes:
+        for p in points:
+            if p.get('mark', '') == '||':
+                xv = _parse_bbt_value(p.get('x', ''))
+                if _math.isfinite(xv) and xmin <= xv <= xmax:
+                    ax.axvline(xv, color='#d19055', lw=1.3, ls='--', zorder=1)
+
+    # ── Sinh các nhánh đường cong ──
+    # Tách theo tiệm cận/gián đoạn
+    break_xs = set()
+    for i, p in enumerate(points):
+        if p.get('mark', '') == '||' or signs[i - 1] == '||' if i > 0 else False:
+            xv = _parse_bbt_value(p.get('x', ''))
+            if _math.isfinite(xv):
+                break_xs.add(xv)
+
+    xs_sample = np.linspace(xmin, xmax, n_samples)
+    segments = []
+    current = []
+
+    for xi in xs_sample:
+        # Kiểm tra qua break point
+        if any(prev < bx <= xi for bx in break_xs
+               for prev in ([current[-1][0]] if current else [])):
+            if current:
+                segments.append(current)
+                current = []
+
+        yi = _bbt_interpolate(xi, xs_raw, left_vals, right_vals, signs, scale_x, scale_y)
+
+        if not _math.isfinite(yi) or yi < ymin - H * 0.5 or yi > ymax + H * 0.5:
+            if current:
+                segments.append(current)
+                current = []
+            continue
+
+        # Midpoint test: phát hiện gián đoạn (từ CHĐ Math Studio)
+        if current:
+            prev_x, prev_y = current[-1]
+            if abs(yi - prev_y) > H * 1.5:
+                mid_xi = (prev_x + xi) / 2
+                mid_yi = _bbt_interpolate(mid_xi, xs_raw, left_vals, right_vals, signs, scale_x, scale_y)
+                expected = (prev_y + yi) / 2
+                if not _math.isfinite(mid_yi) or abs(mid_yi - expected) > H * 0.15:
+                    segments.append(current)
+                    current = []
+
+        current.append((xi, max(ymin - H * 0.1, min(ymax + H * 0.1, yi))))
+
+    if current:
+        segments.append(current)
+
+    # Vẽ các nhánh (Ramer-Douglas-Peucker simplify giảm điểm)
+    for seg in segments:
+        if len(seg) < 2:
+            continue
+        xs_seg, ys_seg = zip(*seg)
+        ax.plot(xs_seg, ys_seg, color=color, lw=2.3,
+                solid_capstyle='round', solid_joinstyle='round', zorder=3)
+
+    # ── Chấm cực trị (mark='0') ──
+    for p in points:
+        if p.get('mark', '') == '0':
+            px = _parse_bbt_value(p.get('x', ''))
+            py = _parse_bbt_value(p.get('y', ''))
+            if _math.isfinite(px) and _math.isfinite(py):
+                if xmin <= px <= xmax and ymin <= py <= ymax:
+                    ax.plot(px, py, 'o', color=color, ms=4.5, zorder=5)
+                    # Đường gióng nét đứt
+                    ax.plot([px, px, xmin], [ymin, py, py],
+                            '--', color='#a6b7e9', lw=1.0, zorder=2)
+                    ax.text(px, ymin - 0.05 * H, f'${_parse_bbt_value(p["x"]):.4g}$',
+                            fontsize=10, ha='center', va='top', color='#778397', fontweight='bold')
+                    ax.text(xmin - 0.04 * W, py, f'${py:.4g}$',
+                            fontsize=10, ha='right', va='center', color='#778397', fontweight='bold')
+
+    # ── Cảnh báo "minh họa" ──
+    ax.text((xmin + xmax) / 2, ymin + 0.03 * H,
+            'Phác họa minh họa — không xác định duy nhất đồ thị',
+            fontsize=7.5, ha='center', va='bottom', color='#9ca3af', style='italic')
+
+    if title and title.strip():
+        ax.set_title(title, fontsize=11.5, fontweight='bold', color='#24334b', pad=6)
+
+    plt.tight_layout(pad=0.3)
+    plt.savefig(filename, dpi=DEFAULT_DPI, bbox_inches='tight',
+                pad_inches=0.05, facecolor='white')
     plt.close()
 
 
