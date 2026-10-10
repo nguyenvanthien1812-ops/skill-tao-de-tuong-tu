@@ -1,11 +1,17 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "5.0.0",
-  "release_date": "2026-10-03",
+  "version": "5.1.0",
+  "release_date": "2026-10-10",
   "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Tạo đề từ ma trận đặc tả (không cần đề gốc). Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge (không cần cài LaTeX), kiểm định tự động GDPT 2018.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "5.1.0": [
+      "NÂNG CẤP BƯỚC 0.1: Bộ điều hướng & prompt mẫu chuẩn vàng đồng bộ cho tất cả 8 tính năng cốt lõi (PDF sang Word, Tạo đề tương tự, Chuẩn hóa công thức Word, Trộn 4 mã đề hoán vị, Dịch tiếng Anh/Song ngữ, Tạo ma trận đặc tả, Trích xuất ma trận từ đề, Nhận diện ảnh đề thi OCR).",
+      "Hướng dẫn trực quan 2 cách đưa file: Cách 1 (Copy vào workspace kèm đường dẫn thực tế) và Cách 2 (Shift + chuột phải Copy as path) kèm prompt mẫu 3 Tiêu chí vàng copy-paste ngay.",
+      "Tích hợp hệ thống thu hồi bản quyền đa tầng từ xa (Remote License Revocation) với cơ chế cache buster.",
+      "Tích hợp bộ xem trước ma trận trực quan (8 môn) và xuất bảng ma trận đặc tả chuẩn Table Grid ra Word."
+    ],
     "5.0.0": [
       "TÍNH NĂNG MỚI: Tạo đề từ ma trận đặc tả (scripts/exam_from_matrix.py) — không cần đề gốc. GV nhập ma trận bất kỳ (bảng chat, Excel, Word, nói tự nhiên), AI sinh từng câu hỏi theo ô ma trận, GV review + nút Sinh lại câu này trước khi xuất.",
       "TÍNH NĂNG MỚI: Chấm bài tự luận bằng AI (scripts/essay_grader.py) — GV chụp ảnh bài làm HS → OCR Gemini Vision → chấm theo rubric GDPT 2018 → AI gợi ý điểm từng tiêu chí → GV xác nhận điểm cuối cùng.",
