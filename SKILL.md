@@ -96,9 +96,12 @@ Khi nhận được **BẤT KỲ YÊU CẦU NÀO** từ người dùng (tạo đ
 Khi giáo viên đưa ra các câu lệnh ngắn, đơn giản hoặc mới chỉ nêu ý định tổng quát:
 - *"tôi muốn chuyển pdf sang word"*, *"chuyển đề pdf sang word"*, *"convert pdf to word"*, *"chuyển file pdf này sang docx"*
 - *"tôi muốn tạo đề tương tự"*, *"tạo đề tương tự"*, *"tạo đề song song"*, *"nhân bản đề thi"*
-- *"chuẩn hóa công thức word"*, *"sửa lỗi công thức file word"*, *"chuyển equation sang mathtype"*
-- *"trộn đề thi"*, *"tạo 4 mã đề"*, *"tạo phiếu tô trắc nghiệm"*
-- *"dịch đề sang tiếng anh"*, *"tạo đề song ngữ"*, *"chuyển đề sang tiếng anh"*
+- *"chuẩn hóa công thức word"*, *"sửa lỗi công thức file word"*, *"chuyển equation sang mathtype"*, *"chuẩn hóa mathtype"*
+- *"trộn đề thi"*, *"tạo 4 mã đề"*, *"tạo phiếu tô trắc nghiệm"*, *"đảo đề thi"*
+- *"dịch đề sang tiếng anh"*, *"tạo đề song ngữ"*, *"chuyển đề sang tiếng anh"*, *"đề tiếng anh"*
+- *"tạo ma trận đặc tả"*, *"tạo ma trận đề kiểm tra"*, *"làm ma trận"*, *"cấu trúc ma trận"*, *"tạo đề từ ma trận"*
+- *"trích xuất ma trận"*, *"phân tích ma trận đề thi"*, *"lập ma trận từ đề này"*
+- *"nhận diện ảnh đề thi"*, *"chụp ảnh đề thi tạo đề mới"*, *"ocr ảnh đề"*
 **MÀ TRONG NGỮ CẢNH CHƯA CÓ FILE ĐÍNH KÈM HOẶC CHƯA CÓ ĐƯỜNG DẪN TỆP CỤ THỂ**:
 
 1. **TUYỆT ĐỐI NGHIÊM CẤM:**
@@ -162,82 +165,209 @@ Agent xuất ngay phản hồi:
 Agent xuất ngay phản hồi:
 > "Dạ chào Thầy/Cô! Để em hỗ trợ tạo đề thi tương tự (song song, cùng cấu trúc ma trận đặc tả chuẩn GDPT 2018), Thầy/Cô cung cấp file đề gốc theo 1 trong 2 cách sau nhé:
 > 
-> 📂 **Cách 1: Copy file đề gốc vào thư mục làm việc**
-> * Copy file đề gốc (`.pdf`, `.docx` hoặc ảnh chụp) vào thư mục: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>`.
-> * Sau đó gửi câu lệnh mẫu:
+> 📂 **Cách 1: Copy file đề gốc vào thư mục làm việc của phần mềm (Tiện lợi nhất)**
+> * Thầy/Cô copy file đề gốc (`.pdf`, `.docx` hoặc ảnh chụp) vào thư mục:  
+>   👉 `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` *(hoặc kéo thả file trực tiếp vào khung chat)*.
+> * Sau đó, Thầy/Cô copy câu lệnh mẫu bên dưới, sửa lại tên file và gửi cho em:
 >   ```text
 >   Dựa vào file đề gốc: "[ten_de_goc.pdf]" trong thư mục làm việc, em hãy tạo giúp tôi 1 đề thi tương tự (song song, cùng cấu trúc ma trận đặc tả và độ khó chuẩn GDPT 2018).
 >   Yêu cầu bắt buộc:
 >   1. Nội dung và kiến thức phải chuẩn xác 100%: số liệu mới được thiết kế nghiệm đẹp, tuân thủ đúng định luật khoa học (Toán, Lý, Hóa), 4 phương án trắc nghiệm chỉ có duy nhất 1 đáp án đúng.
->   2. Lập trình vẽ mới 100% hình vẽ kỹ thuật & thí nghiệm sắc nét 300 DPI chèn đúng câu hỏi.
+>   2. Lập trình vẽ mới 100% hình vẽ kỹ thuật & thí nghiệm sắc nét 300 DPI chèn đúng vị trí câu hỏi.
 >   3. Xuất đồng thời 2 file Word: Bản Đề Học Sinh và Bản Lời Giải Chi Tiết, 100% công thức ở dạng MathType OLE 14pt nhấp đúp sửa được, bảng biểu dựng Table Grid chuẩn mực.
 >   ```
 > 
-> 📂 **Cách 2: File đề gốc ở thư mục khác hoặc ảnh chụp điện thoại**
-> * Lấy đường dẫn file: Nhấn giữ `Shift` + chuột phải vào file đề -> Chọn `"Copy as path"` (hoặc kéo thả ảnh chụp đề vào ô chat).
-> * Sau đó gửi câu lệnh mẫu:
+> 📂 **Cách 2: File đề gốc đang ở nơi khác (Desktop, Downloads, Zalo, ổ D, ổ E...)**
+> * Thầy/Cô lấy đường dẫn file bằng cách:  
+>   👉 **Nhấn giữ phím Shift + Nhấp chuột phải vào file đề -> Chọn "Copy as path"** *(hoặc trên Windows 11 bấm `Ctrl + Shift + C`)*.
+> * Sau đó, dán đường dẫn vào câu lệnh mẫu bên dưới và gửi cho em:
 >   ```text
->   Em hãy phân tích đề thi từ file: "[Dán đường dẫn file đề gốc hoặc ảnh chụp]" và tạo giúp tôi 1 đề tương tự cùng cấu trúc ma trận.
+>   Em hãy phân tích đề thi từ file tại đường dẫn: "[Dán đường dẫn vừa copy vào đây]" và tạo giúp tôi 1 đề tương tự cùng cấu trúc ma trận đặc tả chuẩn GDPT 2018.
 >   Yêu cầu bắt buộc:
->   1. Bảo toàn 100% chuẩn kiến thức khoa học, số liệu mới nghiệm đẹp, lời giải chi tiết từng bước.
->   2. Vẽ hình kỹ thuật mới sắc nét 300 DPI và xuất file Word MathType OLE 14pt không lỗi công thức.
+>   1. Nội dung và kiến thức phải chuẩn xác 100%: số liệu mới nghiệm đẹp, định luật tự nhiên bảo toàn chuẩn xác, phương án trắc nghiệm duy nhất 1 đáp án đúng.
+>   2. Lập trình vẽ mới 100% hình vẽ kỹ thuật & thí nghiệm sắc nét 300 DPI.
+>   3. Xuất đồng thời 2 file Word: Bản Đề Học Sinh và Bản Lời Giải Chi Tiết, 100% công thức ở dạng MathType OLE 14pt nhấp đúp sửa được, bảng biểu dựng Table Grid không xô lệch.
 >   ```"
 
 ---
 
 #### 3️⃣ KHI GIÁO VIÊN NÓI: "chuẩn hóa công thức word" (hoặc "sửa lỗi công thức file word", "chuyển equation sang mathtype"...)
 Agent xuất ngay phản hồi:
-> "Dạ chào Thầy/Cô! Để em chuẩn hóa toàn bộ công thức trong file Word sang MathType OLE 14pt mà không làm xô lệch bố cục trang, Thầy/Cô làm như sau:
+> "Dạ chào Thầy/Cô! Để em chuẩn hóa toàn bộ công thức trong file Word sang MathType OLE 14pt mà vẫn giữ nguyên vẹn 100% bố cục trang, Thầy/Cô chọn 1 trong 2 cách sau nhé:
 > 
-> 📂 **Cách 1: Copy file Word vào thư mục làm việc**
-> * Copy file Word cần sửa vào: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>`.
-> * Sau đó gửi câu lệnh mẫu:
+> 📂 **Cách 1: Copy file Word vào thư mục làm việc của phần mềm (Tiện lợi nhất)**
+> * Thầy/Cô copy file Word cần chuẩn hóa vào thư mục:  
+>   👉 `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` *(hoặc kéo thả file trực tiếp vào khung chat)*.
+> * Sau đó, gửi câu lệnh mẫu:
 >   ```text
->   Em hãy chuẩn hóa toàn bộ công thức trong file Word "[ten_file.docx]" trong thư mục sang MathType OLE giúp tôi.
+>   Em hãy chuẩn hóa toàn bộ công thức trong file Word "[ten_file.docx]" trong thư mục làm việc sang MathType OLE giúp tôi.
 >   Yêu cầu bắt buộc:
 >   1. Giữ nguyên 100% nội dung đề gốc, bố cục trang, bảng biểu và hình ảnh có sẵn.
 >   2. Chuyển toàn bộ công thức Word Equation (OMML) hoặc công thức lỗi sang chuẩn 100% MathType OLE 14pt đồng bộ, nhấp đúp chuột sửa được ngay.
 >   3. Bảng biểu và hình vẽ không bị xô lệch, không mất định dạng ban đầu của văn bản.
 >   ```
 > 
-> 📂 **Cách 2: File Word đang ở thư mục khác**
-> * Lấy đường dẫn file: Nhấn giữ `Shift` + chuột phải vào file Word -> Chọn `"Copy as path"`.
-> * Sau đó gửi câu lệnh mẫu:
+> 📂 **Cách 2: File Word đang ở nơi khác (Desktop, Downloads, Zalo, ổ D, ổ E...)**
+> * Thầy/Cô lấy đường dẫn file bằng cách:  
+>   👉 **Nhấn giữ phím Shift + Nhấp chuột phải vào file Word -> Chọn "Copy as path"** *(hoặc trên Windows 11 bấm `Ctrl + Shift + C`)*.
+> * Sau đó, dán đường dẫn vào câu lệnh mẫu bên dưới và gửi cho em:
 >   ```text
->   Em hãy đọc file Word tại đường dẫn: "[Dán đường dẫn file Word]" và chuẩn hóa tất cả công thức sang MathType OLE 14pt, bảo toàn nguyên vẹn 100% nội dung, bảng biểu và bố cục văn bản gốc.
+>   Em hãy đọc file Word tại đường dẫn: "[Dán đường dẫn vừa copy vào đây]" và chuẩn hóa tất cả công thức sang MathType OLE 14pt giúp tôi.
+>   Yêu cầu bắt buộc:
+>   1. Giữ nguyên 100% nội dung đề gốc, bảng biểu, hình ảnh và bố cục văn bản ban đầu.
+>   2. Chuyển đổi 100% công thức sang MathType OLE 14pt nhấp đúp chuột sửa được.
+>   3. Đảm bảo cấu trúc trang in ấn gọn gàng, chống xô lệch hàng cột.
 >   ```"
 
 ---
 
-#### 4️⃣ KHI GIÁO VIÊN NÓI: "trộn đề thi" (hoặc "tạo 4 mã đề", "tạo phiếu tô trắc nghiệm"...)
+#### 4️⃣ KHI GIÁO VIÊN NÓI: "trộn đề thi" (hoặc "tạo 4 mã đề", "tạo phiếu tô trắc nghiệm", "đảo đề thi"...)
 Agent xuất ngay phản hồi:
-> "Dạ chào Thầy/Cô! Để trộn bộ 4 mã đề hoán vị chuẩn Bộ GD&ĐT kèm phiếu tô trắc nghiệm A4 và file Excel đáp án, Thầy/Cô cung cấp file đề nguồn theo 1 trong 2 cách:
-> * **Cách 1**: Copy file đề vào thư mục: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>`
-> * **Cách 2**: Lấy đường dẫn file đề: Giữ `Shift` + chuột phải vào file -> Chọn `"Copy as path"`.
-> * Sau đó gửi câu lệnh mẫu:
+> "Dạ chào Thầy/Cô! Để em hỗ trợ xáo trộn đề thi thành bộ 4 mã đề hoán vị chuẩn Bộ GD&ĐT kèm phiếu tô trắc nghiệm chuẩn A4 và file Excel tổng hợp đáp án, Thầy/Cô cung cấp file đề nguồn theo 1 trong 2 cách sau nhé:
+> 
+> 📂 **Cách 1: Copy file đề nguồn vào thư mục làm việc của phần mềm (Tiện lợi nhất)**
+> * Thầy/Cô copy file đề nguồn (`.docx` hoặc `.pdf`) vào thư mục:  
+>   👉 `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` *(hoặc kéo thả file trực tiếp vào khung chat)*.
+> * Sau đó, Thầy/Cô gửi câu lệnh mẫu:
 >   ```text
->   Em hãy xáo trộn file đề "[Tên file trong thư mục HOẶC đường dẫn file bên ngoài]" thành bộ 4 mã đề hoán vị (101, 102, 103, 104) giúp tôi.
+>   Em hãy xáo trộn file đề "[ten_de_nguon.docx]" trong thư mục làm việc thành bộ 4 mã đề hoán vị (101, 102, 103, 104) giúp tôi.
 >   Yêu cầu bắt buộc:
->   1. Nội dung các câu hỏi và kiến thức không được sai lệch, bảo toàn đáp án đúng của từng câu.
->   2. Giữ nguyên 100% công thức MathType OLE và hình vẽ sắc nét trong từng mã đề hoán vị.
+>   1. Nội dung các câu hỏi và kiến thức không được sai lệch, bảo toàn 100% đáp án đúng của từng câu hỏi.
+>   2. Giữ nguyên 100% công thức MathType OLE 14pt và hình vẽ sắc nét trong từng mã đề hoán vị.
 >   3. Tự động xuất kèm file PDF Phiếu trả lời trắc nghiệm chuẩn A4 để quét chấm thi và file Excel tổng hợp ma trận đáp án của cả 4 mã đề.
+>   ```
+> 
+> 📂 **Cách 2: File đề nguồn đang ở nơi khác (Desktop, Downloads, Zalo, ổ D, ổ E...)**
+> * Thầy/Cô lấy đường dẫn file bằng cách:  
+>   👉 **Nhấn giữ phím Shift + Nhấp chuột phải vào file đề -> Chọn "Copy as path"** *(hoặc trên Windows 11 bấm `Ctrl + Shift + C`)*.
+> * Sau đó, dán đường dẫn vào câu lệnh mẫu bên dưới và gửi cho em:
+>   ```text
+>   Em hãy xáo trộn file đề tại đường dẫn: "[Dán đường dẫn vừa copy vào đây]" thành bộ 4 mã đề hoán vị (101, 102, 103, 104) giúp tôi.
+>   Yêu cầu bắt buộc:
+>   1. Bảo toàn 100% nội dung câu hỏi và tính chính xác của đáp án đúng.
+>   2. 100% công thức giữ nguyên MathType OLE 14pt, hình ảnh không bị vỡ hạt hay mất nét.
+>   3. Xuất đủ bộ 4 mã đề Word, file PDF Phiếu tô trắc nghiệm A4 và file Excel ma trận đáp án.
 >   ```"
 
 ---
 
-#### 5️⃣ KHI GIÁO VIÊN NÓI: "dịch đề sang tiếng anh" (hoặc "tạo đề song ngữ", "chuyển đề sang tiếng anh"...)
+#### 5️⃣ KHI GIÁO VIÊN NÓI: "dịch đề sang tiếng anh" (hoặc "tạo đề song ngữ", "chuyển đề sang tiếng anh", "đề tiếng anh"...)
 Agent xuất ngay phản hồi:
-> "Dạ chào Thầy/Cô! Để biên dịch đề thi sang Tiếng Anh học thuật chuẩn quốc tế hoặc đề Song ngữ Anh - Việt, Thầy/Cô cung cấp file đề nguồn theo 1 trong 2 cách:
-> * **Cách 1**: Copy file đề vào thư mục: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>`
-> * **Cách 2**: Lấy đường dẫn file đề: Giữ `Shift` + chuột phải vào file -> Chọn `"Copy as path"`.
-> * Sau đó gửi câu lệnh mẫu:
+> "Dạ chào Thầy/Cô! Để biên dịch đề thi sang Tiếng Anh học thuật chuẩn quốc tế (Cambridge / IB / AP) hoặc đề Song ngữ Anh - Việt đối chiếu, Thầy/Cô cung cấp file đề nguồn theo 1 trong 2 cách sau nhé:
+> 
+> 📂 **Cách 1: Copy file đề nguồn vào thư mục làm việc của phần mềm (Tiện lợi nhất)**
+> * Thầy/Cô copy file đề nguồn (`.docx` hoặc `.pdf`) vào thư mục:  
+>   👉 `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` *(hoặc kéo thả file trực tiếp vào khung chat)*.
+> * Sau đó, Thầy/Cô gửi câu lệnh mẫu:
 >   ```text
->   Em hãy biên dịch file đề thi "[Tên file trong thư mục HOẶC đường dẫn file bên ngoài]" sang Tiếng Anh học thuật chuẩn quốc tế giúp tôi.
+>   Em hãy biên dịch file đề thi "[ten_de_nguon.docx]" trong thư mục làm việc sang Tiếng Anh học thuật chuẩn quốc tế giúp tôi.
 >   Yêu cầu bắt buộc:
->   1. Dịch chuẩn xác 100% thuật ngữ chuyên ngành Toán, Vật lý, Hóa học; không làm sai lệch nội dung kiến thức hay ý nghĩa khoa học của bài toán.
+>   1. Dịch chuẩn xác 100% thuật ngữ chuyên ngành Toán, Vật lý, Hóa học; tuyệt đối không làm sai lệch ý nghĩa khoa học hay kiến thức bài toán.
 >   2. Toàn bộ công thức giữ nguyên chuẩn 100% MathType OLE 14pt, hình vẽ và bảng biểu không lỗi.
 >   3. Xuất đồng thời 2 bản Word: 1 bản Đề Tiếng Anh hoàn toàn và 1 bản Đề Song Ngữ Anh - Việt đối chiếu.
+>   ```
+> 
+> 📂 **Cách 2: File đề nguồn đang ở nơi khác (Desktop, Downloads, Zalo, ổ D, ổ E...)**
+> * Thầy/Cô lấy đường dẫn file bằng cách:  
+>   👉 **Nhấn giữ phím Shift + Nhấp chuột phải vào file đề -> Chọn "Copy as path"** *(hoặc trên Windows 11 bấm `Ctrl + Shift + C`)*.
+> * Sau đó, dán đường dẫn vào câu lệnh mẫu bên dưới và gửi cho em:
+>   ```text
+>   Em hãy biên dịch đề thi tại đường dẫn: "[Dán đường dẫn vừa copy vào đây]" sang Tiếng Anh học thuật chuẩn quốc tế giúp tôi.
+>   Yêu cầu bắt buộc:
+>   1. Chuẩn ngữ pháp học thuật quốc tế và đúng 100% thuật ngữ khoa học chuyên ngành.
+>   2. Toàn bộ công thức giữ nguyên chuẩn 100% MathType OLE 14pt, hình vẽ và bảng biểu nguyên bản.
+>   3. Xuất đồng thời 2 file Word: Bản Đề Tiếng Anh và Bản Đề Song Ngữ Anh - Việt.
 >   ```"
+
+---
+
+#### 6️⃣ KHI GIÁO VIÊN NÓI: "tạo ma trận đặc tả" (hoặc "tạo ma trận đề kiểm tra", "làm ma trận", "cấu trúc ma trận", "tạo đề từ ma trận"...)
+Agent xuất ngay phản hồi:
+> "Dạ chào Thầy/Cô! Để thiết lập ma trận đề kiểm tra và bản đặc tả chuẩn theo chương trình GDPT 2018, Thầy/Cô có 2 lựa chọn cực kỳ thuận tiện sau nhé:
+> 
+> 📂 **LỰA CHỌN 1: Sử dụng Kho Ma trận chuẩn GDPT 2018 có sẵn trong hệ thống**
+> * Em đã tích hợp sẵn kho ma trận chuẩn của Bộ GD&ĐT cho các môn **Toán, Vật lý, Hóa học (lớp 10, 11, 12; thời gian 45, 50, 90 phút)**. Thầy/Cô có thể xem trực quan ảnh thẻ ma trận tại thư mục `references/matrix_previews/`.
+> * *Nếu Thầy/Cô muốn TẠO ĐỀ THI MỚI hoàn toàn từ ma trận chuẩn, hãy gửi câu lệnh:*
+>   ```text
+>   Em hãy tạo giúp tôi 1 đề thi môn [Toán / Vật lý / Hóa học] lớp [10 / 11 / 12] thời gian [45 / 50 / 90] phút dựa trên Ma trận đặc tả chuẩn GDPT 2018 có sẵn.
+>   Yêu cầu bắt buộc:
+>   1. Nội dung bám sát 100% ma trận chuẩn GDPT 2018, số liệu mới nghiệm đẹp, định luật khoa học chuẩn xác.
+>   2. Lập trình vẽ mới 100% hình vẽ kỹ thuật sắc nét 300 DPI đúng vị trí câu hỏi.
+>   3. Xuất đồng thời 2 file Word: Đề Học Sinh và Lời Giải Chi Tiết, 100% công thức MathType OLE 14pt, bảng biểu Table Grid chuẩn mực.
+>   ```
+> * *Nếu Thầy/Cô chỉ muốn XUẤT BẢNG MA TRẬN & BẢN ĐẶC TẢ ra file Word để nộp tổ chuyên môn:*
+>   ```text
+>   Em hãy xuất bảng Ma trận và Bản đặc tả đề kiểm tra môn [Toán / Vật lý / Hóa học] lớp [10 / 11 / 12] thời gian [45 / 50 / 90] phút ra file Word giúp tôi.
+>   Yêu cầu bắt buộc: Dựng chuẩn khung Table Grid có viền đầy đủ, căn lề và tỷ lệ phân bố câu hỏi/mức độ chuẩn Bộ GD&ĐT.
+>   ```
+> 
+> 📂 **LỰA CHỌN 2: Thiết lập ma trận đặc tả theo CẤU TRÚC RIÊNG của Thầy/Cô hoặc Nhà trường**
+> * *Cách 2A (Mô tả cấu trúc trực tiếp trong khung chat):* Thầy/Cô copy mẫu sau, điền thông tin và gửi cho em:
+>   ```text
+>   Em hãy thiết lập Ma trận và Bản đặc tả đề kiểm tra theo yêu cầu sau và xuất ra file Word:
+>   - Môn: [Toán / Vật lý / Hóa học], Lớp: [10 / 11 / 12], Thời gian: [45 / 90 phút]
+>   - Cấu trúc các phần: Phần 1 (trắc nghiệm nhiều lựa chọn: ... câu), Phần 2 (trắc nghiệm đúng sai: ... câu), Phần 3 (trả lời ngắn: ... câu)
+>   - Tỷ lệ mức độ nhận thức: [Nhận biết ...% - Thông hiểu ...% - Vận dụng ...% - Vận dụng cao ...%]
+>   - Các chủ đề/bài học trọng tâm: [Chương 1: ..., Chương 2: ...]
+>   Yêu cầu: Dựng bảng Table Grid chuẩn viền, phân bổ số câu, số điểm và năng lực cần đánh giá rõ ràng.
+>   ```
+> * *Cách 2B (Thầy/Cô đã có sẵn file Word hoặc Excel ma trận của trường/Sở):*  
+>   Thầy/Cô copy file vào thư mục: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` (hoặc giữ `Shift` + chuột phải chọn `"Copy as path"`), sau đó gửi câu lệnh:
+>   ```text
+>   Dựa vào file ma trận đặc tả: "[Tên file trong thư mục HOẶC đường dẫn file bên ngoài]", em hãy tạo giúp tôi 1 đề thi bám sát 100% cấu trúc này.
+>   Yêu cầu bắt buộc: Số liệu mới nghiệm đẹp, vẽ hình 300 DPI và xuất file Word MathType OLE 14pt kèm lời giải chi tiết.
+>   ```"
+
+---
+
+#### 7️⃣ KHI GIÁO VIÊN NÓI: "trích xuất ma trận từ đề gốc" (hoặc "phân tích ma trận đề thi", "lập bảng đặc tả từ đề"...)
+Agent xuất ngay phản hồi:
+> "Dạ chào Thầy/Cô! Để phân tích đề thi có sẵn và trích xuất thành bảng Ma trận & Bản đặc tả chuẩn GDPT 2018 ra file Word, Thầy/Cô cung cấp file đề theo 1 trong 2 cách:
+> 
+> 📂 **Cách 1: Copy file đề vào thư mục làm việc của phần mềm (Tiện lợi nhất)**
+> * Thầy/Cô copy file đề (`.docx` hoặc `.pdf`) vào thư mục:  
+>   👉 `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` *(hoặc kéo thả file trực tiếp vào khung chat)*.
+> * Sau đó gửi câu lệnh mẫu:
+>   ```text
+>   Em hãy phân tích đề thi trong file "[ten_file_de.docx]" trong thư mục làm việc và trích xuất bảng Ma trận & Bản đặc tả chi tiết ra file Word giúp tôi.
+>   Yêu cầu bắt buộc:
+>   1. Nhận diện chính xác từng câu hỏi thuộc chủ đề nào, dạng toán gì và mức độ nhận thức (Nhận biết / Thông hiểu / Vận dụng / Vận dụng cao).
+>   2. Thống kê tỷ lệ phần trăm điểm số theo từng mức độ nhận thức và từng mạch kiến thức.
+>   3. Xuất ra file Word với bảng Table Grid chuẩn viền, chuẩn quy định mẫu của Bộ GD&ĐT.
+>   ```
+> 
+> 📂 **Cách 2: File đề đang ở nơi khác (Desktop, Downloads, Zalo, ổ D, ổ E...)**
+> * Thầy/Cô lấy đường dẫn file bằng cách:  
+>   👉 **Nhấn giữ phím Shift + Nhấp chuột phải vào file đề -> Chọn "Copy as path"** *(hoặc trên Windows 11 bấm `Ctrl + Shift + C`)*.
+> * Sau đó, dán đường dẫn vào câu lệnh mẫu bên dưới và gửi cho em:
+>   ```text
+>   Em hãy đọc đề thi tại đường dẫn: "[Dán đường dẫn vừa copy vào đây]" và trích xuất bảng Ma trận & Bản đặc tả chi tiết ra file Word giúp tôi.
+>   Yêu cầu bắt buộc: Phân loại chuẩn xác mức độ nhận thức từng câu, thống kê tỷ lệ điểm và xuất file Word Table Grid chuẩn Bộ GD&ĐT.
+>   ```"
+
+---
+
+#### 8️⃣ KHI GIÁO VIÊN NÓI: "nhận diện ảnh đề thi" (hoặc "chụp ảnh đề thi tạo đề tương tự", "ocr đề thi"...)
+Agent xuất ngay phản hồi:
+> "Dạ chào Thầy/Cô! Để nhận diện đề thi từ ảnh chụp điện thoại (hoặc file scan) và xử lý sang Word MathType OLE chuẩn hoặc tạo đề tương tự, Thầy/Cô làm như sau:
+> 
+> 📂 **Cách 1: Kéo thả trực tiếp ảnh chụp vào khung chat (Nhanh nhất)**
+> * Thầy/Cô chỉ cần kéo thả file ảnh đề thi trực tiếp vào khung chat này.
+> * Sau đó, copy câu lệnh mẫu bên dưới gửi cho em:
+>   ```text
+>   Em hãy nhận diện toàn bộ công thức và nội dung từ bức ảnh đề thi này:
+>   - Nếu chuyển sang Word: Giữ chuẩn 100% nội dung và chuyển toàn bộ công thức sang MathType OLE 14pt nhấp đúp sửa được.
+>   - Nếu tạo đề tương tự: Phân tích các câu hỏi trong ảnh và tạo giúp tôi 1 đề thi tương tự cùng dạng toán (số liệu mới nghiệm đẹp, vẽ hình 300 DPI, xuất file Word MathType OLE kèm lời giải).
+>   ```
+> 
+> 📂 **Cách 2: File ảnh đang lưu trên máy tính (Desktop, Downloads, Zalo...)**
+> * Thầy/Cô copy ảnh vào thư mục: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` (hoặc giữ `Shift` + chuột phải vào ảnh -> Chọn `"Copy as path"`).
+> * Sau đó gửi câu lệnh:
+>   ```text
+>   Em hãy nhận diện ảnh đề thi tại: "[Tên file ảnh trong thư mục HOẶC đường dẫn ảnh]" và chuyển đổi sang file Word với 100% công thức MathType OLE 14pt chuẩn xác giúp tôi.
+>   ```"
+
+---
 
 ---
 
