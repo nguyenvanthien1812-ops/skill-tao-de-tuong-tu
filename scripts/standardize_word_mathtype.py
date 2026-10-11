@@ -50,11 +50,21 @@ def _clean_latex_syntax(latex_str: str) -> str:
     latex_str = latex_str.replace(r"\implies", r"\Rightarrow")
     latex_str = latex_str.replace(r"\iff", r"\Leftrightarrow")
     latex_str = latex_str.replace(r"\to", r"\rightarrow")
+    latex_str = re.sub(r'\\lvert\b', r'\\left|', latex_str)
+    latex_str = re.sub(r'\\rvert\b', r'\\right|', latex_str)
     
-    # 2. Xóa các ký tự xuống dòng thô trong công thức
+    # 2. Tự động chuyển giá trị tuyệt đối |...| sang \left| ... \right| chuẩn Template Fence MathType
+    def _repl_abs(m):
+        inner = m.group(1)
+        if not inner.strip():
+            return '||'
+        return r'\left|' + inner + r'\right|'
+    latex_str = re.sub(r'(?<!\\)(?<!\\left)\|(?!\|)([^\|\r\n]+?)(?<!\\)\|(?!\|)', _repl_abs, latex_str)
+
+    # 3. Xóa các ký tự xuống dòng thô trong công thức
     latex_str = re.sub(r'[\r\n]+', ' ', latex_str)
     
-    # 3. Chuẩn hóa khoảng trắng
+    # 4. Chuẩn hóa khoảng trắng
     latex_str = re.sub(r'\s+', ' ', latex_str).strip()
     return latex_str
 

@@ -146,13 +146,24 @@ _omml_failed_formulas = []
 def sanitize_latex_for_mathtype(latex_str):
     """
     Chuẩn hóa cú pháp LaTeX tương thích 100% với bộ biên dịch TeX của MathType:
-    - Thay \\implies -> \\Rightarrow (MathType không hỗ trợ \\implies và nuốt mất!)
-    - Thay \\iff -> \\Leftrightarrow (MathType nuốt mất \\iff!)
+    - Thay \implies -> \Rightarrow (MathType không hỗ trợ \implies và nuốt mất!)
+    - Thay \iff -> \Leftrightarrow (MathType nuốt mất \iff!)
+    - Tự động chuẩn hóa dấu giá trị tuyệt đối sang \left| ... \right| (chuẩn Fence Template tmFENCE của MathType,
+      chống triệt để lỗi MathType nuốt mất dấu gạch đứng khi nhấp đúp mở ra chỉnh sửa).
     """
     import re
     s = latex_str
     s = re.sub(r'\\implies\b', r'\\Rightarrow', s)
     s = re.sub(r'\\iff\b', r'\\Leftrightarrow', s)
+    s = re.sub(r'\\lvert\b', r'\\left|', s)
+    s = re.sub(r'\\rvert\b', r'\\right|', s)
+    # Tự động bọc \left| ... \right| cho các cặp |...| đơn
+    def _repl_abs(m):
+        inner = m.group(1)
+        if not inner.strip():
+            return '||'
+        return r'\left|' + inner + r'\right|'
+    s = re.sub(r'(?<!\\)(?<!\\left)\|(?!\|)([^\|\r\n]+?)(?<!\\)\|(?!\|)', _repl_abs, s)
     return s
 
 
