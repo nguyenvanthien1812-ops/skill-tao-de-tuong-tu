@@ -144,7 +144,7 @@ def latex_to_omml(latex_str):
 _omml_failed_formulas = []
 
 def sanitize_latex_for_mathtype(latex_str):
-    """
+    r"""
     Chuẩn hóa cú pháp LaTeX tương thích 100% với bộ biên dịch TeX của MathType:
     - Thay \implies -> \Rightarrow (MathType không hỗ trợ \implies và nuốt mất!)
     - Thay \iff -> \Leftrightarrow (MathType nuốt mất \iff!)
