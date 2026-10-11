@@ -1123,6 +1123,15 @@ Agent PHẢI chọn đúng công cụ theo bảng dưới để đảm bảo đ�
 3. ❌ **TUYỆT ĐỐI KHÔNG GỘP NHIỀU DÒNG VÀO 1 PARAGRAPH BẰNG `\n`** $\rightarrow$ ✅ Mỗi bước biến đổi toán học hoặc mỗi câu phải là một đoạn văn riêng biệt (`doc.add_paragraph()`). Nhét `\n` vào một text run sẽ làm xô lệch các đối tượng OLE và đè chữ lên nhau.
 4. ❌ **TUYỆT ĐỐI KHÔNG ĐỂ CÔNG THỨC Ở TIÊU ĐỀ HOẶC BẢNG BIỂU DƯỚI DẠNG TEXT THÔ** $\rightarrow$ ✅ Mọi ký hiệu toán học ở Tiêu đề câu (ví dụ `$AK = AB\sqrt{2}$`, `$\widehat{HEF} = \widehat{HCB}$`) và trong Bảng Barem điểm BẮT BUỘC PHẢI ĐƯỢC BỌC TRONG CẶP `$ ... $` để biên dịch sang MathType OLE 100%.
 5. ⚠️ **KÝ HIỆU ĐỒNG DẠNG TAM GIÁC**: MathType TeX bỏ qua `\sim`. Trong lời giải hình học, viết rõ: "$\Delta ABC$ đồng dạng với $\Delta DEF$ (g - g)" kèm tỷ số đồng dạng $\Rightarrow \frac{AB}{DE} = \frac{AC}{DF}$.
+6. ✅ **KÝ HIỆU SONG SONG VÀ VUÔNG GÓC CHUẨN SGK VIỆT NAM**:
+   - Theo chuẩn SGK GDPT 2018 (cả cấp 2 và cấp 3), ký hiệu song song chính thức là **hai gạch xiên song song** (`//` hoặc `⫽`), còn LaTeX quốc tế thường dùng `\parallel` (hai gạch đứng $\parallel$).
+   - Hệ thống tự động chuẩn hóa cả hai dạng:
+     + Khi giáo viên/AI viết `$AB // CD$` hay `$(P) // (Q)$`: Tự động chuẩn hóa thành `\text{ // }` có khoảng đệm toán học đối xứng, chống dính sát chữ và chống nhận nhầm thành phép chia trong MathType OLE / Word Equation.
+     + Khi viết `\parallel`: Tự động thêm khoảng đệm đối xứng `\ \parallel \ ` (ví dụ `$BK \ \parallel \ CH$`), chống dính sát vào tên đoạn thẳng và mã hóa chuẩn font `TF_SYMBOL` trong MathType OLE (không bị ô vuông `□` hoặc `?`).
+     + Khi viết `\perp`: Tự động thêm khoảng đệm đối xứng `\ \perp \ ` (ví dụ `$AB \ \perp \ CD$`).
+7. ✅ **DẤU GIÁ TRỊ TUYỆT ĐỐI CHUẨN TEMPLATE FENCE MATHTYPE**:
+   - Tự động chuẩn hóa mọi cặp dấu `|...|` hoặc `\lvert ... \rvert` sang `\left| ... \right|` (chuẩn template `tmFENCE` của MathType).
+   - Ngăn chặn triệt để hiện tượng giáo viên nhấp đúp chuột mở MathType bị nuốt mất 2 vạch gạch đứng giá trị tuyệt đối.
 
 Sử dụng thư viện cốt lõi [docx_math_builder.py](./scripts/docx_math_builder.py):
 

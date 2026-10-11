@@ -150,6 +150,11 @@ def sanitize_latex_for_mathtype(latex_str):
     - Thay \iff -> \Leftrightarrow (MathType nuốt mất \iff!)
     - Tự động chuẩn hóa dấu giá trị tuyệt đối sang \left| ... \right| (chuẩn Fence Template tmFENCE của MathType,
       chống triệt để lỗi MathType nuốt mất dấu gạch đứng khi nhấp đúp mở ra chỉnh sửa).
+    - Chuẩn hóa ký hiệu song song:
+      + Nếu dùng // (chuẩn SGK Việt Nam): Chuẩn hóa thành \text{ // } có khoảng cách mỏng hai bên, chống lỗi dính chữ.
+      + Nếu dùng \parallel: Chuẩn hóa thành \ \parallel \ có khoảng cách toán học chuẩn, chống dính sát vào đoạn thẳng.
+    - Chuẩn hóa ký hiệu vuông góc:
+      + Nếu dùng \perp: Chuẩn hóa thành \ \perp \ có khoảng cách đối xứng.
     """
     import re
     s = latex_str
@@ -157,6 +162,10 @@ def sanitize_latex_for_mathtype(latex_str):
     s = re.sub(r'\\iff\b', r'\\Leftrightarrow', s)
     s = re.sub(r'\\lvert\b', r'\\left|', s)
     s = re.sub(r'\\rvert\b', r'\\right|', s)
+    # Chuẩn hóa ký hiệu song song và vuông góc có khoảng cách chuẩn, chống dính sát vào chữ
+    s = re.sub(r'(?<!\\)\s*\\parallel\s*', r' \\ \\parallel \\ ', s)
+    s = re.sub(r'(?<!\\)\s*\\perp\s*', r' \\ \\perp \\ ', s)
+    s = re.sub(r'(?<!https:)(?<!http:)(?<!/)\s*//\s*(?!/)', r' \\text{ // } ', s)
     # Tự động bọc \left| ... \right| cho các cặp |...| đơn
     def _repl_abs(m):
         inner = m.group(1)
