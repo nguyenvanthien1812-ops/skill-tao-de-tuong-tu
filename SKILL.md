@@ -11,7 +11,7 @@ description: >-
   Hỗ trợ xuất đồng thời bản Đề Học Sinh và bản Lời Giải Chi Tiết riêng biệt.
   Tự động tạo bộ 4 mã đề hoán vị kèm phiếu trả lời bong bóng (bubble sheet) chuẩn A4 chụp ảnh chấm thi và file Excel tổng hợp đáp án.
   Đặc biệt: Tích hợp công nghệ chuyển đổi tệp đề thi PDF (kể cả PDF scan hoặc ảnh) sang Word không lỗi công thức khoa học (Toán, Lý, Hóa), không lỗi hình vẽ và bảng biểu, xuất trực tiếp MathType OLE 14pt.
-  Tích hợp thêm: Đọc file DOCX cũ có MathType OLE (chuyển về LaTeX tự động) và OCR ảnh chụp đề thi bằng điện thoại (Mistral AI Vision) để nhận diện công thức → tạo đề tương tự.
+  Tích hợp thêm: Đọc file DOCX cũ có MathType OLE (chuyển về LaTeX tự động), OCR ảnh chụp đề thi bằng điện thoại (Mistral AI Vision) để nhận diện công thức → tạo đề tương tự; và Tạo kịch bản & Prompt Veo 3 cho video khởi động bài học (60–80s) đồng nhất nhân vật giáo viên, không chữ trong video, an toàn chính sách 100%.
   Kích hoạt khi người dùng yêu cầu: "tạo đề tương tự", "tạo đề tương tự từ đề gốc", "nhân bản đề thi Toán", "tạo đề vật lý tương tự",
   "tạo đề thi môn lý", "nhân bản đề thi vật lý", "tạo đề hóa học tương tự", "tạo đề thi môn hóa", "nhân bản đề hóa học", "tạo đề KHTN",
   "tạo mã đề song song có hình vẽ và công thức chuẩn", "xuất đề thi mathtype ole", "cài đặt môi trường", "cài đặt thư viện", "setup máy tạo đề",
@@ -32,7 +32,10 @@ description: >-
   "chuyển equation sang mathtype", "chuẩn hoá file word mathtype", "sửa lỗi công thức file word", "giữ nguyên bố cục word mathtype",
   "chuẩn hóa công thức giữ nguyên bố cục", "tôi muốn chuyển pdf sang word", "hướng dẫn chuyển pdf sang word",
   "hướng dẫn tôi tạo đề", "hướng dẫn tạo đề tương tự", "làm sao để chuyển pdf sang word", "cách chuyển pdf sang word",
-  "tôi muốn tạo đề tương tự", "làm sao để tạo đề tương tự", "hướng dẫn sử dụng skill", "cách dùng skill".
+  "tôi muốn tạo đề tương tự", "làm sao để tạo đề tương tự", "hướng dẫn sử dụng skill", "cách dùng skill",
+  "tôi muốn làm video", "tôi muốn viết kịch bản video", "tạo video khởi động", "làm video khởi động",
+  "viết prompt veo 3", "tạo kịch bản video", "làm video mở đầu bài", "tạo prompt video",
+  "viết kịch bản cho video", "làm video cho bài học", "tôi cần video khởi động", "lên kịch bản video".
 ---
 
 
@@ -1679,3 +1682,125 @@ Agent kích hoạt hệ thống biên dịch chuyên sâu [exam_translator.py](.
 - **Fix**: Thêm **Bước 2.0 – difficulty_level** vào SKILL.md với bảng điều chỉnh 9 dạng bài × 3 mức (easier / equivalent / harder).
 - **Quy tắc vàng bất biến**: Dạng bài / kiểu bài PHẢI GIỐNG ĐỀ GỐC 100%. Chỉ điều chỉnh số liệu và độ phức tạp tính toán.
 - **Kết quả**: Agent tự động đọc yêu cầu người dùng → map sang `difficulty_level` → áp dụng bảng điều chỉnh số liệu phù hợp.
+
+---
+
+# 🎬 PHẦN ĐẶC BIỆT: TÍCH HỢP TẠO VIDEO KHỞI ĐỘNG BÀI HỌC VỚI VEO 3 (60–80 GIÂY)
+
+Module này tích hợp trực tiếp khả năng xây dựng kịch bản và xuất trọn bộ Prompt Veo 3 cho video khởi động bài học (warm-up video) dài **60–80 giây** (chia làm 6–8 clip, mỗi clip 10 giây), đảm bảo đồng nhất nhân vật giáo viên, kích thích sự tò mò tối đa cho học sinh trước khi vào tiết học.
+
+---
+
+## ⚡ 1. PHẢN HỒI KHI GIÁO VIÊN NÓI: "TÔI MUỐN VIẾT KỊCH BẢN VIDEO..."
+
+Khi giáo viên gửi câu lệnh mở đầu như *"tôi muốn làm video"*, *"tôi muốn viết kịch bản video..."*, *"làm video khởi động..."* (mà chưa gửi thông tin bài học cụ thể), trợ lý **BẮT BUỘC** phản hồi ngay bằng mẫu hướng dẫn thân thiện và cung cấp form điền nhanh:
+
+```markdown
+Chào Thầy/Cô! Rất vui được đồng hành cùng Thầy/Cô lên kịch bản và prompt Veo 3 cho video khởi động bài học.
+
+Để video đạt hiệu quả sư phạm cao nhất, hình ảnh đồng nhất và đúng chuẩn, Thầy/Cô hãy gửi ảnh chụp SGK / file PDF hoặc sao chép mẫu dưới đây, điền thông tin và gửi lại cho tôi nhé:
+
+---
+📝 **MẪU ĐIỀN THÔNG TIN BÀI HỌC:**
+- Môn học: [Toán / Lý / Hóa / Sinh / Công nghệ / KHTN / ...]
+- Lớp: [6 / 7 / 8 / 9 / 10 / 11 / 12]
+- Tên bài: [...]
+- Nội dung trọng tâm: [Khái niệm cốt lõi cần học sinh tò mò]
+- Tình huống mở đầu trong SGK: [Mô tả ngắn hoặc gửi ảnh chụp SGK]
+- Nhân vật trong video: [Thầy giáo (~28 hoặc ~35 tuổi) / Cô giáo (~25 tuổi)]
+- Thời lượng mong muốn: [60s (6 clip) / 70s (7 clip) / 80s (8 clip)]
+---
+
+👉 Ngay khi nhận được thông tin, tôi sẽ gợi ý 3–5 Ý TƯỞNG KỊCH BẢN độc đáo để Thầy/Cô lựa chọn trước khi viết trọn bộ Prompt Veo 3!
+```
+
+---
+
+## 🗺️ 2. QUY TRÌNH SƯ PHẠM CHUẨN 3 BƯỚC
+
+```
+[BƯỚC 1] Tiếp nhận bài học (từ SGK, PDF hoặc form điền)
+              ↓
+[BƯỚC 2] Gợi ý 3–5 Ý TƯỞNG kịch bản + Bảng so sánh + Câu lệnh bước tiếp theo
+              ↓
+[BƯỚC 3] Giáo viên chọn ý tưởng → Xuất CHARACTER SEED + PROMPT VEO 3 TỪNG CLIP (10s/clip)
+```
+
+---
+
+## 💡 3. TẬP HỢP CÁC MẸO VÀNG KHI VIẾT PROMPT VEO 3
+
+1. **LOẠI BỎ TOÀN BỘ CHỮ TRONG VIDEO (No Text / Pure Visuals)**:
+   - Các mô hình AI video như Veo 3 khi render chữ thường bị méo, sai chính tả tiếng Việt hoặc biến dạng thành chữ vô nghĩa.
+   - Thay thế chữ bằng **hiệu ứng thị giác hình học thuần túy**: đốm sáng, dải laser, mô hình 3D, thanh ray, gạch màu phát sáng.
+   - Luôn thêm vào prompt: `No text, no letters, no words, clean minimalist visuals`.
+   - Luôn đính kèm Negative Prompt: `text, words, letters, typography, alphabet, subtitles, watermark, labels, blackboard writing`.
+   - **Khâu hậu kỳ**: Dùng **CapCut** để chèn chữ tiêu đề bài học, tên định lý, nhãn điểm đè lên. Video sẽ sắc nét 100% chuẩn truyền hình!
+
+2. **ĐỒNG NHẤT NHÂN VẬT (Character Consistency)**:
+   - Dán đoạn **CHARACTER SEED** mô tả ngoại hình cố định vào ĐẦU MỖI PROMPT CLIP (Clip 1 đến Clip cuối).
+   - Sau khi tạo xong Clip 1 trên Veo 3, chụp ảnh màn hình khuôn mặt và trang phục nhân vật $\to$ Tải lên làm **Reference Image** khi tạo các clip tiếp theo.
+
+3. **VƯỢT BỘ LỌC AN TOÀN CHÍNH SÁCH (Policy Safety Bypass)**:
+   - Tránh tuyệt đối các từ chỉ hành động cắt, gọt, dao, kéo, xé, bẻ gập: `cut, knife, scissors, tear, fold violently, sharp`.
+   - Thay bằng từ ngữ nhẹ nhàng, sư phạm: `places, arranges, slides, positions, points gently, demonstrates, holds`.
+   - Tránh các cử động ngón tay quá phức tạp để chống biến dạng ngón tay (`distorted fingers`).
+
+4. **BẢO TOÀN TÍNH SƯ PHẠM (Không Spoil đáp án trước)**:
+   - Video khởi động là chiếc móc câu (Hook) tạo sự tò mò.
+   - Tuyệt đối **không tiết lộ công thức, định lý hay đáp số** (không nói trước `tổng bằng 180°`, `chỉ có duy nhất 1 đường thẳng`...).
+   - Chỉ dừng lại ở việc phát hiện ra **hiện tượng kỳ lạ** và đặt ra **câu hỏi lớn mở ra bài học**.
+
+5. **CAMERA & ÁNH SÁNG ĐIỆN ẢNH**:
+   - Dùng thuật ngữ quay phim: `medium shot, close-up tracking shot, smooth slow push-in, cinematic lighting, soft rim light, shallow depth of field`.
+   - Tỉ lệ khung hình: `16:9` (chuẩn bài giảng / máy chiếu).
+   - Thời lượng mỗi clip: `10 seconds`.
+
+---
+
+## 🎭 4. BỘ CHARACTER SEEDS MẪU CHUẨN
+
+### Nhân vật THẦY GIÁO (~35 tuổi - Chững chạc, truyền cảm hứng):
+```
+A charismatic Vietnamese male teacher in his mid-30s, 
+neat styled short black hair, clean-shaven refined face, 
+wearing modern titanium wire-frame eyeglasses, 
+dressed in a sharp slate-blue button-up shirt with sleeves neatly rolled to elbows, 
+charcoal tailored trousers, leather watch strap, 
+warm confident smile, inspiring, intellectually sharp and approachable educator demeanor. 
+Photorealistic, 4K, cinematic lighting, sharp focus.
+```
+
+### Nhân vật THẦY GIÁO TRẺ (~28 tuổi - Năng động, hiện đại):
+```
+A young Vietnamese male teacher in his late 20s, 
+neat short modern black hair, clean-shaven, 
+wearing a light pastel blue button-up dress shirt tucked into 
+charcoal grey tailored trousers, stylish silver-rimmed glasses, 
+warm energetic smile, approachable, smart and passionate educator demeanor. 
+Photorealistic, 4K, cinematic lighting, sharp focus.
+```
+
+### Nhân vật CÔ GIÁO TRẺ (~25 tuổi - Tươi tắn, duyên dáng):
+```
+A young Vietnamese female teacher in her mid-20s, 
+with long straight black hair worn down, 
+wearing a light pastel pink button-up blouse tucked into 
+white wide-leg trousers, small gold stud earrings, 
+natural makeup with soft pink lips, warm bright smile, 
+slim figure, approachable and energetic personality. 
+Photorealistic, 4K, cinematic lighting, sharp focus.
+```
+
+---
+
+## 🎬 5. HƯỚNG DẪN HẬU KỲ TRÊN CAPCUT DÀNH CHO GIÁO VIÊN
+
+1. **Bước 1**: Tải các clip 10s từ Veo 3 về máy tính hoặc điện thoại.
+2. **Bước 2**: Mở CapCut $\to$ Import toàn bộ các clip theo thứ tự Clip 1 $\to$ Clip cuối.
+3. **Bước 3**: Tạo giọng đọc tiếng Việt bằng FPT.AI Speech (`speech.fpt.ai`) hoặc ElevenLabs.
+4. **Bước 4**: Kéo các file âm thanh vào khớp với từng clip.
+5. **Bước 5**: Thêm Text (Tiêu đề bài học, tên định lý, nhãn điểm...) bằng tính năng Văn bản của CapCut.
+6. **Bước 6**: Thêm nhạc nền nhẹ nhàng (nhạc acoustic hoặc instrumental truyền cảm hứng).
+7. **Bước 7**: Xuất video độ phân giải 1080p, tỉ lệ 16:9.
+
