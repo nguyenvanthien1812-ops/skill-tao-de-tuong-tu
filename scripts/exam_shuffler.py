@@ -71,6 +71,14 @@ def generate_exam_variant(base_exam, variant_code, base_seed=42):
     - variant_code: chuỗi mã đề (vd: '202')
     - base_seed: seed gốc, mỗi mã đề dùng seed khác nhau để hoán vị khác nhau
     """
+    try:
+        _d = os.path.dirname(os.path.abspath(__file__))
+        if _d not in sys.path:
+            sys.path.insert(0, _d)
+        from license_manager import require_valid_license
+        require_valid_license("shuffle_exam")
+    except ImportError:
+        pass
     seed = base_seed + sum(ord(c) for c in str(variant_code))
     variant = {'code': variant_code}
 

@@ -110,6 +110,14 @@ class MatrixParser:
 
 class ExamGenerator:
     def __init__(self, subject='math', grade=12, api_key=None):
+        try:
+            _d = os.path.dirname(os.path.abspath(__file__))
+            if _d not in sys.path:
+                sys.path.insert(0, _d)
+            from license_manager import require_valid_license
+            require_valid_license("matrix_exam")
+        except ImportError:
+            pass
         self.subject = subject
         self.grade = grade
         self.api_key = api_key or os.environ.get("GEMINI_API_KEY")

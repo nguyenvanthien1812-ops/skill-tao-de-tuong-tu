@@ -51,6 +51,14 @@ def _set_table_borders(table, color="000000", sz="4", val="single"):
     tblPr.append(borders)
 
 def export_matrix_to_docx(matrix_key, output_path=None):
+    try:
+        _d = os.path.dirname(os.path.abspath(__file__))
+        if _d not in sys.path:
+            sys.path.insert(0, _d)
+        from license_manager import require_valid_license
+        require_valid_license("matrix_exam")
+    except ImportError:
+        pass
     if not DB_PATH.exists():
         raise FileNotFoundError(f"Không tìm thấy: {DB_PATH}")
     

@@ -264,6 +264,14 @@ class RubricEngine:
 
 class AIGrader:
     def __init__(self, api_key=None):
+        try:
+            _d = os.path.dirname(os.path.abspath(__file__))
+            if _d not in sys.path:
+                sys.path.insert(0, _d)
+            from license_manager import require_valid_license
+            require_valid_license("grade_essay")
+        except ImportError:
+            pass
         self.api_key = api_key or os.environ.get('GEMINI_API_KEY')
         self.is_mock = not bool(self.api_key)
         self.api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={self.api_key}"

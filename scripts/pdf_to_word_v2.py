@@ -297,6 +297,15 @@ def convert_pdf_to_word(
     - Text trích xuất giữ nguyên định dạng, phân tầng tiêu đề
     - Công thức toán/hóa được gửi backend chuyển sang MathType OLE
     """
+    try:
+        _d = os.path.dirname(os.path.abspath(__file__))
+        if _d not in sys.path:
+            sys.path.insert(0, _d)
+        from license_manager import require_valid_license
+        require_valid_license("pdf_to_word")
+    except ImportError:
+        pass
+
     pdf_p = pathlib.Path(pdf_path)
     if not pdf_p.exists():
         return {"success": False, "error": f"Không tìm thấy file: {pdf_path}"}

@@ -88,7 +88,31 @@ Khi nhận được **BẤT KỲ YÊU CẦU NÀO** từ người dùng (tạo đ
      > 3. Nhấp đúp vào file **`KICH_HOAT_BAN_QUYEN.bat`** để dán Key kích hoạt và sử dụng vĩnh viễn (hoặc gửi trực tiếp mã License Key vào khung chat này để em kích hoạt giúp thầy/cô)."
    - **DỪNG TIẾN TRÌNH NGAY LẬP TỨC!** Không trả lời thêm bất kỳ nội dung đề thi nào.
 
-> Chỉ khi nào license đã được kích hoạt hợp lệ thì mới được tiếp tục thực hiện các Bước 1, 2, 3 bên dưới!
+3. **Kiểm tra Phân Quyền Theo Từng Tiện Ích Mua Lẻ (`MODULAR FEATURE GATE` - Bắt buộc kiểm tra khi `--check` hợp lệ):**
+   - Khi chạy `python "<ĐƯỜNG_DẪN_SKILL>/scripts/license_manager.py" --check`, đọc dòng `UNLOCKED_FEATURES : ...` trong kết quả:
+     + Nếu `UNLOCKED_FEATURES : ALL` $\rightarrow$ Giáo viên sở hữu gói **FULL VIP (Trọn bộ 8 tiện ích)**, được phép thực hiện mọi yêu cầu.
+     + Nếu `UNLOCKED_FEATURES` chỉ liệt kê một số mã tiện ích cụ thể (mua lẻ từng tiện ích), đối chiếu yêu cầu hiện tại của giáo viên với bảng 8 mã tiện ích sau:
+       * `pdf_to_word`: Chuyển đổi đề thi PDF sang Word MathType OLE
+       * `clone_exam`: Tạo đề thi tương tự (song song) & Vẽ hình tự động
+       * `standardize_mathtype`: Chuẩn hóa công thức file Word sang MathType OLE 14pt
+       * `shuffle_exam`: Trộn bộ 4 mã đề hoán vị & Tạo phiếu tô trắc nghiệm A4
+       * `translate_exam`: Dịch đề thi sang Tiếng Anh học thuật & Song ngữ Anh - Việt
+       * `matrix_exam`: Thiết lập Ma trận đặc tả, Trích xuất ma trận & Tạo đề từ ma trận
+       * `grade_essay`: Chấm bài tự luận học sinh bằng AI Vision & Xuất báo cáo điểm
+       * `ocr_exam`: Nhận diện ảnh chụp đề thi (OCR) & Đọc công thức MathType cũ
+     + **Nếu tiện ích giáo viên yêu cầu KHÔNG nằm trong `UNLOCKED_FEATURES`**:
+       * **TUYỆT ĐỐI NGHIÊM CẤM** thực thi tiện ích chưa mua đó (kể cả khi giáo viên yêu cầu qua hướng dẫn câu lệnh).
+       * **DỪNG NGAY LẬP TỨC** và chỉ trả lời thông báo lịch sự sau:
+         > "🔒 **TIỆN ÍCH NÀY CHƯA NẰM TRONG GÓI BẢN QUYỀN HIỆN TẠI CỦA THẦY/CÔ!**  
+         >   
+         > • **Tiện ích Thầy/Cô đang yêu cầu:** `<Tên tiện ích đang gọi>`  
+         > • **Gói bản quyền hiện tại trên máy đang mở khóa:** `<Tên các tiện ích trong Gói mở khóa>`  
+         >   
+         > 💡 **Cách mở khóa thêm tiện ích (không cần cài đặt lại phần mềm):**  
+         > 1. Thầy/Cô vui lòng liên hệ Tác giả để đăng ký mở khóa thêm tiện ích này (hoặc nâng cấp lên gói **FULL VIP Trọn bộ 8 tiện ích**).  
+         > 2. Sau khi nhận Mã License Key mới từ Tác giả, Thầy/Cô chỉ cần dán trực tiếp mã đó vào khung chat này (hoặc chạy `KICH_HOAT_BAN_QUYEN.bat`) là mở khóa sử dụng được ngay!"
+
+> Chỉ khi nào license hợp lệ VÀ tiện ích nằm trong gói được phép sử dụng thì mới được tiếp tục thực hiện các bước bên dưới!
 
 ---
 

@@ -128,6 +128,15 @@ def standardize_doc_to_mathtype(
     
     Bảo đảm 100% không xô lệch bố cục, bảng biểu, hình ảnh.
     """
+    try:
+        _d = os.path.dirname(os.path.abspath(__file__))
+        if _d not in sys.path:
+            sys.path.insert(0, _d)
+        from license_manager import require_valid_license
+        require_valid_license("standardize_mathtype")
+    except ImportError:
+        pass
+
     in_p = pathlib.Path(input_path).resolve()
     if not in_p.exists():
         return {"success": False, "error": f"Không tìm thấy file: {input_path}"}

@@ -1,11 +1,17 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "5.1.1",
-  "release_date": "2026-10-11",
+  "version": "5.2.0",
+  "release_date": "2026-10-13",
   "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Tạo đề từ ma trận đặc tả (không cần đề gốc). Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge (không cần cài LaTeX), kiểm định tự động GDPT 2018.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "5.2.0": [
+      "NÂNG CẤP HỆ THỐNG BẢN QUYỀN PHÂN QUYỀN THEO TIỆN ÍCH (Modular Feature Licensing): Cho phép Tác giả cấp mã License Key mở khóa trọn bộ 8 tiện ích (FULL VIP) hoặc bán lẻ từng tiện ích riêng biệt (PDF sang Word, Tạo đề tương tự, Chuẩn hóa MathType, Trộn 4 mã đề, Dịch tiếng Anh/Song ngữ, Ma trận đặc tả, Chấm tự luận AI, Nhận diện ảnh đề OCR).",
+      "Bảo mật chữ ký số RSA-PSS cho danh sách tiện ích trong Key; tương thích ngược 100% với toàn bộ các mã License Key đã cấp trước đây.",
+      "Tích hợp cổng kiểm tra phân quyền tiện ích kép (Dual-Gate): Kiểm soát ở cả Bước 0 của AI Agent (SKILL.md) và bên trong từng script Python chuyên biệt.",
+      "Bổ sung công cụ Xuất Bộ Cài Lẻ Từng Tiện Ích (5_XUAT_BO_CAI_LE_TUNG_TIEN_ICH.bat / xuat_bo_cai_le.py) tự động đóng gói 8 file .zip độc lập cho từng tiện ích."
+    ],
     "5.1.1": [
       "Khắc phục triệt để lỗi hiển thị ký hiệu song song (// và \\parallel) và vuông góc (\\perp): Tự động chuẩn hóa đệm khoảng cách toán học đối xứng, chống dính sát chữ cái và đoạn thẳng.",
       "Hỗ trợ 100% chuẩn ký hiệu hai gạch xiên song song (// hoặc ⫽) của SGK GDPT 2018 Toán cấp 2 và 3 trong cả MathType OLE và Word Equation (OMML).",

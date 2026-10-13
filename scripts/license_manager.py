@@ -41,6 +41,100 @@ except ImportError:
 SKILL_DIR    = Path(__file__).resolve().parent.parent  # Thư mục gốc của skill
 SKILL_NAME   = "tao-de-toan-tuong-tu"
 
+# ─── DANH MỤC 8 TIỆN ÍCH CỐT LÕI (MODULAR FEATURE LICENSING) ─────────────────
+FEATURE_CATALOG = {
+    "pdf_to_word": {
+        "index": "1",
+        "name": "Chuyển đổi PDF sang Word MathType OLE",
+        "short": "PDF sang Word MathType",
+        "desc": "Chuyển đề thi PDF (kể cả scan/ảnh) sang Word MathType OLE 14pt, giữ nguyên hình vẽ 300 DPI & bảng biểu"
+    },
+    "clone_exam": {
+        "index": "2",
+        "name": "Tạo đề thi tương tự & Vẽ hình tự động",
+        "short": "Tạo đề tương tự (Song song)",
+        "desc": "Nhân bản đề thi tương tự cùng ma trận đặc tả, số liệu mới nghiệm đẹp, lập trình vẽ hình 300-450 DPI"
+    },
+    "standardize_mathtype": {
+        "index": "3",
+        "name": "Chuẩn hóa công thức Word sang MathType OLE",
+        "short": "Chuẩn hóa công thức Word",
+        "desc": "Chuyển toàn bộ công thức Word Equation/LaTeX trong file DOCX sang MathType OLE 14pt, giữ nguyên 100% bố cục"
+    },
+    "shuffle_exam": {
+        "index": "4",
+        "name": "Trộn bộ 4 mã đề hoán vị & Phiếu tô trắc nghiệm",
+        "short": "Trộn 4 mã đề hoán vị",
+        "desc": "Xáo trộn câu hỏi & đáp án tạo 4 mã đề Word MathType OLE, kèm phiếu tô trắc nghiệm A4 và Excel đáp án"
+    },
+    "translate_exam": {
+        "index": "5",
+        "name": "Biên dịch đề thi Tiếng Anh & Song ngữ Anh - Việt",
+        "short": "Dịch đề Tiếng Anh / Song ngữ",
+        "desc": "Dịch đề thi sang Tiếng Anh học thuật quốc tế (SAT/IB/Cambridge) và xuất bản Song ngữ đối chiếu"
+    },
+    "matrix_exam": {
+        "index": "6",
+        "name": "Ma trận đặc tả & Tạo đề thi từ Ma trận",
+        "short": "Ma trận đặc tả & Tạo đề",
+        "desc": "Thiết lập ma trận đặc tả chuẩn Bộ GD&ĐT, trích xuất ma trận từ đề có sẵn và sinh đề mới từ ma trận"
+    },
+    "grade_essay": {
+        "index": "7",
+        "name": "Chấm bài tự luận bằng AI Vision & Báo cáo điểm",
+        "short": "Chấm tự luận AI Vision",
+        "desc": "Nhận diện bài làm tự luận học sinh qua ảnh chụp, chấm theo Rubric GDPT 2018 và xuất báo cáo Word/Excel"
+    },
+    "ocr_exam": {
+        "index": "8",
+        "name": "Nhận diện ảnh chụp đề thi (OCR) & Đọc MathType cũ",
+        "short": "OCR ảnh đề thi & Đọc MathType",
+        "desc": "Quét ảnh chụp đề thi bằng điện thoại hoặc đọc công thức MathType OLE cũ chuyển về chuẩn LaTeX/Word"
+    }
+}
+
+def get_unlocked_features(payload: dict) -> list[str]:
+    """Lấy danh sách các mã tiện ích được mở khóa trong payload (Tương thích ngược: mặc định ['ALL'])."""
+    if not payload:
+        return []
+    feats = payload.get("features")
+    if not feats:
+        return ["ALL"]
+    if isinstance(feats, str):
+        feats = [f.strip() for f in feats.split(",") if f.strip()]
+    if "ALL" in feats or "*" in feats:
+        return ["ALL"]
+    return list(feats)
+
+def has_feature_permission(payload: dict, required_feature: str | list[str] | None = None) -> bool:
+    """Kiểm tra xem payload bản quyền có quyền sử dụng tiện ích required_feature hay không."""
+    if not payload:
+        return False
+    if not required_feature:
+        return True
+    unlocked = get_unlocked_features(payload)
+    if "ALL" in unlocked:
+        return True
+    if isinstance(required_feature, str):
+        return required_feature in unlocked
+    if isinstance(required_feature, (list, tuple, set)):
+        return any(f in unlocked for f in required_feature)
+    return False
+
+def format_features_summary(payload: dict) -> str:
+    """Trả về chuỗi mô tả gói tiện ích đã mở khóa."""
+    unlocked = get_unlocked_features(payload)
+    if "ALL" in unlocked:
+        return "🌟 TRỌN BỘ TẤT CẢ 8 TIỆN ÍCH (FULL VIP)"
+    names = []
+    for code in unlocked:
+        info = FEATURE_CATALOG.get(code)
+        if info:
+            names.append(f"[{info['index']}] {info['name']}")
+        else:
+            names.append(code)
+    return ", ".join(names) if names else "Chưa có tiện ích nào"
+
 def get_all_license_paths() -> list[Path]:
     """
     Trả về danh sách tất cả các vị trí có thể lưu hoặc kiểm tra license.key:
@@ -298,10 +392,11 @@ def activate(license_key: str) -> bool:
                  - datetime.now(timezone.utc)).days
 
     print(f"\n[✓] KÍCH HOẠT THÀNH CÔNG!")
-    print(f"    Chào mừng: {payload.get('name', '')} ({payload.get('email', '')})")
-    print(f"    Hạn sử dụng: {payload['expiry']} (còn {days_left} ngày)")
+    print(f"    Chào mừng   : {payload.get('name', '')} ({payload.get('email', '')})")
+    print(f"    Hạn sử dụng : {payload['expiry']} (còn {days_left} ngày)")
+    print(f"    Gói mở khóa : {format_features_summary(payload)}")
     print(f"    Đã tự động nạp và đồng bộ vào Google Antigravity!")
-    print(f"    Skill đã sẵn sàng sử dụng 100%!")
+    print(f"    Skill đã sẵn sàng sử dụng!")
     return True
 
 
@@ -350,16 +445,17 @@ def check_current_license() -> tuple[bool, dict, str]:
     return True, found_payload, ""
 
 
-def require_valid_license() -> dict:
+def require_valid_license(required_feature: str | list[str] | None = None) -> dict:
     """
-    Hàm gọi từ các script khác để bắt buộc có license hợp lệ.
-    Nếu không hợp lệ → in thông báo rõ ràng và exit.
+    Hàm gọi từ các script khác để bắt buộc có license hợp lệ (và đúng tiện ích đã mua).
+    - Nếu chưa có license → in thông báo kích hoạt và exit(1).
+    - Nếu có license nhưng chưa mở khóa tiện ích required_feature → in thông báo nâng cấp và exit(2).
     """
     is_valid, payload, error = check_current_license()
     if not is_valid:
-        print("=" * 60)
+        print("=" * 65)
         print("  ⛔  CẦN KÍCH HOẠT LICENSE ĐỂ SỬ DỤNG SKILL NÀY")
-        print("=" * 60)
+        print("=" * 65)
         print(f"\n  {error}")
         print()
         print("  📋 Để được cấp license, liên hệ tác giả:")
@@ -367,8 +463,31 @@ def require_valid_license() -> dict:
         print(f"        python scripts/license_manager.py --machine-id")
         print(f"     2. Gửi Machine ID cho tác giả để nhận license key.")
         print(f"     3. Kích hoạt: python scripts/license_manager.py --activate <KEY>")
-        print("=" * 60)
+        print("=" * 65)
         sys.exit(1)
+
+    if required_feature and not has_feature_permission(payload, required_feature):
+        if isinstance(required_feature, str):
+            req_codes = [required_feature]
+        else:
+            req_codes = list(required_feature)
+        req_names = [
+            f"[{FEATURE_CATALOG[c]['index']}] {FEATURE_CATALOG[c]['name']}"
+            if c in FEATURE_CATALOG else c
+            for c in req_codes
+        ]
+        print("=" * 68)
+        print("  🔒  TIỆN ÍCH NÀY CHƯA NẰM TRONG GÓI BẢN QUYỀN CỦA THẦY/CÔ")
+        print("=" * 68)
+        print(f"  • Tiện ích yêu cầu : {' / '.join(req_names)}")
+        print(f"  • Gói hiện tại mở  : {format_features_summary(payload)}")
+        print("-" * 68)
+        print("  💡 Để mở khóa thêm tiện ích này (hoặc nâng cấp gói Trọn bộ 8 tiện ích):")
+        print("     1. Liên hệ Tác giả để nhận Mã License Key nâng cấp.")
+        print("     2. Dán mã mới vào KICH_HOAT_BAN_QUYEN.bat (không cần cài lại phần mềm!).")
+        print("=" * 68)
+        sys.exit(2)
+
     return payload
 
 
@@ -397,6 +516,7 @@ def main():
     g.add_argument("--machine-id", action="store_true", help="Lấy Machine ID của máy này")
     g.add_argument("--activate",   nargs="?", const="PROMPT", metavar="LICENSE_KEY", help="Kích hoạt license key")
     g.add_argument("--check",      action="store_true",   help="Kiểm tra trạng thái license")
+    p.add_argument("--feature",    metavar="FEATURE_CODE", help="Kiểm tra quyền sử dụng một tiện ích cụ thể (vd: pdf_to_word, clone_exam...)")
     args = p.parse_args()
 
     # Mặc định nếu không truyền tham số: kiểm tra license
@@ -435,24 +555,40 @@ def main():
 
     elif args.check:
         is_valid, payload, error = check_current_license()
-        print("\n" + "=" * 50)
+        print("\n" + "=" * 65)
         if is_valid:
             days_left = (datetime.strptime(payload["expiry"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
                          - datetime.now(timezone.utc)).days
             status = "✅ HỢP LỆ" if days_left > 7 else f"⚠️  CÒN {days_left} NGÀY"
+            unlocked = get_unlocked_features(payload)
             print(f"  Trạng thái  : {status}")
             print(f"  Tên         : {payload.get('name', '')}")
             print(f"  Email/SĐT   : {payload.get('email', '')}")
             print(f"  Hết hạn     : {payload['expiry']} (còn {days_left} ngày)")
             print(f"  Khóa máy    : {'Khóa theo máy này' if payload.get('machine_id') != 'ANY' else 'Không giới hạn máy'}")
-            print("=" * 50)
+            print(f"  Gói mở khóa : {format_features_summary(payload)}")
+            print(f"  UNLOCKED_FEATURES : {','.join(unlocked)}")
+            if "ALL" not in unlocked:
+                locked = [k for k in FEATURE_CATALOG.keys() if k not in unlocked]
+                locked_names = [f"[{FEATURE_CATALOG[k]['index']}] {FEATURE_CATALOG[k]['name']}" for k in locked]
+                print(f"  LOCKED_FEATURES   : {','.join(locked)}")
+                print(f"  Tiện ích đang khóa: {', '.join(locked_names)}")
+            print("=" * 65)
+
+            if args.feature:
+                if has_feature_permission(payload, args.feature):
+                    f_info = FEATURE_CATALOG.get(args.feature, {})
+                    f_name = f_info.get("name", args.feature)
+                    print(f"  [✓] ĐƯỢC PHÉP SỬ DỤNG TIỆN ÍCH: {f_name} ({args.feature})")
+                    sys.exit(0)
+                else:
+                    require_valid_license(args.feature)
             sys.exit(0)
         else:
             print(f"  Trạng thái  : ❌ CHƯA HỢP LỆ")
             print(f"  Chi tiết    : {error}")
-            print("=" * 50)
+            print("=" * 65)
             sys.exit(1)
-        print("=" * 50)
 
 
 if __name__ == "__main__":

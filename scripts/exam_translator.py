@@ -356,6 +356,14 @@ def translate_academic_text(vietnamese_text: str, subject: str = "math") -> str:
     Biên dịch văn bản toán học / khoa học từ tiếng Việt sang tiếng Anh học thuật chuẩn.
     Bảo toàn nguyên vẹn 100% các biểu thức toán trong cặp $...$.
     """
+    try:
+        _d = os.path.dirname(os.path.abspath(__file__))
+        if _d not in sys.path:
+            sys.path.insert(0, _d)
+        from license_manager import require_valid_license
+        require_valid_license("translate_exam")
+    except ImportError:
+        pass
     # 1. Tách các khối toán $...$ ra để không bị dịch nhầm
     parts = re.split(r'(\$[^\$]+\$)', vietnamese_text)
     translated_parts = []
