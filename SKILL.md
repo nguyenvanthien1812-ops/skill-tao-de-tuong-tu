@@ -195,25 +195,50 @@ Agent xuất ngay phản hồi:
 > 📂 **Cách 1: Copy file đề gốc vào thư mục làm việc của phần mềm (Tiện lợi nhất)**
 > * Thầy/Cô copy file đề gốc (`.pdf`, `.docx` hoặc ảnh chụp) vào thư mục:  
 >   👉 `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` *(hoặc kéo thả file trực tiếp vào khung chat)*.
-> * Sau đó, Thầy/Cô copy câu lệnh mẫu bên dưới, sửa lại tên file và gửi cho em:
+> * Sau đó, Thầy/Cô copy câu lệnh mẫu bên dưới, sửa lại **tên file** và **mức độ khó** rồi gửi cho em:
+>
+> ---
+> 🎯 **CHỌN MỨC ĐỘ KHÓ CỦA ĐỀ MỚI** *(chọn 1 trong 3 câu lệnh mẫu bên dưới)*
+>
+> **📗 Mức A — Đề TƯƠNG ĐƯƠNG đề gốc** *(mặc định nếu Thầy/Cô không nói gì)*
 >   ```text
->   Dựa vào file đề gốc: "[ten_de_goc.pdf]" trong thư mục làm việc, em hãy tạo giúp tôi 1 đề thi tương tự (song song, cùng cấu trúc ma trận đặc tả và độ khó chuẩn GDPT 2018).
+>   Dựa vào file đề gốc: "[ten_de_goc.pdf]" trong thư mục làm việc, em hãy tạo giúp tôi 1 đề thi tương tự CÙNG ĐỘ KHÓ với đề gốc (song song, cùng cấu trúc ma trận đặc tả chuẩn GDPT 2018, tỷ lệ NB/TH/VD/VDC giữ nguyên).
 >   Yêu cầu bắt buộc:
 >   1. Nội dung và kiến thức phải chuẩn xác 100%: số liệu mới được thiết kế nghiệm đẹp, tuân thủ đúng định luật khoa học (Toán, Lý, Hóa), 4 phương án trắc nghiệm chỉ có duy nhất 1 đáp án đúng.
 >   2. Lập trình vẽ mới 100% hình vẽ kỹ thuật & thí nghiệm sắc nét 300 DPI chèn đúng vị trí câu hỏi.
 >   3. Xuất đồng thời 2 file Word: Bản Đề Học Sinh và Bản Lời Giải Chi Tiết, 100% công thức ở dạng MathType OLE 14pt nhấp đúp sửa được, bảng biểu dựng Table Grid chuẩn mực.
 >   ```
-> 
+>
+> **📘 Mức B — Đề DỄ HƠN đề gốc** *(dùng cho lớp yếu hơn, ôn tập củng cố, hoặc kiểm tra 15 phút)*
+>   ```text
+>   Dựa vào file đề gốc: "[ten_de_goc.pdf]" trong thư mục làm việc, em hãy tạo giúp tôi 1 đề thi tương tự nhưng DỄ HƠN đề gốc (cùng dạng toán nhưng số liệu đơn giản hơn, tính tay không cần máy tính, tăng tỷ lệ câu Nhận Biết và Thông Hiểu lên ~80%, giảm câu Vận Dụng Cao còn ~5%).
+>   Yêu cầu bắt buộc:
+>   1. Nội dung và kiến thức phải chuẩn xác 100%: số liệu mới nghiệm đẹp, dễ tính, định luật tự nhiên bảo toàn chuẩn xác, phương án trắc nghiệm duy nhất 1 đáp án đúng.
+>   2. Lập trình vẽ mới 100% hình vẽ kỹ thuật & thí nghiệm sắc nét 300 DPI.
+>   3. Xuất đồng thời 2 file Word: Bản Đề Học Sinh và Bản Lời Giải Chi Tiết, 100% công thức ở dạng MathType OLE 14pt nhấp đúp sửa được, bảng biểu dựng Table Grid chuẩn mực.
+>   ```
+>
+> **📕 Mức C — Đề KHÓ HƠN đề gốc** *(dùng cho lớp giỏi, đề thi học kỳ nâng cao, hoặc ôn thi đại học)*
+>   ```text
+>   Dựa vào file đề gốc: "[ten_de_goc.pdf]" trong thư mục làm việc, em hãy tạo giúp tôi 1 đề thi tương tự nhưng KHÓ HƠN đề gốc (cùng dạng toán nhưng số liệu phức tạp hơn, thêm bẫy sai, tăng tỷ lệ câu Vận Dụng và Vận Dụng Cao lên ~40%, có câu tích hợp liên chủ đề).
+>   Yêu cầu bắt buộc:
+>   1. Nội dung và kiến thức phải chuẩn xác 100%: số liệu mới phức tạp hơn đề gốc, có phân số hoặc căn thức gọn, định luật tự nhiên bảo toàn chuẩn xác, phương án trắc nghiệm duy nhất 1 đáp án đúng, các phương án mồi bẫy sai tinh vi.
+>   2. Lập trình vẽ mới 100% hình vẽ kỹ thuật & thí nghiệm sắc nét 300 DPI.
+>   3. Xuất đồng thời 2 file Word: Bản Đề Học Sinh và Bản Lời Giải Chi Tiết, 100% công thức ở dạng MathType OLE 14pt nhấp đúp sửa được, bảng biểu dựng Table Grid chuẩn mực.
+>   ```
+>
+> ---
 > 📂 **Cách 2: File đề gốc đang ở nơi khác (Desktop, Downloads, Zalo, ổ D, ổ E...)**
 > * Thầy/Cô lấy đường dẫn file bằng cách:  
 >   👉 **Nhấn giữ phím Shift + Nhấp chuột phải vào file đề -> Chọn "Copy as path"** *(hoặc trên Windows 11 bấm `Ctrl + Shift + C`)*.
-> * Sau đó, dán đường dẫn vào câu lệnh mẫu bên dưới và gửi cho em:
+> * Sau đó, dán đường dẫn vào 1 trong 3 câu lệnh mẫu theo mức độ khó bên trên (thay `"[ten_de_goc.pdf]" trong thư mục làm việc` bằng `file tại đường dẫn: "[Dán đường dẫn vừa copy vào đây]"`).
+> * **Ví dụ câu lệnh đầy đủ cho Mức B (dễ hơn):**
 >   ```text
->   Em hãy phân tích đề thi từ file tại đường dẫn: "[Dán đường dẫn vừa copy vào đây]" và tạo giúp tôi 1 đề tương tự cùng cấu trúc ma trận đặc tả chuẩn GDPT 2018.
+>   Em hãy phân tích đề thi từ file tại đường dẫn: "C:\Users\GiaoVien\Desktop\de_toan_12.pdf" và tạo giúp tôi 1 đề tương tự nhưng DỄ HƠN đề gốc (tăng NB+TH lên ~80%, giảm VDC còn ~5%, số liệu tính tay không cần máy tính).
 >   Yêu cầu bắt buộc:
->   1. Nội dung và kiến thức phải chuẩn xác 100%: số liệu mới nghiệm đẹp, định luật tự nhiên bảo toàn chuẩn xác, phương án trắc nghiệm duy nhất 1 đáp án đúng.
+>   1. Nội dung chuẩn xác 100%, số liệu mới nghiệm đẹp, dễ tính, phương án trắc nghiệm duy nhất 1 đáp án đúng.
 >   2. Lập trình vẽ mới 100% hình vẽ kỹ thuật & thí nghiệm sắc nét 300 DPI.
->   3. Xuất đồng thời 2 file Word: Bản Đề Học Sinh và Bản Lời Giải Chi Tiết, 100% công thức ở dạng MathType OLE 14pt nhấp đúp sửa được, bảng biểu dựng Table Grid không xô lệch.
+>   3. Xuất đồng thời 2 file Word: Bản Đề Học Sinh và Bản Lời Giải Chi Tiết, 100% công thức ở dạng MathType OLE 14pt nhấp đúp sửa được.
 >   ```"
 
 ---
@@ -794,20 +819,43 @@ Trước khi thiết kế số liệu, Agent PHẢI xác định `difficulty_lev
 | **Hóa học – Phản ứng** | Phân tử đơn giản, cân bằng hệ số nhỏ | Phương trình cân bằng chuẩn | Phản ứng nhiều bước, tính hiệu suất |
 | **Vật lý – Dao động / Điện** | Biên độ nguyên, tần số đẹp | Biên độ nguyên, pha ban đầu $0$ hoặc $\pi/2$ | Pha ban đầu $\pi/6$, mạch RLC phức hợp |
 
-**Ví dụ áp dụng:**
+**Bảng điều chỉnh tỷ lệ NB / TH / VD / VDC theo `difficulty_level`:**
+
+> [!IMPORTANT]
+> Agent PHẢI điều chỉnh phân phối mức độ tư duy **toàn đề** theo bảng này. Không chỉ thay số liệu — phải thực sự phân bổ lại số câu hỏi theo từng mức.
+
+| Mức độ | NB (Nhận biết) | TH (Thông hiểu) | VD (Vận dụng) | VDC (Vận dụng cao) | Ghi chú |
+|--------|---------------|-----------------|---------------|---------------------|---------|
+| `easier` | ~40% | ~40% | ~15% | ~5% | Ưu tiên câu tính tay được, không cần máy tính; bỏ câu tích hợp liên chủ đề |
+| `equivalent` | ~30% | ~40% | ~20% | ~10% | Giữ nguyên phân phối chuẩn GDPT 2018 như đề gốc |
+| `harder` | ~20% | ~30% | ~25% | ~25% | Thêm câu tích hợp liên chủ đề; phương án mồi bẫy sai tinh vi hơn |
+
+**Ví dụ áp dụng — Đề Toán 45 câu, 90 phút:**
+
+| | `easier` | `equivalent` | `harder` |
+|-|----------|--------------|----------|
+| NB | 18 câu | 14 câu | 9 câu |
+| TH | 18 câu | 18 câu | 14 câu |
+| VD | 7 câu | 9 câu | 11 câu |
+| VDC | 2 câu | 4 câu | 11 câu |
+| **Tổng** | **45 câu** | **45 câu** | **45 câu** |
+
+**Ví dụ áp dụng — thay đổi số liệu câu cụ thể:**
 - Đề gốc có câu: *"Hàm $y = x^3 - 3x + 2$ có bao nhiêu cực trị?"*
   - `easier`: $y = x^3 - 3x$ (bỏ hằng số, nghiệm đơn hơn)
   - `equivalent`: $y = x^3 - 3x^2 + 4$ (cùng bậc, cùng số cực trị)
   - `harder`: $y = x^3 - 3x^2 + 4x - 2$ (thêm tham số, đòi hỏi tính toán hơn)
 
 Với mỗi câu hỏi trong đề gốc:
-1. **Giữ nguyên dạng toán & phương pháp giải**: Đổi số liệu, tham số nhưng giữ nguyên mức độ nhận biết / thông hiểu / vận dụng.
-2. **Chọn số liệu nghiệm đẹp** (áp dụng bảng trên theo `difficulty_level`):
+1. **Điều chỉnh phân phối NB/TH/VD/VDC toàn đề**: Áp dụng bảng tỷ lệ bên trên theo `difficulty_level`. Nếu `easier` → chuyển một số câu VD/VDC thành câu TH/NB cùng dạng bài nhưng đơn giản hơn. Nếu `harder` → nâng độ tư duy của một số câu NB/TH lên VD/VDC.
+2. **Giữ nguyên dạng toán & phương pháp giải**: Đổi số liệu, tham số theo bảng điều chỉnh số liệu bên trên.
+3. **Chọn số liệu nghiệm đẹp** (áp dụng bảng trên theo `difficulty_level`):
    - Hàm bậc ba / phân thức: Chọn nghiệm đạo hàm nguyên (ví dụ $x = 0, x = 2$ hoặc $x = \pm 1$), tung độ cực trị nguyên.
    - Bài toán thực tế / tối ưu hóa: Đảm bảo điểm dừng $x_0$ rơi vào khoảng thực tế và cho kết quả nguyên hoặc số thập phân gọn.
-3. **Lập bảng kiểm định**: Tính toán đạo hàm, cực trị, giới hạn tiệm cận để đảm bảo đáp án trắc nghiệm không bị trùng hoặc vô nghiệm.
+4. **Lập bảng kiểm định**: Tính toán đạo hàm, cực trị, giới hạn tiệm cận để đảm bảo đáp án trắc nghiệm không bị trùng hoặc vô nghiệm.
 
 ---
+
 
 ### ✅ Bước 2bis: Kiểm Định Chuẩn GDPT 2018 (BẮT BUỘC TRƯỚC KHI XUẤT ĐỀ)
 
