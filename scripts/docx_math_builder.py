@@ -162,6 +162,9 @@ def sanitize_latex_for_mathtype(latex_str):
     s = re.sub(r'\\iff\b', r'\\Leftrightarrow', s)
     s = re.sub(r'\\lvert\b', r'\\left|', s)
     s = re.sub(r'\\rvert\b', r'\\right|', s)
+    # Chuẩn hóa ký hiệu môn Hóa Học:
+    s = re.sub(r'\\rightleftarrows\b', r'\\rightleftharpoons', s)
+    s = re.sub(r'\\ce\{([^}]+)\}', r'\\mathrm{\1}', s)
     # Chuẩn hóa ký hiệu song song và vuông góc có khoảng cách chuẩn, chống dính sát vào chữ
     s = re.sub(r'(?<!\\)\s*\\parallel\s*', r' \\ \\parallel \\ ', s)
     s = re.sub(r'(?<!\\)\s*\\perp\s*', r' \\ \\perp \\ ', s)

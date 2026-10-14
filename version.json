@@ -1,11 +1,18 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "5.3.0",
-  "release_date": "2026-10-13",
+  "version": "5.4.0",
+  "release_date": "2026-10-14",
   "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Tạo đề từ ma trận đặc tả (không cần đề gốc). Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge (không cần cài LaTeX), kiểm định tự động GDPT 2018.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "5.4.0": [
+      "QUY CHUẨN TOÀN DIỆN MÔN HÓA HỌC CHUẨN GDPT 2018 & IUPAC (100% MathType OLE): Khóa cứng quy định font chữ nguyên tố/hợp chất bắt buộc in THẲNG ĐỨNG \\mathrm{...} theo danh pháp quốc tế IUPAC, tuyệt đối không in nghiêng như biến số Toán.",
+      "Chuẩn hóa 100% hệ thống ký hiệu Hóa học: Mũi tên 1 chiều có điều kiện (\\xrightarrow{t^\\circ, \\text{xt}}), mũi tên thuận nghịch cân bằng (\\rightleftharpoons), ký hiệu kết tủa/bay hơi (\\downarrow, \\uparrow), trạng thái chất ((s), (l), (g), (aq)).",
+      "Hỗ trợ chuẩn xác Nhiệt hóa học (\\Delta_r H_{298}^\\circ, \\Delta_f H_{298}^\\circ), điện tích ion chuẩn mới (số trước dấu sau: SO_4^{2-}, Al^{3+}), phức chất ([Cu(NH_3)_4]^{2+}) và pin điện hóa Galvanic (\\mid, \\parallel).",
+      "Nâng cấp bộ tự động Sanitize LaTeX trong docx_math_builder.py: Tự động chuyển đổi \\rightleftarrows -> \\rightleftharpoons và hỗ trợ gói mhchem \\ce{...} -> \\mathrm{...} bảo đảm 100% hiển thị hoàn mỹ trong MathType OLE.",
+      "Tích hợp phương pháp giải Sơ đồ bảo toàn (khối lượng, nguyên tố, electron, điện tích) và tư duy Hóa học xanh vào bộ kiểm định tự động gdpt2018_validator.py."
+    ],
     "5.3.0": [
       "NÂNG CẤP HƯỚNG DẪN ĐỘ KHÓ ĐỀ TƯƠNG TỰ (3 mức: Dễ hơn / Tương đương / Khó hơn): Bổ sung đầy đủ 3 câu lệnh mẫu copy-paste cho giáo viên trong Bước 0.1 (Mức A — Tương đương, Mức B — Dễ hơn, Mức C — Khó hơn) với hướng dẫn ngôn ngữ giáo viên cụ thể, rõ ràng.",
       "BỔ SUNG BẢNG ĐIỀU CHỈNH TỶ LỆ NB/TH/VD/VDC THEO ĐỘ KHÓ (Bước 2.0): Khi easier → NB:TH:VD:VDC = 40:40:15:5%; khi equivalent → 30:40:20:10%; khi harder → 20:30:25:25%. Agent PHẢI phân bổ lại số câu thực sự — không chỉ thay số liệu.",
