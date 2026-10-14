@@ -804,6 +804,43 @@ def add_centered_image(doc, img_path, width=Inches(4.5), caption=None, mode='tex
 
 # ─── BACKEND CONVERTER ───────────────────────────────────────────────────────
 
+def postprocess_ole_docx_fix_delimiters(docx_path):
+    """
+    Tự động chuẩn hóa các đối tượng MathType OLE (.bin) trong file DOCX:
+    1. Sửa lỗi tofu kim cương ◆ (U+2223): Khi LaTeX dùng \\mid, backend sinh mã Unicode 0x2223
+       trong font Symbol (tf=0x86). Do Symbol là font 8-bit, MathType không có glyph nên hiện ◆.
+       -> Chuyển thành mã ASCII 0x007C trong font Symbol (tf=0x86) hiển thị vạch đứng | thẳng tắp 100%.
+    2. Sửa lỗi ngoặc đơn mở '(' (MT Extra 0x7C): Khi backend dùng fence tmBAR với font MT Extra (tf=0x96),
+       glyph 0x7C trong mtextra.ttf là verticalbracketright (hình vòng cung cong '(').
+       -> Đổi typeface thành Symbol (tf=0x86) với mã 0x7C hiển thị vạch đứng | thẳng tắp 100%.
+    """
+    try:
+        import zipfile, os
+        tmp_path = str(docx_path) + '.tmp'
+        fixed = 0
+        with zipfile.ZipFile(docx_path, 'r') as zin, zipfile.ZipFile(tmp_path, 'w', compression=zipfile.ZIP_DEFLATED) as zout:
+            for item in zin.infolist():
+                data = zin.read(item.filename)
+                if item.filename.startswith('word/embeddings/') and item.filename.endswith('.bin'):
+                    # 1. U+2223 in Symbol font -> 0x007C in Symbol font (chống lỗi kim cương ◆)
+                    if b'\x02\x00\x86\x23\x22' in data:
+                        fixed += data.count(b'\x02\x00\x86\x23\x22')
+                        data = data.replace(b'\x02\x00\x86\x23\x22', b'\x02\x00\x86\x7c\x00')
+                    # 2. MT Extra 0x7C -> Symbol font 0x007C (chống lỗi ngoặc '(' khi kích đúp)
+                    if b'\x02\x00\x96\x7c\x00' in data:
+                        fixed += data.count(b'\x02\x00\x96\x7c\x00')
+                        data = data.replace(b'\x02\x00\x96\x7c\x00', b'\x02\x00\x86\x7c\x00')
+                zout.writestr(item, data)
+        if fixed > 0:
+            os.replace(tmp_path, docx_path)
+            print(f"[MathType OLE PostProcess] ✓ Đã chuẩn hóa tự động {fixed} vạch đứng (|) chống lỗi hiển thị và kích đúp.")
+        else:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+    except Exception as e:
+        print(f"[MathType OLE PostProcess] Ghi chú: {e}")
+
+
 def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path,
                                          api_url=BACKEND_API_URL, timeout=120):
     """
@@ -846,6 +883,9 @@ def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path
             if resp.status == 200:
                 with open(output_ole_docx_path, 'wb') as f:
                     f.write(resp.read())
+
+                # Chuẩn hóa nhị phân MTEF để chống triệt để lỗi tofu kim cương ◆ và dấu ngoặc '('
+                postprocess_ole_docx_fix_delimiters(output_ole_docx_path)
 
                 # Tự động chạy kiểm định tính toàn vẹn
                 audit = audit_word_ole_file(output_ole_docx_path)
