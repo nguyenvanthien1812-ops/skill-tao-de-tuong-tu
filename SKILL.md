@@ -1579,9 +1579,13 @@ GV xác nhận điểm này không? [Enter] Đồng ý 2.2đ | [n] Nhập điể
   * Ví dụ: $\mathrm{Zn(s) \mid Zn^{2+}(aq) \parallel Cu^{2+}(aq) \mid Cu(s)}$
 
 ### 2. Phương trình phản ứng & Cân bằng hóa học:
+- **Phương trình có điều kiện dài trên/dưới (BẮT BUỘC DÙNG MŨI TÊN CO GIÃN DÀI)**:
+  * Khi có điều kiện xúc tác, nhiệt độ (như $\mathrm{H_2SO_4\ \text{đặc}}$, $t^\circ$): BẮT BUỘC dùng lệnh mũi tên co giãn hai chiều `\xrightleftharpoons[dưới]{trên}` hoặc mũi tên một chiều `\xrightarrow[dưới]{trên}`. Thân mũi tên sẽ **tự động kéo dài ra** khớp với độ dài của chữ điều kiện.
+  * Ví dụ chuẩn: $\mathrm{CH_3COOH + C_2H_5OH \xrightleftharpoons[t^\circ]{\mathrm{H_2SO_4\ \text{đặc}}} CH_3COOC_2H_5 + H_2O}$
+  * ❌ **TUYỆT ĐỐI KHÔNG DÙNG**: `\overset{...}{\underset{...}{\rightleftharpoons}}` vì `\rightleftharpoons` chỉ là ký hiệu cố định ngắn 1 ký tự, khiến chữ ở trên bị bè rộng còn mũi tên ở giữa bị ngắn ngủn, lọt thỏm mất thẩm mỹ.
 - **Phương trình 1 chiều có điều kiện**: Luôn dùng `\xrightarrow{t^\circ}`, `\xrightarrow{t^\circ, \text{xt}}`, `\xrightarrow{\text{ánh sáng}}` hoặc `\rightarrow`.
   * Ví dụ: $\mathrm{2Al + Fe_2O_3 \xrightarrow{t^\circ} Al_2O_3 + 2Fe}$
-- **Phương trình thuận nghịch (Cân bằng hóa học)**: Bắt buộc dùng ký hiệu `\rightleftharpoons`, tuyệt đối không dùng `<=>` hay `\Leftrightarrow`.
+- **Phương trình thuận nghịch (Cân bằng hóa học đơn giản)**: Dùng `\rightleftharpoons` khi không có điều kiện phức tạp.
   * Ví dụ: $\mathrm{N_2(g) + 3H_2(g) \rightleftharpoons 2NH_3(g)}$
 - **Trạng thái chất**: Ghi rõ thể: $(s)$ rắn, $(l)$ lỏng, $(g)$ khí, $(aq)$ dung dịch.
   * Ví dụ: $\mathrm{CaCO_{3(s)} \xrightarrow{t^\circ} CaO_{(s)} + CO_{2(g)}\uparrow}$

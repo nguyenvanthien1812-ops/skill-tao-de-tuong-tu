@@ -143,6 +143,85 @@ def latex_to_omml(latex_str):
 # Log cac cong thuc OMML that bai de agent biet va fix
 _omml_failed_formulas = []
 
+def _extract_brace_arg(s, start_idx):
+    """Trích xuất nội dung bên trong cặp ngoặc nhọn { ... } tại start_idx (hỗ trợ ngoặc lồng nhau)."""
+    if start_idx >= len(s) or s[start_idx] != '{':
+        return None, start_idx
+    depth = 0
+    content_start = start_idx + 1
+    for i in range(start_idx, len(s)):
+        if s[i] == '{':
+            depth += 1
+        elif s[i] == '}':
+            depth -= 1
+            if depth == 0:
+                return s[content_start:i], i + 1
+    return None, start_idx
+
+
+def _auto_expand_extensible_arrows(s):
+    """
+    Tự động chuẩn hóa các mũi tên bị ngắn khi dùng \\overset / \\underset trên mũi tên
+    thành mũi tên co giãn hai chiều \\xrightleftharpoons hoặc một chiều \\xrightarrow
+    để thân mũi tên tự động kéo dài bằng đúng bề ngang của chữ điều kiện bên trên/dưới.
+    """
+    import re
+    pattern = re.compile(r'\\(overset|underset)\b')
+    idx = 0
+    res = []
+    while idx < len(s):
+        m = pattern.search(s, idx)
+        if not m:
+            res.append(s[idx:])
+            break
+        res.append(s[idx:m.start()])
+        cmd = m.group(1)
+        arg1, p1 = _extract_brace_arg(s, m.end())
+        if arg1 is None:
+            res.append(m.group(0))
+            idx = m.end()
+            continue
+        
+        arg2, p2 = _extract_brace_arg(s, p1)
+        if arg2 is None:
+            res.append(s[m.start():p1])
+            idx = p1
+            continue
+            
+        # Trường hợp 1: arg2 chứa lồng overset/underset
+        m2 = re.match(r'\\(overset|underset)\b', arg2.strip())
+        if m2:
+            inner_arg1, ip1 = _extract_brace_arg(arg2.strip(), m2.end())
+            inner_arg2, ip2 = _extract_brace_arg(arg2.strip(), ip1)
+            base = inner_arg2.strip() if inner_arg2 else ''
+            if base in (r'\rightleftharpoons', r'\rightarrow', r'\to'):
+                top = arg1 if cmd == 'overset' else inner_arg1
+                bot = inner_arg1 if cmd == 'overset' else arg1
+                arrow_fn = r'\xrightleftharpoons' if base == r'\rightleftharpoons' else r'\xrightarrow'
+                res.append(f'{arrow_fn}[{bot}]{{{top}}}')
+                idx = p2
+                continue
+                
+        # Trường hợp 2: arg2 là trực tiếp mũi tên
+        base = arg2.strip()
+        if base in (r'\rightleftharpoons', r'\rightarrow', r'\to'):
+            if cmd == 'overset':
+                arrow_fn = r'\xrightleftharpoons' if base == r'\rightleftharpoons' else r'\xrightarrow'
+                res.append(f'{arrow_fn}[]{{{arg1}}}')
+                idx = p2
+                continue
+            elif cmd == 'underset':
+                arrow_fn = r'\xrightleftharpoons' if base == r'\rightleftharpoons' else r'\xrightarrow'
+                res.append(f'{arrow_fn}[{arg1}]{{}}')
+                idx = p2
+                continue
+                
+        res.append(s[m.start():p2])
+        idx = p2
+        
+    return ''.join(res)
+
+
 def sanitize_latex_for_mathtype(latex_str):
     r"""
     Chuẩn hóa cú pháp LaTeX tương thích 100% với bộ biên dịch TeX của MathType:
@@ -155,9 +234,13 @@ def sanitize_latex_for_mathtype(latex_str):
       + Nếu dùng \parallel: Chuẩn hóa thành \ \parallel \ có khoảng cách toán học chuẩn, chống dính sát vào đoạn thẳng.
     - Chuẩn hóa ký hiệu vuông góc:
       + Nếu dùng \perp: Chuẩn hóa thành \ \perp \ có khoảng cách đối xứng.
+    - Tự động kéo dài mũi tên phản ứng Hóa học (\xrightleftharpoons, \xrightarrow) khi có điều kiện dài,
+      chống hiện tượng mũi tên bị ngắn ngủn khi dùng \overset/\underset.
     """
     import re
     s = latex_str
+    # Tự động co giãn mũi tên phản ứng hóa học có điều kiện trên/dưới
+    s = _auto_expand_extensible_arrows(s)
     s = re.sub(r'\\implies\b', r'\\Rightarrow', s)
     s = re.sub(r'\\iff\b', r'\\Leftrightarrow', s)
     s = re.sub(r'\\lvert\b', r'\\left|', s)
