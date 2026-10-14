@@ -50,21 +50,25 @@ def _clean_latex_syntax(latex_str: str) -> str:
     latex_str = latex_str.replace(r"\implies", r"\Rightarrow")
     latex_str = latex_str.replace(r"\iff", r"\Leftrightarrow")
     latex_str = latex_str.replace(r"\to", r"\rightarrow")
-    latex_str = re.sub(r'\\lvert\b', r'\\left|', latex_str)
-    latex_str = re.sub(r'\\rvert\b', r'\\right|', latex_str)
+    # Chuẩn hóa giá trị tuyệt đối / vạch đứng sang \mid để chống lỗi font MT Extra 0x7c '(' khi kích đúp MathType:
+    latex_str = re.sub(r'\\left\s*\|', r'\\mid ', latex_str)
+    latex_str = re.sub(r'\\right\s*\|', r' \\mid', latex_str)
+    latex_str = re.sub(r'\\lvert\b', r'\\mid ', latex_str)
+    latex_str = re.sub(r'\\rvert\b', r' \\mid', latex_str)
     
     # 2. Chuẩn hóa ký hiệu song song và vuông góc đối xứng, chống dính chữ
     latex_str = re.sub(r'(?<!\\)\s*\\parallel\s*', r' \\ \\parallel \\ ', latex_str)
     latex_str = re.sub(r'(?<!\\)\s*\\perp\s*', r' \\ \\perp \\ ', latex_str)
     latex_str = re.sub(r'(?<!https:)(?<!http:)(?<!/)\s*//\s*(?!/)', r' \\text{ // } ', latex_str)
     
-    # 3. Tự động chuyển giá trị tuyệt đối |...| sang \left| ... \right| chuẩn Template Fence MathType
+    # 3. Tự động chuyển giá trị tuyệt đối |...| sang \mid ... \mid
     def _repl_abs(m):
         inner = m.group(1)
         if not inner.strip():
             return '||'
-        return r'\left|' + inner + r'\right|'
-    latex_str = re.sub(r'(?<!\\)(?<!\\left)\|(?!\|)([^\|\r\n]+?)(?<!\\)\|(?!\|)', _repl_abs, latex_str)
+        return r'\mid ' + inner.strip() + r' \mid'
+    latex_str = re.sub(r'(?<!\\)(?<!\\mid\s)\|(?!\|)([^\|\r\n]+?)(?<!\\)\|(?!\|)', _repl_abs, latex_str)
+    latex_str = re.sub(r'\s*\\mid\s*', r' \\mid ', latex_str)
 
     # 4. Xóa các ký tự xuống dòng thô trong công thức
     latex_str = re.sub(r'[\r\n]+', ' ', latex_str)
