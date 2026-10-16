@@ -53,27 +53,56 @@
 
 ---
 
-## 💬 Cách Ra Lệnh Tạo Đề Trong Khung Chat Antigravity
+## 💬 Cách Ra Lệnh Trong Khung Chat Antigravity
 
-Thầy/Cô mở phần mềm **Google Antigravity**, mở thư mục chứa đề thi và nhắn tin tự nhiên:
+Thầy/Cô mở phần mềm **Google Antigravity**, mở thư mục chứa đề thi và nhắn tin tự nhiên.
 
-### 1. Tạo đề tương tự:
+### 📌 3 Cách Cực Dễ Để Đưa File Vào Khung Chat:
+* **Cách 1 (Nhanh nhất - 1 giây): Kéo thả trực tiếp**  
+  Mở thư mục chứa file $\to$ Giữ chuột trái kéo file thả thẳng vào ô nhập tin nhắn Antigravity.
+* **Cách 2: Copy file vào thư mục làm việc**  
+  Bấm `Ctrl + C` file đề $\to$ Vào thư mục làm việc của phần mềm bấm `Ctrl + V` để dán.
+* **Cách 3: Lấy đường dẫn file ở Desktop/Zalo/ổ D... (không cần copy file)**  
+  - *Windows 10:* Nhấn giữ **`Shift` + Chuột phải** vào file $\to$ Chọn **"Copy as path"**.
+  - *Windows 11:* Bấm **`Ctrl + Shift + C`**.  
+  Sau đó vào ô chat bấm `Ctrl + V` dán đường dẫn vào câu lệnh.
+
+---
+
+### 🎯 Các Câu Lệnh Ngắn & Mẫu Lệnh Nhanh:
+
+#### 1. Khi gõ lệnh ngắn:
+* Gõ: `"tôi muốn tạo đề tương tự"` $\to$ AI sẽ lập tức xuất hiện bảng hướng dẫn kèm 3 mẫu lệnh theo độ khó (Tương đương / Dễ hơn / Khó hơn).
+* Gõ: `"chuyển pdf sang word"` $\to$ AI hướng dẫn chọn file và xuất bản Word MathType OLE 14pt.
+* Gõ: `"chuẩn hoá file"` $\to$ AI hướng dẫn quét file Word cũ và chuyển 100% sang MathType OLE.
+* Gõ: `"vẽ hình"` $\to$ AI hướng dẫn gửi ảnh hoặc mô tả để lập trình vẽ hình 300 DPI siêu nét.
+
+#### 2. Mẫu lệnh tạo đề tương tự (Copy dùng ngay):
 ```text
-"Tạo cho tôi một đề tương tự từ Đề 301"
-"Tạo đề môn Vật lý tương tự file Đề Vật lý.docx, chuẩn công thức và hình vẽ"
-"Nhân bản đề thi Toán 12 này với số liệu mới và nghiệm đẹp"
+"Tạo cho tôi một đề tương tự từ file [De_Toan_12.pdf] trong thư mục làm việc.
+- Đổi mới toàn bộ số liệu, nghiệm số nguyên đẹp.
+- Vẽ lại 100% hình vẽ kỹ thuật sắc nét 300 DPI.
+- Xuất đồng thời 2 bản Word: Bản Đề Học Sinh và Bản Lời Giải Chi Tiết (MathType OLE 14pt nhấp đúp sửa được)."
 ```
 
-### 2. Tạo bộ 4 mã đề phòng thi:
+#### 3. Mẫu lệnh chuyển PDF sang Word MathType OLE:
 ```text
-"Tạo bộ 4 mã đề phòng thi (mã 201, 202, 203, 204) kèm phiếu trả lời bong bóng để in"
-"Xuất cả bản đề học sinh, bản lời giải giáo viên và bảng Excel đáp án tổng hợp"
+"Chuyển đổi file [De_Kiem_Tra.pdf] sang file Word giúp tôi.
+- Toàn bộ công thức Toán/Lý/Hóa chuyển sang MathType OLE 14pt (kích đúp chuột sửa được).
+- Giữ nguyên bố cục bảng biểu Table Grid và hình vẽ sắc nét."
 ```
 
-### 3. Cập nhật tính năng mới:
+#### 4. Mẫu lệnh tạo bộ 4 mã đề phòng thi:
+```text
+"Tạo bộ 4 mã đề phòng thi (mã 201, 202, 203, 204) từ đề vừa tạo:
+- Kèm file PDF phiếu trả lời trắc nghiệm bong bóng chuẩn A4 để in chấm thi.
+- Kèm file Excel tổng hợp đáp án của cả 4 mã đề."
+```
+
+#### 5. Cập nhật tính năng mới:
 ```text
 "Cập nhật skill lên bản mới nhất giúp tôi"
-(Hoặc nhấp đúp vào file cap_nhat_tu_dong.bat)
+(Hoặc nhấp đúp chuột vào file: cap_nhat_tu_dong.bat)
 ```
 
 ---

@@ -33,6 +33,7 @@ description: >-
   "chuẩn hóa công thức giữ nguyên bố cục", "tôi muốn chuyển pdf sang word", "hướng dẫn chuyển pdf sang word",
   "hướng dẫn tôi tạo đề", "hướng dẫn tạo đề tương tự", "làm sao để chuyển pdf sang word", "cách chuyển pdf sang word",
   "tôi muốn tạo đề tương tự", "làm sao để tạo đề tương tự", "hướng dẫn sử dụng skill", "cách dùng skill",
+  "tôi muốn vẽ hình", "hướng dẫn vẽ hình", "cách vẽ hình", "vẽ hình cho tôi", "vẽ đồ thị", "tôi muốn vẽ đồ thị",
   "tôi muốn làm video", "tôi muốn viết kịch bản video", "tạo video khởi động", "làm video khởi động",
   "viết prompt veo 3", "tạo kịch bản video", "làm video mở đầu bài", "tạo prompt video",
   "viết kịch bản cho video", "làm video cho bài học", "tôi cần video khởi động", "lên kịch bản video".
@@ -420,6 +421,23 @@ Agent xuất ngay phản hồi:
 >   ```"
 
 ---
+
+#### 9️⃣ KHI GIÁO VIÊN NÓI: "vẽ hình" (hoặc "tôi muốn vẽ hình", "vẽ đồ thị", "vẽ hình học không gian", "vẽ mạch điện", "vẽ thí nghiệm"...)
+Agent xuất ngay phản hồi:
+> "Dạ chào Thầy/Cô! Em có thể lập trình vẽ mới 100% hình vẽ kỹ thuật Toán, Vật lý và sơ đồ Hóa học đạt chuẩn xuất bản 300 DPI siêu nét:
+> 
+> 🎨 **Thầy/Cô cung cấp yêu cầu hình vẽ theo 1 trong 3 cách sau nhé:**
+> * **Cách 1 (Nhanh nhất):** Chụp ảnh bài toán có hình vẽ và kéo thả thẳng ảnh vào khung chat này.
+> * **Cách 2:** Copy hoặc gõ trực tiếp đề bài câu hỏi cần vẽ hình vào ô chat.
+> * **Cách 3:** Mô tả hình Thầy/Cô cần vẽ theo câu lệnh mẫu bên dưới:
+> 
+> ✍️ **Câu lệnh mẫu mô tả hình vẽ:**
+> ```text
+> Em hãy lập trình vẽ giúp tôi hình vẽ kỹ thuật sau:
+> - Môn: [Toán / Vật lý / Hóa học]
+> - Loại hình: [Ví dụ: Đồ thị hàm số bậc 3 y = x^3 - 3x / Đồ thị phân thức bậc 2/1 có tiệm cận xiên / Hình chóp S.ABCD đáy hình vuông / Bảng biến thiên full khung viền / Sơ đồ mạch điện R, L, C nối tiếp / Sơ đồ điều chế và thu khí O2 dời chỗ nước]
+> - Yêu cầu kỹ thuật: Nét vẽ đậm rõ (lw=2.2-2.4), độ phân giải 300 DPI, nhãn điểm và góc chuẩn xác, xuất file ảnh PNG nền trong suốt để chèn trực tiếp vào Word.
+> ```"
 
 ---
 

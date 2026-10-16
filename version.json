@@ -1,11 +1,15 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "5.5.0",
-  "release_date": "2026-10-14",
+  "version": "5.5.1",
+  "release_date": "2026-10-16",
   "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Tạo đề từ ma trận đặc tả (không cần đề gốc). Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge (không cần cài LaTeX), kiểm định tự động GDPT 2018.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "5.5.1": [
+      "TÍCH HỢP HỆ THỐNG KỊCH BẢN PHẢN HỒI 'CẦM TAY CHỈ VIỆC' KHI GIÁO VIÊN GÕ LỆNH NGẮN: Tự động hướng dẫn chi tiết 3 cách đưa file (Kéo thả chuột 1 giây, Copy vào thư mục làm việc, phím tắt Shift+Chuột phải lấy đường dẫn) và cung cấp sẵn câu lệnh mẫu copy-paste cho 9 tác vụ: Tạo đề tương tự (3 mức độ khó Tương đương/Dễ hơn/Khó hơn), Chuyển PDF sang Word, Chuẩn hóa MathType OLE, Trộn 4 mã đề, Dịch tiếng Anh song ngữ, Tạo ma trận đặc tả, Trích xuất ma trận từ đề, Nhận diện ảnh đề thi OCR, và Lập trình vẽ hình kỹ thuật 300 DPI.",
+      "BỘ HẬU XỬ LÝ NHỊ PHÂN MTEF TỰ ĐỘNG (postprocess_ole_docx_fix_delimiters): Quét và chuẩn hóa trực tiếp các đối tượng OLE .bin trong file Word để triệt tiêu vĩnh viễn cả lỗi kim cương đen (◆ do U+2223) và lỗi dấu ngoặc đơn mở ('(' do MT Extra 0x7c), bảo đảm 100% vạch đứng | thẳng tắp chuẩn MathType 14pt khi kích đúp."
+    ],
     "5.5.0": [
       "KHẮC PHỤC TRIỆT ĐỂ LỖI KÍCH ĐÚP MATHTYPE BIẾN DẤU GIÁ TRỊ TUYỆT ĐỐI |...| THÀNH DẤU NGOẶC ĐƠN MỞ '(': Phát hiện và xử lý tận gốc cơ chế xung đột font nhị phân MTEF. Khi dùng \\left|...\\right| hoặc |...|, bộ biên dịch sinh ra Fence Template tmBAR với mã 0x7C trỏ vào font MT Extra (mtextra.ttf), trong đó glyph 0x7C là 'verticalbracketright' (hình vòng cung ngoặc đơn mở '('). Trong Word nhìn bình thường (nhờ ảnh WMF cache), nhưng khi kích đúp MathType.exe để sửa thì lập tức bị đổi thành '(x - 2('!",
       "Giải pháp toàn diện: Tự động chuẩn hóa dấu gạch đứng / giá trị tuyệt đối sang \\mid ... \\mid trong cả 2 quy trình tạo đề mới và chuẩn hóa file cũ (docx_math_builder.py & standardize_word_mathtype.py). Ký tự được ánh xạ chuẩn xác sang mã Unicode 0x2223 (Symbol font thẳng đứng), giữ nguyên vạch đứng | 100%, kích đúp MathType sửa mượt mà không bao giờ bị biến dạng.",
