@@ -41,7 +41,7 @@ os.environ['PYTHONUTF8'] = '1'
 BACKEND_API_URL = "https://latex2mathtypeweb.onrender.com/api/convert-docx"
 
 def postprocess_ole_docx_fix_delimiters(docx_path):
-    """
+    r"""
     Tự động chuẩn hóa các đối tượng MathType OLE (.bin) trong file DOCX:
     1. Sửa lỗi tofu kim cương ◆ (U+2223): Khi LaTeX dùng \mid, backend sinh mã Unicode 0x2223
        trong font Symbol (tf=0x86). Do Symbol là font 8-bit, MathType không có glyph nên hiện ◆.
@@ -91,8 +91,14 @@ def _clean_latex_syntax(latex_str: str) -> str:
     latex_str = re.sub(r'\\lvert\b', r'\\mid ', latex_str)
     latex_str = re.sub(r'\\rvert\b', r' \\mid', latex_str)
     
-    # 2. Chuẩn hóa ký hiệu song song và vuông góc đối xứng, chống dính chữ
-    latex_str = re.sub(r'(?<!\\)\s*\\parallel\s*', r' \\ \\parallel \\ ', latex_str)
+    # Chuẩn hóa cung tròn hình học (MathType không hỗ trợ \wideparen, gây lỗi in raw text):
+    latex_str = re.sub(r'\\wideparen\{([^}]+)\}', r'\\text{cung }\1', latex_str)
+    # Chuẩn hóa song song sang // chuẩn SGK Việt Nam (thay vì ||):
+    latex_str = re.sub(r'\\parallel\b', r'\\text{ // }', latex_str)
+    # Tự động chèn dấu nhân \cdot trước \widehat nếu đứng sau số hệ số (chống lỗi MathType nuốt số vào dấu mũ):
+    latex_str = re.sub(r'(\d+)\s*\\widehat\{', r'\1 \\cdot \\widehat{', latex_str)
+
+    # 2. Chuẩn hóa ký hiệu vuông góc đối xứng, chống dính chữ
     latex_str = re.sub(r'(?<!\\)\s*\\perp\s*', r' \\ \\perp \\ ', latex_str)
     latex_str = re.sub(r'(?<!https:)(?<!http:)(?<!/)\s*//\s*(?!/)', r' \\text{ // } ', latex_str)
     

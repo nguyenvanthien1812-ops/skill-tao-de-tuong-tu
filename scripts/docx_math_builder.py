@@ -251,8 +251,13 @@ def sanitize_latex_for_mathtype(latex_str):
     # Chuẩn hóa ký hiệu môn Hóa Học:
     s = re.sub(r'\\rightleftarrows\b', r'\\rightleftharpoons', s)
     s = re.sub(r'\\ce\{([^}]+)\}', r'\\mathrm{\1}', s)
-    # Chuẩn hóa ký hiệu song song và vuông góc có khoảng cách chuẩn, chống dính sát vào chữ
-    s = re.sub(r'(?<!\\)\s*\\parallel\s*', r' \\ \\parallel \\ ', s)
+    # Chuẩn hóa cung tròn hình học (MathType không hỗ trợ \wideparen, gây lỗi in raw text):
+    s = re.sub(r'\\wideparen\{([^}]+)\}', r'\\text{cung }\1', s)
+    # Chuẩn hóa song song sang // chuẩn SGK Việt Nam (thay vì ||):
+    s = re.sub(r'\\parallel\b', r'\\text{ // }', s)
+    # Tự động chèn dấu nhân \cdot trước \widehat nếu đứng sau số hệ số (chống lỗi MathType nuốt số vào dấu mũ):
+    s = re.sub(r'(\d+)\s*\\widehat\{', r'\1 \\cdot \\widehat{', s)
+    # Chuẩn hóa ký hiệu vuông góc có khoảng cách chuẩn, chống dính sát vào chữ
     s = re.sub(r'(?<!\\)\s*\\perp\s*', r' \\ \\perp \\ ', s)
     s = re.sub(r'(?<!https:)(?<!http:)(?<!/)\s*//\s*(?!/)', r' \\text{ // } ', s)
     # Tự động chuyển các cặp |...| đơn sang \mid ... \mid
@@ -273,6 +278,20 @@ def add_math_content(paragraph, text, mode='omml', bold=False, font_size=None):
     don gian hon. Neu van that bai thi ghi log va danh dau [formula] thay vi giu nguyen $latex$.
     Dieu nay dam bao Integrity Audit (ky tu $ ton du = 0) luon pass.
     """
+    if not text:
+        return
+    text = str(text)
+    # Chuẩn hóa các dạng delimiter: $$, \[, \], \(, \) thành $
+    text = text.replace(r'\[', '$').replace(r'\]', '$')
+    text = text.replace(r'\(', '$').replace(r'\)', '$')
+    text = text.replace('$$', '$')
+
+    # Tự động phát hiện nếu chuỗi không có $ nhưng chứa lệnh LaTeX hoặc ký hiệu toán học
+    if '$' not in text:
+        import re
+        if re.search(r'\\[a-zA-Z]+|[\^_]', text):
+            text = f"${text}$"
+
     parts = text.split('$')
     for i, part in enumerate(parts):
         if not part:
@@ -436,6 +455,16 @@ def add_aligned_choices(doc, choices, mode='omml'):
     - Đáp án vừa (≤50 ký tự) : 2 hàng 2 cột
     - Đáp án dài             : 4 dòng riêng biệt
     """
+    processed_choices = []
+    for c in choices:
+        c_str = str(c).strip()
+        if '$' not in c_str:
+            import re
+            if re.search(r'\\[a-zA-Z]+|[\^_=><]', c_str) or re.match(r'^[0-9]+[a-zA-Z%]*$', c_str):
+                c_str = f"${c_str}$"
+        processed_choices.append(c_str)
+    choices = processed_choices
+
     max_len = max(len(c) for c in choices)
     labels = ['A', 'B', 'C', 'D']
 
@@ -881,8 +910,17 @@ def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             if resp.status == 200:
-                with open(output_ole_docx_path, 'wb') as f:
-                    f.write(resp.read())
+                content = resp.read()
+                try:
+                    with open(output_ole_docx_path, 'wb') as f:
+                        f.write(content)
+                except PermissionError:
+                    base_stem, ext = os.path.splitext(output_ole_docx_path)
+                    fallback_path = f"{base_stem}_moi{ext}"
+                    with open(fallback_path, 'wb') as f:
+                        f.write(content)
+                    print(f"[CẢNH BÁO KHÓA FILE] File {output_ole_docx_path} đang được mở trong Word! Đã tự động lưu sang: {fallback_path}")
+                    output_ole_docx_path = fallback_path
 
                 # Chuẩn hóa nhị phân MTEF để chống triệt để lỗi tofu kim cương ◆ và dấu ngoặc '('
                 postprocess_ole_docx_fix_delimiters(output_ole_docx_path)
@@ -976,6 +1014,11 @@ def _write_exam_body(doc, exam_data, mode='tex', show_answers=False, show_soluti
                 if img and os.path.exists(img):
                     add_centered_image(doc, img, width=Inches(3.8), caption=q.get('image_caption'))
 
+                if q.get('table'):
+                    tbl_data = q['table']
+                    add_styled_table(doc, tbl_data.get('headers', []), tbl_data.get('rows', []),
+                                     col_widths=tbl_data.get('widths'), mode=mode)
+
                 if choices:
                     add_aligned_choices(doc, choices, mode=mode)
 
@@ -1027,6 +1070,11 @@ def _write_exam_body(doc, exam_data, mode='tex', show_answers=False, show_soluti
 
             if img and os.path.exists(img):
                 add_centered_image(doc, img, width=Inches(3.8), caption=q.get('image_caption'))
+
+            if q.get('table'):
+                tbl_data = q['table']
+                add_styled_table(doc, tbl_data.get('headers', []), tbl_data.get('rows', []),
+                                 col_widths=tbl_data.get('widths'), mode=mode)
 
             for item in items:
                 p_item = doc.add_paragraph()
@@ -1090,6 +1138,11 @@ def _write_exam_body(doc, exam_data, mode='tex', show_answers=False, show_soluti
 
             if img and os.path.exists(img):
                 add_centered_image(doc, img, width=Inches(3.8), caption=q.get('image_caption'))
+
+            if q.get('table'):
+                tbl_data = q['table']
+                add_styled_table(doc, tbl_data.get('headers', []), tbl_data.get('rows', []),
+                                 col_widths=tbl_data.get('widths'), mode=mode)
 
             if not show_answers:
                 add_short_answer_box(doc, q_num)

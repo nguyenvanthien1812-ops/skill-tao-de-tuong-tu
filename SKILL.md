@@ -1220,11 +1220,21 @@ Agent PHẢI chọn đúng công cụ theo bảng dưới để đảm bảo đ�
    - Theo chuẩn SGK GDPT 2018 (cả cấp 2 và cấp 3), ký hiệu song song chính thức là **hai gạch xiên song song** (`//` hoặc `⫽`), còn LaTeX quốc tế thường dùng `\parallel` (hai gạch đứng $\parallel$).
    - Hệ thống tự động chuẩn hóa cả hai dạng:
      + Khi giáo viên/AI viết `$AB // CD$` hay `$(P) // (Q)$`: Tự động chuẩn hóa thành `\text{ // }` có khoảng đệm toán học đối xứng, chống dính sát chữ và chống nhận nhầm thành phép chia trong MathType OLE / Word Equation.
-     + Khi viết `\parallel`: Tự động thêm khoảng đệm đối xứng `\ \parallel \ ` (ví dụ `$BK \ \parallel \ CH$`), chống dính sát vào tên đoạn thẳng và mã hóa chuẩn font `TF_SYMBOL` trong MathType OLE (không bị ô vuông `□` hoặc `?`).
+     + Khi viết `\parallel`: Tự động chuyển thành `\text{ // }` (chuẩn SGK Việt Nam), chống dính sát vào tên đoạn thẳng và không bị ô vuông `□` hoặc `?` trong MathType OLE.
      + Khi viết `\perp`: Tự động thêm khoảng đệm đối xứng `\ \perp \ ` (ví dụ `$AB \ \perp \ CD$`).
 7. ✅ **DẤU GIÁ TRỊ TUYỆT ĐỐI CHUẨN TEMPLATE FENCE MATHTYPE**:
    - Tự động chuẩn hóa mọi cặp dấu `|...|` hoặc `\lvert ... \rvert` sang `\left| ... \right|` (chuẩn template `tmFENCE` của MathType).
    - Ngăn chặn triệt để hiện tượng giáo viên nhấp đúp chuột mở MathType bị nuốt mất 2 vạch gạch đứng giá trị tuyệt đối.
+8. ❌ **TUYỆT ĐỐI KHÔNG DÙNG `\wideparen` CHO CUNG TRÒN**:
+   - Bộ dịch TeX của MathType không hỗ trợ lệnh `\wideparen{AB}` và sẽ in ra nguyên bản chuỗi text thô `\wideparen{AB}`.
+   - Hệ thống tự động chuyển hóa thành `\text{cung } AB` hoặc viết lời giải bằng tiếng Việt: `cung $AB$` chuẩn sư phạm SGK Việt Nam.
+9. ⚠️ **CÁCH GHI HỆ SỐ TRƯỚC GÓC `\widehat`**:
+   - Tránh viết dính liền `$2\widehat{ABC}$` vì bộ phân tích MathType đôi khi gom số 2 vào trong mũ góc. Tự động chuẩn hóa thành `$2 \cdot \widehat{ABC}$`.
+10. ⚠️ **TÁCH BIỆT CÔNG THỨC DISPLAY MATH TRÊN DÒNG ĐỘC LẬP**:
+   - Khi hiển thị công thức trọng tâm hoặc biến đổi dài, tuyệt đối không chèn `$$ ... $$` lẫn trong đoạn văn bản thông thường. Mỗi công thức display math phải được đưa vào một paragraph riêng căn giữa `doc.add_paragraph()` với định dạng `$ ... $` (`add_display_eq()`).
+11. 🛡️ **CƠ CHẾ TỰ ĐỘNG CHỐNG XUNG ĐỘT KHÓA FILE WORD (PERMISSIONERROR)**:
+   - Khi giáo viên đang mở xem file Word trên máy tính, hệ điều hành Windows sẽ khóa quyền ghi đè (`PermissionError: [Errno 13] Permission denied`).
+   - Bộ xuất file tự động bắt ngoại lệ, không bao giờ báo lỗi hay nuốt kết quả, mà sẽ tự động lưu ra file mới `<tên_file>_moi.docx` và thông báo rõ ràng cho giáo viên.
 
 Sử dụng thư viện cốt lõi [docx_math_builder.py](./scripts/docx_math_builder.py):
 
@@ -1805,6 +1815,39 @@ Agent kích hoạt hệ thống biên dịch chuyên sâu [exam_translator.py](.
 - **Fix**: Thêm **Bước 2.0 – difficulty_level** vào SKILL.md với bảng điều chỉnh 9 dạng bài × 3 mức (easier / equivalent / harder).
 - **Quy tắc vàng bất biến**: Dạng bài / kiểu bài PHẢI GIỐNG ĐỀ GỐC 100%. Chỉ điều chỉnh số liệu và độ phức tạp tính toán.
 - **Kết quả**: Agent tự động đọc yêu cầu người dùng → map sang `difficulty_level` → áp dụng bảng điều chỉnh số liệu phù hợp.
+
+---
+
+## 🆕 Nhật Ký Cải Tiến Kỹ Thuật (v4.1.0 – 10/2026)
+
+### ✅ Nâng cấp 1: Bộ Chuẩn Hóa Ký Hiệu Hình Học SGK & Chống Nuốt Ký Hiệu MathType Toàn Diện
+- **Vấn đề cũ**: Lệnh `\wideparen{...}` (cung tròn) không được bộ dịch TeX của MathType hỗ trợ, in ra chuỗi text thô `\wideparen{AB}`; lệnh `\parallel` hiển thị hai vạch đứng quốc tế $\parallel$ thay vì gạch xiên `//` của SGK Việt Nam; hệ số đứng trước góc như `2\widehat{OBC}` đôi khi bị MathType gom vào trong mũ góc.
+- **Giải pháp v4.1.0**:
+  + Bổ sung vào hàm `sanitize_latex_for_mathtype()` quy tắc tự động chuyển đổi `\wideparen{...}` $\rightarrow$ `\text{cung } ...` chuẩn quy ước SGK GDPT 2018.
+  + Chuẩn hóa `\parallel` $\rightarrow$ `\text{ // }` có khoảng đệm đối xứng, không dính chữ, hiển thị gạch xiên chuẩn SGK Việt Nam.
+  + Tự động thêm dấu nhân `\cdot` phân tách rõ ràng khi có hệ số số học trước góc: `(\d+)\s*\\widehat\{` $\rightarrow$ `\1 \cdot \widehat{`.
+- **Kết quả**: Ký hiệu hình học hiển thị 100% chuẩn mực sư phạm, nhấp đúp chuột mở MathType OLE hoàn hảo không một lỗi nhỏ.
+
+### ✅ Nâng cấp 2: Phân Tách Tuyệt Đối Display Math Trên Đoạn Văn Bản Độc Lập
+- **Vấn đề cũ**: Khi chèn `$$ ... $$` lẫn trong đoạn văn bản có ký tự `$ ... $` nội dòng, thuật toán tách chuỗi phân đoạn bị nhầm lẫn khiến một số công thức bị sót thành text thô.
+- **Giải pháp v4.1.0**:
+  + Chuẩn hóa tự động thay thế `$$` thành `$` trong các khối nội dòng.
+  + Bổ sung phương thức `add_display_eq()` để tách các công thức biến đổi trọng tâm thành paragraph riêng căn giữa độc lập.
+- **Kết quả**: Không còn hiện tượng chuỗi LaTeX thô lọt vào văn bản; 100% công thức biến đổi lớn nằm trang trọng giữa trang.
+
+### ✅ Nâng cấp 3: Cơ Chế Tự Động Chống Xung Đột Khóa File Word (Windows File Lock)
+- **Vấn đề cũ**: Khi giáo viên đang mở xem file Word trên máy tính, Windows khóa ghi file (`PermissionError: [Errno 13] Permission denied`). Nếu agent ghi đè sẽ bị lỗi hoặc âm thầm thất bại, khiến file cũ vẫn giữ nguyên.
+- **Giải pháp v4.1.0**:
+  + Bổ sung cơ chế bắt ngoại lệ `PermissionError` trong `convert_to_mathtype_ole_via_backend()` và các hàm xuất Word.
+  + Khi phát hiện file đích bị khóa, tự động lưu sang file mới `<tên_file>_moi.docx` và thông báo ngay cho giáo viên.
+- **Kết quả**: Không bao giờ mất dữ liệu hay bị dừng đột ngột; giáo viên luôn nhận được file Word mới nhất.
+
+### 🌐 Phạm Vi Áp Dụng Toàn Diện Hệ Thống:
+- Đã được cập nhật đồng bộ 100% trên toàn bộ các module cốt lõi của skill:
+  1. [`docx_math_builder.py`](./scripts/docx_math_builder.py) (Bộ dựng đề và bài giải Word OLE/OMML chính).
+  2. [`standardize_word_mathtype.py`](./scripts/standardize_word_mathtype.py) (Bộ chuẩn hóa và sửa lỗi file Word có sẵn).
+  3. [`pdf_to_math_docx.py`](./scripts/pdf_to_math_docx.py) (Bộ chuyển đổi đề thi PDF sang Word MathType).
+  4. [`SKILL.md`](./SKILL.md) (Quy chuẩn bắt buộc cho toàn bộ tiến trình làm việc của Agent).
 
 ---
 

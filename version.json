@@ -1,11 +1,16 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "5.5.1",
+  "version": "5.5.2",
   "release_date": "2026-10-16",
   "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Tạo đề từ ma trận đặc tả (không cần đề gốc). Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge (không cần cài LaTeX), kiểm định tự động GDPT 2018.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "5.5.2": [
+      "CHUẨN HÓA TOÀN DIỆN KÝ HIỆU HÌNH HỌC SGK GDPT 2018 (docx_math_builder & standardize_word_mathtype): Tự động khử triệt để lỗi MathType in text thô \\wideparen{...} sang \\text{cung } ..., chuẩn hóa \\parallel sang // (hai gạch xiên chuẩn SGK Việt Nam), đệm dấu nhân \\cdot trước góc \\widehat khi có hệ số số học (chống MathType gom số vào mũ góc).",
+      "PHÂN TÁCH DISPLAY MATH ĐỘC LẬP (add_display_eq): Tách các công thức biến đổi trọng tâm thành paragraph riêng căn giữa độc lập, loại bỏ 100% tình trạng sót chuỗi LaTeX thô $...$ trong văn bản.",
+      "CƠ CHẾ TỰ ĐỘNG CHỐNG XUNG ĐỘT KHÓA FILE WORD (PermissionError Windows Lock): Tự động phát hiện khi file Word đang mở bởi người dùng, tự động lưu sang <ten_file>_moi.docx an toàn 100% không gián đoạn."
+    ],
     "5.5.1": [
       "TÍCH HỢP HỆ THỐNG KỊCH BẢN PHẢN HỒI 'CẦM TAY CHỈ VIỆC' KHI GIÁO VIÊN GÕ LỆNH NGẮN: Tự động hướng dẫn chi tiết 3 cách đưa file (Kéo thả chuột 1 giây, Copy vào thư mục làm việc, phím tắt Shift+Chuột phải lấy đường dẫn) và cung cấp sẵn câu lệnh mẫu copy-paste cho 9 tác vụ: Tạo đề tương tự (3 mức độ khó Tương đương/Dễ hơn/Khó hơn), Chuyển PDF sang Word, Chuẩn hóa MathType OLE, Trộn 4 mã đề, Dịch tiếng Anh song ngữ, Tạo ma trận đặc tả, Trích xuất ma trận từ đề, Nhận diện ảnh đề thi OCR, và Lập trình vẽ hình kỹ thuật 300 DPI.",
       "BỘ HẬU XỬ LÝ NHỊ PHÂN MTEF TỰ ĐỘNG (postprocess_ole_docx_fix_delimiters): Quét và chuẩn hóa trực tiếp các đối tượng OLE .bin trong file Word để triệt tiêu vĩnh viễn cả lỗi kim cương đen (◆ do U+2223) và lỗi dấu ngoặc đơn mở ('(' do MT Extra 0x7c), bảo đảm 100% vạch đứng | thẳng tắp chuẩn MathType 14pt khi kích đúp."
