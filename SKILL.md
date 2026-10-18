@@ -33,6 +33,8 @@ description: >-
   "chuẩn hóa công thức giữ nguyên bố cục", "tôi muốn chuyển pdf sang word", "hướng dẫn chuyển pdf sang word",
   "hướng dẫn tôi tạo đề", "hướng dẫn tạo đề tương tự", "làm sao để chuyển pdf sang word", "cách chuyển pdf sang word",
   "tôi muốn tạo đề tương tự", "làm sao để tạo đề tương tự", "hướng dẫn sử dụng skill", "cách dùng skill",
+  "tôi muốn tạo đề từ ma trận có sẵn", "tạo đề từ ma trận có sẵn", "tạo đề khi chưa có ma trận", "tôi muốn tạo đề khi chưa có ma trận",
+  "chưa có ma trận đặc tả", "chuẩn bị gì để tạo ma trận", "hướng dẫn chuẩn bị ma trận", "tạo ma trận cho mọi môn", "lập ma trận từ sgk",
   "tôi muốn vẽ hình", "hướng dẫn vẽ hình", "cách vẽ hình", "vẽ hình cho tôi", "vẽ đồ thị", "tôi muốn vẽ đồ thị",
   "tôi muốn làm video", "tôi muốn viết kịch bản video", "tạo video khởi động", "làm video khởi động",
   "viết prompt veo 3", "tạo kịch bản video", "làm video mở đầu bài", "tạo prompt video",
@@ -127,7 +129,7 @@ Khi giáo viên đưa ra các câu lệnh ngắn, đơn giản hoặc mới ch�
 - *"chuẩn hóa công thức word"*, *"sửa lỗi công thức file word"*, *"chuyển equation sang mathtype"*, *"chuẩn hóa mathtype"*
 - *"trộn đề thi"*, *"tạo 4 mã đề"*, *"tạo phiếu tô trắc nghiệm"*, *"đảo đề thi"*
 - *"dịch đề sang tiếng anh"*, *"tạo đề song ngữ"*, *"chuyển đề sang tiếng anh"*, *"đề tiếng anh"*
-- *"tạo ma trận đặc tả"*, *"tạo ma trận đề kiểm tra"*, *"làm ma trận"*, *"cấu trúc ma trận"*, *"tạo đề từ ma trận"*
+- *"tạo ma trận đặc tả"*, *"tạo ma trận đề kiểm tra"*, *"tôi muốn tạo đề từ ma trận có sẵn"*, *"tạo đề khi chưa có ma trận"*, *"chưa có ma trận đặc tả"*, *"chuẩn bị gì để tạo ma trận"*, *"làm ma trận"*, *"cấu trúc ma trận"*, *"tạo đề từ ma trận"*
 - *"trích xuất ma trận"*, *"phân tích ma trận đề thi"*, *"lập ma trận từ đề này"*
 - *"nhận diện ảnh đề thi"*, *"chụp ảnh đề thi tạo đề mới"*, *"ocr ảnh đề"*
 **MÀ TRONG NGỮ CẢNH CHƯA CÓ FILE ĐÍNH KÈM HOẶC CHƯA CÓ ĐƯỜNG DẪN TỆP CỤ THỂ**:
@@ -334,41 +336,68 @@ Agent xuất ngay phản hồi:
 
 ---
 
-#### 6️⃣ KHI GIÁO VIÊN NÓI: "tạo ma trận đặc tả" (hoặc "tạo ma trận đề kiểm tra", "làm ma trận", "cấu trúc ma trận", "tạo đề từ ma trận"...)
+#### 6️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn tạo đề từ ma trận có sẵn", "tạo đề khi chưa có ma trận", "tạo ma trận đặc tả" (hoặc "tạo ma trận đề kiểm tra", "làm ma trận", "cấu trúc ma trận", "tạo đề từ ma trận"...)
 Agent xuất ngay phản hồi:
-> "Dạ chào Thầy/Cô! Để thiết lập ma trận đề kiểm tra và bản đặc tả chuẩn theo chương trình GDPT 2018, Thầy/Cô có 2 lựa chọn cực kỳ thuận tiện sau nhé:
+> "Dạ chào Thầy/Cô! Để hỗ trợ Thầy/Cô thiết lập ma trận hoặc ra đề thi chuẩn theo chương trình GDPT 2018, hệ thống phân chia rõ ràng theo 2 trường hợp thực tế sau nhé:
 > 
-> 📂 **LỰA CHỌN 1: Sử dụng Kho Ma trận chuẩn GDPT 2018 có sẵn trong hệ thống**
-> * Em đã tích hợp sẵn kho ma trận chuẩn của Bộ GD&ĐT cho các môn **Toán, Vật lý, Hóa học (lớp 10, 11, 12; thời gian 45, 50, 90 phút)**. Thầy/Cô có thể xem trực quan ảnh thẻ ma trận tại thư mục `references/matrix_previews/`.
-> * *Nếu Thầy/Cô muốn TẠO ĐỀ THI MỚI hoàn toàn từ ma trận chuẩn, hãy gửi câu lệnh:*
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 📁 **TRƯỜNG HỢP 1: CHƯA CÓ MA TRẬN ĐẶC TẢ SẴN (Lập Ma Trận & Bản Đặc Tả Từ Tư Liệu Gốc - Áp dụng cho MỌI MÔN HỌC)**
+> 
+> 📌 **Bước 1: Thầy/Cô tạo 1 thư mục riêng** trên máy tính (ví dụ đặt tên: `DU_LIEU_RA_DE`) và chép vào thư mục các file sau:
+> 1. **Sách giáo khoa điện tử (file PDF)**: Cuốn SGK môn học đang dạy (Kết nối tri thức / Cánh diều / Chân trời sáng tạo) của học kỳ hoặc các chương cần kiểm tra.
+> 2. **Phụ lục / Kế hoạch dạy học (Phân phối chương trình - PPCT)**: File Word/PDF phân phối chương trình của trường/bộ môn (để AI xác định chính xác thời điểm kiểm tra rơi vào tuần mấy, gồm những bài học nào, thời lượng bao nhiêu tiết).
+> 3. **Cấu trúc ra đề**: Hướng dẫn hoặc quy định của Trường / Phòng / Sở GD&ĐT (Thời gian làm bài: 45/60/90 phút; Hình thức: Trắc nghiệm nhiều lựa chọn, Đúng/Sai, Trả lời ngắn hay Tự luận; Thang điểm và Tỷ lệ nhận thức: 40-30-20-10 hay 30-40-20-10).
+> 4. **Đề minh họa / Đề mẫu (nếu có)**: Đề thi các năm trước hoặc đề mẫu của Sở/Bộ để AI học văn phong và định dạng quen thuộc của trường.
+> 5. **Chương trình GDPT 2018 của môn học đó (file PDF)**: Bản chương trình môn học ban hành theo Thông tư 32/2018/TT-BGDĐT để trích xuất chuẩn xác 100% cột "Yêu cầu cần đạt" (YCCĐ).
+> 
+> ✍️ **Bước 2: Câu lệnh (Prompt) mẫu gửi vào khung chat:**
+> ```text
+> Em hãy đọc toàn bộ các tài liệu trong thư mục "[Dán đường dẫn thư mục DU_LIEU_RA_DE vào đây]":
+> - Môn: [Điền tên môn, ví dụ: Toán / Vật lý / Hóa học / KHTN / Lịch sử & Địa lý]
+> - Lớp: [Điền khối lớp, ví dụ: 8 / 10 / 11 / 12]
+> - Bài kiểm tra: [Giữa học kỳ 1 / Cuối học kỳ 1 / Giữa học kỳ 2 / Cuối học kỳ 2]
+> 
+> Dựa vào Sách giáo khoa, Phân phối chương trình, Cấu trúc ra đề và Chương trình GDPT 2018 có trong thư mục, em hãy:
+> 1. Xác định chính xác phạm vi bài học, số tiết tương ứng đến thời điểm kiểm tra.
+> 2. Lập BẢNG MA TRẬN ĐỀ KIỂM TRA phân bổ số câu, số điểm theo 4 mức độ nhận thức (Nhận biết, Thông hiểu, Vận dụng, Vận dụng cao) bám sát đúng Cấu trúc ra đề.
+> 3. Lập BẢN ĐẶC TẢ ĐỀ KIỂM TRA chi tiết: Trích dẫn chuẩn xác 100% "Yêu cầu cần đạt" từ văn bản Chương trình GDPT 2018 của môn học cho từng mạch kiến thức và từng câu hỏi.
+> 4. Xuất toàn bộ kết quả ra 1 file Word (.docx) duy nhất, định dạng bảng Table Grid chuẩn viền, căn lề và thể thức văn bản hành chính theo đúng quy định của Bộ GD&ĐT để tôi nộp duyệt tổ chuyên môn.
+> ```
+> 
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 📝 **TRƯỜNG HỢP 2: ĐÃ CÓ MA TRẬN ĐẶC TẢ SẴN (Ra Đề Thi Hoàn Chỉnh Từ Ma Trận Có Sẵn)**
+> 
+> Khi Thầy/Cô đã có sẵn file Ma trận & Bản đặc tả (Word, Excel, PDF hoặc bảng dán trong chat), Thầy/Cô chỉ cần copy file vào thư mục: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` (hoặc giữ `Shift` + chuột phải vào file -> Chọn `"Copy as path"`), sau đó gửi câu lệnh:
+> 
+> ✍️ **Câu lệnh (Prompt) mẫu ra đề chuẩn 3 tiêu chuẩn vàng:**
+> ```text
+> Dựa vào file Ma trận và Bản đặc tả đề kiểm tra tại: "[Dán đường dẫn file Ma trận Word/Excel/PDF vào đây]", em hãy biên soạn giúp tôi 1 ĐỀ THI HOÀN CHỈNH bám sát 100% cấu trúc này.
+> 
+> Thông tin bổ sung:
+> - Môn: [Toán / Vật lý / Hóa học / Sinh học / KHTN...] - Lớp: [...]
+> - Bộ sách giáo khoa đang dạy: [Kết nối tri thức / Chân trời sáng tạo / Cánh diều]
+> 
+> Yêu cầu bắt buộc khi ra đề:
+> 1. Chuẩn xác khoa học 100%: Số liệu mới hoàn toàn, tính toán nghiệm đẹp, tuân thủ đúng định luật khoa học tự nhiên. Bốn phương án trắc nghiệm chỉ có DUY NHẤT 1 đáp án đúng, các phương án nhiễu có tính sư phạm (bắt đúng lỗi sai học sinh hay mắc).
+> 2. Từng câu hỏi phải bám đúng mạch kiến thức và đúng cấp độ tư duy (NB / TH / VD / VDC) theo từng dòng của Bản đặc tả.
+> 3. Lập trình vẽ mới 100% hình vẽ kỹ thuật, đồ thị, sơ đồ thí nghiệm sắc nét 300 DPI chèn đúng vào vị trí câu hỏi tương ứng (nếu đề có hình).
+> 4. Xuất đồng thời 2 file Word riêng biệt:
+>    - File 1: Bản ĐỀ HỌC SINH (trình bày trang nhã, chuẩn bố cục in ấn phát cho học sinh).
+>    - File 2: Bản LỜI GIẢI CHI TIẾT (hướng dẫn giải từng bước, kèm bảng đáp án trắc nghiệm nhanh và thang điểm chấm chi tiết).
+> 5. 100% công thức khoa học trong cả 2 file phải ở định dạng MathType OLE (Equation.DSMT4, cỡ chữ 14pt, nhấp đúp chuột sửa được), bảng biểu dựng chuẩn Table Grid không xô lệch.
+> ```
+> 
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> ⚡ **LỰA CHỌN NHANH: Sử Dụng Kho 8 Ma Trận Chuẩn GDPT 2018 Có Sẵn (Không Cần Chuẩn Bị File)**
+> * Nếu Thầy/Cô chưa có ma trận và cũng không muốn chuẩn bị nhiều file, hệ thống đã nạp sẵn kho 8 ma trận chuẩn của Bộ GD&ĐT cho các môn **Toán, Vật lý, Hóa học, Sinh học, KHTN, Sử, Địa, Văn (lớp 8, 10, 11, 12; 45, 50, 90 phút)**. Thầy/Cô có thể xem trực quan ảnh thẻ ma trận tại thư mục `references/matrix_previews/`.
+> * *Nếu Thầy/Cô muốn TẠO ĐỀ THI MỚI ngay từ ma trận chuẩn:*
 >   ```text
 >   Em hãy tạo giúp tôi 1 đề thi môn [Toán / Vật lý / Hóa học] lớp [10 / 11 / 12] thời gian [45 / 50 / 90] phút dựa trên Ma trận đặc tả chuẩn GDPT 2018 có sẵn.
->   Yêu cầu bắt buộc:
->   1. Nội dung bám sát 100% ma trận chuẩn GDPT 2018, số liệu mới nghiệm đẹp, định luật khoa học chuẩn xác.
->   2. Lập trình vẽ mới 100% hình vẽ kỹ thuật sắc nét 300 DPI đúng vị trí câu hỏi.
->   3. Xuất đồng thời 2 file Word: Đề Học Sinh và Lời Giải Chi Tiết, 100% công thức MathType OLE 14pt, bảng biểu Table Grid chuẩn mực.
+>   Yêu cầu: Số liệu mới nghiệm đẹp, vẽ hình 300 DPI, xuất đồng thời 2 file Word Đề Học Sinh và Lời Giải Chi Tiết chuẩn MathType OLE 14pt.
 >   ```
 > * *Nếu Thầy/Cô chỉ muốn XUẤT BẢNG MA TRẬN & BẢN ĐẶC TẢ ra file Word để nộp tổ chuyên môn:*
 >   ```text
->   Em hãy xuất bảng Ma trận và Bản đặc tả đề kiểm tra môn [Toán / Vật lý / Hóa học] lớp [10 / 11 / 12] thời gian [45 / 50 / 90] phút ra file Word giúp tôi.
->   Yêu cầu bắt buộc: Dựng chuẩn khung Table Grid có viền đầy đủ, căn lề và tỷ lệ phân bố câu hỏi/mức độ chuẩn Bộ GD&ĐT.
->   ```
-> 
-> 📂 **LỰA CHỌN 2: Thiết lập ma trận đặc tả theo CẤU TRÚC RIÊNG của Thầy/Cô hoặc Nhà trường**
-> * *Cách 2A (Mô tả cấu trúc trực tiếp trong khung chat):* Thầy/Cô copy mẫu sau, điền thông tin và gửi cho em:
->   ```text
->   Em hãy thiết lập Ma trận và Bản đặc tả đề kiểm tra theo yêu cầu sau và xuất ra file Word:
->   - Môn: [Toán / Vật lý / Hóa học], Lớp: [10 / 11 / 12], Thời gian: [45 / 90 phút]
->   - Cấu trúc các phần: Phần 1 (trắc nghiệm nhiều lựa chọn: ... câu), Phần 2 (trắc nghiệm đúng sai: ... câu), Phần 3 (trả lời ngắn: ... câu)
->   - Tỷ lệ mức độ nhận thức: [Nhận biết ...% - Thông hiểu ...% - Vận dụng ...% - Vận dụng cao ...%]
->   - Các chủ đề/bài học trọng tâm: [Chương 1: ..., Chương 2: ...]
->   Yêu cầu: Dựng bảng Table Grid chuẩn viền, phân bổ số câu, số điểm và năng lực cần đánh giá rõ ràng.
->   ```
-> * *Cách 2B (Thầy/Cô đã có sẵn file Word hoặc Excel ma trận của trường/Sở):*  
->   Thầy/Cô copy file vào thư mục: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` (hoặc giữ `Shift` + chuột phải chọn `"Copy as path"`), sau đó gửi câu lệnh:
->   ```text
->   Dựa vào file ma trận đặc tả: "[Tên file trong thư mục HOẶC đường dẫn file bên ngoài]", em hãy tạo giúp tôi 1 đề thi bám sát 100% cấu trúc này.
->   Yêu cầu bắt buộc: Số liệu mới nghiệm đẹp, vẽ hình 300 DPI và xuất file Word MathType OLE 14pt kèm lời giải chi tiết.
+>   Em hãy xuất bảng Ma trận và Bản đặc tả đề kiểm tra môn [Toán / Vật lý / Hóa học] lớp [10 / 11 / 12] thời gian [45 / 50 / 90] phút ra file Word giúp tôi (dựng chuẩn khung Table Grid có viền đầy đủ theo thể thức Bộ GD&ĐT).
 >   ```"
 
 ---
@@ -484,17 +513,39 @@ Agent xuất ngay phản hồi:
 
 ## Các Bước Thực Hiện Chi Tiết
 
-### 🆕 Bước 0.5: Tạo Đề Từ Ma Trận Đặc Tả (Không Cần Đề Gốc)
+### 🆕 Bước 0.5: Thiết Lập Ma Trận & Tạo Đề Từ Ma Trận Đặc Tả
 
 > [!TIP]
-> **Khi nào dùng:** Giáo viên muốn tạo đề mới hoàn toàn từ đầu theo ma trận đặc tả — không cần có đề gốc để "tương tự".
+> **Khi nào dùng:** 
+> 1. Giáo viên muốn lập Bảng Ma trận & Bản đặc tả chuẩn GDPT 2018 từ các tài liệu gốc (khi chưa có ma trận).
+> 2. Giáo viên đã có sẵn file Ma trận đặc tả và muốn tạo đề thi mới hoàn toàn bám sát 100% ma trận này.
+> 3. Giáo viên muốn dùng nhanh kho 8 ma trận chuẩn GDPT 2018 tích hợp sẵn trong hệ thống.
 
 **Kích hoạt khi giáo viên nói:**
-- *"tạo đề Toán 12"* / *"tạo đề Hóa 11, 90 phút"* → Dùng ma trận mặc định GDPT 2018
-- *"tạo theo ma trận này: [bảng]"* → Parse bảng Markdown trong chat
-- *"tải file ma trận"* (kèm file Excel/Word) → Đọc bảng từ file
+- *"chưa có ma trận đặc tả"*, *"tạo đề khi chưa có ma trận"*, *"hướng dẫn chuẩn bị ma trận"* → Kích hoạt **Nhánh 1: Lập Ma trận từ 5 tư liệu gốc**.
+- *"tôi muốn tạo đề từ ma trận có sẵn"*, *"tạo đề theo ma trận này"* (kèm file Word/Excel/ảnh hoặc bảng chat) → Kích hoạt **Nhánh 2: Ra đề từ ma trận có sẵn**.
+- *"tạo đề Toán 12, 90 phút"*, *"xuất ma trận Hóa 11"* → Kích hoạt **Nhánh 3: Dùng kho ma trận chuẩn GDPT 2018 mặc định**.
 
-**Quy trình thực hiện:**
+---
+
+#### 📌 Nhánh 1: Khi Giáo Viên Chưa Có Ma Trận (Lập Ma Trận & Bản Đặc Tả Từ Thư Mục 5 Tư Liệu)
+1. **Đọc và đối chiếu toàn bộ tài liệu trong thư mục do giáo viên cung cấp:**
+   - Đọc file **Kế hoạch dạy học / Phân phối chương trình (PPCT)** để đếm chính xác số tiết đã dạy đến thời điểm kiểm tra, xác định danh sách các bài học nằm trong phạm vi ra đề.
+   - Đọc file **Sách giáo khoa điện tử (PDF)** để nắm các dạng bài tập, thuật ngữ, ký hiệu và ngữ cảnh đặc trưng của bộ sách đang dạy.
+   - Đọc file **Cấu trúc ra đề** để xác định hình thức (TN 4 lựa chọn, TN Đúng/Sai, Trả lời ngắn, Tự luận), thời gian làm bài, tổng điểm và tỷ lệ mức độ nhận thức (NB/TH/VD/VDC).
+   - Đọc file **Chương trình GDPT 2018 môn học (PDF)** để trích xuất nguyên văn cột **"Yêu cầu cần đạt" (YCCĐ)** tương ứng với từng bài học / chủ đề.
+   - Tham khảo file **Đề mẫu / Đề minh họa (nếu có)** để căn chỉnh độ dài câu hỏi và văn phong ra đề quen thuộc của trường/Sở.
+2. **Thiết lập Bảng Ma trận & Bản đặc tả:**
+   - Phân bổ số câu, số điểm theo tỷ lệ số tiết của từng mạch nội dung.
+   - Khớp nối từng câu hỏi với từng Yêu cầu cần đạt (YCCĐ) cụ thể.
+3. **Xuất file Word (`.docx`) nộp tổ chuyên môn:**
+   - Dựng bảng `Table Grid` viền đầy đủ, căn giữa tiêu đề, lề văn bản chuẩn thể thức Bộ GD&ĐT.
+   - Nhúng công thức MathType OLE 14pt (hoặc OMML dự phòng) cho các ký hiệu khoa học.
+
+---
+
+#### 📌 Nhánh 2: Khi Giáo Viên Đã Có Sẵn Ma Trận (Ra Đề Thi Hoàn Chỉnh Bám Sát Ma Trận)
+1. **Parse ma trận đặc tả (tự động nhận diện định dạng):**
 
 ```python
 from scripts.exam_from_matrix import MatrixParser, ExamGenerator, ReviewInterface
@@ -652,22 +703,25 @@ KHÔNG hỏi — tự quyết định:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📌 CÁC CÁCH TẠO ĐỀ TỪ MA TRẬN ĐẶC TẢ
+📌 TỔNG HỢP CÁC CÁCH TẠO MA TRẬN & RA ĐỀ TỪ MA TRẬN
 
-🔹 Cách 1 — Dán bảng ma trận vào chat:
-   "Tạo đề theo ma trận sau, Hóa 11 Kết Nối 90 phút:
-    [dán bảng vào đây]"
+📁 NHÓM 1: CHƯA CÓ MA TRẬN ĐẶC TẢ SẴN (Lập từ 5 tư liệu gốc cho mọi môn):
+   - Tạo thư mục "DU_LIEU_RA_DE" chứa: (1) SGK điện tử, (2) Kế hoạch dạy học/PPCT,
+     (3) Cấu trúc ra đề, (4) Đề mẫu nếu có, (5) Chương trình GDPT 2018 môn học (PDF).
+   - Câu lệnh:
+     "Em hãy đọc các tài liệu trong thư mục DU_LIEU_RA_DE, đối chiếu PPCT và Chương trình GDPT 2018
+      để lập bảng Ma trận và Bản đặc tả đề kiểm tra môn [Toán/Lý/Hóa/KHTN...] lớp [...] ra file Word."
 
-🔹 Cách 2 — Gửi file kèm:
-   "Tạo đề theo file ma trận này" + đính kèm file Excel/Word/ảnh
+📝 NHÓM 2: ĐÃ CÓ SẴN FILE MA TRẬN ĐẶC TẢ (Ra đề hoàn chỉnh chuẩn 3 tiêu chuẩn vàng):
+   - Đính kèm file Word/Excel/PDF ma trận hoặc dán bảng vào chat.
+   - Câu lệnh:
+     "Dựa vào file Ma trận tại: [đường dẫn file], em hãy tạo giúp tôi 1 đề thi hoàn chỉnh bám sát 100%
+      cấu trúc này (nghiệm đẹp chuẩn khoa học, vẽ hình 300 DPI, xuất 2 file Word Đề Học Sinh và Lời Giải
+      Chi Tiết chuẩn 100% MathType OLE 14pt)."
 
-🔹 Cách 3 — Nói tóm tắt, AI hỏi phần còn thiếu:
-   "Tạo đề Toán 12 kiểm tra cuối kỳ"
-   → AI sẽ hỏi thêm bộ sách và phạm vi (1 câu gộp, không hỏi nhiều lần)
-
-🔹 Cách 4 — Đủ thông tin 1 lần, AI ra đề ngay:
-   "Tạo đề [Môn] [Lớp], [thời gian], sách [tên bộ sách],
-    chương [X-Y], theo ma trận: [bảng]"
+⚡ NHÓM 3: SỬ DỤNG KHO MA TRẬN CHUẨN GDPT 2018 CÓ SẴN TRONG HỆ THỐNG:
+   - "Tạo đề Toán 12, 90 phút theo ma trận chuẩn GDPT 2018 có sẵn"
+   - "Xuất bảng ma trận và bản đặc tả Hóa 11 ra file Word"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
@@ -1956,6 +2010,20 @@ white wide-leg trousers, small gold stud earrings,
 natural makeup with soft pink lips, warm bright smile, 
 slim figure, approachable and energetic personality. 
 Photorealistic, 4K, cinematic lighting, sharp focus.
+```
+
+---
+
+## 📋 4.5. TIÊU CHUẨN XUẤT PROMPT: ĐỊNH DẠNG "ALL-IN-ONE SINGLE CODE BLOCK" (BẮT BUỘC)
+
+> [!IMPORTANT]
+> **QUY TẮC VÀNG VỀ TRẢI NGHIỆM NGƯỜI DÙNG CHO GIÁO VIÊN:**
+> Tuyệt đối **KHÔNG tách rời** lời thoại tiếng Việt, đặc điểm nhân vật, hay bối cảnh ra ngoài các ô code khiến giáo viên phải copy - paste chắp vá nhiều lần.
+> Mọi clip xuất ra cho giáo viên **BẮT BUỘC** phải được đóng gói thành **ĐÚNG 1 Ô CODE DUY NHẤT CHO MỖI CLIP (Single Code Block per Clip)**. Giáo viên chỉ cần click 1 lần nút "Copy" trên góc ô code là nạp thẳng vào AI (Veo 3, Kling AI, Runway Gen-4, Sora...) mà không cần chỉnh sửa!
+
+### 📐 Công thức cấu trúc 1 Prompt hoàn chỉnh cho mỗi clip:
+```text
+[CHARACTER CONSISTENCY SEED]. Setting: [Bối cảnh phòng lab/lớp học tự nhiên]. Action: [Thao tác nhân vật & đạo cụ trực quan, an toàn chính sách]. Camera & Lighting: [Góc máy, chuyển động mượt, ánh sáng điện ảnh, 4K, 16:9, 24fps]. Spoken dialogue in clear [tone] Vietnamese: "[Lời thoại tiếng Việt sư phạm dưới 30 từ, đọc thong thả trong 8.5-9s]". Visual constraints: No on-screen text, no letters, no words, clean minimalist visuals, no subtitles.
 ```
 
 ---
