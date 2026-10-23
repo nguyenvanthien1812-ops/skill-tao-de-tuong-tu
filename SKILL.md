@@ -38,7 +38,7 @@ description: >-
   "tôi muốn vẽ hình", "hướng dẫn vẽ hình", "cách vẽ hình", "vẽ hình cho tôi", "vẽ đồ thị", "tôi muốn vẽ đồ thị",
   "tôi muốn làm video", "tôi muốn viết kịch bản video", "tạo video khởi động", "làm video khởi động",
   "viết prompt veo 3", "tạo kịch bản video", "làm video mở đầu bài", "tạo prompt video",
-  "viết kịch bản cho video", "làm video cho bài học", "tôi cần video khởi động", "lên kịch bản video".
+  "viết kịch bản cho video", "làm video cho bài học", "tôi cần video khởi động", "lên kịch bản video", "tôi muốn làm thí nghiệm ảo", "thí nghiệm 3d", "tạo thí nghiệm ảo", "mô phỏng 3d", "làm thí nghiệm ảo", "tạo mô phỏng 3d", "thí nghiệm ảo vật lý", "thí nghiệm ảo hóa học", "thí nghiệm ảo khtn", "chụp ảnh sgk tạo thí nghiệm ảo", "thí nghiệm ảo toán học".
 ---
 
 
@@ -55,6 +55,13 @@ Skill này tự động hóa toàn bộ quy trình biên soạn đề kiểm tra
    - Kèm cơ chế **Smart Fallback**: Luôn sinh thêm bản **Word Equation (OMML)** để mở được mượt mà trên mọi máy tính kể cả khi không cài MathType.
 4. **Bảng Biểu Nguyên Bản (Table Grid 100%)**:
    - Tự động dựng thành bảng Word thật (`Table Grid`) có viền đầy đủ, căn lề giữa cả ngang và dọc cho các bảng thống kê Toán, bảng số liệu thực nghiệm đo đạc Vật lý, và bảng nhận biết thuốc thử Hóa học. Tuyệt đối không dùng ảnh chụp bảng, giáo viên chỉnh sửa số liệu tùy ý.
+5. **Bộ 6 Chú Ý Bắt Buộc Khi Lập Ma Trận, Bản Đặc Tả & Ra Đề Theo Ma Trận (Toán, Lý, Hóa, KHTN, Công Nghệ...)**:
+   - **Chú ý 1 — Bản đặc tả tách mỗi mức độ nhận thức thành 1 dòng riêng & gióng thẳng hàng câu hỏi**: Bắt buộc tách riêng cột **`Mức độ đánh giá`** và cột **`Yêu cầu cần đạt`**. Mỗi mức độ nhận thức (`Nhận biết`, `Thông hiểu`, `Vận dụng`, `Vận dụng cao`) của từng bài học phải nằm trên **1 dòng (row) riêng biệt**; số lượng câu/ý và mã câu hỏi (`C1, C2, C17a...`) tương ứng với mức độ nhận thức nào **bắt buộc phải đặt nằm trên cùng dòng đó** (các cột `TT`, `Chủ đề`, `Nội dung/Đơn vị kiến thức` gộp dọc `vMerge` theo các dòng của bài học).
+   - **Chú ý 2 — Tuyệt đối không được thiếu các dòng Tổng kết cuối bảng**: Cả **Bảng 1 (Khung Ma trận)** và **Bảng 2 (Bản đặc tả)** bắt buộc phải có đầy đủ bộ dòng tổng kết ở cuối bảng: **`TỔNG (Ý)`**, **`TỔNG SỐ CÂU / LỆNH HỎI`**, **`TỔNG ĐIỂM (10,0 ĐIỂM)`**, và **`TỈ LỆ % (100%)`**.
+   - **Chú ý 3 — Vẽ bảng Word liền nét 100%, không bao giờ mất nét ở ô gộp**: Mọi bảng Ma trận và Bản đặc tả khi xuất ra `.docx` bắt buộc phải gọi hàm `enforce_perfect_table_borders(table, header_rows=3)` (trong `scripts/matrix_to_docx.py`) để gắn `<w:tblBorders>` cấp toàn bảng + quét trực tiếp toàn bộ thẻ XML `<w:tc>` (kể cả các ô ẩn `<w:vMerge/>` ở dòng 2, dòng 3 của tiêu đề hoặc cột gộp dọc) nhằm đóng khung đủ 4 cạnh, kế thừa màu nền `<w:shd>` và chống đứt dòng ngang trang (`<w:cantSplit/>`).
+   - **Chú ý 4 — Kiểm tra sát phạm vi bài học thực tế đã dạy (Lý thuyết vs. Thực hành)**: Nếu bài học cuối kỳ/giữa kỳ mới học 1 phần (ví dụ mới học phần lý thuyết cơ bản, chưa học phần thực hành), khi ra câu hỏi tự luận hoặc vận dụng/vận dụng cao ở bài đó **bắt buộc chỉ hỏi xoay quanh kiến thức lý thuyết đã học** (khái niệm, ưu điểm, phân loại, liên hệ thực tế đơn giản), tuyệt đối không hỏi quy trình thao tác thực hành chưa học.
+   - **Chú ý 5 — Khi tạo thêm Đề số 2, Đề số 3... từ cùng Ma trận & Bản đặc tả**: Phải giữ nguyên 100% ma trận phân bổ từng câu (`C1` đến câu cuối), đúng bài học, đúng mức độ nhận thức (`Nhận biết`, `Thông hiểu`, `Vận dụng`, `Vận dụng cao`) và đúng thang điểm như Đề số 1, nhưng đổi ngữ cảnh và câu hỏi mới hoàn toàn không trùng lặp.
+   - **Chú ý 6 — Cung cấp Câu lệnh gợi ý (Prompt mẫu) chặt chẽ cho giáo viên**: Luôn kèm theo mẫu câu lệnh tường minh (nêu rõ yêu cầu tách dòng mức độ nhận thức, đặt câu hỏi cùng dòng, đủ dòng tổng kết cuối bảng, kẻ bảng không mất nét) để giáo viên tái sử dụng dễ dàng.
 
 ---
 
@@ -338,53 +345,70 @@ Agent xuất ngay phản hồi:
 
 #### 6️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn tạo đề từ ma trận có sẵn", "tạo đề khi chưa có ma trận", "tạo ma trận đặc tả" (hoặc "tạo ma trận đề kiểm tra", "làm ma trận", "cấu trúc ma trận", "tạo đề từ ma trận"...)
 Agent xuất ngay phản hồi:
-> "Dạ chào Thầy/Cô! Để hỗ trợ Thầy/Cô thiết lập ma trận hoặc ra đề thi chuẩn theo chương trình GDPT 2018, hệ thống phân chia rõ ràng theo 2 trường hợp thực tế sau nhé:
+> "Dạ chào Thầy/Cô! Để hỗ trợ Thầy/Cô thiết lập Ma trận, Bản đặc tả hoặc ra đề thi chuẩn theo chương trình GDPT 2018, hệ thống phân chia rõ ràng theo 2 trường hợp thực tế sau nhé:
 > 
 > ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 > 📁 **TRƯỜNG HỢP 1: CHƯA CÓ MA TRẬN ĐẶC TẢ SẴN (Lập Ma Trận & Bản Đặc Tả Từ Tư Liệu Gốc - Áp dụng cho MỌI MÔN HỌC)**
 > 
 > 📌 **Bước 1: Thầy/Cô tạo 1 thư mục riêng** trên máy tính (ví dụ đặt tên: `DU_LIEU_RA_DE`) và chép vào thư mục các file sau:
 > 1. **Sách giáo khoa điện tử (file PDF)**: Cuốn SGK môn học đang dạy (Kết nối tri thức / Cánh diều / Chân trời sáng tạo) của học kỳ hoặc các chương cần kiểm tra.
-> 2. **Phụ lục / Kế hoạch dạy học (Phân phối chương trình - PPCT)**: File Word/PDF phân phối chương trình của trường/bộ môn (để AI xác định chính xác thời điểm kiểm tra rơi vào tuần mấy, gồm những bài học nào, thời lượng bao nhiêu tiết).
+> 2. **Phụ lục / Kế hoạch dạy học (Phân phối chương trình - PPCT)**: File Word/PDF/Excel phân phối chương trình của trường/bộ môn (để AI xác định chính xác thời điểm kiểm tra rơi vào tuần mấy, gồm những bài học nào, thời lượng bao nhiêu tiết).
 > 3. **Cấu trúc ra đề**: Hướng dẫn hoặc quy định của Trường / Phòng / Sở GD&ĐT (Thời gian làm bài: 45/60/90 phút; Hình thức: Trắc nghiệm nhiều lựa chọn, Đúng/Sai, Trả lời ngắn hay Tự luận; Thang điểm và Tỷ lệ nhận thức: 40-30-20-10 hay 30-40-20-10).
 > 4. **Đề minh họa / Đề mẫu (nếu có)**: Đề thi các năm trước hoặc đề mẫu của Sở/Bộ để AI học văn phong và định dạng quen thuộc của trường.
 > 5. **Chương trình GDPT 2018 của môn học đó (file PDF)**: Bản chương trình môn học ban hành theo Thông tư 32/2018/TT-BGDĐT để trích xuất chuẩn xác 100% cột "Yêu cầu cần đạt" (YCCĐ).
 > 
-> ✍️ **Bước 2: Câu lệnh (Prompt) mẫu gửi vào khung chat:**
+> ✍️ **Bước 2: Câu lệnh (Prompt) mẫu chặt chẽ gửi vào khung chat:**
 > ```text
 > Em hãy đọc toàn bộ các tài liệu trong thư mục "[Dán đường dẫn thư mục DU_LIEU_RA_DE vào đây]":
-> - Môn: [Điền tên môn, ví dụ: Toán / Vật lý / Hóa học / KHTN / Lịch sử & Địa lý]
-> - Lớp: [Điền khối lớp, ví dụ: 8 / 10 / 11 / 12]
+> - Môn: [Điền tên môn, ví dụ: Toán / Vật lý / Hóa học / KHTN / Công nghệ / Lịch sử & Địa lý]
+> - Lớp: [Điền khối lớp, ví dụ: 6 / 7 / 8 / 9 / 10 / 11 / 12]
 > - Bài kiểm tra: [Giữa học kỳ 1 / Cuối học kỳ 1 / Giữa học kỳ 2 / Cuối học kỳ 2]
+> - Thời gian làm bài: [45 phút / 60 phút / 90 phút]
 > 
-> Dựa vào Sách giáo khoa, Phân phối chương trình, Cấu trúc ra đề và Chương trình GDPT 2018 có trong thư mục, em hãy:
-> 1. Xác định chính xác phạm vi bài học, số tiết tương ứng đến thời điểm kiểm tra.
-> 2. Lập BẢNG MA TRẬN ĐỀ KIỂM TRA phân bổ số câu, số điểm theo 4 mức độ nhận thức (Nhận biết, Thông hiểu, Vận dụng, Vận dụng cao) bám sát đúng Cấu trúc ra đề.
-> 3. Lập BẢN ĐẶC TẢ ĐỀ KIỂM TRA chi tiết: Trích dẫn chuẩn xác 100% "Yêu cầu cần đạt" từ văn bản Chương trình GDPT 2018 của môn học cho từng mạch kiến thức và từng câu hỏi.
-> 4. Xuất toàn bộ kết quả ra 1 file Word (.docx) duy nhất, định dạng bảng Table Grid chuẩn viền, căn lề và thể thức văn bản hành chính theo đúng quy định của Bộ GD&ĐT để tôi nộp duyệt tổ chuyên môn.
+> Dựa vào Sách giáo khoa, Phân phối chương trình (PPCT), Cấu trúc ra đề và Chương trình GDPT 2018 có trong thư mục, em hãy thực hiện nghiêm ngặt 4 yêu cầu bắt buộc sau:
+> 
+> 1. XÁC ĐỊNH PHẠM VI KIẾN THỨC:
+>    - Đối chiếu PPCT và SGK để lấy chính xác 100% tên Chủ đề/Chương và tên từng Bài học, số tiết thực dạy tính đến thời điểm kiểm tra (nếu có phần thực hành chưa học đến thì chỉ kiểm tra phần lý thuyết đã học).
+> 
+> 2. LẬP BẢNG 1 - KHUNG MA TRẬN ĐỀ KIỂM TRA:
+>    - Phân bổ số câu, số lệnh hỏi và điểm số theo các phần (Phần I: Nhiều lựa chọn; Phần II: Đúng/Sai; Phần III: Trả lời ngắn [nếu có]; Phần Tự luận) và 4 mức độ nhận thức (Biết - Hiểu - Vận dụng - Vận dụng cao) tỉ lệ thuận với số tiết dạy.
+>    - BẮT BUỘC PHẢI CÓ ĐẦY ĐỦ 4 DÒNG TỔNG KẾT Ở CUỐI BẢNG MA TRẬN (tuyệt đối không được thiếu dòng cuối cùng của bảng):
+>      (1) Dòng "TỔNG (Ý)" (thống kê tổng số lệnh hỏi theo từng cột B, H, VD, VDC).
+>      (2) Dòng "TỔNG SỐ CÂU" (thống kê tổng số câu của từng phần và toàn đề).
+>      (3) Dòng "TỔNG ĐIỂM" (điểm từng phần và tổng điểm theo từng mức độ nhận thức = 10,0 điểm).
+>      (4) Dòng "TỈ LỆ %" (40% Biết - 30% Hiểu - 20% Vận dụng - 10% Vận dụng cao, tổng = 100%).
+> 
+> 3. LẬP BẢNG 2 - BẢN ĐẶC TẢ ĐỀ KIỂM TRA CHI TIẾT (QUY TẮC BẮT BUỘC):
+>    - Tách riêng cột "Mức độ đánh giá" và cột "Yêu cầu cần đạt" thành 2 cột độc lập (tuyệt đối không gộp chung vào 1 cột).
+>    - MỖI TỈ LỆ / MỨC ĐỘ NHẬN THỨC (Nhận biết, Thông hiểu, Vận dụng, Vận dụng cao) CỦA TỪNG BÀI HỌC BẮT BUỘC PHẢI CHIA THÀNH 1 DÒNG (ROW) RIÊNG BIỆT (tuyệt đối không gộp chung các mức độ nhận thức của 1 bài vào cùng 1 ô).
+>    - Ở mỗi dòng mức độ nhận thức: chỉ ghi "Yêu cầu cần đạt" đúng của mức độ đó; đồng thời SỐ LƯỢNG CÂU HỎI ở các phần và MÃ CÂU HỎI TƯƠNG ỨNG TRONG ĐỀ (ví dụ: C4, C5, C17a / C20 / C24a...) BẮT BUỘC PHẢI ĐẶT Ở CÙNG DÒNG VỚI MỨC ĐỘ NHẬN THỨC ĐÓ. (Các cột TT, Chủ đề, Nội dung/Bài học được gộp ô dọc qua các dòng mức độ nhận thức của bài đó).
+>    - BẮT BUỘC PHẢI CÓ ĐẦY ĐỦ CÁC DÒNG TỔNG KẾT Ở CUỐI BẢNG ĐẶC TẢ (tuyệt đối không được thiếu dòng cuối cùng của bảng): (1) TỔNG (Ý) / TỔNG SỐ CÂU - LỆNH HỎI, (2) TỔNG ĐIỂM (10,0 ĐIỂM), (3) TỈ LỆ % (100%), kèm Bảng chữ ký duyệt cuối trang.
+> 
+> 4. KỸ THUẬT VẼ BẢNG WORD CHỐNG MẤT NÉT 100%:
+>    - Xuất ra file Word (.docx) khổ giấy ngang Landscape A4.
+>    - Vẽ bảng chuẩn khung viền liền nét 100% (áp dụng đầy đủ cả tblBorders và tcBorders cho mọi ô thực tế kể cả các ô gộp dọc vMerge và gộp ngang gridSpan), tuyệt đối không được mất nét kẻ dọc hay nét kẻ ngang ở phần tiêu đề bảng hay các ô gộp; chống cắt dòng khi qua trang (cantSplit) và lặp lại tiêu đề bảng (tblHeader).
 > ```
 > 
 > ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 > 📝 **TRƯỜNG HỢP 2: ĐÃ CÓ MA TRẬN ĐẶC TẢ SẴN (Ra Đề Thi Hoàn Chỉnh Từ Ma Trận Có Sẵn)**
 > 
-> Khi Thầy/Cô đã có sẵn file Ma trận & Bản đặc tả (Word, Excel, PDF hoặc bảng dán trong chat), Thầy/Cô chỉ cần copy file vào thư mục: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` (hoặc giữ `Shift` + chuột phải vào file -> Chọn `"Copy as path"`), sau đó gửi câu lệnh:
+> Khi Thầy/Cô đã có sẵn file Ma trận & Bản đặc tả (Word, Excel, PDF hoặc bảng dán trong chat), Thầy/Cô chỉ cần copy file vào thư mục: `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` (hoặc giữ `Shift` + chuột phải vào file -> Chọn `"Copy as path"`), sau đó gửi câu lệnh chặt chẽ sau:
 > 
-> ✍️ **Câu lệnh (Prompt) mẫu ra đề chuẩn 3 tiêu chuẩn vàng:**
+> ✍️ **Câu lệnh (Prompt) mẫu ra đề chuẩn khớp 100% từng dòng Bản đặc tả:**
 > ```text
-> Dựa vào file Ma trận và Bản đặc tả đề kiểm tra tại: "[Dán đường dẫn file Ma trận Word/Excel/PDF vào đây]", em hãy biên soạn giúp tôi 1 ĐỀ THI HOÀN CHỈNH bám sát 100% cấu trúc này.
+> Dựa vào file Ma trận và Bản đặc tả đề kiểm tra tại: "[Dán đường dẫn file Ma trận Word/Excel/PDF vào đây]", em hãy biên soạn giúp tôi 1 ĐỀ KIỂM TRA HOÀN CHỈNH bám sát 100% cấu trúc này.
 > 
 > Thông tin bổ sung:
-> - Môn: [Toán / Vật lý / Hóa học / Sinh học / KHTN...] - Lớp: [...]
+> - Môn: [Toán / Vật lý / Hóa học / Sinh học / KHTN / Công nghệ...] - Lớp: [...]
 > - Bộ sách giáo khoa đang dạy: [Kết nối tri thức / Chân trời sáng tạo / Cánh diều]
+> - Số lượng đề cần tạo: [1 đề / 2 đề song song]
 > 
 > Yêu cầu bắt buộc khi ra đề:
-> 1. Chuẩn xác khoa học 100%: Số liệu mới hoàn toàn, tính toán nghiệm đẹp, tuân thủ đúng định luật khoa học tự nhiên. Bốn phương án trắc nghiệm chỉ có DUY NHẤT 1 đáp án đúng, các phương án nhiễu có tính sư phạm (bắt đúng lỗi sai học sinh hay mắc).
-> 2. Từng câu hỏi phải bám đúng mạch kiến thức và đúng cấp độ tư duy (NB / TH / VD / VDC) theo từng dòng của Bản đặc tả.
-> 3. Lập trình vẽ mới 100% hình vẽ kỹ thuật, đồ thị, sơ đồ thí nghiệm sắc nét 300 DPI chèn đúng vào vị trí câu hỏi tương ứng (nếu đề có hình).
-> 4. Xuất đồng thời 2 file Word riêng biệt:
->    - File 1: Bản ĐỀ HỌC SINH (trình bày trang nhã, chuẩn bố cục in ấn phát cho học sinh).
->    - File 2: Bản LỜI GIẢI CHI TIẾT (hướng dẫn giải từng bước, kèm bảng đáp án trắc nghiệm nhanh và thang điểm chấm chi tiết).
-> 5. 100% công thức khoa học trong cả 2 file phải ở định dạng MathType OLE (Equation.DSMT4, cỡ chữ 14pt, nhấp đúp chuột sửa được), bảng biểu dựng chuẩn Table Grid không xô lệch.
+> 1. Khớp nối 100% với Ma trận & Bản đặc tả: Từng câu hỏi và từng ý hỏi (C1, C2..., C13a,b,c,d..., C17a,b...) phải khớp tuyệt đối với đúng bài học, đúng mức độ nhận thức (Nhận biết / Thông hiểu / Vận dụng / Vận dụng cao) và đúng "Yêu cầu cần đạt" trên từng dòng của Bản đặc tả. Chỉ kiểm tra những phần kiến thức đã học trong phạm vi ma trận.
+> 2. Chuẩn xác khoa học 100%: Số liệu mới hoàn toàn, tính toán nghiệm đẹp, tuân thủ đúng định luật tự nhiên và thực tiễn. Bốn phương án trắc nghiệm chỉ có DUY NHẤT 1 đáp án đúng, các phương án nhiễu có tính sư phạm.
+> 3. Lập trình vẽ mới 100% hình vẽ kỹ thuật, đồ thị, sơ đồ thí nghiệm sắc nét 300 DPI chèn đúng vị trí câu hỏi tương ứng (nếu đề có hình).
+> 4. Xuất file Word (.docx) đầy đủ Đề Kiểm Tra (có khung thông tin học sinh, bảng điền đáp án cho từng phần trắc nghiệm) và Hướng dẫn chấm + Barem biểu điểm chi tiết đến từng 0,10đ - 0,25đ.
+> 5. 100% công thức khoa học ở định dạng MathType OLE (Equation.DSMT4, cỡ chữ 13pt-14pt, nhấp đúp chuột sửa được), toàn bộ bảng biểu kẻ khung viền liền nét 100% không mất nét, không xô lệch.
 > ```
 > 
 > ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -393,29 +417,31 @@ Agent xuất ngay phản hồi:
 > * *Nếu Thầy/Cô muốn TẠO ĐỀ THI MỚI ngay từ ma trận chuẩn:*
 >   ```text
 >   Em hãy tạo giúp tôi 1 đề thi môn [Toán / Vật lý / Hóa học] lớp [10 / 11 / 12] thời gian [45 / 50 / 90] phút dựa trên Ma trận đặc tả chuẩn GDPT 2018 có sẵn.
->   Yêu cầu: Số liệu mới nghiệm đẹp, vẽ hình 300 DPI, xuất đồng thời 2 file Word Đề Học Sinh và Lời Giải Chi Tiết chuẩn MathType OLE 14pt.
+>   Yêu cầu: Khớp 100% từng dòng mức độ nhận thức trong ma trận đặc tả, số liệu mới nghiệm đẹp, vẽ hình 300 DPI, xuất đồng thời 2 file Word Đề Học Sinh và Lời Giải Chi Tiết chuẩn MathType OLE 14pt, bảng biểu đầy đủ nét viền không mất nét.
 >   ```
 > * *Nếu Thầy/Cô chỉ muốn XUẤT BẢNG MA TRẬN & BẢN ĐẶC TẢ ra file Word để nộp tổ chuyên môn:*
 >   ```text
->   Em hãy xuất bảng Ma trận và Bản đặc tả đề kiểm tra môn [Toán / Vật lý / Hóa học] lớp [10 / 11 / 12] thời gian [45 / 50 / 90] phút ra file Word giúp tôi (dựng chuẩn khung Table Grid có viền đầy đủ theo thể thức Bộ GD&ĐT).
+>   Em hãy xuất bảng Ma trận và Bản đặc tả đề kiểm tra môn [Toán / Vật lý / Hóa học] lớp [10 / 11 / 12] thời gian [45 / 50 / 90] phút ra file Word giúp tôi.
+>   Yêu cầu bắt buộc: Trong Bản đặc tả, mỗi mức độ nhận thức (Nhận biết, Thông hiểu, Vận dụng, Vận dụng cao) phải chia thành 1 dòng riêng biệt, số câu và mã câu hỏi tương ứng đặt ở cùng dòng đó; cả 2 bảng phải có đầy đủ các dòng tổng kết cuối bảng (Tổng ý, Tổng số câu, Tổng điểm, Tỉ lệ %); vẽ bảng khung viền liền nét 100% không mất nét ở các ô gộp.
 >   ```"
 
 ---
 
 #### 7️⃣ KHI GIÁO VIÊN NÓI: "trích xuất ma trận từ đề gốc" (hoặc "phân tích ma trận đề thi", "lập bảng đặc tả từ đề"...)
 Agent xuất ngay phản hồi:
-> "Dạ chào Thầy/Cô! Để phân tích đề thi có sẵn và trích xuất thành bảng Ma trận & Bản đặc tả chuẩn GDPT 2018 ra file Word, Thầy/Cô cung cấp file đề theo 1 trong 2 cách:
+> "Dạ chào Thầy/Cô! Để phân tích đề thi có sẵn và trích xuất ngược thành bảng Ma trận & Bản đặc tả chuẩn GDPT 2018 ra file Word, Thầy/Cô cung cấp file đề theo 1 trong 2 cách:
 > 
 > 📂 **Cách 1: Copy file đề vào thư mục làm việc của phần mềm (Tiện lợi nhất)**
 > * Thầy/Cô copy file đề (`.docx` hoặc `.pdf`) vào thư mục:  
 >   👉 `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` *(hoặc kéo thả file trực tiếp vào khung chat)*.
-> * Sau đó gửi câu lệnh mẫu:
+> * Sau đó gửi câu lệnh mẫu chặt chẽ sau:
 >   ```text
->   Em hãy phân tích đề thi trong file "[ten_file_de.docx]" trong thư mục làm việc và trích xuất bảng Ma trận & Bản đặc tả chi tiết ra file Word giúp tôi.
+>   Em hãy phân tích đề thi trong file "[ten_file_de.docx]" trong thư mục làm việc và trích xuất bảng Khung Ma trận & Bản đặc tả chi tiết ra file Word giúp tôi.
 >   Yêu cầu bắt buộc:
->   1. Nhận diện chính xác từng câu hỏi thuộc chủ đề nào, dạng toán gì và mức độ nhận thức (Nhận biết / Thông hiểu / Vận dụng / Vận dụng cao).
->   2. Thống kê tỷ lệ phần trăm điểm số theo từng mức độ nhận thức và từng mạch kiến thức.
->   3. Xuất ra file Word với bảng Table Grid chuẩn viền, chuẩn quy định mẫu của Bộ GD&ĐT.
+>   1. Nhận diện chính xác từng câu hỏi và từng ý hỏi thuộc Chương/Chủ đề nào, Bài học nào và mức độ nhận thức nào (Nhận biết / Thông hiểu / Vận dụng / Vận dụng cao).
+>   2. Trong Bản đặc tả: Tách riêng cột "Mức độ đánh giá" và cột "Yêu cầu cần đạt"; mỗi mức độ nhận thức của từng bài học bắt buộc nằm trên 1 dòng riêng biệt; số lượng câu hỏi và mã câu hỏi tương ứng (C1, C2, C13a...) phải đặt ở cùng dòng với mức độ nhận thức đó.
+>   3. Cả bảng Khung Ma trận và bảng Bản đặc tả bắt buộc phải có đầy đủ 4 dòng tổng kết ở cuối bảng: Tổng (Ý), Tổng số câu, Tổng điểm (10,0 điểm) và Tỉ lệ % (100%), tuyệt đối không được thiếu dòng cuối cùng.
+>   4. Xuất ra file Word khổ ngang A4 với bảng biểu kẻ khung viền liền nét 100%, không bị mất nét kẻ dọc/ngang tại các ô gộp.
 >   ```
 > 
 > 📂 **Cách 2: File đề đang ở nơi khác (Desktop, Downloads, Zalo, ổ D, ổ E...)**
@@ -423,8 +449,8 @@ Agent xuất ngay phản hồi:
 >   👉 **Nhấn giữ phím Shift + Nhấp chuột phải vào file đề -> Chọn "Copy as path"** *(hoặc trên Windows 11 bấm `Ctrl + Shift + C`)*.
 > * Sau đó, dán đường dẫn vào câu lệnh mẫu bên dưới và gửi cho em:
 >   ```text
->   Em hãy đọc đề thi tại đường dẫn: "[Dán đường dẫn vừa copy vào đây]" và trích xuất bảng Ma trận & Bản đặc tả chi tiết ra file Word giúp tôi.
->   Yêu cầu bắt buộc: Phân loại chuẩn xác mức độ nhận thức từng câu, thống kê tỷ lệ điểm và xuất file Word Table Grid chuẩn Bộ GD&ĐT.
+>   Em hãy đọc đề thi tại đường dẫn: "[Dán đường dẫn vừa copy vào đây]" và trích xuất bảng Khung Ma trận & Bản đặc tả chi tiết ra file Word giúp tôi.
+>   Yêu cầu bắt buộc: Trong Bản đặc tả mỗi mức độ nhận thức 1 dòng riêng kèm mã câu hỏi tương ứng ở cùng dòng đó; cuối mỗi bảng có đầy đủ các dòng Tổng (Ý), Tổng số câu, Tổng điểm, Tỉ lệ % (không thiếu dòng cuối); vẽ bảng Word liền nét 100% không mất nét ở các ô gộp.
 >   ```"
 
 ---
@@ -467,6 +493,54 @@ Agent xuất ngay phản hồi:
 > - Loại hình: [Ví dụ: Đồ thị hàm số bậc 3 y = x^3 - 3x / Đồ thị phân thức bậc 2/1 có tiệm cận xiên / Hình chóp S.ABCD đáy hình vuông / Bảng biến thiên full khung viền / Sơ đồ mạch điện R, L, C nối tiếp / Sơ đồ điều chế và thu khí O2 dời chỗ nước]
 > - Yêu cầu kỹ thuật: Nét vẽ đậm rõ (lw=2.2-2.4), độ phân giải 300 DPI, nhãn điểm và góc chuẩn xác, xuất file ảnh PNG nền trong suốt để chèn trực tiếp vào Word.
 > ```"
+
+---
+
+---
+
+#### 🔟 KHI GIÁO VIÊN NÓI: "tôi muốn làm thí nghiệm ảo" HOẶC "thí nghiệm 3D" (hoặc "tạo mô phỏng 3D", "làm thí nghiệm ảo", "chụp ảnh sgk tạo thí nghiệm"...)
+Agent xuất ngay phản hồi "cầm tay chỉ việc":
+> "Dạ chào Thầy/Cô! Tính năng **Thí Nghiệm Ảo & Mô Phỏng 3D Tương Tác** giúp chuyển hóa các hình vẽ tĩnh, sơ đồ trừu tượng trong SGK thành mô hình động có thể xoay 360 độ, kéo thanh trượt đổi thông số và bấm nút tiến hành thí nghiệm như trong phòng lab thực tế.
+> 
+> Để tạo thí nghiệm ảo nhanh và chuẩn bài học nhất, Thầy/Cô thực hiện theo **3 bước cực kỳ đơn giản** sau nhé:
+> 
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 📌 **BƯỚC 1: CHUẨN BỊ TƯ LIỆU (Ưu tiên số 1: Chụp ảnh trang SGK - Nhanh & Chuẩn nhất)**
+> * 📸 **Cách 1 (Khuyên dùng - Nhanh nhất 1 giây):** Thầy/Cô lấy điện thoại **chụp lại trang Sách Giáo Khoa (SGK)** có hình vẽ thí nghiệm, sơ đồ mạch điện, đường truyền tia sáng hoặc mô hình phân tử.  
+>   *(Vì SGK đã vẽ sẵn dụng cụ, hóa chất, các bước tiến hành 1-2-3 và câu hỏi quan sát hiện tượng chuẩn GDPT 2018).*
+> * ✍️ **Cách 2 (Nếu chưa có ảnh):** Thầy/Cô chỉ cần nhớ tên bài học hoặc thí nghiệm cần làm (Ví dụ: *Dao động con lắc đơn, Chuẩn độ axit - bazơ, Khúc xạ qua lăng kính, Mô hình lăng trụ/chóp 3D*).
+> 
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 📂 **BƯỚC 2: CÁCH ĐƯA VÀO HỆ THỐNG**
+> * *Nếu có ảnh chụp:* Thầy/Cô chỉ cần **kéo thả file ảnh trực tiếp vào khung chat này** (hoặc copy ảnh vào thư mục làm việc `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>`).
+> * *Nếu không có ảnh:* Thầy/Cô chỉ cần copy mẫu câu lệnh ở Bước 3 và điền tên bài học.
+> 
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> ✍️ **BƯỚC 3: CÂU LỆNH (PROMPT) MẪU CHỈ VIỆC COPY - PASTE**
+> 
+> **📗 MẪU A — KHI CÓ ẢNH CHỤP TRANG SGK (Đơn giản nhất - AI đọc ảnh tự lập trình):**
+> ```text
+> Dựa vào bức ảnh chụp trang SGK này, em hãy lập trình giúp tôi 1 THÍ NGHIỆM ẢO / MÔ PHỎNG 3D TƯƠNG TÁC bám sát đúng bài học:
+> 1. Tái hiện chuẩn xác dụng cụ, hóa chất hoặc mô hình y như trong ảnh vẽ SGK.
+> 2. Lập trình các nút bấm tương tác: "Tiến hành thí nghiệm", "Tạm dừng", "Làm lại", và thanh trượt để học sinh tự thay đổi thông số.
+> 3. Mô phỏng chuyển động/hiện tượng thời gian thực (60 FPS) theo đúng định luật tự nhiên (bảo toàn cơ năng, phản ứng hóa học, định luật Ohm...).
+> 4. Đặt kèm khung câu hỏi "Quan sát hiện tượng" và "Giải thích kiến thức" chuẩn SGK bên cạnh.
+> 5. Xuất thành 1 file HTML duy nhất chạy Offline 100% không cần mạng Internet trên máy chiếu/TV lớp học.
+> ```
+> 
+> **📘 MẪU B — KHI MÔ TẢ BẰNG CHỮ (Khi không có ảnh chụp):**
+> ```text
+> Em hãy lập trình giúp tôi 1 THÍ NGHIỆM ẢO / MÔ PHỎNG 3D TƯƠNG TÁC:
+> - Môn: [Toán / Vật lý / Hóa học / Sinh học / KHTN] - Lớp: [...]
+> - Tên bài học / thí nghiệm: [Ví dụ: Khảo sát dao động con lắc lò xo / Chuẩn độ dung dịch NaOH bằng HCl / Đo hiệu điện thế mạch RLC / Khối chóp S.ABCD xoay 360 độ tìm thiết diện]
+> - Yêu cầu: Bảng điều khiển trực quan, thanh trượt chỉnh thông số linh hoạt, đồ thị/đồng hồ đo thời gian thực, xuất file HTML độc lập chạy Offline 100% không cần mạng.
+> ```
+> 
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 🎁 **KẾT QUẢ THẦY/CÔ NHẬN ĐƯỢC:**
+> 1. **Chạy thử ngay trong chat**: Màn hình thí nghiệm tương tác hiện ngay trong Antigravity để Thầy/Cô bấm nút, thử nghiệm lập tức.
+> 2. **File HTML độc lập (Ví dụ: `Thi_Nghiem_Ao.html`)**: Chạy Offline 100% trên máy tính lớp học, TV cảm ứng, bảng thông minh mà không cần mạng Internet, không cần cài đặt phần mềm.
+> 3. **Nhúng vào PowerPoint**: Chỉ cần chèn liên kết (Hyperlink) từ slide bài giảng, nhấp chuột là mở toàn màn hình để học sinh cùng thao tác!"
 
 ---
 
@@ -528,19 +602,146 @@ Agent xuất ngay phản hồi:
 
 ---
 
-#### 📌 Nhánh 1: Khi Giáo Viên Chưa Có Ma Trận (Lập Ma Trận & Bản Đặc Tả Từ Thư Mục 5 Tư Liệu)
+#### 📌 Nhánh 1: Khi Giáo Viên Chưa Có Ma Trận (Lập Ma Trận & Bản Đặc Tả Từ Thư Mục Tư Liệu)
 1. **Đọc và đối chiếu toàn bộ tài liệu trong thư mục do giáo viên cung cấp:**
-   - Đọc file **Kế hoạch dạy học / Phân phối chương trình (PPCT)** để đếm chính xác số tiết đã dạy đến thời điểm kiểm tra, xác định danh sách các bài học nằm trong phạm vi ra đề.
-   - Đọc file **Sách giáo khoa điện tử (PDF)** để nắm các dạng bài tập, thuật ngữ, ký hiệu và ngữ cảnh đặc trưng của bộ sách đang dạy.
-   - Đọc file **Cấu trúc ra đề** để xác định hình thức (TN 4 lựa chọn, TN Đúng/Sai, Trả lời ngắn, Tự luận), thời gian làm bài, tổng điểm và tỷ lệ mức độ nhận thức (NB/TH/VD/VDC).
-   - Đọc file **Chương trình GDPT 2018 môn học (PDF)** để trích xuất nguyên văn cột **"Yêu cầu cần đạt" (YCCĐ)** tương ứng với từng bài học / chủ đề.
+   - Đọc file **Kế hoạch dạy học / Phân phối chương trình (PPCT)** để đếm chính xác số tiết đã dạy đến thời điểm kiểm tra, xác định danh sách các bài học nằm trong phạm vi ra đề (nếu giáo viên lưu ý phần thực hành của bài cuối chưa học thì chỉ ra đề phần lý thuyết đã học).
+   - Đọc file **Sách giáo khoa điện tử (PDF)** để nắm chính xác tên Chương / Chủ đề, các dạng bài tập, thuật ngữ, ký hiệu và ngữ cảnh đặc trưng của bộ sách đang dạy.
+   - Đọc file **Cấu trúc ra đề** để xác định hình thức (TN 4 lựa chọn, TN Đúng/Sai, Trả lời ngắn, Tự luận), thời gian làm bài, tổng điểm và tỷ lệ mức độ nhận thức (chuẩn 40% Nhận biết – 30% Thông hiểu – 20% Vận dụng – 10% Vận dụng cao).
+   - Đọc file **Chương trình GDPT 2018 môn học (PDF)** để trích xuất nguyên văn chuẩn xác 100% cột **"Yêu cầu cần đạt" (YCCĐ)** tương ứng với từng bài học và từng mức độ nhận thức.
    - Tham khảo file **Đề mẫu / Đề minh họa (nếu có)** để căn chỉnh độ dài câu hỏi và văn phong ra đề quen thuộc của trường/Sở.
-2. **Thiết lập Bảng Ma trận & Bản đặc tả:**
-   - Phân bổ số câu, số điểm theo tỷ lệ số tiết của từng mạch nội dung.
-   - Khớp nối từng câu hỏi với từng Yêu cầu cần đạt (YCCĐ) cụ thể.
-3. **Xuất file Word (`.docx`) nộp tổ chuyên môn:**
-   - Dựng bảng `Table Grid` viền đầy đủ, căn giữa tiêu đề, lề văn bản chuẩn thể thức Bộ GD&ĐT.
-   - Nhúng công thức MathType OLE 14pt (hoặc OMML dự phòng) cho các ký hiệu khoa học.
+
+2. **Quy tắc thiết lập Bảng Ma trận đề kiểm tra (Bảng 1 - Khung Ma trận):**
+   - **Tên Chủ đề / Mạch kiến thức (Cột 1):** Lấy chuẩn xác 100% theo tên Chương / Chủ đề trong **Sách giáo khoa (SGK)** đang dùng (kèm tổng số tiết và tỉ lệ % thời lượng).
+   - **Tên Nội dung / Đơn vị kiến thức (Cột 2):** Lấy chuẩn xác 100% theo tên bài trong **Kế hoạch dạy học / Phân phối chương trình (PPCT)** (kèm số tiết dạy của bài). Tuyệt đối không tự ý cắt xén, không để trống và không lặp lại sai lệch tên bài.
+   - **Phân bổ số câu, số điểm:** Tỉ lệ thuận với số tiết dạy của từng bài học; phân bổ đúng các phần (Phần I: TN nhiều lựa chọn; Phần II: Đúng/Sai; Phần III: Trả lời ngắn [nếu có]; Phần Tự luận).
+   - **⛔ BẮT BUỘC PHẢI CÓ ĐẦY ĐỦ 4 HÀNG TỔNG KẾT Ở CUỐI BẢNG MA TRẬN (TUYỆT ĐỐI KHÔNG ĐƯỢC THIẾU DÒNG CUỐI CÙNG CỦA BẢNG):**
+     1. `TỔNG (Ý)`: Thống kê chi tiết số ý/lệnh hỏi theo từng cột B, H, VD, VDC của từng phần và tổng số lệnh hỏi (ví dụ: 31 ý hoặc 32 ý).
+     2. `TỔNG SỐ CÂU`: Thống kê số câu của từng phần (ví dụ: Phần I: 16 câu | Phần II: 2 câu (8 ý) | Phần III: 4 câu | Phần IV: 3 câu | Tổng: 25 câu (31 ý)).
+     3. `TỔNG ĐIỂM`: Điểm từng phần và tổng điểm theo 4 mức độ nhận thức (4,0 đ Biết | 3,0 đ Hiểu | 2,0 đ Vận dụng | 1,0 đ Vận dụng cao | Tổng: 10,0 đ).
+     4. `TỈ LỆ %`: 40% Biết | 30% Hiểu | 20% Vận dụng | 10% Vận dụng cao | Tổng: 100%.
+
+3. **QUY TẮC VÀNG THIẾT LẬP BẢN ĐẶC TẢ ĐỀ KIỂM TRA (Bảng 2 - Bản đặc tả chi tiết):**
+   > [!IMPORTANT]
+   > **1️⃣ QUY TẮC MỖI TỈ LỆ / MỨC ĐỘ NHẬN THỨC 1 DÒNG & CÂU HỎI TƯƠNG ỨNG Ở CÙNG DÒNG ĐÓ:**
+   > - **Tách riêng cột `Mức độ đánh giá` và cột `Yêu cầu cần đạt`** thành 2 cột độc lập (tuyệt đối không gộp chung 2 cột này thành 1 cột).
+   > - Tuyệt đối **KHÔNG gộp chung** các mức độ (`Nhận biết`, `Thông hiểu`, `Vận dụng`, `Vận dụng cao`) của cùng một bài học vào 1 hàng (row) hay 1 ô.
+   > - **Mỗi mức độ nhận thức xuất hiện trong bài học đó bắt buộc phải chiếm 1 DÒNG ĐỘC LẬP (ROW RIÊNG)** trong bảng. Các cột `TT`, `Chủ đề / Mạch kiến thức` và `Nội dung / Đơn vị kiến thức (Tên bài học)` được gộp ô dọc (`vMerge`) qua các dòng mức độ nhận thức của bài học đó:
+   >   + **Cột 1 (`TT`) & Cột 2 (`Chủ đề / Mạch kiến thức`):** Gộp dọc theo toàn bộ các dòng thuộc cùng một Chương / Chủ đề.
+   >   + **Cột 3 (`Nội dung / Đơn vị kiến thức`):** Gộp dọc theo các dòng mức độ nhận thức thuộc cùng một Bài học (ví dụ: `Bài 2. Nguyên tử (5 tiết)` gộp dọc qua 3 dòng: `Nhận biết`, `Thông hiểu`, `Vận dụng`).
+   >   + **Cột 4 (`Mức độ đánh giá`):** Mỗi dòng ghi đúng 1 mức độ: `Nhận biết` (in đậm, màu xanh `#005A9E`), `Thông hiểu` (in đậm, màu xanh `#005A9E`), `Vận dụng` (in đậm, màu cam đậm `#C55A11`), hoặc `Vận dụng cao` (in đậm, màu đỏ nâu `#9E1B1B`).
+   >   + **Cột 5 (`Yêu cầu cần đạt`):** Trích xuất chuẩn xác YCCĐ từ Chương trình GDPT 2018 tương ứng đúng với mức độ nhận thức của dòng đó (dòng `Nhận biết` chỉ ghi YCCĐ Nhận biết; dòng `Thông hiểu` chỉ ghi YCCĐ Thông hiểu; dòng `Vận dụng` chỉ ghi YCCĐ Vận dụng).
+   >   + **Các cột Số câu ở từng phần (`Phần I: B, H, VD`, `Phần II: B, H, VD`, `Phần III: B, H, VD`, `Tự luận: B, H, VD, VDC`):** Điền số lượng câu hỏi / lệnh hỏi vào **ĐÚNG DÒNG CỦA MỨC ĐỘ NHẬN THỨC ĐÓ**.
+   >   + **Cột cuối cùng (`Câu hỏi trong đề`):** Ghi rõ mã định danh câu hỏi cụ thể trong đề thi tương ứng với mức độ nhận thức đó **Ở CÙNG DÒNG ĐÓ** (ví dụ: dòng `Nhận biết` ghi `C4, C5, C17a`; dòng `Thông hiểu` ghi `C20`; dòng `Vận dụng` ghi `C24a`).
+   >
+   > 📊 **Minh họa cấu trúc dòng chuẩn bắt buộc của Bản đặc tả:**
+   > | TT | Chủ đề / Mạch kiến thức | Nội dung / Đơn vị kiến thức | Mức độ đánh giá | Yêu cầu cần đạt | Phần I (B) | Phần I (H) | Phần II (B) | Phần II (H) | Tự luận (VD) | Câu hỏi trong đề |
+   > |:--:|:---|:---|:---:|:---|:--:|:--:|:--:|:--:|:--:|:--:|
+   > | **2** *(gộp dọc)* | **Chất và sự biến đổi của chất** *(gộp dọc)* | **Bài 2. Nguyên tử (5 tiết)** *(gộp dọc 3 dòng)* | **Nhận biết** | - Nêu được mô hình nguyên tử...<br>- Xác định được các loại hạt... | 2 | | 1 | | | **C4, C5, C17a** |
+   > | ↑ | ↑ | ↑ | **Thông hiểu** | - Tính được khối lượng xấp xỉ...<br>- Xác định được số hạt p, e, n... | | | | 1 | | **C20** |
+   > | ↑ | ↑ | ↑ | **Vận dụng** | - Tính được số lượng từng loại hạt p, e, n trong nguyên tử... | | | | | 0.5* | **C24a** |
+   > | ↑ | ↑ | **Bài 3. Nguyên tố hóa học (3 tiết)** *(gộp dọc 2 dòng)* | **Nhận biết** | - Phát biểu được khái niệm nguyên tố hóa học... | 1 | | 1 | | | **C6, C17b** |
+   > | ↑ | ↑ | ↑ | **Thông hiểu** | - Viết đúng kí hiệu hóa học và gọi tên các nguyên tố... | | 1 | | | | **C7** |
+   >
+   > **2️⃣ ĐẦY ĐỦ CÁC HÀNG TỔNG KẾT BẮT BUỘC Ở CUỐI BẢN ĐẶC TẢ (TUYỆT ĐỐI KHÔNG ĐƯỢC THIẾU DÒNG CUỐI CÙNG):**
+   >   1. `TỔNG (Ý)` / `TỔNG SỐ CÂU / LỆNH HỎI`: Điền số lượng câu/ý theo từng cột và tổng (ví dụ: 25 câu, 31 ý).
+   >   2. `TỔNG ĐIỂM (10,0 ĐIỂM)`: 4,0 đ | 2,0 đ | 1,0 đ | 3,0 đ | 10,0 đ.
+   >   3. `TỈ LỆ %`: 40% | 20% | 10% | 30% | 100%.
+   >
+   > **3️⃣ BẢNG CHỮ KÝ PHÊ DUYỆT (Bảng 3):** Đặt ngay dưới Bản đặc tả gồm 3 cột phân định thẩm quyền:
+   >   * Cột 1: *HIỆU TRƯỞNG / BGH DUYỆT* (Ký, đóng dấu và phê duyệt).
+   >   * Cột 2: *TỔ TRƯỞNG CHUYÊN MÔN* (Ký và ghi rõ họ tên).
+   >   * Cột 3: *NGƯỜI LẬP MA TRẬN & ĐẶC TẢ* (Ký và ghi rõ họ tên kèm ngày tháng năm).
+
+4. **QUY TẮC KỸ THUẬT BẮT BUỘC: VẼ BẢNG WORD CHỐNG MẤT NÉT VIỀN 100% (`enforce_perfect_table_borders`):**
+   > [!WARNING]
+   > **NGUYÊN NHÂN LỖI MẤT NÉT KẺ BẢNG TRONG `python-docx` VÀ CÁCH KHẮC PHỤC TRIỆT ĐỂ:**
+   > - Trong `python-docx`, khi gộp ô dọc bằng `cell_top.merge(cell_bottom)`, lệnh truy cập `table.rows[r].cells[c]` ở các dòng bị gộp (`Row 1, Row 2` của tiêu đề hoặc các dòng gộp của `TT`, `Chủ đề`, `Bài học`) sẽ **trả về ô gốc phía trên (`vMerge="restart"`)** chứ KHÔNG trả về phần tử XML `<w:tc>` thực sự tại dòng đó (`<w:vMerge/>`).
+   > - Do đó, nếu chỉ lặp `for row in table.rows: for cell in row.cells:` để gắn `<w:tcBorders>` và màu nền `<w:shd>`, các phần tử `<w:tc>` có `<w:vMerge/>` sẽ bị **bỏ trống hoàn toàn `<w:tcBorders>` và `<w:shd>`**, dẫn đến khi mở trong Microsoft Word sẽ bị **mất đường kẻ dọc, mất đường kẻ ngang và mất màu nền ở giữa các ô gộp tiêu đề**!
+   > - Ngoài ra, nếu không gắn `<w:cantSplit/>` cho từng dòng `<w:tr>`, khi bảng tràn sang trang mới giữa chừng một dòng, Word sẽ cắt đôi dòng và làm mất nét kẻ ngang cuối trang.
+   >
+   > **✅ GIẢI PHÁP BẮT BUỘC (Agent phải gọi hàm `enforce_perfect_table_borders(table, header_rows=3)` sau khi hoàn tất `.merge()` trên mọi bảng Ma trận & Bản đặc tả):**
+   ```python
+   from docx.oxml import parse_xml, OxmlElement
+   from docx.oxml.ns import qn
+
+   def enforce_perfect_table_borders(table, header_rows=3, border_color="000000", border_sz="4"):
+       """
+       Đảm bảo 100% bảng Word (kể cả mọi ô gộp dọc vMerge và gộp ngang gridSpan)
+       có đầy đủ đường kẻ viền 4 cạnh sắc nét, đồng bộ màu nền ô gộp,
+       không bị cắt đứt dòng khi qua trang (cantSplit) và lặp lại tiêu đề bảng (tblHeader).
+       """
+       tblPr = table._tbl.tblPr
+       # 1. Thiết lập tblBorders ở cấp toàn bảng
+       old_borders = tblPr.find(qn('w:tblBorders'))
+       if old_borders is not None:
+           tblPr.remove(old_borders)
+       tblPr.append(parse_xml(
+           f'<w:tblBorders xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+           f'<w:top w:val="single" w:sz="{border_sz}" w:space="0" w:color="{border_color}"/>'
+           f'<w:left w:val="single" w:sz="{border_sz}" w:space="0" w:color="{border_color}"/>'
+           f'<w:bottom w:val="single" w:sz="{border_sz}" w:space="0" w:color="{border_color}"/>'
+           f'<w:right w:val="single" w:sz="{border_sz}" w:space="0" w:color="{border_color}"/>'
+           f'<w:insideH w:val="single" w:sz="{border_sz}" w:space="0" w:color="{border_color}"/>'
+           f'<w:insideV w:val="single" w:sz="{border_sz}" w:space="0" w:color="{border_color}"/>'
+           f'</w:tblBorders>'
+       ))
+
+       # 2. Duyệt trực tiếp qua mọi phần tử XML <w:tr> và <w:tc> (bao gồm cả các ô vMerge bị ẩn)
+       col_active_fill = {}
+       for r_idx, tr in enumerate(table._tbl.tr_lst):
+           trPr = tr.get_or_add_trPr()
+           # Chống cắt đôi dòng khi ngắt trang
+           if trPr.find(qn('w:cantSplit')) is None:
+               trPr.append(OxmlElement('w:cantSplit'))
+           # Lặp lại tiêu đề bảng khi sang trang mới
+           if r_idx < header_rows and trPr.find(qn('w:tblHeader')) is None:
+               trPr.append(OxmlElement('w:tblHeader'))
+
+           grid_col = 0
+           for tc in tr.tc_lst:
+               tcPr = tc.get_or_add_tcPr()
+               gridSpan_el = tcPr.find(qn('w:gridSpan'))
+               span = int(gridSpan_el.get(qn('w:val'))) if gridSpan_el is not None else 1
+
+               # Gắn tcBorders đủ 4 cạnh cho TẤT CẢ các <w:tc> (kể cả ô vMerge continue)
+               for old_b in tcPr.findall(qn('w:tcBorders')):
+                   tcPr.remove(old_b)
+               tcPr.append(parse_xml(
+                   f'<w:tcBorders xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+                   f'<w:top w:val="single" w:sz="{border_sz}" w:space="0" w:color="{border_color}"/>'
+                   f'<w:left w:val="single" w:sz="{border_sz}" w:space="0" w:color="{border_color}"/>'
+                   f'<w:bottom w:val="single" w:sz="{border_sz}" w:space="0" w:color="{border_color}"/>'
+                   f'<w:right w:val="single" w:sz="{border_sz}" w:space="0" w:color="{border_color}"/>'
+                   f'</w:tcBorders>'
+               ))
+
+               # Đồng bộ màu nền <w:shd> từ ô vMerge="restart" xuống các ô vMerge bên dưới
+               vMerge_el = tcPr.find(qn('w:vMerge'))
+               shd_el = tcPr.find(qn('w:shd'))
+               if vMerge_el is not None:
+                   vm_val = vMerge_el.get(qn('w:val'))
+                   if vm_val == 'restart':
+                       fill_color = shd_el.get(qn('w:fill')) if shd_el is not None else None
+                       for c_i in range(grid_col, grid_col + span):
+                           col_active_fill[c_i] = fill_color
+                   else:
+                       inherit_fill = col_active_fill.get(grid_col)
+                       if inherit_fill and shd_el is None:
+                           tcPr.append(parse_xml(
+                               f'<w:shd xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
+                               f'w:val="clear" w:color="auto" w:fill="{inherit_fill}"/>'
+                           ))
+               else:
+                   for c_i in range(grid_col, grid_col + span):
+                       col_active_fill.pop(c_i, None)
+
+               grid_col += span
+   ```
+
+5. **Thể thức xuất file Word (.docx) nộp tổ chuyên môn & Quy trình tạo Bộ hồ sơ kiểm tra hoàn chỉnh:**
+   - **Khổ giấy Landscape (ngang A4):** Bắt buộc dùng khổ ngang để bảng 18-21 cột hiển thị thông thoáng, không co ép chữ hay tràn lề.
+   - **Căn lề văn bản hành chính:** Trên 1.5–2cm, Dưới 1.5–2cm, Phải 1.5–2cm, Trái 2–2.5cm. Font chữ `Times New Roman` đồng nhất.
+   - **Khi tạo cả Đề thi từ ma trận vừa lập:** Tự động đối chiếu chéo 4 chiều (`Khung Ma trận` <-> `Bản đặc tả` <-> `Đề kiểm tra` <-> `Hướng dẫn chấm`) để đảm bảo khớp 100% số câu, mã câu, mức độ nhận thức và thang điểm.
 
 ---
 
@@ -703,29 +904,38 @@ KHÔNG hỏi — tự quyết định:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📌 TỔNG HỢP CÁC CÁCH TẠO MA TRẬN & RA ĐỀ TỪ MA TRẬN
+📌 TỔNG HỢP CÁC CÂU LỆNH MẪU CHẶT CHẼ ĐỂ TẠO MA TRẬN, ĐẶC TẢ & RA ĐỀ THI
 
 📁 NHÓM 1: CHƯA CÓ MA TRẬN ĐẶC TẢ SẴN (Lập từ 5 tư liệu gốc cho mọi môn):
    - Tạo thư mục "DU_LIEU_RA_DE" chứa: (1) SGK điện tử, (2) Kế hoạch dạy học/PPCT,
      (3) Cấu trúc ra đề, (4) Đề mẫu nếu có, (5) Chương trình GDPT 2018 môn học (PDF).
-   - Câu lệnh:
-     "Em hãy đọc các tài liệu trong thư mục DU_LIEU_RA_DE, đối chiếu PPCT và Chương trình GDPT 2018
-      để lập bảng Ma trận và Bản đặc tả đề kiểm tra môn [Toán/Lý/Hóa/KHTN...] lớp [...] ra file Word."
+   - Câu lệnh chuẩn:
+     "Em hãy đọc các tài liệu trong thư mục [đường dẫn DU_LIEU_RA_DE], đối chiếu PPCT, SGK và Chương trình
+      GDPT 2018 để lập bảng Khung Ma trận và Bản đặc tả đề kiểm tra môn [Toán/Lý/Hóa/KHTN/Công nghệ...]
+      lớp [...] học kỳ [...] ra file Word khổ ngang A4.
+      Yêu cầu bắt buộc:
+      1. Trong Bản đặc tả: Tách riêng cột Mức độ đánh giá và cột Yêu cầu cần đạt; mỗi mức độ nhận thức
+         (Nhận biết, Thông hiểu, Vận dụng, Vận dụng cao) của từng bài học phải nằm trên 1 dòng riêng biệt;
+         số lượng câu hỏi và mã câu hỏi tương ứng (C1, C2, C17a...) phải đặt ở cùng dòng với mức độ đó.
+      2. Cả bảng Khung Ma trận và Bản đặc tả bắt buộc phải có đầy đủ các dòng tổng kết ở cuối bảng:
+         Tổng (Ý), Tổng số câu, Tổng điểm (10,0 điểm) và Tỉ lệ % (100%), tuyệt đối không thiếu dòng cuối.
+      3. Vẽ bảng Word khung viền liền nét 100% (áp dụng đầy đủ tblBorders và tcBorders cho cả các ô gộp),
+         tuyệt đối không bị mất nét kẻ dọc hay ngang."
 
 📝 NHÓM 2: ĐÃ CÓ SẴN FILE MA TRẬN ĐẶC TẢ (Ra đề hoàn chỉnh chuẩn 3 tiêu chuẩn vàng):
    - Đính kèm file Word/Excel/PDF ma trận hoặc dán bảng vào chat.
-   - Câu lệnh:
-     "Dựa vào file Ma trận tại: [đường dẫn file], em hãy tạo giúp tôi 1 đề thi hoàn chỉnh bám sát 100%
-      cấu trúc này (nghiệm đẹp chuẩn khoa học, vẽ hình 300 DPI, xuất 2 file Word Đề Học Sinh và Lời Giải
-      Chi Tiết chuẩn 100% MathType OLE 14pt)."
+   - Câu lệnh chuẩn:
+     "Dựa vào file Ma trận & Bản đặc tả tại: [đường dẫn file], em hãy tạo giúp tôi [1 đề / 2 đề song song]
+      môn [...] lớp [...] bám sát 100% từng dòng mức độ nhận thức và yêu cầu cần đạt của Bản đặc tả
+      (số liệu mới nghiệm đẹp, vẽ hình 300 DPI, đầy đủ bảng đáp án và hướng dẫn chấm chi tiết từng 0,25đ,
+      xuất file Word chuẩn MathType OLE 13pt-14pt, bảng biểu liền nét 100% không mất nét)."
 
 ⚡ NHÓM 3: SỬ DỤNG KHO MA TRẬN CHUẨN GDPT 2018 CÓ SẴN TRONG HỆ THỐNG:
    - "Tạo đề Toán 12, 90 phút theo ma trận chuẩn GDPT 2018 có sẵn"
-   - "Xuất bảng ma trận và bản đặc tả Hóa 11 ra file Word"
+   - "Xuất bảng ma trận và bản đặc tả Hóa 11 ra file Word (mỗi mức độ nhận thức 1 dòng riêng kèm mã câu hỏi cùng dòng, đủ 4 dòng tổng kết cuối bảng, khung viền liền nét không mất nét)"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
-
 
 
 ### Bước 1: Tiếp nhận và phân tích đề gốc

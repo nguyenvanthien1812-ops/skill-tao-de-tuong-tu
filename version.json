@@ -1,11 +1,15 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "5.5.2",
-  "release_date": "2026-10-16",
+  "version": "5.5.3",
+  "release_date": "2026-10-21",
   "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Tạo đề từ ma trận đặc tả (không cần đề gốc). Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge (không cần cài LaTeX), kiểm định tự động GDPT 2018.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "5.5.3": [
+      "TÍCH HỢP TÍNH NĂNG TẠO THÍ NGHIỆM ẢO & MÔ PHỎNG 3D TƯƠNG TÁC (TỪ ẢNH CHỤP SGK HOẶC MÔ TẢ): Bổ sung kịch bản phản hồi 'cầm tay chỉ việc' cho giáo viên (Mục 10 SKILL.md và Nhóm 6 Cẩm nang), hỗ trợ bóc tách dụng cụ/hóa chất/tiến trình thực hành từ ảnh chụp SGK GDPT 2018 bằng AI Vision và xuất file HTML5 tương tác 60 FPS chạy Offline 100% không cần mạng.",
+      "KHÓA CODE & BẢO VỆ CHỐNG HỒI QUY (LOCKED & FROZEN v2.5): Niêm phong toàn diện bộ lọc LaTeX Sanitizer (xử lý triệt để ký hiệu song song \\parallel & // chuẩn SGK Việt Nam, dọn sạch 100% rác raw text, không lọt $), cỡ chữ 13pt nội dung, công thức MathType OLE 14pt và tự động thu dọn file tạm sau khi biên dịch."
+    ],
     "5.5.2": [
       "CHUẨN HÓA TOÀN DIỆN KÝ HIỆU HÌNH HỌC SGK GDPT 2018 (docx_math_builder & standardize_word_mathtype): Tự động khử triệt để lỗi MathType in text thô \\wideparen{...} sang \\text{cung } ..., chuẩn hóa \\parallel sang // (hai gạch xiên chuẩn SGK Việt Nam), đệm dấu nhân \\cdot trước góc \\widehat khi có hệ số số học (chống MathType gom số vào mũ góc).",
       "PHÂN TÁCH DISPLAY MATH ĐỘC LẬP (add_display_eq): Tách các công thức biến đổi trọng tâm thành paragraph riêng căn giữa độc lập, loại bỏ 100% tình trạng sót chuỗi LaTeX thô $...$ trong văn bản.",
