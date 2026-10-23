@@ -135,7 +135,7 @@ def format_features_summary(payload: dict) -> str:
             names.append(code)
     return ", ".join(names) if names else "Chưa có tiện ích nào"
 
-def get_all_license_paths() -> list[Path]:
+def get_all_license_paths(include_cwd: bool = True) -> list[Path]:
     """
     Trả về danh sách tất cả các vị trí có thể lưu hoặc kiểm tra license.key:
     1. Thư mục cục bộ của skill (nơi chứa script này)
@@ -159,7 +159,11 @@ def get_all_license_paths() -> list[Path]:
         pass
         
     # 3. Thư mục làm việc hiện tại (cwd) và thư mục cha
+    #    CHỈ ĐỂ ĐỌC (include_cwd=True). Khi GHI/ĐỒNG BỘ phải truyền include_cwd=False để
+    #    không rải license.key vào thư mục dự án bất kỳ mà giáo viên đang đứng.
     try:
+        if not include_cwd:
+            raise RuntimeError("skip cwd")
         cwd = Path.cwd().resolve()
         paths.append(cwd / "license.key")
         paths.append(cwd / SKILL_NAME / "license.key")
@@ -433,8 +437,8 @@ def check_current_license() -> tuple[bool, dict, str]:
     if not found_key:
         return False, {}, "Chưa kích hoạt license. Vui lòng chạy KICH_HOAT_BAN_QUYEN.bat hoặc dán mã bản quyền."
 
-    # TỰ ĐỘNG ĐỒNG BỘ: Ghi bản quyền sang tất cả các vị trí chưa có
-    for p in get_all_license_paths():
+    # TỰ ĐỘNG ĐỒNG BỘ: chỉ ghi vào các vị trí CỐ ĐỊNH (skill, global config, ~/.gemini), KHÔNG ghi theo cwd
+    for p in get_all_license_paths(include_cwd=False):
         try:
             if not p.exists() or p.read_text(encoding="utf-8").strip() != found_key:
                 p.parent.mkdir(parents=True, exist_ok=True)

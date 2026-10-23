@@ -874,6 +874,8 @@ def add_aligned_choices(doc, choices, mode='omml'):
     for c in choices:
 
         c_str = str(c).strip()
+        import re
+        c_str = re.sub(r"^[A-D]\.\s*", "", c_str).strip()
 
         if '$' not in c_str:
 

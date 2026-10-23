@@ -277,7 +277,7 @@ def add_angle_label(ax, x, y, vertex, ray1=None, ray2=None,
                     ha='center', va='center'):
     """
     Ve nhan goc tai vi tri (x, y) su dung ky hieu widehat chuan SGK.
-    Dung thay cho ax.text(x, y, r'$\hat{A}$') vi hat{A} qua ngan.
+    Dung thay cho ax.text(x, y, r'$\\hat{A}$') vi hat{A} qua ngan.
     """
     label = fmt_angle(vertex, ray1, ray2)
     return ax.text(x, y, label, fontsize=fontsize, fontweight=fontweight,
@@ -289,7 +289,7 @@ def add_degree_label(ax, x, y, value, fontsize=12.5, color='black', ha='center',
     """
     Ve so do goc (vi du: 60 do) voi ky hieu do trong ro, dam, den tuyen.
     Dung thay cho ax.text voi color='gray' vi xam mo khi in.
-    Vi du: add_degree_label(ax, 1.5, 0.5, 60) -> hien thi '60^{\circ}' ro net.
+    Vi du: add_degree_label(ax, 1.5, 0.5, 60) -> hien thi '60^{\\circ}' ro net.
     """
     label = rf'$\mathbf{{{value}}}^{{\circ}}$'
     return ax.text(x, y, label, fontsize=fontsize, fontweight='bold',

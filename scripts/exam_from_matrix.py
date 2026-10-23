@@ -65,30 +65,67 @@ class MatrixParser:
             data = json.loads(data)
         return self._normalize(data)
 
+    _FILE_HINT = (
+        "Chưa có bộ đọc bảng tự động cho định dạng này (bảng ma trận mỗi trường mỗi khác). "
+        "Agent hãy ĐỌC file (docx_reader.read_exam_source / openpyxl), quy đổi từng dòng ma trận "
+        "sang dict {'subject','grade','duration_minutes','cells':[{'topic_display','nb','th','vd','vdc','part'}]} "
+        "rồi gọi MatrixParser().from_json(dict). Không dùng ma trận rỗng để sinh đề."
+    )
+
     def from_excel(self, path: str) -> dict:
         if not HAS_OPENPYXL:
             raise ImportError("openpyxl is required to parse Excel files.")
-        # placeholder
-        return self._normalize({'cells': []})
+        raise NotImplementedError(f"from_excel('{path}'): " + self._FILE_HINT)
 
     def from_docx(self, path: str) -> dict:
         if not HAS_DOCX:
             raise ImportError("python-docx is required to parse Word files.")
-        # placeholder
-        return self._normalize({'cells': []})
+        raise NotImplementedError(f"from_docx('{path}'): " + self._FILE_HINT)
+
+    _SUBJECTS = [
+        ('khtn', r'khtn|khoa học tự nhiên'), ('math', r'toán'), ('physics', r'vật lý|vật lí|\blý\b'),
+        ('chemistry', r'hóa|hoá'), ('biology', r'sinh'), ('geography', r'địa'),
+        ('literature', r'văn'),
+    ]
 
     def from_natural_language(self, text: str) -> dict:
-        return self.get_default('math', 12)
+        """Suy luận môn / lớp / thời gian từ câu nói tự nhiên rồi lấy ma trận chuẩn tương ứng."""
+        low = text.lower()
+        subject = next((k for k, pat in self._SUBJECTS if re.search(pat, low)), 'math')
+        m_grade = re.search(r'lớp\s*(\d{1,2})', low) or re.search(r'\b(1[0-2]|[6-9])\b', low)
+        grade = int(m_grade.group(1)) if m_grade else 12
+        m_dur = re.search(r'(\d{2,3})\s*(?:phút|p\b|ph\b)', low)
+        duration = int(m_dur.group(1)) if m_dur else (45 if grade <= 9 else 90)
+        return self.get_default(subject, grade, duration)
 
     def get_default(self, subject: str, grade: int, duration_minutes: int = 90) -> dict:
         ref_path = Path(__file__).parent.parent / "references" / "default_matrices.json"
         if ref_path.exists():
             with open(ref_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                key = f"{subject}_{grade}_thpt_{duration_minutes}min"
-                if key in data:
-                    return self._normalize(data[key])
-        return self._normalize({'cells': []})
+                for level in ('thpt', 'thcs'):
+                    key = f"{subject}_{grade}_{level}_{duration_minutes}min"
+                    if key in data:
+                        return self._normalize(data[key])
+                # Fallback: cùng môn + lớp, khác thời gian
+                prefix = f"{subject}_{grade}_"
+                for key in data:
+                    if key.startswith(prefix):
+                        return self._normalize(data[key])
+        raise KeyError(
+            f"Không có ma trận mặc định cho môn '{subject}' lớp {grade} ({duration_minutes} phút). "
+            "Hãy lập ma trận từ tư liệu của giáo viên (xem references/ma_tran_dac_ta.md, Nhánh 1).")
+
+    def to_word(self, matrix: dict, output_path: str) -> Path:
+        """
+        Xuất Ma trận + Bản đặc tả ra Word qua matrix_to_docx.export_matrix_dict_to_docx
+        (1 mức độ/1 dòng, mã câu cùng dòng, đủ dòng tổng kết, viền liền nét 100%).
+        """
+        _d = str(Path(__file__).resolve().parent)
+        if _d not in sys.path:
+            sys.path.insert(0, _d)
+        from matrix_to_docx import export_matrix_dict_to_docx
+        return export_matrix_dict_to_docx(matrix, output_path, matrix_key=str(matrix.get('subject', 'matrix')))
 
     def _normalize(self, raw: dict) -> dict:
         normalized = {

@@ -1,11 +1,17 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "5.5.3",
-  "release_date": "2026-10-21",
+  "version": "5.6.0",
+  "release_date": "2026-10-23",
   "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Tạo đề từ ma trận đặc tả (không cần đề gốc). Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge (không cần cài LaTeX), kiểm định tự động GDPT 2018.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "5.6.0": [
+      "CHUẨN HÓA TOÀN DIỆN MA TRẬN & BẢN ĐẶC TẢ WORD (matrix_to_docx.py & exam_from_matrix.py): Tách riêng cột Mức độ đánh giá và cột Yêu cầu cần đạt; mỗi mức độ nhận thức (Nhận biết, Thông hiểu, Vận dụng, Vận dụng cao) nằm trên 1 dòng riêng biệt kèm số câu và mã câu hỏi (C1, C2, C17a...) ở ngay cùng dòng đó; bắt buộc có đầy đủ bộ dòng Tổng kết cuối bảng ở cả Bảng 1 (Ma trận) và Bảng 2 (Bản đặc tả).",
+      "KHẮC PHỤC TRIỆT ĐỂ LỖI MẤT NÉT VIỀN & LẶP CHỮ Ô GỘP DỌC TRONG PYTHON-DOCX (enforce_perfect_table_borders & _dedupe_merged_cell_paragraphs): Tự động gắn w:tblBorders toàn bảng, quét toàn bộ thẻ XML w:tc (kể cả ô ẩn vMerge) để đóng khung đủ 4 cạnh, kế thừa màu nền w:shd, sắp xếp chuẩn thứ tự thẻ con OOXML (tcPr/tblPr) và khử sạch đoạn văn lặp trong các ô gộp dọc.",
+      "TÁI CẤU TRÚC MÔ-ĐUN HÓA SKILL.md (từ 187 KB xuống 47.6 KB, giữ nguyên 100% quy tắc vào 12 file chuyên đề trong references/*.md): Sửa lỗi dính heading Bước 4, bổ sung Bản đồ Tài liệu điều hướng nhanh, ghim Bộ 6 Chú ý bắt buộc ngay đầu SKILL.md.",
+      "ĐỒNG BỘ & KIỂM ĐỊNH TỰ ĐỘNG (sync_skill.py): Tự động kiểm định biên dịch 21 script, kiểm tra cấu trúc Markdown, kiểm định 1396 ô bảng Ma trận mẫu, chặn license_manager.py tự nhân bản license.key vào thư mục làm việc bất kỳ (include_cwd=False khi ghi), và đồng bộ 100% giữa bản Workspace và Global."
+    ],
     "5.5.3": [
       "TÍCH HỢP TÍNH NĂNG TẠO THÍ NGHIỆM ẢO & MÔ PHỎNG 3D TƯƠNG TÁC (TỪ ẢNH CHỤP SGK HOẶC MÔ TẢ): Bổ sung kịch bản phản hồi 'cầm tay chỉ việc' cho giáo viên (Mục 10 SKILL.md và Nhóm 6 Cẩm nang), hỗ trợ bóc tách dụng cụ/hóa chất/tiến trình thực hành từ ảnh chụp SGK GDPT 2018 bằng AI Vision và xuất file HTML5 tương tác 60 FPS chạy Offline 100% không cần mạng.",
       "KHÓA CODE & BẢO VỆ CHỐNG HỒI QUY (LOCKED & FROZEN v2.5): Niêm phong toàn diện bộ lọc LaTeX Sanitizer (xử lý triệt để ký hiệu song song \\parallel & // chuẩn SGK Việt Nam, dọn sạch 100% rác raw text, không lọt $), cỡ chữ 13pt nội dung, công thức MathType OLE 14pt và tự động thu dọn file tạm sau khi biên dịch."

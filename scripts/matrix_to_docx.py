@@ -44,12 +44,71 @@ def _set_cell_style(cell, text, bold=False, font_size=10, align=WD_ALIGN_PARAGRA
         tcPr.append(shd)
 
 
+# Thứ tự phần tử con chuẩn theo schema OOXML (Word có thể báo lỗi / bỏ viền nếu sai thứ tự)
+_TCPR_ORDER = ['cnfStyle', 'tcW', 'gridSpan', 'hMerge', 'vMerge', 'tcBorders', 'shd', 'noWrap',
+               'tcMar', 'textDirection', 'tcFitText', 'vAlign', 'hideMark']
+_TBLPR_ORDER = ['tblStyle', 'tblpPr', 'tblOverlap', 'bidiVisual', 'tblStyleRowBandSize',
+                'tblStyleColBandSize', 'tblW', 'jc', 'tblCellSpacing', 'tblInd', 'tblBorders',
+                'shd', 'tblLayout', 'tblCellMar', 'tblLook', 'tblCaption', 'tblDescription']
+
+
+def _reorder_children(el, order):
+    """Sắp xếp lại phần tử con của el theo `order` (phần tử lạ giữ nguyên ở cuối)."""
+    def key(child):
+        tag = child.tag.split('}')[-1]
+        return order.index(tag) if tag in order else len(order)
+    children = list(el)
+    ordered = sorted(children, key=key)  # sorted ổn định
+    if ordered != children:
+        for c in children:
+            el.remove(c)
+        for c in ordered:
+            el.append(c)
+
+
+def _dedupe_merged_cell_paragraphs(table):
+    """
+    python-docx cộng dồn đoạn văn của các ô khi gộp (merge): ô TT/Chủ đề/Bài học gộp dọc N dòng
+    sẽ hiện lặp lại N lần ("1 1 1 1"), ô gộp ngang có thêm đoạn trống làm cao dòng.
+    Giữ lại mỗi đoạn có chữ đúng 1 lần (theo thứ tự), bỏ đoạn trống/lặp (luôn giữ >= 1 đoạn).
+    """
+    W = qn('w:p')
+    for tr in table._tbl.tr_lst:
+        for tc in tr.tc_lst:
+            tcPr = tc.tcPr
+            if tcPr is None:
+                continue
+            vm = tcPr.find(qn('w:vMerge'))
+            is_merged = tcPr.find(qn('w:gridSpan')) is not None or (vm is not None and vm.get(qn('w:val')) == 'restart')
+            if not is_merged:
+                continue
+            paras = tc.findall(W)
+            if len(paras) <= 1:
+                continue
+            seen, keep = set(), []
+            for para in paras:
+                txt = ''.join(x.text or '' for x in para.iter(qn('w:t')))
+                has_break = para.find('.//' + qn('w:br')) is not None
+                if not txt.strip() and not has_break:
+                    continue
+                if txt in seen:
+                    continue
+                seen.add(txt)
+                keep.append(para)
+            if not keep:
+                keep = [paras[0]]
+            for para in paras:
+                if para not in keep and len(tc.findall(W)) > 1:
+                    tc.remove(para)
+
+
 def enforce_perfect_table_borders(table, header_rows=3, border_color="000000", border_sz="4"):
     """
     Đảm bảo 100% bảng Word (kể cả mọi ô gộp dọc vMerge và gộp ngang gridSpan)
     có đầy đủ đường kẻ viền 4 cạnh sắc nét, đồng bộ màu nền ô gộp,
     không bị cắt đứt dòng khi qua trang (cantSplit) và lặp lại tiêu đề bảng (tblHeader).
     """
+    _dedupe_merged_cell_paragraphs(table)
     tblPr = table._tbl.tblPr
     old_borders = tblPr.find(qn('w:tblBorders'))
     if old_borders is not None:
@@ -109,7 +168,10 @@ def enforce_perfect_table_borders(table, header_rows=3, border_color="000000", b
                 for c_i in range(grid_col, grid_col + span):
                     col_active_fill.pop(c_i, None)
 
+            _reorder_children(tcPr, _TCPR_ORDER)
             grid_col += span
+
+    _reorder_children(tblPr, _TBLPR_ORDER)
 
 
 def _set_table_borders(table, color="000000", sz="4", val="single"):
@@ -117,6 +179,21 @@ def _set_table_borders(table, color="000000", sz="4", val="single"):
 
 
 def export_matrix_to_docx(matrix_key, output_path=None):
+    """Xuất Word Ma trận + Bản đặc tả từ một khóa trong references/default_matrices.json."""
+    if not DB_PATH.exists():
+        raise FileNotFoundError(f"Không tìm thấy: {DB_PATH}")
+    data = json.loads(DB_PATH.read_text(encoding='utf-8'))
+    if matrix_key not in data:
+        raise KeyError(f"Không tìm thấy ma trận: {matrix_key}")
+    return export_matrix_dict_to_docx(data[matrix_key], output_path, matrix_key=matrix_key)
+
+
+def export_matrix_dict_to_docx(m, output_path=None, matrix_key="matrix"):
+    """
+    Xuất Word Ma trận + Bản đặc tả từ DICT ma trận (cùng schema với default_matrices.json /
+    MatrixParser._normalize). Đây là ĐƯỜNG DUY NHẤT dựng bảng -> mọi ma trận (kho chuẩn hay do
+    giáo viên cung cấp) đều tự động đúng chuẩn: 1 mức độ/1 dòng, đủ dòng tổng kết, viền liền nét.
+    """
     try:
         _d = os.path.dirname(os.path.abspath(__file__))
         if _d not in sys.path:
@@ -125,15 +202,8 @@ def export_matrix_to_docx(matrix_key, output_path=None):
         require_valid_license("matrix_exam")
     except ImportError:
         pass
-    if not DB_PATH.exists():
-        raise FileNotFoundError(f"Không tìm thấy: {DB_PATH}")
 
-    data = json.loads(DB_PATH.read_text(encoding='utf-8'))
-    if matrix_key not in data:
-        raise KeyError(f"Không tìm thấy ma trận: {matrix_key}")
-
-    m = data[matrix_key]
-    subj = m.get("subject", "Môn học").capitalize()
+    subj = str(m.get("subject", "Môn học")).capitalize()
     grade = m.get("grade", 12)
     duration = m.get("duration_minutes", 90)
     cells = m.get("cells", [])
@@ -499,5 +569,14 @@ def export_matrix_to_docx(matrix_key, output_path=None):
 
 
 if __name__ == "__main__":
-    test_key = sys.argv[1] if len(sys.argv) > 1 else "math_12_thpt_90min"
-    export_matrix_to_docx(test_key)
+    import argparse
+    ap = argparse.ArgumentParser(description="Xuất Ma trận & Bản đặc tả ra Word (chuẩn: 1 mức độ/1 dòng, đủ dòng tổng, viền liền nét).")
+    ap.add_argument("key", nargs="?", default="math_12_thpt_90min", help="Khóa trong references/default_matrices.json")
+    ap.add_argument("--json", help="Đường dẫn file JSON ma trận (thay cho khóa có sẵn)")
+    ap.add_argument("-o", "--output", help="Đường dẫn file .docx xuất ra")
+    args = ap.parse_args()
+    if args.json:
+        _m = json.loads(Path(args.json).read_text(encoding="utf-8"))
+        export_matrix_dict_to_docx(_m, args.output, matrix_key=Path(args.json).stem)
+    else:
+        export_matrix_to_docx(args.key, args.output)
