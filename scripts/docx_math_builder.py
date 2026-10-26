@@ -2259,6 +2259,41 @@ def _build_teacher_docx(path, exam_data, code, school_info, exam_title, duration
 
     doc.save(path)
 
+
+def deploy_mathtype_pref_files(target_dir=None):
+    """
+    Tự động sao chép các file cấu hình MathType chuẩn (phân số to rõ, đồng bộ cỡ 14pt/13pt/12pt)
+    ra Desktop và thư mục xuất, kèm in hướng dẫn 1-click cho giáo viên.
+    """
+    import os, shutil
+    src_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'references', 'CAU_HINH_MATHTYPE_CHUAN')
+    if not os.path.exists(src_dir):
+        src_dir = os.path.join(r'd:\skill-quan-trong', 'CAU_HINH_MATHTYPE_CHUAN')
+    
+    desktop = os.path.join(os.environ.get('USERPROFILE', ''), 'Desktop')
+    dest_dirs = []
+    if target_dir and os.path.exists(target_dir):
+        dest_dirs.append(target_dir)
+    if desktop and os.path.exists(desktop):
+        dest_dirs.append(desktop)
+        
+    if os.path.exists(src_dir):
+        for fname in os.listdir(src_dir):
+            if fname.endswith('.eqp'):
+                s_file = os.path.join(src_dir, fname)
+                for d in dest_dirs:
+                    try:
+                        shutil.copy2(s_file, os.path.join(d, fname))
+                    except Exception:
+                        pass
+    print("\n" + "=" * 72)
+    print("💡 MẸO ĐỒNG BỘ 100% CỠ CHỮ CÔNG THỨC MATHTYPE VÀ LÀM TO PHÂN SỐ (1-CLICK):")
+    print("   Trong Word, nếu Thầy/Cô đổi cỡ font hoặc thấy phân số bị nhỏ hơn chữ:")
+    print("   1. Mở file Word -> Chọn tab MathType -> Format Equations (Ctrl + Alt + Q)")
+    print("   2. Chọn 'MathType preference file' -> Browse... -> Desktop -> Times_14pt_Chuan_BGD.eqp")
+    print("   3. Chọn 'Whole document' -> Bấm OK (Đồng bộ toàn bài chuẩn 14pt chỉ trong 3 giây!)")
+    print("=" * 72 + "\n")
+
 def build_and_export(exam_data, output_dir, exam_code,
 
                      school_info="SỞ GD&ĐT ....................\nTRƯỜNG THPT ....................",
@@ -2367,6 +2402,8 @@ def build_and_export(exam_data, output_dir, exam_code,
 
         print(f"[Cảnh báo] Không thể tạo bản OMML: {e}")
 
+    # 4. Tự động đồng bộ các file cấu hình MathType chuẩn 14pt (làm to phân số)
+    deploy_mathtype_pref_files(output_dir)
     return results
 
 def export_exam_to_word_mathtype(exam_data, output_dir, exam_code="101",

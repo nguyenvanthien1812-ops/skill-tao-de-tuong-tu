@@ -1,11 +1,23 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "5.6.0",
-  "release_date": "2026-10-23",
-  "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Tạo đề từ ma trận đặc tả (không cần đề gốc). Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge (không cần cài LaTeX), kiểm định tự động GDPT 2018.",
+  "version": "5.8.0",
+  "release_date": "2026-10-26",
+  "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Thẩm định & rà soát đề thi theo 42 tiêu chí (xuất biên bản Word & Dashboard Excel + Auto-fix). Tạo đề từ ma trận đặc tả. Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge, kiểm định tự động GDPT 2018.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "5.8.0": [
+      "TÍCH HỢP BỘ CHUẨN HÓA ĐỒNG BỘ CỠ CHỮ MATHTYPE OLE VÀ PHÓNG TO PHÂN SỐ (1-CLICK TRONG WORD): Giải quyết triệt để hiện tượng công thức to nhỏ không đều và phân số bị thu nhỏ tí hon so với văn bản.",
+      "BỘ CẤU HÌNH EQP CHUẨN GDPT 2018 (PHÂN SỐ TO RÕ 75%): Tích hợp sẵn Times_14pt_Chuan_BGD.eqp (14pt), Times_13pt_Chuan_BGD.eqp (13pt), Times_12pt_Chuan_BGD.eqp (12pt). Tự động sao chép ra Desktop và thư mục xuất file mỗi khi xuất Word.",
+      "HƯỚNG DẪN 2 CÁCH KÈM HÌNH ẢNH TRỰC QUAN: Bổ sung Cách 1 (Click Desktop) và Cách 2 (Dán trực tiếp đường dẫn siêu nhanh) kèm 2 hình ảnh minh họa thực tế vào cẩm nang giáo viên, menu bàn giao sau task và tài liệu tham chiếu UX.",
+      "NÂNG CẤP BACKEND EXPORT & STANDARDIZE: scripts/docx_math_builder.py và scripts/standardize_word_mathtype.py tự động gọi deploy_mathtype_pref_files() và in hướng dẫn chuẩn hóa ra terminal."
+    ],
+    "5.7.0": [
+      "TÍCH HỢP BỘ CÔNG CỤ THẨM ĐỊNH & RÀ SOÁT ĐỀ KIỂM TRA (42 TIÊU CHÍ CHUẨN GDPT 2018): Xây dựng trọn gói 5 module lõi (exam_extractor, exam_validator, report_generator, auto_fixer, exam_reviewer_cli). Tự động đối chiếu chéo 100% giữa Ma trận - Đề thi - Hướng dẫn chấm, kiểm tra vượt chương trình, bám sát Yêu cầu cần đạt, nghiệm đẹp, đáp án duy nhất đúng, phân bổ đáp án A/B/C/D, 100% công thức MathType OLE 14pt và bảng biểu liền nét.",
+      "TỰ ĐỘNG XUẤT 2 BÁO CÁO CHUYÊN NGHIỆP: Biên bản thẩm định Word (.docx) chuẩn mẫu Hội đồng thẩm định có bảng biểu chữ ký và Dashboard thống kê Excel (.xlsx) trực quan.",
+      "CƠ CHẾ KẾ HOẠCH SỬA CHỮA & AUTO-FIX TỰ ĐỘNG: Trình Correction Plan lên chat, chờ giáo viên duyệt Đồng ý / OK thì tự động sửa các lỗi cấu trúc (mã đề HDC, bổ sung dấu HẾT, thêm lưu ý chấm) và xuất file _FIXED.docx.",
+      "BỔ SUNG LAUNCHER 1-CLICK THAM_DINH_DE_THI.bat & KỊCH BẢN PHẢN HỒI MẪU: Hỗ trợ giáo viên kéo thả file để thẩm định tự động, bổ sung mục 11 trong references/onboarding_prompts.md và tài liệu kỹ thuật references/tham_dinh_de_thi.md."
+    ],
     "5.6.0": [
       "CHUẨN HÓA TOÀN DIỆN MA TRẬN & BẢN ĐẶC TẢ WORD (matrix_to_docx.py & exam_from_matrix.py): Tách riêng cột Mức độ đánh giá và cột Yêu cầu cần đạt; mỗi mức độ nhận thức (Nhận biết, Thông hiểu, Vận dụng, Vận dụng cao) nằm trên 1 dòng riêng biệt kèm số câu và mã câu hỏi (C1, C2, C17a...) ở ngay cùng dòng đó; bắt buộc có đầy đủ bộ dòng Tổng kết cuối bảng ở cả Bảng 1 (Ma trận) và Bảng 2 (Bản đặc tả).",
       "KHẮC PHỤC TRIỆT ĐỂ LỖI MẤT NÉT VIỀN & LẶP CHỮ Ô GỘP DỌC TRONG PYTHON-DOCX (enforce_perfect_table_borders & _dedupe_merged_cell_paragraphs): Tự động gắn w:tblBorders toàn bảng, quét toàn bộ thẻ XML w:tc (kể cả ô ẩn vMerge) để đóng khung đủ 4 cạnh, kế thừa màu nền w:shd, sắp xếp chuẩn thứ tự thẻ con OOXML (tcPr/tblPr) và khử sạch đoạn văn lặp trong các ô gộp dọc.",

@@ -191,7 +191,14 @@ def run_all() -> int:
     if GLOBAL_SKILLS_ROOT.exists():
         sync_directory(SKILL_DIR, GLOBAL_SKILL_DIR, preserve_files={"license.key"})
         clean_junk_in_skill_dir(GLOBAL_SKILL_DIR)
-        print(f"  [✓] Đã đồng bộ sang Global: {GLOBAL_SKILL_DIR}")
+        print(f"  [✓] Đã đồng bộ sang Global Config: {GLOBAL_SKILL_DIR}")
+
+        # Đồng bộ sang Antigravity Skills directory nếu có
+        agy_skill_dir = Path.home() / ".gemini" / "antigravity" / "skills" / "tao-de-toan-tuong-tu"
+        if agy_skill_dir.parent.exists():
+            sync_directory(SKILL_DIR, agy_skill_dir, preserve_files={"license.key"})
+            clean_junk_in_skill_dir(agy_skill_dir)
+            print(f"  [✓] Đã đồng bộ sang Antigravity Skills: {agy_skill_dir}")
 
         # Đồng bộ luôn skill video khởi động bài học nếu có
         vid_src = WORKSPACE_SKILLS_ROOT / "tao-video-khoi-dong-bai-hoc"

@@ -12,22 +12,21 @@
 
 ### 6.1 Post-Task Menu (Sau Khi Tạo Đề Xong)
 
-**Sau MỖI LẦN tạo đề hoặc xuất file xong**, Agent PHẢI hiển thị:
-
-```
-✅ Đã tạo đề [Môn] [Lớp] mã [XXXX] xong!
-
-📦 Bạn muốn xuất định dạng nào?
-  [1] 📄 Word MathType OLE (.docx) — sửa được công thức, có lời giải tách bạch
-  [2] 🖨️  PDF đẹp chuẩn in ấn (.pdf) — không bao giờ lệch font, 6 theme màu
-  [3] 📦 Cả Word + PDF cùng lúc (khuyên dùng)
-
-💡 Tuỳ chỉnh thêm? Nói tự nhiên:
-  → "dùng theme đỏ" / "đổi tên trường" / "thêm logo" / "trắng đen tiết kiệm mực"
-  → "dịch sang tiếng Anh" / "tạo bộ 4 mã đề" / "trộn đề"
-
-(Hoặc gõ số 1/2/3, hoặc nói tự nhiên điều bạn muốn)
-```
+> [!IMPORTANT]
+> **CHỈ THỊ CẢNH BÁO CHO GIÁO VIÊN KHI XUẤT FILE WORD:**
+> Bất cứ khi nào Agent hoàn thành xuất file Word MathType OLE (`_MATHTYPE_OLE.docx`) hoặc chuẩn hóa file Word, Agent **BẮT BUỘC PHẢI HIỂN THỊ HỘP CẢNH BÁO / HƯỚNG DẪN 1-CLICK NÀY** ngay trong khung chat để giáo viên biết cách xử lý nếu muốn đồng bộ toàn bộ kích cỡ công thức hoặc làm to phân số:
+>
+> 💡 **MẸO DÀNH CHO THẦY/CÔ ĐỒNG BỘ 100% CỠ CÔNG THỨC & LÀM TO PHÂN SỐ (1-CLICK):**  
+> Trong Word, khi Thầy/Cô đổi cỡ chữ văn bản (ví dụ từ 14pt xuống 12pt hoặc ngược lại), đối tượng MathType OLE sẽ không tự co giãn theo chữ. Đồng thời mặc định MathType thu nhỏ phân số xuống 58%.  
+> 👉 **Để toàn bộ công thức và phân số to rõ, đồng đều 100% với văn bản (chỉ 3 giây):**  
+> 1. Mở file Word $\rightarrow$ Chọn tab **MathType** trên thanh công cụ $\rightarrow$ Bấm nút **Format Equations** (hoặc `Ctrl + Alt + Q`).  
+> 2. Tích chọn **MathType preference file** $\rightarrow$ bấm **Browse...**  
+> 3. Chọn file cấu hình (Thầy/Cô chọn 1 trong 2 cách cực dễ):  
+>    • **Cách 1 (Dễ nhất):** Nhìn sang cột bên trái bấm vào **Desktop** $\rightarrow$ chọn file **`Times_14pt_Chuan_BGD.eqp`** $\rightarrow$ bấm **Open**.  
+>    • **Cách 2 (Siêu nhanh):** Dán trực tiếp đường dẫn này vào ô `File name:` rồi bấm **Open**:  
+>      `C:\Users\admin\Desktop\Times_14pt_Chuan_BGD.eqp`  
+> 4. Tích chọn **Whole document** $\rightarrow$ Bấm **OK**. (Toàn bộ đề thi sẽ đồng bộ chuẩn 14pt, phân số to rõ cân đối tuyệt đối!)  
+> *(Hoặc Thầy/Cô có thể dùng ngay bản song hành `..._WORD_EQ.docx` đi kèm để công thức tự động co giãn theo cỡ chữ khi bôi đen).*
 
 ### 6.2 Contextual Suggestions (Gợi Ý Theo Ngữ Cảnh)
 

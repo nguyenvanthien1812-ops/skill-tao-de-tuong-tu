@@ -3,8 +3,8 @@ name: tao-de-toan-tuong-tu
 description: >-
   Tạo đề thi/kiểm tra Toán, Vật lý, Hóa học, KHTN, Sinh học, Địa lý, KTPL, Công nghệ... lớp 6-12 chuẩn GDPT 2018 và xuất Word MathType OLE (Equation.DSMT4) + Word Equation OMML:
   tạo đề tương tự (song song) từ đề gốc PDF/Word/ảnh; lập Ma trận & Bản đặc tả; ra đề theo ma trận có sẵn; vẽ hình kỹ thuật 300-450 DPI (Matplotlib/TikZ: đồ thị, hình không gian, mạch điện, thí nghiệm hóa, bảng biến thiên);
-  chuyển PDF sang Word không lỗi công thức; chuẩn hóa công thức file Word; trộn bộ 4 mã đề + phiếu tô trắc nghiệm + Excel đáp án; dịch đề sang tiếng Anh/song ngữ; xuất PDF in ấn; chấm bài tự luận bằng AI; OCR ảnh đề thi; đọc file MathType OLE cũ; cài đặt môi trường 1-click.
-  Kích hoạt khi người dùng nói: "tạo đề tương tự", "nhân bản đề thi", "tạo đề toán/lý/hóa/KHTN", "tạo ma trận đặc tả", "tạo đề từ ma trận", "chưa có ma trận đặc tả", "trích xuất ma trận", "chuyển pdf sang word", "chuẩn hóa công thức word", "xuất word mathtype", "tạo bộ 4 mã đề", "trộn đề", "tạo phiếu trả lời", "dịch đề sang tiếng anh", "đề song ngữ", "xuất pdf đẹp", "chấm bài tự luận", "vẽ hình", "vẽ đồ thị", "render tikz", "ocr ảnh đề thi", "đọc file docx mathtype", "thí nghiệm ảo", "mô phỏng 3d", "cài đặt môi trường", "hướng dẫn tạo đề".
+  chuyển PDF sang Word không lỗi công thức; chuẩn hóa công thức file Word; trộn bộ 4 mã đề + phiếu tô trắc nghiệm + Excel đáp án; dịch đề sang tiếng Anh/song ngữ; xuất PDF in ấn; chấm bài tự luận bằng AI; OCR ảnh đề thi; đọc file MathType OLE cũ; thẩm định & rà soát đề thi theo 42 tiêu chí chuẩn GDPT 2018 (xuất biên bản Word & Dashboard Excel + Auto-fix lỗi tự động); cài đặt môi trường 1-click.
+  Kích hoạt khi người dùng nói: "tạo đề tương tự", "nhân bản đề thi", "tạo đề toán/lý/hóa/KHTN", "tạo ma trận đặc tả", "tạo đề từ ma trận", "chưa có ma trận đặc tả", "trích xuất ma trận", "chuyển pdf sang word", "chuẩn hóa công thức word", "xuất word mathtype", "tạo bộ 4 mã đề", "trộn đề", "tạo phiếu trả lời", "dịch đề sang tiếng anh", "đề song ngữ", "xuất pdf đẹp", "chấm bài tự luận", "vẽ hình", "vẽ đồ thị", "render tikz", "ocr ảnh đề thi", "đọc file docx mathtype", "thẩm định đề thi", "rà soát đề thi", "kiểm tra đề thi", "thẩm định ma trận", "rà soát lời giải", "biên bản thẩm định", "đánh giá chất lượng đề", "thí nghiệm ảo", "mô phỏng 3d", "cài đặt môi trường", "hướng dẫn tạo đề".
   (Video khởi động bài học / prompt Veo 3 → dùng skill riêng `tao-video-khoi-dong-bai-hoc`.)
 ---
 
@@ -52,6 +52,7 @@ Skill này tự động hóa toàn bộ quy trình biên soạn đề kiểm tra
 | Chấm bài tự luận bằng AI | [`references/cham_bai_tu_luan.md`](./references/cham_bai_tu_luan.md) |
 | "Trợ giúp", lần đầu dùng, menu sau khi tạo đề | [`references/ux_chu_dong.md`](./references/ux_chu_dong.md) |
 | Chuẩn GDPT 2018, quy chuẩn đề 2025 | [`references/gdpt2018_methods.md`](./references/gdpt2018_methods.md), [`references/quy_chuan_de_thi_2025.md`](./references/quy_chuan_de_thi_2025.md) |
+| Thẩm định & rà soát đề thi, ma trận, lời giải (42 tiêu chí, xuất biên bản Word & Excel + Auto-fix) | [`references/tham_dinh_de_thi.md`](./references/tham_dinh_de_thi.md) |
 | Lịch sử thay đổi | [`references/CHANGELOG.md`](./references/CHANGELOG.md), `version.json` |
 
 ---
@@ -130,6 +131,7 @@ Khi giáo viên đưa ra các câu lệnh ngắn, đơn giản hoặc mới ch�
 - *"tạo ma trận đặc tả"*, *"tạo ma trận đề kiểm tra"*, *"tôi muốn tạo đề từ ma trận có sẵn"*, *"tạo đề khi chưa có ma trận"*, *"chưa có ma trận đặc tả"*, *"chuẩn bị gì để tạo ma trận"*, *"làm ma trận"*, *"cấu trúc ma trận"*, *"tạo đề từ ma trận"*
 - *"trích xuất ma trận"*, *"phân tích ma trận đề thi"*, *"lập ma trận từ đề này"*
 - *"nhận diện ảnh đề thi"*, *"chụp ảnh đề thi tạo đề mới"*, *"ocr ảnh đề"*
+- *"thẩm định đề thi"*, *"rà soát đề thi"*, *"kiểm tra đề thi và lời giải"*, *"đánh giá đề thi"*, *"thẩm định ma trận đặc tả"*
 **MÀ TRONG NGỮ CẢNH CHƯA CÓ FILE ĐÍNH KÈM HOẶC CHƯA CÓ ĐƯỜNG DẪN TỆP CỤ THỂ**:
 
 1. **TUYỆT ĐỐI NGHIÊM CẤM:**
@@ -383,9 +385,11 @@ Khi giáo viên yêu cầu tạo bộ đề hoán vị, hàm `generate_exam_set`
 1. Cung cấp đường link trực tiếp tới cả 2 tệp `.docx` đã tạo:
    - `<MA_DE>_MATHTYPE_OLE.docx` (MathType OLE nguyên bản - khuyên dùng)
    - `<MA_DE>_WORD_EQUATION.docx` (Word Equation OMML)
-2. Hiển thị đề thi trực quan trên màn hình trò chuyện kèm hình ảnh minh họa.
-3. Trình bày bảng đáp án trắc nghiệm Phần I, II, III và barem chấm chi tiết phần Tự luận.
-4. Lập bảng đối chiếu chứng minh tính chuẩn xác về mặt toán học giữa đề mới và hình vẽ.
+2. **Hiển thị Cảnh báo & Hướng dẫn 1-Click đồng bộ cỡ công thức MathType (Format Equations)**:
+   Khi bàn giao file `_MATHTYPE_OLE.docx`, luôn kèm theo thông báo hướng dẫn giáo viên cách dùng tab **MathType** $\rightarrow$ **Format Equations** với file `Times_14pt_Chuan_BGD.eqp` (được tự động sinh sẵn trên Desktop/thư mục kết quả) để phòng trường hợp giáo viên đổi cỡ chữ văn bản hoặc muốn phóng to phân số tăm tắp theo ý muốn.
+3. Hiển thị đề thi trực quan trên màn hình trò chuyện kèm hình ảnh minh họa.
+4. Trình bày bảng đáp án trắc nghiệm Phần I, II, III và barem chấm chi tiết phần Tự luận.
+5. Lập bảng đối chiếu chứng minh tính chuẩn xác về mặt toán học giữa đề mới và hình vẽ.
 
 ---
 

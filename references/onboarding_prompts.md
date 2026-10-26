@@ -394,6 +394,71 @@ Agent xuất ngay phản hồi "cầm tay chỉ việc":
 > 1. **Chạy thử ngay trong chat**: Màn hình thí nghiệm tương tác hiện ngay trong Antigravity để Thầy/Cô bấm nút, thử nghiệm lập tức.
 > 2. **File HTML độc lập (Ví dụ: `Thi_Nghiem_Ao.html`)**: Chạy Offline 100% trên máy tính lớp học, TV cảm ứng, bảng thông minh mà không cần mạng Internet, không cần cài đặt phần mềm.
 > 3. **Nhúng vào PowerPoint**: Chỉ cần chèn liên kết (Hyperlink) từ slide bài giảng, nhấp chuột là mở toàn màn hình để học sinh cùng thao tác!"
+> 
+> ---
+> 
+> #### 1️⃣1️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn thẩm định đề" (hoặc "thẩm định đề thi", "rà soát đề thi", "kiểm tra đề thi và lời giải", "đánh giá chất lượng đề", "kiểm tra ma trận đề"...)
+> Agent xuất ngay phản hồi ân cần, chi tiết:
+> > "Dạ chào Thầy/Cô! Tính năng **Thẩm Định & Rà Soát Đề Kiểm Tra** giúp Thầy/Cô kiểm tra toàn diện đề thi, ma trận đặc tả và hướng dẫn chấm theo **42 tiêu chí chuẩn GDPT 2018** (đối chiếu chéo 3 file, kiểm tra vượt chương trình, bám sát yêu cầu cần đạt, nghiệm đẹp, đáp án duy nhất đúng, công thức MathType OLE, bảng biểu liền nét).
+> > 
+> > Sau khi rà soát, hệ thống sẽ **xuất Biên bản thẩm định Word + Dashboard Excel**, đồng thời **trình Kế hoạch sửa chữa chi tiết** lên đây; khi Thầy/Cô đồng ý duyệt ("OK"), hệ thống sẽ **tự động sửa lỗi (Auto-fix)** và xuất file `_FIXED.docx` hoàn thiện.
+> > 
+> > Để bắt đầu, Thầy/Cô chuẩn bị 3 file đầu vào (`.docx`):
+> > 1. **File Ma trận & Bản đặc tả** đề kiểm tra
+> > 2. **File Đề thi** (bản dành cho học sinh)
+> > 3. **File Hướng dẫn chấm & Thang điểm** (lời giải chi tiết)
+> > 
+> > Thầy/Cô chọn 1 trong 2 cách đưa file vào cực kỳ nhanh chóng sau nhé:
+> > 
+> > 📂 **Cách 1: Copy 3 file vào thư mục làm việc của phần mềm (Tiện lợi nhất)**
+> > * Thầy/Cô copy 3 file vào thư mục đang làm việc này của em:  
+> >   👉 `<ĐIỀN_ĐƯỜNG_DẪN_WORKSPACE_THỰC_TẾ_TẠI_ĐÂY>` *(hoặc kéo thả cả 3 file trực tiếp vào khung chat này)*.
+> > * Sau đó, copy câu lệnh mẫu bên dưới, sửa lại tên file và gửi cho em:
+> >   ```text
+> >   Dựa vào các file trong thư mục làm việc:
+> >   - File Ma trận & Bản đặc tả: "[ten_file_ma_tran.docx]"
+> >   - File Đề thi học sinh: "[ten_file_de_thi.docx]"
+> >   - File Hướng dẫn chấm: "[ten_file_huong_dan_cham.docx]"
+> > 
+> >   Em hãy tiến hành THẨM ĐỊNH & RÀ SOÁT TOÀN DIỆN bộ đề kiểm tra này theo 42 tiêu chí chuẩn GDPT 2018 giúp tôi.
+> >   Thông tin bổ sung:
+> >   - Môn: [Toán / Vật lý / Hóa học / KHTN] - Lớp: [6/7/8/9/10/11/12]
+> >   - Bộ sách: [Kết nối tri thức / Cánh diều / Chân trời sáng tạo]
+> >   - Tên trường: [Tên trường - tuỳ chọn]
+> >   - Giáo viên biên soạn: [Tên Thầy/Cô - tuỳ chọn]
+> > 
+> >   Yêu cầu bắt buộc khi thẩm định:
+> >   1. Đối chiếu chéo 100% giữa Ma trận - Đề thi - Hướng dẫn chấm: kiểm tra số lượng câu hỏi, thang điểm từng phần, từng câu có bám sát đúng bài học, đúng mức độ nhận thức (NB/TH/VD/VDC) và Yêu cầu cần đạt hay không. Cảnh báo rõ nếu có câu hỏi vượt quá giới hạn chương trình tại thời điểm kiểm tra.
+> >   2. Chuẩn xác khoa học và sư phạm: kiểm tra nghiệm số đẹp, tính duy nhất của đáp án đúng trắc nghiệm, độ phân bổ các phương án A/B/C/D có cân đối không (không thiên lệch quá 60% một phương án), các phương án nhiễu có tính sư phạm không, hình vẽ kỹ thuật có đủ và sắc nét 300 DPI không.
+> >   3. Kiểm tra định dạng kỹ thuật: 100% công thức ở dạng MathType OLE (Equation.DSMT4 13-14pt nhấp đúp sửa được), 0% ký tự $ sót, bảng biểu dựng chuẩn Table Grid liền nét 100% không mất nét viền, cuối đề có dòng kết thúc chuẩn mực.
+> >   4. Xuất đầy đủ 2 tài liệu báo cáo: (1) Biên bản thẩm định Word (.docx) chuẩn mẫu Hội đồng thẩm định có bảng biểu, chữ ký; (2) Dashboard thống kê Excel (.xlsx) trực quan.
+> >   5. Trình Kế hoạch sửa chữa chi tiết lên khung chat. Khi tôi xem xét và ĐỒNG Ý thì mới tiến hành TỰ ĐỘNG SỬA các lỗi có thể Auto-fix và lưu vào file _FIXED.docx giúp tôi.
+> >   ```
+> > 
+> > 📂 **Cách 2: 3 file đang ở nơi khác (Desktop, Downloads, Zalo, ổ D, ổ E...)**
+> > * Thầy/Cô lấy đường dẫn từng file bằng cách:  
+> >   👉 **Nhấn giữ phím Shift + Nhấp chuột phải vào từng file -> Chọn "Copy as path"** *(hoặc trên Windows 11 bấm `Ctrl + Shift + C`)*.
+> > * Sau đó, dán đường dẫn vào câu lệnh mẫu bên dưới và gửi cho em:
+> >   ```text
+> >   Dựa vào các file tại đường dẫn:
+> >   - File Ma trận & Bản đặc tả: "[Dán đường dẫn file Ma trận vừa copy vào đây]"
+> >   - File Đề thi học sinh: "[Dán đường dẫn file Đề thi vừa copy vào đây]"
+> >   - File Hướng dẫn chấm: "[Dán đường dẫn file HDC vừa copy vào đây]"
+> > 
+> >   Em hãy tiến hành THẨM ĐỊNH & RÀ SOÁT TOÀN DIỆN bộ đề kiểm tra này theo 42 tiêu chí chuẩn GDPT 2018 giúp tôi:
+> >   - Môn: [Toán / Vật lý / Hóa học / KHTN] - Lớp: [6/7/8/9/10/11/12]
+> >   - Bộ sách: [Kết nối tri thức / Cánh diều / Chân trời sáng tạo]
+> >   
+> >   Yêu cầu bắt buộc:
+> >   1. Đối chiếu chéo 100% giữa Ma trận - Đề thi - HDC: kiểm tra số lượng câu, khớp Yêu cầu cần đạt, cảnh báo nếu vượt chương trình.
+> >   2. Tính toán nghiệm số, kiểm tra đáp án đúng duy nhất, độ phân bổ đáp án A/B/C/D, hình vẽ 300 DPI.
+> >   3. Kiểm tra công thức MathType OLE, 0% ký tự $ sót, bảng biểu Table Grid liền nét.
+> >   4. Xuất đầy đủ Biên bản thẩm định Word (.docx) và Dashboard thống kê Excel (.xlsx).
+> >   5. Trình Kế hoạch sửa chữa lên đây. Khi tôi gõ ĐỒNG Ý thì tự động sửa lỗi và xuất file _FIXED.docx giúp tôi.
+> >   ```
+> > 
+> > 💡 *Mẹo nhỏ*: Thầy/Cô cũng có thể nhấp đúp chuột trực tiếp vào file **`THAM_DINH_DE_THI.bat`** tại thư mục gốc `d:\skill-quan-trong` để thẩm định tự động 1-click mà không cần gõ lệnh!"
+
 
 ---
 
