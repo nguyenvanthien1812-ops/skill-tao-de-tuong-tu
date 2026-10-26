@@ -130,6 +130,54 @@ def _fix_rubric_exam_code(rubric_path: str, rubric_out: str, correct_code: str) 
 # MAIN AUTO-FIX RUNNER
 # ──────────────────────────────────────────────────────────────────────────────
 
+def _fix_standardize_mathtype(docx_path: str, out_path: str) -> str:
+    """
+    Chuẩn hóa cỡ chữ MathType OLE về 13pt đồng đều cho toàn bộ file.
+    Gọi hàm standardize_doc_to_mathtype() đã có sẵn trong pipeline.
+    Cũng giúp cải thiện hiển thị phân số (pipeline sẽ rerender MTEF).
+    """
+    try:
+        import sys
+        import importlib
+
+        # Đảm bảo thư mục scripts nằm trong sys.path
+        scripts_dir = os.path.normpath(
+            os.path.join(os.path.dirname(__file__), '..', '..')
+        )
+        if scripts_dir not in sys.path:
+            sys.path.insert(0, scripts_dir)
+
+        # Thử import module chuẩn hóa MathType
+        try:
+            mod = importlib.import_module('standardize_word_mathtype')
+            standardize_fn = getattr(mod, 'standardize_doc_to_mathtype', None)
+        except ImportError:
+            standardize_fn = None
+
+        if standardize_fn is None:
+            # Fallback: copy file và ghi hướng dẫn thủ công
+            shutil.copy2(docx_path, out_path)
+            return (
+                "⚠️ Không tìm thấy module standardize_word_mathtype. "
+                "Vui lòng mở file bằng MathType → Format → Define Sizes → "
+                "đặt Full (cỡ chữ chính) = 13pt → Apply to All."
+            )
+
+        result = standardize_fn(docx_path, out_path)
+        if result and os.path.exists(out_path):
+            return f"✅ Đã chuẩn hóa cỡ chữ MathType về 13pt → {os.path.basename(out_path)}"
+        else:
+            shutil.copy2(docx_path, out_path)
+            return "⚠️ Hàm chuẩn hóa chạy nhưng không tạo file output — đã giữ nguyên file gốc."
+
+    except Exception as e:
+        try:
+            shutil.copy2(docx_path, out_path)
+        except Exception:
+            pass
+        return f"❌ Lỗi khi chuẩn hóa MathType: {e}"
+
+
 def run_auto_fix(
     approved_items: list,       # [FindingItem] đã được GV phê duyệt
     data: ExamData,
@@ -153,6 +201,10 @@ def run_auto_fix(
     shutil.copy2(exam_path,   exam_out)
     shutil.copy2(rubric_path, rubric_out)
 
+    # Theo dõi các fix cần chạy trên cùng file (tránh chạy trùng lặp)
+    _mathtype_exam_fixed   = False
+    _mathtype_rubric_fixed = False
+
     for item in approved_items:
         code = item.code
         print(f"[AutoFix] Áp dụng fix {code}: {item.fix_action}")
@@ -168,6 +220,17 @@ def run_auto_fix(
         elif code == "D04":   # Thêm Lưu ý chấm bài
             res = _fix_add_rubric_note(rubric_out, rubric_out)
             results.append(f"**[{code}]** {res}")
+
+        elif code in ("E03", "E04"):   # Chuẩn hóa cỡ chữ & phân số MathType
+            # Chỉ chạy một lần cho mỗi file dù cả E03 lẫn E04 cùng được duyệt
+            if not _mathtype_exam_fixed:
+                res_e = _fix_standardize_mathtype(exam_out, exam_out)
+                results.append(f"**[E03/E04 – Đề thi]** {res_e}")
+                _mathtype_exam_fixed = True
+            if not _mathtype_rubric_fixed:
+                res_r = _fix_standardize_mathtype(rubric_out, rubric_out)
+                results.append(f"**[E03/E04 – HDC]** {res_r}")
+                _mathtype_rubric_fixed = True
 
         else:
             results.append(f"**[{code}]** ℹ️ Lỗi này cần sửa thủ công — em đã ghi rõ hướng dẫn trong báo cáo.")

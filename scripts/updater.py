@@ -243,6 +243,18 @@ def main():
     # Thực hiện cập nhật
     updated_files, skipped_files = download_zip_and_update(zip_url, SKILL_DIR)
     print(f"\n[✓] Đã cập nhật thành công {len(updated_files)} tệp mã nguồn và tài liệu.")
+    # Tự động triển khai bộ 3 file cấu hình MathType ra Desktop của giáo viên
+    try:
+        pref_src = os.path.join(SKILL_DIR, "references", "CAU_HINH_MATHTYPE_CHUAN")
+        desktop_dir = os.path.join(os.environ.get("USERPROFILE", ""), "Desktop")
+        if os.path.exists(pref_src) and os.path.exists(desktop_dir):
+            for f in os.listdir(pref_src):
+                if f.endswith(".eqp"):
+                    shutil.copy2(os.path.join(pref_src, f), os.path.join(desktop_dir, f))
+            print("  [✓] Đã tự động đặt sẵn bộ file cấu hình MathType chuẩn 14pt (Times_14pt_Chuan_BGD.eqp) ngay trên Desktop!")
+    except Exception:
+        pass
+
     
     if skipped_files:
         print(f"[i] Bảo toàn an toàn {len(skipped_files)} tệp dữ liệu cá nhân & bản quyền:")

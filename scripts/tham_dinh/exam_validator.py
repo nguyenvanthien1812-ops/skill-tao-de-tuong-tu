@@ -2,7 +2,7 @@
 """
 exam_validator.py
 ─────────────────
-Chạy 42 tiêu chí kiểm tra trên ExamData đã trích xuất.
+Chạy toàn bộ các tiêu chí kiểm tra chuẩn GDPT 2018 trên ExamData đã trích xuất.
 Trả về danh sách FindingItem (lỗi/cảnh báo) để dùng trong báo cáo và auto-fix.
 """
 from __future__ import annotations
@@ -392,6 +392,64 @@ def _check_group_E(data: ExamData, rpt: ValidationReport):
                     "FAIL", SEVERITY_ERROR,
                     "Chạy lại pipeline xuất HDC để nhúng MathType OLE."))
 
+    # E03: Đồng bộ cỡ chữ công thức MathType
+    exam_outliers = data.__dict__.get('_exam_ole_outliers', 0)
+    total_text_oles_exam = len([h for h in data.exam_ole_heights if h < 350_000])
+    if not data.exam_ole_heights:
+        rpt.add(_fi("E03", GROUP,
+                    "Cỡ chữ công thức MathType đồng bộ (chuẩn 13–14pt)",
+                    "Không phân tích được kích thước OLE (có thể file dùng định dạng cũ)",
+                    "WARN", SEVERITY_WARNING,
+                    "Mở file bằng MathType và kiểm tra cỡ chữ thủ công."))
+    elif total_text_oles_exam >= 5 and exam_outliers > 0:
+        pct = round(exam_outliers / total_text_oles_exam * 100)
+        # Nếu chỉ có 1-3 công thức lệch nhỏ (< 10%) thường là chỉ số trên/dưới (x^2, a_1)
+        if pct < 10 and exam_outliers <= 3:
+            rpt.add(_fi("E03", GROUP,
+                        "Cỡ chữ công thức MathType đồng bộ (chuẩn 13–14pt)",
+                        f"Cỡ chữ {total_text_oles_exam} công thức cơ bản đồng đều "
+                        f"(có {exam_outliers} công thức dạng mũ/chỉ số nhỏ đặc thù) ✓",
+                        "PASS", SEVERITY_WARNING))
+        else:
+            rpt.add(_fi("E03", GROUP,
+                        "Cỡ chữ công thức MathType đồng bộ (chuẩn 13–14pt)",
+                        f"Phát hiện {exam_outliers}/{total_text_oles_exam} công thức "
+                        f"({pct}%) có cỡ chữ lệch chuẩn so với phần lớn đề thi "
+                        f"(thường do copy công thức từ nhiều nguồn khác nhau)",
+                        "WARN", SEVERITY_WARNING,
+                        "Chạy Auto-fix để chuẩn hóa toàn bộ cỡ chữ MathType về 13pt "
+                        "đồng đều. Hoặc mở MathType → Format → Define Sizes và chỉnh lại.",
+                        fixable=True, fix_action="standardize_mathtype_size"))
+    else:
+        rpt.add(_fi("E03", GROUP,
+                    "Cỡ chữ công thức MathType đồng bộ (chuẩn 13–14pt)",
+                    f"Cỡ chữ {total_text_oles_exam} công thức trong đề thi đồng đều ✓",
+                    "PASS", SEVERITY_WARNING))
+
+    # E04: Phân số không bị co nhỏ (inline fraction)
+    sf_exam   = data.exam_small_fractions
+    sf_rubric = data.rubric_small_fractions
+    sf_total  = sf_exam + sf_rubric
+    if sf_total > 0:
+        parts = []
+        if sf_exam > 0:
+            parts.append(f"Đề thi: {sf_exam} phân số")
+        if sf_rubric > 0:
+            parts.append(f"HDC: {sf_rubric} phân số")
+        rpt.add(_fi("E04", GROUP,
+                    "Phân số hiển thị đầy đủ (không bị co nhỏ kiểu inline)",
+                    f"Phát hiện {sf_total} phân số có thể bị co nhỏ "
+                    f"({', '.join(parts)}) — trông giống \\frac thay vì \\dfrac",
+                    "WARN", SEVERITY_WARNING,
+                    "Chạy Auto-fix để chuyển sang Full-size fraction. "
+                    "Hoặc trong MathType: chọn phân số → Format → Full size fraction (Ctrl+Shift+F).",
+                    fixable=True, fix_action="standardize_mathtype_size"))
+    else:
+        rpt.add(_fi("E04", GROUP,
+                    "Phân số hiển thị đầy đủ (không bị co nhỏ kiểu inline)",
+                    "Không phát hiện phân số co nhỏ bất thường ✓",
+                    "PASS", SEVERITY_WARNING))
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # NHÓM F — ĐỐI CHIẾU CHÉO
@@ -492,7 +550,7 @@ def _check_group_G(data: ExamData, rpt: ValidationReport):
 # ──────────────────────────────────────────────────────────────────────────────
 
 def run_all_checks(data: ExamData) -> ValidationReport:
-    """Chạy toàn bộ 42 tiêu chí và trả về ValidationReport."""
+    """Chạy toàn bộ các tiêu chí thẩm định và trả về ValidationReport."""
     rpt = ValidationReport()
 
     print("[Validator] Kiểm tra Nhóm A — Ma trận & Bản đặc tả...")

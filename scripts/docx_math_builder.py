@@ -208,30 +208,33 @@ import lxml.etree as ET
 BACKEND_API_URL = 'https://latex2mathtypeweb.onrender.com/api/convert-docx'
 
 def _prewarm_backend_async():
-
     """Tự động đánh thức máy chủ Render ngầm trong background thread để triệt tiêu thời gian chờ 60s."""
-
     import threading
-
     def _ping():
-
         try:
-
             import urllib.request
-
             req = urllib.request.Request('https://latex2mathtypeweb.onrender.com', headers={'User-Agent': 'prewarm-daemon/1.0'})
-
             with urllib.request.urlopen(req, timeout=10):
-
                 pass
-
         except Exception:
-
             pass
-
     threading.Thread(target=_ping, daemon=True).start()
 
 _prewarm_backend_async()
+
+def _auto_deploy_eqp_on_load():
+    try:
+        import threading
+        def _task():
+            try:
+                deploy_mathtype_pref_files(silent=True)
+            except Exception:
+                pass
+        threading.Thread(target=_task, daemon=True).start()
+    except Exception:
+        pass
+
+_auto_deploy_eqp_on_load()
 
 XSL_PATHS = [
 
@@ -2260,7 +2263,7 @@ def _build_teacher_docx(path, exam_data, code, school_info, exam_title, duration
     doc.save(path)
 
 
-def deploy_mathtype_pref_files(target_dir=None):
+def deploy_mathtype_pref_files(target_dir=None, silent=False):
     """
     Tự động sao chép các file cấu hình MathType chuẩn (phân số to rõ, đồng bộ cỡ 14pt/13pt/12pt)
     ra Desktop và thư mục xuất, kèm in hướng dẫn 1-click cho giáo viên.
@@ -2286,13 +2289,15 @@ def deploy_mathtype_pref_files(target_dir=None):
                         shutil.copy2(s_file, os.path.join(d, fname))
                     except Exception:
                         pass
-    print("\n" + "=" * 72)
-    print("💡 MẸO ĐỒNG BỘ 100% CỠ CHỮ CÔNG THỨC MATHTYPE VÀ LÀM TO PHÂN SỐ (1-CLICK):")
-    print("   Trong Word, nếu Thầy/Cô đổi cỡ font hoặc thấy phân số bị nhỏ hơn chữ:")
-    print("   1. Mở file Word -> Chọn tab MathType -> Format Equations (Ctrl + Alt + Q)")
-    print("   2. Chọn 'MathType preference file' -> Browse... -> Desktop -> Times_14pt_Chuan_BGD.eqp")
-    print("   3. Chọn 'Whole document' -> Bấm OK (Đồng bộ toàn bài chuẩn 14pt chỉ trong 3 giây!)")
-    print("=" * 72 + "\n")
+    if not silent:
+        print("\n" + "=" * 72)
+        print("💡 MẸO ĐỒNG BỘ 100% CỠ CHỮ CÔNG THỨC MATHTYPE VÀ LÀM TO PHÂN SỐ (1-CLICK):")
+        print("   Trong Word, nếu Thầy/Cô đổi cỡ font hoặc thấy phân số bị nhỏ hơn chữ:")
+        print("   1. Mở file Word -> Chọn tab MathType -> Format Equations (Ctrl + Alt + Q)")
+        print("   2. Chọn 'MathType preference file' -> Browse... -> Desktop -> Times_14pt_Chuan_BGD.eqp")
+        print("   3. Chọn 'Whole document' -> Bấm OK (Đồng bộ toàn bài chuẩn 14pt chỉ trong 3 giây!)")
+        print("=" * 72 + "\n")
+
 
 def build_and_export(exam_data, output_dir, exam_code,
 

@@ -58,10 +58,12 @@ Bộ công cụ sẽ thực hiện:
 - **D03**: Lời giải tự luận chia nhỏ barem điểm đến từng $0,25$ điểm (hoặc $0,1$ điểm).
 - **D04**: Có khung quy định "Lưu ý khi chấm" (học sinh làm cách khác đúng vẫn cho điểm tối đa, làm đúng đến đâu cho điểm đến đó).
 
-### Nhóm E: Định Dạng & Kỹ Thuật Soạn Thảo (E01 – E03)
-- **E01**: 100% công thức toán ở định dạng MathType OLE (`Equation.DSMT4`, $13\text{pt} - 14\text{pt}$), nhấp đúp chuột sửa được.
-- **E02**: 0% ký tự LaTeX thô hoặc ký tự `$` sót trong nội dung file Word.
-- **E03**: Toàn bộ bảng biểu trong đề và HDC kẻ khung viền liền nét 100% (`Table Grid`), không mất nét viền ở các ô gộp.
+### Nhóm E: Định Dạng & Kỹ Thuật Soạn Thảo (E01 – E05)
+- **E01**: Bản Đề thi 100% công thức toán ở định dạng MathType OLE (`Equation.DSMT4`), 0% ký hiệu `$` sót lại.
+- **E02**: Bản HDC 100% công thức toán ở định dạng MathType OLE, 0% ký hiệu `$` sót lại.
+- **E03**: Đồng bộ cỡ chữ công thức MathType (chuẩn 13pt–14pt toàn bài, phát hiện lệch cỡ to/nhỏ do sao chép từ nhiều nguồn khác nhau). *(Có Auto-fix)*
+- **E04**: Phân số và biểu thức tầng hiển thị chuẩn, không bị co nhỏ dạng inline `\frac` (chuyển sang Full-size display `\dfrac`). *(Có Auto-fix)*
+- **E05**: Toàn bộ bảng biểu trong đề và HDC kẻ khung viền liền nét 100% (`Table Grid`), không mất nét viền ở các ô gộp.
 
 ### Nhóm F: Đối Chiếu Chéo 3 File (Cross-Check F01 – F03)
 - **F01**: Từng câu hỏi trên đề khớp 100% với yêu cầu cần đạt và mức độ nhận thức trong Bản đặc tả.

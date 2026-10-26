@@ -3,7 +3,7 @@
 report_generator.py
 ───────────────────
 Xuất Báo cáo Thẩm định ra file Word (chuẩn biên bản Hội đồng bộ môn)
-và file Excel (dashboard 42 tiêu chí).
+và file Excel (dashboard tiêu chí).
 
 Bao gồm:
   - generate_word_report(rpt, data, out_path) → DOCX
@@ -230,7 +230,7 @@ def generate_excel_report(
     data: ExamData,
     out_path: str
 ) -> str:
-    """Xuất dashboard 42 tiêu chí ra file Excel."""
+    """Xuất dashboard tiêu chí ra file Excel."""
     if not HAS_XLSX:
         return ""
 

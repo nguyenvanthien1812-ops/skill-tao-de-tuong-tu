@@ -2,11 +2,12 @@
   "name": "tao-de-toan-tuong-tu",
   "version": "5.8.0",
   "release_date": "2026-10-26",
-  "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Thẩm định & rà soát đề thi theo 42 tiêu chí (xuất biên bản Word & Dashboard Excel + Auto-fix). Tạo đề từ ma trận đặc tả. Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge, kiểm định tự động GDPT 2018.",
+  "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Thẩm định & rà soát đề thi theo 44 tiêu chí (xuất biên bản Word & Dashboard Excel + Auto-fix). Tạo đề từ ma trận đặc tả. Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge, kiểm định tự động GDPT 2018.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
     "5.8.0": [
+      "BỔ SUNG TIÊU CHÍ E03 & E04 VÀO BỘ THẨM ĐỊNH ĐỀ THI (44 TIÊU CHÍ CHUẨN GDPT 2018): E03 kiểm tra đồng bộ cỡ chữ công thức MathType OLE (chuẩn 13pt-14pt, phát hiện lệch cỡ do copy từ nhiều nguồn); E04 kiểm tra chuẩn hiển thị phân số và biểu thức tầng (phát hiện phân số bị co nhỏ kiểu inline \\frac). Tích hợp cơ chế Auto-fix tự động đồng bộ cỡ chữ và phân số khi giáo viên duyệt Đồng ý.",
       "TÍCH HỢP BỘ CHUẨN HÓA ĐỒNG BỘ CỠ CHỮ MATHTYPE OLE VÀ PHÓNG TO PHÂN SỐ (1-CLICK TRONG WORD): Giải quyết triệt để hiện tượng công thức to nhỏ không đều và phân số bị thu nhỏ tí hon so với văn bản.",
       "BỘ CẤU HÌNH EQP CHUẨN GDPT 2018 (PHÂN SỐ TO RÕ 75%): Tích hợp sẵn Times_14pt_Chuan_BGD.eqp (14pt), Times_13pt_Chuan_BGD.eqp (13pt), Times_12pt_Chuan_BGD.eqp (12pt). Tự động sao chép ra Desktop và thư mục xuất file mỗi khi xuất Word.",
       "HƯỚNG DẪN 2 CÁCH KÈM HÌNH ẢNH TRỰC QUAN: Bổ sung Cách 1 (Click Desktop) và Cách 2 (Dán trực tiếp đường dẫn siêu nhanh) kèm 2 hình ảnh minh họa thực tế vào cẩm nang giáo viên, menu bàn giao sau task và tài liệu tham chiếu UX.",

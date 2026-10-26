@@ -131,6 +131,29 @@ def check_backend_api():
         print(f"  [LƯU Ý] Máy chủ phản hồi chậm hoặc đang khởi động lại ({e}).")
         print("          Đừng lo, hệ thống vẫn sẽ sinh bản Word Equation (OMML) cực chuẩn!")
 
+
+def deploy_mathtype_preferences():
+    print("\n[5/5] Cài đặt cấu hình MathType chuẩn GDPT 2018 (Phân số to rõ 75%):")
+    try:
+        import shutil
+        skill_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        pref_src = os.path.join(skill_dir, 'references', 'CAU_HINH_MATHTYPE_CHUAN')
+        desktop_dir = os.path.join(os.environ.get('USERPROFILE', ''), 'Desktop')
+        if os.path.exists(pref_src) and os.path.exists(desktop_dir):
+            copied = []
+            for f in os.listdir(pref_src):
+                if f.endswith('.eqp'):
+                    shutil.copy2(os.path.join(pref_src, f), os.path.join(desktop_dir, f))
+                    copied.append(f)
+            if copied:
+                print(f"  [OK] Đã tạo sẵn {len(copied)} file cấu hình MathType (.eqp) trên Desktop của Thầy/Cô!")
+                print("       (Times_14pt_Chuan_BGD.eqp: chuẩn 14pt cho đề thi, phân số to rõ cân đối 100%)")
+                return True
+        print("  [i] Thư mục cấu hình MathType đã sẵn sàng trong hệ thống.")
+    except Exception as e:
+        print(f"  [!] Lưu ý cấu hình MathType: {e}")
+    return False
+
 def main():
     try:
         sys.stdout.reconfigure(encoding='utf-8')
@@ -141,6 +164,7 @@ def main():
     check_microsoft_office()
     check_latex_compiler()
     check_backend_api()
+    deploy_mathtype_preferences()
     
     print("\n" + "=" * 65)
     if pkg_status:

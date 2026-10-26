@@ -116,6 +116,12 @@ class ExamData:
     rubric_ole_count: int = 0
     rubric_residual_dollar: int = 0
 
+    # E03/E04 — Cỡ chữ & phân số OLE (danh sách chiều cao EMU của từng OLE object)
+    exam_ole_heights: list = field(default_factory=list)   # [int, ...] chiều cao EMU mỗi OLE
+    exam_small_fractions: int = 0    # Số OLE nghi là phân số bị co nhỏ
+    rubric_ole_heights: list = field(default_factory=list)
+    rubric_small_fractions: int = 0
+
     # Raw text (để fallback)
     matrix_raw: str = ""
     exam_raw: str = ""
@@ -198,6 +204,136 @@ def _count_ole_objects(docx_path: str) -> dict:
                 'ok': ole_count > 0 and residual == 0}
     except Exception as e:
         return {'ole_count': 0, 'residual_count': -1, 'ok': False, 'error': str(e)}
+
+
+def _analyze_ole_sizes(docx_path: str) -> dict:
+    r"""
+    Phân tích cỡ chữ và phân số co nhỏ trong các OLE MathType.
+
+    Phương pháp:
+    - Đọc kích thước của từng <w:object> trong document.xml:
+      + Kiểu 1: <wp:extent cx="..." cy="..."/>
+      + Kiểu 2: <v:shape ... style="...width:...;height:..."/> (Word MathType truyền thống)
+      + Kiểu 3: <w:object w:dxaOrig="..." w:dyaOrig="...">
+    - Đơn vị quy đổi: pt hoặc EMU (1 pt = 12700 EMU = 20 dxa).
+    - Cỡ chữ chuẩn 13pt–14pt → chiều cao chữ ≈ 10–18 pt.
+    - Phân số inline co nhỏ (E04): chiều cao 12–20 pt nhưng bề rộng >= 25 pt
+      (công thức phân số dạng \frac bị ép dòng inline thay vì \dfrac display).
+    - Cỡ chữ lệch chuẩn (E03): các công thức chữ thường lệch > 40% so với median.
+
+    Trả về:
+        {
+            'heights': [int, ...],      # danh sách cy EMU của từng OLE
+            'widths':  [int, ...],      # danh sách cx EMU
+            'small_fractions': int,     # số OLE nghi phân số co nhỏ
+            'outlier_count': int,       # số OLE cỡ chữ lệch chuẩn
+            'ok': bool
+        }
+    """
+    try:
+        import zipfile
+        import statistics
+
+        heights = []
+        widths  = []
+
+        with zipfile.ZipFile(docx_path, 'r') as z:
+            if 'word/document.xml' not in z.namelist():
+                return {'heights': [], 'widths': [], 'small_fractions': 0,
+                        'outlier_count': 0, 'ok': False}
+            xml = z.read('word/document.xml').decode('utf-8', errors='ignore')
+
+        # Tách từng khối <w:object ... </w:object>
+        obj_blocks = re.findall(
+            r'<w:object\b[^>]*>.*?</w:object>',
+            xml, flags=re.DOTALL
+        )
+
+        for blk in obj_blocks:
+            # 1. wp:extent (EMU trực tiếp)
+            m_wp = re.search(r'<wp:extent\s+cx="(\d+)"\s+cy="(\d+)"', blk)
+            if m_wp:
+                cx, cy = int(m_wp.group(1)), int(m_wp.group(2))
+                if cx > 50_000 and cy > 50_000:
+                    heights.append(cy)
+                    widths.append(cx)
+                    continue
+
+            # 2. v:shape style="width:Xpt;height:Ypt" (MathType OLE phổ biến)
+            m_v = re.search(r'<v:shape[^>]+style=["\']([^"\']+)["\']', blk)
+            if m_v:
+                style = m_v.group(1)
+                mw = re.search(r'width:([0-9.]+)pt', style)
+                mh = re.search(r'height:([0-9.]+)pt', style)
+                if mw and mh:
+                    cx = int(float(mw.group(1)) * 12700)
+                    cy = int(float(mh.group(1)) * 12700)
+                    if cx > 50_000 and cy > 50_000:
+                        heights.append(cy)
+                        widths.append(cx)
+                        continue
+
+            # 3. w:dxaOrig / w:dyaOrig (1 dxa = 635 EMU)
+            m_dxa = re.search(r'w:dxaOrig="(\d+)"\s+w:dyaOrig="(\d+)"', blk)
+            if m_dxa:
+                cx = int(m_dxa.group(1)) * 635
+                cy = int(m_dxa.group(2)) * 635
+                if cx > 50_000 and cy > 50_000:
+                    heights.append(cy)
+                    widths.append(cx)
+                    continue
+
+        # Fallback toàn văn nếu không match qua w:object
+        if not heights:
+            for s in re.findall(r'<v:shape[^>]+style=["\']([^"\']+)["\']', xml):
+                mw = re.search(r'width:([0-9.]+)pt', s)
+                mh = re.search(r'height:([0-9.]+)pt', s)
+                if mw and mh:
+                    cx = int(float(mw.group(1)) * 12700)
+                    cy = int(float(mh.group(1)) * 12700)
+                    if cx > 50_000 and cy > 50_000:
+                        heights.append(cy)
+                        widths.append(cx)
+
+        if not heights:
+            return {'heights': [], 'widths': [], 'small_fractions': 0,
+                    'outlier_count': 0, 'ok': True}
+
+        # Đổi ra đơn vị pt để tính toán trực quan
+        heights_pt = [h / 12700 for h in heights]
+        widths_pt  = [w / 12700 for w in widths]
+
+        # ── Phát hiện phân số co nhỏ (E04) ──────────────────────────────────
+        # Phân số inline: chiều cao nằm trong mức văn bản (12–20pt) nhưng chiều rộng lớn (>= 25pt)
+        small_fractions = sum(
+            1 for h, w in zip(heights_pt, widths_pt)
+            if 12.0 <= h <= 20.0 and w >= 25.0
+        )
+
+        # ── Phát hiện cỡ chữ không đồng bộ (E03) ────────────────────────────
+        # Lấy median của các công thức dòng thông thường (h < 22pt)
+        regular = [h for h in heights_pt if h < 22.0]
+        outlier_count = 0
+        if len(regular) >= 5:
+            med = statistics.median(regular)
+            if med > 0:
+                # Lệch > 40% so với median kích thước chuẩn
+                outlier_count = sum(
+                    1 for h in regular
+                    if abs(h - med) / med > 0.40
+                )
+
+        return {
+            'heights': heights,
+            'widths':  widths,
+            'small_fractions': small_fractions,
+            'outlier_count': outlier_count,
+            'ok': True
+        }
+
+    except Exception as e:
+        return {'heights': [], 'widths': [], 'small_fractions': 0,
+                'outlier_count': 0, 'ok': False, 'error': str(e)}
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -584,6 +720,17 @@ def extract_exam_data(
     data.exam_residual_dollar   = ole_exam['residual_count']
     data.rubric_ole_count       = ole_rubric['ole_count']
     data.rubric_residual_dollar = ole_rubric['residual_count']
+
+    print(f"[Extractor] Phân tích cỡ chữ & phân số OLE: {os.path.basename(exam_path)}")
+    size_exam   = _analyze_ole_sizes(exam_path)
+    size_rubric = _analyze_ole_sizes(rubric_path)
+    data.exam_ole_heights       = size_exam.get('heights', [])
+    data.exam_small_fractions   = size_exam.get('small_fractions', 0)
+    data.rubric_ole_heights     = size_rubric.get('heights', [])
+    data.rubric_small_fractions = size_rubric.get('small_fractions', 0)
+    # outlier_count lưu tạm để validator dùng (không cần đưa vào dataclass)
+    data.__dict__['_exam_ole_outliers']   = size_exam.get('outlier_count', 0)
+    data.__dict__['_rubric_ole_outliers'] = size_rubric.get('outlier_count', 0)
 
     print(f"[Extractor] ✓ Hoàn tất. TN={len(data.tn_questions)} câu, "
           f"TL={len(data.essay_questions)} bài, "

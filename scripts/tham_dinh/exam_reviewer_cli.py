@@ -50,7 +50,7 @@ BANNER = """
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Thẩm định đề kiểm tra Toán theo 42 tiêu chí chuẩn GDPT 2018"
+        description="Thẩm định đề kiểm tra Toán chuẩn GDPT 2018"
     )
     parser.add_argument('--matrix',  required=True,  help='Đường dẫn file Ma trận & Bản đặc tả (.docx)')
     parser.add_argument('--exam',    required=True,  help='Đường dẫn file Đề thi học sinh (.docx)')
@@ -85,10 +85,10 @@ def main():
     print("=" * 65)
     data = extract_exam_data(args.matrix, args.exam, args.rubric)
 
-    # ── BƯỚC 2: KIỂM TRA 42 TIÊU CHÍ ────────────────────────────────────────
+    # ── BƯỚC 2: KIỂM TRA BỘ TIÊU CHÍ THẨM ĐỊNH ─────────────────────────────
     print()
     print("=" * 65)
-    print("BƯỚC 2: KIỂM TRA 42 TIÊU CHÍ THẨM ĐỊNH")
+    print("BƯỚC 2: KIỂM TRA BỘ TIÊU CHÍ THẨM ĐỊNH (CHUẨN GDPT 2018)")
     print("=" * 65)
     rpt = run_all_checks(data)
 

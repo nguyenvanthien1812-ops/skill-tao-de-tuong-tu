@@ -3,7 +3,7 @@ name: tao-de-toan-tuong-tu
 description: >-
   Tạo đề thi/kiểm tra Toán, Vật lý, Hóa học, KHTN, Sinh học, Địa lý, KTPL, Công nghệ... lớp 6-12 chuẩn GDPT 2018 và xuất Word MathType OLE (Equation.DSMT4) + Word Equation OMML:
   tạo đề tương tự (song song) từ đề gốc PDF/Word/ảnh; lập Ma trận & Bản đặc tả; ra đề theo ma trận có sẵn; vẽ hình kỹ thuật 300-450 DPI (Matplotlib/TikZ: đồ thị, hình không gian, mạch điện, thí nghiệm hóa, bảng biến thiên);
-  chuyển PDF sang Word không lỗi công thức; chuẩn hóa công thức file Word; trộn bộ 4 mã đề + phiếu tô trắc nghiệm + Excel đáp án; dịch đề sang tiếng Anh/song ngữ; xuất PDF in ấn; chấm bài tự luận bằng AI; OCR ảnh đề thi; đọc file MathType OLE cũ; thẩm định & rà soát đề thi theo 42 tiêu chí chuẩn GDPT 2018 (xuất biên bản Word & Dashboard Excel + Auto-fix lỗi tự động); cài đặt môi trường 1-click.
+  chuyển PDF sang Word không lỗi công thức; chuẩn hóa công thức file Word; trộn bộ 4 mã đề + phiếu tô trắc nghiệm + Excel đáp án; dịch đề sang tiếng Anh/song ngữ; xuất PDF in ấn; chấm bài tự luận bằng AI; OCR ảnh đề thi; đọc file MathType OLE cũ; thẩm định & rà soát đề thi theo 44 tiêu chí chuẩn GDPT 2018 (xuất biên bản Word & Dashboard Excel + Auto-fix lỗi tự động); cài đặt môi trường 1-click.
   Kích hoạt khi người dùng nói: "tạo đề tương tự", "nhân bản đề thi", "tạo đề toán/lý/hóa/KHTN", "tạo ma trận đặc tả", "tạo đề từ ma trận", "chưa có ma trận đặc tả", "trích xuất ma trận", "chuyển pdf sang word", "chuẩn hóa công thức word", "xuất word mathtype", "tạo bộ 4 mã đề", "trộn đề", "tạo phiếu trả lời", "dịch đề sang tiếng anh", "đề song ngữ", "xuất pdf đẹp", "chấm bài tự luận", "vẽ hình", "vẽ đồ thị", "render tikz", "ocr ảnh đề thi", "đọc file docx mathtype", "thẩm định đề thi", "rà soát đề thi", "kiểm tra đề thi", "thẩm định ma trận", "rà soát lời giải", "biên bản thẩm định", "đánh giá chất lượng đề", "thí nghiệm ảo", "mô phỏng 3d", "cài đặt môi trường", "hướng dẫn tạo đề".
   (Video khởi động bài học / prompt Veo 3 → dùng skill riêng `tao-video-khoi-dong-bai-hoc`.)
 ---
@@ -52,7 +52,7 @@ Skill này tự động hóa toàn bộ quy trình biên soạn đề kiểm tra
 | Chấm bài tự luận bằng AI | [`references/cham_bai_tu_luan.md`](./references/cham_bai_tu_luan.md) |
 | "Trợ giúp", lần đầu dùng, menu sau khi tạo đề | [`references/ux_chu_dong.md`](./references/ux_chu_dong.md) |
 | Chuẩn GDPT 2018, quy chuẩn đề 2025 | [`references/gdpt2018_methods.md`](./references/gdpt2018_methods.md), [`references/quy_chuan_de_thi_2025.md`](./references/quy_chuan_de_thi_2025.md) |
-| Thẩm định & rà soát đề thi, ma trận, lời giải (42 tiêu chí, xuất biên bản Word & Excel + Auto-fix) | [`references/tham_dinh_de_thi.md`](./references/tham_dinh_de_thi.md) |
+| Thẩm định & rà soát đề thi, ma trận, lời giải (44 tiêu chí, xuất biên bản Word & Excel + Auto-fix) | [`references/tham_dinh_de_thi.md`](./references/tham_dinh_de_thi.md) |
 | Lịch sử thay đổi | [`references/CHANGELOG.md`](./references/CHANGELOG.md), `version.json` |
 
 ---
