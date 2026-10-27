@@ -467,41 +467,74 @@ Agent xuất ngay phản hồi "cầm tay chỉ việc":
 
 #### 1️⃣2️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn soạn giáo án" HOẶC "soạn giáo án tích hợp năng lực số, AI" (hoặc "chèn nls", "tích hợp năng lực số", "kế hoạch bài dạy 5512", "giáo án 2345"...)
 
-Agent xuất ngay phản hồi ân cần, chi tiết:
-> "Dạ chào Thầy/Cô! Tính năng **Soạn Kế Hoạch Bài Dạy (Giáo Án) Tích Hợp Năng Lực Số và AI** hỗ trợ chuẩn mực theo Công văn 5512 (THCS, THPT) hoặc Công văn 2345 (Tiểu học) tích hợp Năng lực số (Thông tư 02/2025/TT-BGDĐT) và Trí tuệ nhân tạo AI (Quyết định 3439/QĐ-BGDĐT).
+Agent xuất ngay phản hồi sư phạm chi tiết, chuẩn chỉ theo thực tế nhà trường:
+> "Dạ chào Thầy/Cô! Tính năng **Soạn & Chèn Kế Hoạch Bài Dạy (Giáo Án) Tích Hợp Năng Lực Số & AI** hỗ trợ chuẩn mực theo Công văn 5512 (THCS, THPT) hoặc Công văn 2345 (Tiểu học), đồng bộ 100% với **Kế hoạch giáo dục của tổ chuyên môn (Phụ lục III / Phân phối chương trình - PPCT)**.
 >
-> Để giáo án đạt tính chuẩn xác và đúng ý Thầy/Cô nhất, Thầy/Cô thuộc trường hợp nào dưới đây ạ:
+> Để giáo án đạt tính chuẩn xác và khớp hoàn toàn với hồ sơ chuyên môn của nhà trường, Thầy/Cô chọn cách thực hiện phù hợp nhất dưới đây ạ:
 >
 > ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-> 📁 **TRƯỜNG HỢP 1: THẦY/CÔ ĐÃ CÓ SẴN FILE GIÁO ÁN WORD (Khuyên dùng)**
-> *(Em sẽ chèn trực tiếp NLS và AI vào đúng các hoạt động, **bảo toàn 100% nội dung gốc, bảng biểu 2 cột và công thức Toán/Lý/Hóa MathType OLE cũ**).*
+> 📁 **CÁCH 1: ĐÃ CÓ GIÁO ÁN CŨ + KÈM PHỤ LỤC III / PPCT CỦA TRƯỜNG (Khuyên dùng - Chuẩn thanh tra 100%)**  
+> *(AI sẽ đọc file Phụ lục III/PPCT của trường, lấy đúng mã NLS, nội dung AI và YCCĐ đã duyệt để chèn vào giáo án cũ; **bảo toàn 100% công thức MathType OLE và bảng 2 cột**).*
 >
-> 👉 **Thầy/Cô gửi file Word (hoặc copy đường dẫn file) kèm câu lệnh:**
+> 👉 **Thầy/Cô gửi 2 file (hoặc kéo thả cả 2 file vào khung chat) kèm câu lệnh:**
 > ```text
-> "Chèn NLS và AI vào file giáo án này giúp tôi: "[Dán_đường_dẫn_file_ở_đây]".
-> - Cấp học: [THCS / THPT / Tiểu học] - Lớp: [...] - Môn: [...]
-> - Bộ sách: [Kết nối tri thức / Cánh diều / Chân trời sáng tạo]
-> - Tính năng tích hợp: [NLS + AI] (hoặc thêm HSKT, Tiếng Anh nếu có)
-> - Ngày soạn: 27/10/2026. Ngày dạy: Bỏ trống."
+> "Hãy đọc file Phụ lục III [ten_file_phu_luc.docx] và chèn đúng mã NLS, AI vào file giáo án [ten_file_giao_an.docx] giúp tôi.
+> - Môn: [Toán / KHTN / Vật lý / Hóa học / ...] - Lớp: [...]
+> - Tên bài cần chèn: [Bài ... - Tên bài] (Tiết theo PPCT: Tiết ... đến ...)
+> - Yêu cầu bắt buộc:
+>   1. Đọc đúng dòng của bài này trong Phụ lục III/PPCT, bốc đúng mã NLS và nội dung AI của trường đã duyệt (không tự bịa mã khác).
+>   2. Chèn vào 2 vị trí cố định: Mục tiêu (cuối Năng lực) và Thiết bị dạy học (cuối mục GV).
+>   3. Chèn vào mục 'Tổ chức thực hiện' của các hoạt động phù hợp (chỉ chèn ở bước Thực hiện nhiệm vụ hoặc Báo cáo khi HS có hành vi số thực tế).
+>   4. Giữ nguyên 100% nội dung bài dạy, cấu trúc bảng 2 cột và công thức Toán MathType OLE.
+>   5. Ngày soạn: 27/10/2026. Ngày dạy: Bỏ trống."
+> ```
+>
+> 💡 *Mẹo nhanh nếu không muốn gửi cả file Phụ lục III:* Thầy/Cô chỉ cần mở bảng PPCT, copy đúng 1 dòng của bài đó rồi dán vào chat kèm câu lệnh:
+> ```text
+> "Chèn NLS và AI vào file giáo án [ten_file.docx] theo đúng thông tin bài này trong PPCT của trường tôi:
+> - Bài: [Tên bài] (Tiết ...)
+> - Yêu cầu cần đạt: [...]
+> - Mã Năng lực số: [Ví dụ: 1.1.TC1a, 2.4.TC1a]
+> - Năng lực AI: [Ví dụ: NLc.C2 - tra cứu và đối chiếu SGK]
+> - Thiết bị số: [Ví dụ: TV thông minh, phần mềm GeoGebra, máy tính cầm tay]
+> Giữ nguyên toàn bộ nội dung giáo án gốc, bảo toàn công thức MathType OLE."
 > ```
 >
 > ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-> 📝 **TRƯỜNG HỢP 2: THẦY/CÔ CHƯA CÓ GIÁO ÁN (SOẠN MỚI TỪ ĐẦU)**
-> *(Em sẽ soạn từ A–Z một giáo án chuẩn mực bám sát SGK, bảng 2 cột và tích hợp sẵn NLS, AI).*
+> 📂 **CÁCH 2: CÓ GIÁO ÁN CŨ NHƯNG TRƯỜNG CHƯA CÓ PHỤ LỤC III (AI Tự Đề Xuất Mã Chuẩn)**  
+> *(AI sẽ tự động đối chiếu Thông tư 02/2025/TT-BGDĐT và QĐ 3439 theo đúng khối lớp để đề xuất mã tối ưu).*
 >
-> 👉 **Thầy/Cô gửi thông tin theo mẫu ngắn gọn:**
+> 👉 **Thầy/Cô chỉ cần gửi file giáo án kèm câu lệnh:**
 > ```text
-> "Soạn giáo án mới:
-> - Môn: [...] - Lớp: [...] - Tên bài: [...] (Số tiết: ... tiết)
-> - Bộ sách: [Kết nối tri thức / Cánh diều / Chân trời sáng tạo]
-> - Khung giáo án: [Công văn 5512 đối với THCS/THPT / hoặc Công văn 2345 đối với Tiểu học]
-> - Tích hợp: Năng lực số + AI + [HSKT / Tiếng Anh nếu cần]
-> - Định dạng: Bảng 2 cột chuẩn Công văn 5512."
+> "Chèn NLS và AI vào file giáo án này giúp tôi: [Dán_đường_dẫn_file_ở_đây].
+> - Môn: [...] - Lớp: [...] - Bộ sách: [KNTT / Cánh diều / CTST]
+> - Yêu cầu:
+>   1. Tự động đề xuất mã NLS chuẩn Thông tư 02 theo đúng cấp lớp (Lớp 6-7: TC1; Lớp 8-9: TC2; THPT: NC1).
+>   2. Tích hợp năng lực AI theo Quyết định 3439/QĐ-BGDĐT.
+>   3. Áp dụng quy tắc ĐPQ: Chỉ chèn vào hoạt động thực tế có hành vi số của HS, không bịa công cụ vào tiết học truyền thống.
+>   4. Bảo toàn 100% công thức MathType OLE và cấu trúc bảng 2 cột của giáo án gốc.
+>   5. Ngày soạn: 27/10/2026. Ngày dạy: Bỏ trống."
 > ```
-> *(Nếu có kèm file PDF/ảnh chụp trang SGK hoặc Phụ lục III của trường, Thầy/Cô cứ gửi kèm nhé!)*
 >
 > ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-> 👉 **Thầy/Cô chọn thực hiện theo Trường hợp 1 (chèn vào file có sẵn) hay Trường hợp 2 (soạn mới) ạ?**"
+> 📝 **CÁCH 3: SOẠN MỚI HOÀN TOÀN TỪ ĐẦU (KÈM PHỤ LỤC III & NỘI DUNG SGK)**  
+> *(Em sẽ biên soạn từ A–Z một giáo án chuẩn mực bám sát SGK và Phụ lục III, bảng 2 cột chuẩn CV 5512 hoặc CV 2345).*
+>
+> 👉 **Thầy/Cô gửi thông tin theo mẫu chi tiết:**
+> ```text
+> "Soạn mới hoàn chỉnh giáo án bài dạy:
+> - Môn: [...] - Lớp: [...] - Bộ sách: [Kết nối tri thức / Cánh diều / Chân trời sáng tạo]
+> - Tên bài: [Bài ... - Tên bài] (Thời lượng: ... tiết, từ tiết ... đến tiết ...)
+> - Thông tin từ Phụ lục III/PPCT của trường (nếu có):
+>   + Yêu cầu cần đạt: [...]
+>   + Mã Năng lực số: [...]
+>   + Nội dung AI: [...]
+> - Khung bài dạy: [Công văn 5512 (THCS/THPT) trình bày bảng 2 cột / hoặc Công văn 2345 (Tiểu học)]
+> - Yêu cầu: Bám sát nội dung SGK [gửi kèm file PDF/ảnh SGK nếu có], công thức toán chuẩn MathType 14pt, đầy đủ 4 bước Chuyển giao - Thực hiện - Báo cáo - Kết luận."
+> ```
+>
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 👉 **Thầy/Cô đang có sẵn Phụ lục III / PPCT của trường (Cách 1) hay muốn AI tự đề xuất mã (Cách 2) hay Soạn mới từ đầu (Cách 3) ạ?**"
 
 ---
 

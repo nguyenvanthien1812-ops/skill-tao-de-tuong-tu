@@ -45,3 +45,18 @@ Tài liệu hướng dẫn quy chuẩn sư phạm và kỹ thuật chèn Năng l
 * 🟣 Năng lực AI: `<w:color w:val="7030A0"/>` (Tím, in đậm).
 * 🟢 Hòa nhập HSKT: `<w:color w:val="008000"/>` (Xanh lá, in nghiêng + đậm).
 * 🟠 Tiếng Anh: `<w:color w:val="B45309"/>` (Cam đất, in nghiêng + đậm).
+
+---
+
+## 6. QUY CHUẨN XỬ LÝ PHỤ LỤC III / PHÂN PHỐI CHƯƠNG TRÌNH (PPCT)
+Nhà trường và tổ chuyên môn đầu năm học đều ban hành **Kế hoạch giáo dục của tổ chuyên môn (Phụ lục III)** kèm bảng Phân phối chương trình phân công cụ thể từng bài dạy, số tiết, Yêu cầu cần đạt, thiết bị dạy học và mã Năng lực số/AI đã được phê duyệt.
+
+Khi giáo viên yêu cầu tích hợp NLS/AI vào giáo án:
+1. **Trường hợp có Phụ lục III / PPCT**:
+   - AI **BẮT BUỘC** trích xuất đúng dòng tương ứng với tên bài và phân phối tiết của bài dạy.
+   - Bốc chính xác các mã chỉ báo Năng lực số (ví dụ: `1.1.TC1a`, `2.4.TC1a`) và nội dung AI (ví dụ: `NLc.C2`) mà tổ chuyên môn đã phân công.
+   - **Tuyệt đối không tự ý thay đổi hoặc tự bịa mã khác** làm lệch hồ sơ chuyên môn của tổ khi đoàn kiểm tra, thanh tra đối chiếu.
+2. **Trường hợp giáo viên copy 1 dòng từ PPCT vào chat**:
+   - AI sử dụng ngay thông tin đó để đưa vào mục Mục tiêu và Tiến trình dạy học mà không cần hỏi lại.
+3. **Trường hợp trường chưa phân công mã trong Phụ lục III**:
+   - AI tự động đối chiếu Khung năng lực số (Thông tư 02/2025/TT-BGDĐT) và Khung AI (Quyết định 3439/QĐ-BGDĐT) theo đúng cấp học để đề xuất 1-2 mã phù hợp nhất với hoạt động thực tế của bài học.
