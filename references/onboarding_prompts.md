@@ -465,6 +465,46 @@ Agent xuất ngay phản hồi "cầm tay chỉ việc":
 
 ---
 
+#### 1️⃣2️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn soạn giáo án" HOẶC "soạn giáo án tích hợp năng lực số, AI" (hoặc "chèn nls", "tích hợp năng lực số", "kế hoạch bài dạy 5512", "giáo án 2345"...)
+
+Agent xuất ngay phản hồi ân cần, chi tiết:
+> "Dạ chào Thầy/Cô! Tính năng **Soạn Kế Hoạch Bài Dạy (Giáo Án) Tích Hợp Năng Lực Số và AI** hỗ trợ chuẩn mực theo Công văn 5512 (THCS, THPT) hoặc Công văn 2345 (Tiểu học) tích hợp Năng lực số (Thông tư 02/2025/TT-BGDĐT) và Trí tuệ nhân tạo AI (Quyết định 3439/QĐ-BGDĐT).
+>
+> Để giáo án đạt tính chuẩn xác và đúng ý Thầy/Cô nhất, Thầy/Cô thuộc trường hợp nào dưới đây ạ:
+>
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 📁 **TRƯỜNG HỢP 1: THẦY/CÔ ĐÃ CÓ SẴN FILE GIÁO ÁN WORD (Khuyên dùng)**
+> *(Em sẽ chèn trực tiếp NLS và AI vào đúng các hoạt động, **bảo toàn 100% nội dung gốc, bảng biểu 2 cột và công thức Toán/Lý/Hóa MathType OLE cũ**).*
+>
+> 👉 **Thầy/Cô gửi file Word (hoặc copy đường dẫn file) kèm câu lệnh:**
+> ```text
+> "Chèn NLS và AI vào file giáo án này giúp tôi: "[Dán_đường_dẫn_file_ở_đây]".
+> - Cấp học: [THCS / THPT / Tiểu học] - Lớp: [...] - Môn: [...]
+> - Bộ sách: [Kết nối tri thức / Cánh diều / Chân trời sáng tạo]
+> - Tính năng tích hợp: [NLS + AI] (hoặc thêm HSKT, Tiếng Anh nếu có)
+> - Ngày soạn: 27/10/2026. Ngày dạy: Bỏ trống."
+> ```
+>
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 📝 **TRƯỜNG HỢP 2: THẦY/CÔ CHƯA CÓ GIÁO ÁN (SOẠN MỚI TỪ ĐẦU)**
+> *(Em sẽ soạn từ A–Z một giáo án chuẩn mực bám sát SGK, bảng 2 cột và tích hợp sẵn NLS, AI).*
+>
+> 👉 **Thầy/Cô gửi thông tin theo mẫu ngắn gọn:**
+> ```text
+> "Soạn giáo án mới:
+> - Môn: [...] - Lớp: [...] - Tên bài: [...] (Số tiết: ... tiết)
+> - Bộ sách: [Kết nối tri thức / Cánh diều / Chân trời sáng tạo]
+> - Khung giáo án: [Công văn 5512 đối với THCS/THPT / hoặc Công văn 2345 đối với Tiểu học]
+> - Tích hợp: Năng lực số + AI + [HSKT / Tiếng Anh nếu cần]
+> - Định dạng: Bảng 2 cột chuẩn Công văn 5512."
+> ```
+> *(Nếu có kèm file PDF/ảnh chụp trang SGK hoặc Phụ lục III của trường, Thầy/Cô cứ gửi kèm nhé!)*
+>
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 👉 **Thầy/Cô chọn thực hiện theo Trường hợp 1 (chèn vào file có sẵn) hay Trường hợp 2 (soạn mới) ạ?**"
+
+---
+
 ### 🗣️ Luồng Hội Thoại Thông Minh — AI Hỏi Đúng Thứ Gì Còn Thiếu
 
 > [!IMPORTANT]

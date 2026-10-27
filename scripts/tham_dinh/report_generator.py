@@ -370,7 +370,7 @@ def generate_correction_plan(rpt: ValidationReport, data: ExamData) -> str:
         for i, item in enumerate(fixable, 1):
             lines.append(f"- **Fix {i} [{item.code}]:** {item.fix_action}")
         lines.append("")
-        lines.append("> 👉 **Thầy/Cô trả lời `OK` hoặc `Đồng ý` để em tự động sửa toàn bộ {len(fixable)} hạng mục trên.**")
+        lines.append(f"> 👉 **Thầy/Cô trả lời `OK` hoặc `Đồng ý` để em tự động sửa toàn bộ {len(fixable)} hạng mục trên.**")
         lines.append("> Hoặc Thầy/Cô có thể gõ số thứ tự các hạng mục muốn bỏ qua (ví dụ: `Bỏ qua 2, 3`).")
     else:
         lines.append("---")

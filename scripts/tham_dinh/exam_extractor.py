@@ -402,8 +402,8 @@ def _extract_matrix(doc: Document, data: ExamData):
             cells     = [c[0] for c in cells_raw] # chỉ text
             row_text  = ' '.join(cells).lower()
 
-            # Bỏ qua dòng header
-            if any(kw in row_text for kw in HEADER_KW):
+            # Bỏ qua dòng header (chỉ xét 3 hàng đầu của bảng)
+            if r_idx < 3 and any(kw in row_text for kw in HEADER_KW):
                 continue
 
             # Dòng Tổng: "Tổng" ở cột 0
@@ -652,7 +652,7 @@ def _extract_rubric(doc: Document, data: ExamData):
         data.rubric_code = m_code.group(1)
 
     data.rubric_has_note = any(kw in raw.lower() for kw in [
-        'lưu ý khi chấm', 'lưu ý:', 'học sinh làm cách khác'
+        'lưu ý khi chấm', 'lưu ý:', 'lưu ý chung', 'học sinh làm cách khác', 'thí sinh làm theo cách giải khác'
     ])
 
     # Trích đáp án từ bảng — bảng đáp án có header dạng "Câu 1", "Câu 2", ...
