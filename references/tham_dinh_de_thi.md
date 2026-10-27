@@ -77,6 +77,35 @@ Bộ công cụ sẽ thực hiện:
 
 ---
 
+## 🔍 Quy Chuẩn Rà Soát Từng Công Thức & Kế Hoạch Sửa Chữa Chi Tiết (Formula-Level Audit Protocol)
+
+> [!IMPORTANT]
+> Khi thẩm định đề thi, Agent và Thẩm định viên **BẮT BUỘC rà soát tỉ mỉ từng công thức toán học** (từ câu đầu đến câu cuối trong cả Đề thi và Hướng dẫn chấm), tuyệt đối không chỉ kiểm tra hình thức bên ngoài.
+
+### 1. Quy Trình Rà Soát Công Thức 3 Lớp:
+1. **Lớp 1 — Tính đúng đắn toán học & logic nghiệm**:
+   - Giải soát lại từng bước biến đổi đại số, giải phương trình/hệ phương trình/bất phương trình.
+   - Kiểm tra điều kiện xác định (ĐKXĐ), tập xác định, điều kiện có nghĩa của căn thức, phân thức.
+   - Kiểm tra tính toán số học, quy đồng mẫu số, nhân chia dấu âm/dương, khai triển hằng đẳng thức.
+   - Đảm bảo 4 phương án trắc nghiệm chỉ có duy nhất 1 đáp án đúng, các phương án nhiễu phản ánh đúng bẫy sai lầm của học sinh.
+2. **Lớp 2 — Chuẩn mực ký hiệu & sư phạm GDPT 2018**:
+   - Ký hiệu toán học chuẩn mực: dấu suy ra $\Rightarrow$ vs tương đương $\Leftrightarrow$, ký hiệu góc $\widehat{ABC}$, độ dài đoạn thẳng, vectơ $\vec{u}$, tập hợp $\in, \subset$.
+   - Ký hiệu đơn vị chuẩn quốc tế: $\mathrm{cm, m^2, km/h}$, viết thẳng đứng không nghiêng; tên điểm hình học in hoa thẳng đứng.
+3. **Lớp 3 — Chuẩn kỹ thuật & định dạng file**:
+   - 100% công thức nhúng chuẩn MathType OLE (`Equation.DSMT4`), $0\%$ ký hiệu `$` thô sót lại.
+   - Đồng bộ cỡ chữ 13pt–14pt toàn bài, không lệch to nhỏ.
+   - Phân số hiển thị đủ chiều cao (`\dfrac`), không bị co nhỏ dạng inline fractions.
+
+### 2. Định Dạng Kế Hoạch Sửa Chữa Chi Tiết Từng Công Thức (Bắt Buộc Trình Bày Trong Báo Cáo):
+Khi phát hiện công thức có vấn đề, Agent bắt buộc xuất bảng Kế hoạch sửa chữa theo cấu trúc:
+| STT | Vị trí (File & Câu) | Công thức hiện tại | Vấn đề / Lỗi sai | Công thức sửa chuẩn | Hướng xử lý |
+|:---:|:---|:---|:---|:---|:---|
+| 1 | Đề thi - Câu 5 | $x^2 - 4x + 4 = 0 \Leftrightarrow x = -2$ | Sai dấu nghiệm phương trình bậc 2 | $x^2 - 4x + 4 = 0 \Leftrightarrow (x - 2)^2 = 0 \Leftrightarrow x = 2$ | Thủ công |
+| 2 | HDC - Bài 2b | $\frac{2x+1}{x-3}$ (inline nhỏ) | Phân số bị co nhỏ, khó đọc | $\dfrac{2x+1}{x-3}$ (Full-size) | Auto-fix |
+| 3 | Đề thi - Câu 12 | `$(d): y = 2x + 1$` | Sót ký hiệu $ thô chưa qua MathType | Đối tượng MathType OLE chuẩn | Auto-fix |
+
+---
+
 ## 💻 Hướng Dẫn Sử Dụng Bộ Công Cụ
 
 ### Cách 1: Chạy 1-Click qua file BAT (Dành cho Giáo viên)

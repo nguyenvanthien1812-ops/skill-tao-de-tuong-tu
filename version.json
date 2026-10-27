@@ -1,8 +1,8 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "5.8.0",
-  "release_date": "2026-10-26",
-  "description": "Skill tạo đề thi 8 MÔN (Toán, Vật Lý, Hóa Học, Sinh Học, KHTN, Địa Lý, KTPL, Ngữ Văn) lớp 6-12 chuẩn GDPT 2018. Thẩm định & rà soát đề thi theo 44 tiêu chí (xuất biên bản Word & Dashboard Excel + Auto-fix). Tạo đề từ ma trận đặc tả. Chấm tự luận bằng AI Gemini Vision. Xuất MathType OLE 14pt, PDF đẹp qua Chrome/Edge, kiểm định tự động GDPT 2018.",
+  "version": "6.0.0",
+  "release_date": "2026-10-27",
+  "description": "Siêu Skill Toàn Năng GDPT 2018 (5-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Soạn giáo án tích hợp NLS (TT 02/2025) & AI (QĐ 3439) + Soạn Slide PowerPoint 16:9 chuẩn mực sư phạm + Video khởi động bài học Veo 3.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
@@ -204,6 +204,13 @@
       "Hỗ trợ xuất MathType OLE qua Backend API Cloud",
       "Vẽ hình kỹ thuật 300 DPI bằng Matplotlib",
       "Smart Fallback sang Word Equation OMML"
+    ],
+    "6.0.0": [
+      "ĐẠI CẬP NHẬT HỢP NHẤT v6.0.0 (5 TRONG 1 TOÀN DIỆN): Hợp nhất toàn bộ tính năng vào 1 Skill duy nhất.",
+      "TÍCH HỢP SOẠN GIÁO ÁN NLS & AI (CV 5512 / 2345): Bổ sung công cụ XML Injection (inject_nls_docx.py) bảo toàn 100% MathType OLE, bảng 2 cột; tra cứu chuẩn Thông tư 02/2025/TT-BGDĐT và Quyết định 3439/QĐ-BGDĐT.",
+      "TÍCH HỢP SOẠN SLIDE BÀI GIẢNG POWERPOINT 16:9: Tự động loại bỏ slide hành chính rườm rà, tiến trình 3 bước trực quan từ Giáo án/SGK, 100% Native DrawingML không đè chữ, OMML Toán/Lý/Hóa.",
+      "TÍCH HỢP VIDEO KHỞI ĐỘNG BÀI HỌC VEO 3 (60-80s): Quy trình 3 bước, đồng nhất nhân vật giáo viên, Prompting không chữ (No-text) chống lỗi font.",
+      "TÍCH HỢP ĐẦY ĐỦ CẨM NANG THAM CHIẾU & SCRIPT CẬP NHẬT TỰ ĐỘNG: Giáo viên cập nhật 1-click hoặc chat ngay trên Antigravity."
     ]
   }
 }

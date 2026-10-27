@@ -114,11 +114,11 @@ echo.
 
 :: ─── BƯỚC 3: TỰ ĐỘNG CÀI ĐẶT CÁC THƯ VIỆN TOÁN, LÝ, HÓA & HÌNH VẼ ────
 echo [*] Buoc 2/3: Kiem tra va cai dat day du cac thu vien qua pip...
-echo     (matplotlib, scipy, python-docx, lxml, latex2mathml, requests, pillow, openpyxl, cryptography, pymupdf)
+echo     (matplotlib, scipy, python-docx, lxml, latex2mathml, requests, pillow, openpyxl python-pptx edge-tts, cryptography, pymupdf)
 echo.
 
 %PYTHON_EXE% -m pip install --upgrade pip --quiet --no-warn-script-location
-%PYTHON_EXE% -m pip install matplotlib scipy python-docx lxml latex2mathml requests pillow openpyxl cryptography pymupdf --no-warn-script-location
+%PYTHON_EXE% -m pip install matplotlib scipy python-docx lxml latex2mathml requests pillow openpyxl python-pptx edge-tts cryptography pymupdf --no-warn-script-location
 
 echo.
 echo [OK] Tat ca thu vien da duoc cai dat thanh cong 100%!
