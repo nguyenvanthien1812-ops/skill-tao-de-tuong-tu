@@ -1,6 +1,6 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "release_date": "2026-10-27",
   "description": "Siêu Skill Toàn Năng GDPT 2018 (5-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Soạn giáo án tích hợp NLS (TT 02/2025) & AI (QĐ 3439) + Soạn Slide PowerPoint 16:9 chuẩn mực sư phạm + Video khởi động bài học Veo 3.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
@@ -211,6 +211,11 @@
       "TÍCH HỢP SOẠN SLIDE BÀI GIẢNG POWERPOINT 16:9: Tự động loại bỏ slide hành chính rườm rà, tiến trình 3 bước trực quan từ Giáo án/SGK, 100% Native DrawingML không đè chữ, OMML Toán/Lý/Hóa.",
       "TÍCH HỢP VIDEO KHỞI ĐỘNG BÀI HỌC VEO 3 (60-80s): Quy trình 3 bước, đồng nhất nhân vật giáo viên, Prompting không chữ (No-text) chống lỗi font.",
       "TÍCH HỢP ĐẦY ĐỦ CẨM NANG THAM CHIẾU & SCRIPT CẬP NHẬT TỰ ĐỘNG: Giáo viên cập nhật 1-click hoặc chat ngay trên Antigravity."
+    ],
+    "6.1.0": [
+      "NÂNG CẤP TOÀN DIỆN KỊCH BẢN ONBOARDING SOẠN GIÁO ÁN TÍCH HỢP NĂNG LỰC SỐ (TT 02/2025) & AI (QĐ 3439): Hỗ trợ chi tiết 3 cách chuẩn chỉ thực tế: (1) Đã có Giáo án cũ + Phụ lục III/PPCT của trường (bốc đúng mã NLS và AI đã duyệt, giữ nguyên 100% MathType OLE và bảng 2 cột); (2) Tự động đề xuất mã chuẩn Thông tư 02 và QĐ 3439 theo khối lớp khi trường chưa có Phụ lục III; (3) Soạn mới từ đầu theo SGK và Phụ lục III.",
+      "BỔ SUNG KỊCH BẢN 15: Tự động chạy updater.py --force và sync_skill.py khi giáo viên yêu cầu 'cập nhật tính năng mới', tự động hướng dẫn mở New Chat.",
+      "ĐỒNG BỘ 100% TOÀN BỘ BỘ CÔNG CỤ: Đồng bộ cả 2 skill tao-de-toan-tuong-tu và soan-giao-an-tich-hop-nls trên toàn bộ các môi trường."
     ]
   }
 }

@@ -566,6 +566,26 @@ Agent xuất ngay phản hồi:
 
 ---
 
+
+
+---
+
+#### 1️⃣5️⃣ KHI GIÁO VIÊN NÓI: "cập nhật tính năng mới" (hoặc "cập nhật tiện ích", "cập nhật skill", "update skill")
+
+Agent tự động thực thi tiến trình cập nhật từ GitHub:
+1. Chạy ngầm lệnh:
+   ```bash
+   python scripts/updater.py --force
+   python scripts/sync_skill.py
+   ```
+2. Xuất thông báo hoàn tất:
+   > "🎉 **ĐÃ CẬP NHẬT LÊN PHIÊN BẢN v6.1.0 THÀNH CÔNG!**  
+   > - Đã tải toàn bộ tính năng mới nhất từ GitHub về máy tính.  
+   > - Đã cập nhật tính năng Soạn giáo án chuẩn Phụ lục III / PPCT và các công cụ bổ trợ.  
+   > 
+   > ⚠️ **LƯU Ý QUAN TRỌNG:** Để Antigravity nạp ngay các tính năng và kịch bản mới này, Thầy/Cô vui lòng **mở một cuộc trò chuyện mới (bấm dấu '+' hoặc phím tắt Ctrl + N)** trên Antigravity nhé ạ!"
+
+
 ### 🗣️ Luồng Hội Thoại Thông Minh — AI Hỏi Đúng Thứ Gì Còn Thiếu
 
 > [!IMPORTANT]
