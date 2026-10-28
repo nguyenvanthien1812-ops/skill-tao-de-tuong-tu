@@ -1,8 +1,8 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.1.0",
-  "release_date": "2026-10-27",
-  "description": "Siêu Skill Toàn Năng GDPT 2018 (5-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Soạn giáo án tích hợp NLS (TT 02/2025) & AI (QĐ 3439) + Soạn Slide PowerPoint 16:9 chuẩn mực sư phạm + Video khởi động bài học Veo 3.",
+  "version": "6.2.0",
+  "release_date": "2026-10-28",
+  "description": "Siêu Skill Toàn Năng GDPT 2018 (6-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Tạo đề Tiếng Anh & xuất file nghe MP3 chuẩn khảo thí (khớp 100% câu hỏi) + Soạn giáo án tích hợp NLS (TT 02/2025) & AI (QĐ 3439) + Soạn Slide PowerPoint 16:9 chuẩn mực sư phạm + Video khởi động bài học Veo 3.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
@@ -216,6 +216,12 @@
       "NÂNG CẤP TOÀN DIỆN KỊCH BẢN ONBOARDING SOẠN GIÁO ÁN TÍCH HỢP NĂNG LỰC SỐ (TT 02/2025) & AI (QĐ 3439): Hỗ trợ chi tiết 3 cách chuẩn chỉ thực tế: (1) Đã có Giáo án cũ + Phụ lục III/PPCT của trường (bốc đúng mã NLS và AI đã duyệt, giữ nguyên 100% MathType OLE và bảng 2 cột); (2) Tự động đề xuất mã chuẩn Thông tư 02 và QĐ 3439 theo khối lớp khi trường chưa có Phụ lục III; (3) Soạn mới từ đầu theo SGK và Phụ lục III.",
       "BỔ SUNG KỊCH BẢN 15: Tự động chạy updater.py --force và sync_skill.py khi giáo viên yêu cầu 'cập nhật tính năng mới', tự động hướng dẫn mở New Chat.",
       "ĐỒNG BỘ 100% TOÀN BỘ BỘ CÔNG CỤ: Đồng bộ cả 2 skill tao-de-toan-tuong-tu và soan-giao-an-tich-hop-nls trên toàn bộ các môi trường."
+    ],
+    "6.2.0": [
+      "TÍCH HỢP BỘ MÁY TẠO FILE NGHE MP3 MÔN TIẾNG ANH CHUẨN KHẢO THÍ (scripts/english_listening_mp3_builder.py & references/tao_file_nghe_mp3_tieng_anh.md): Thực thi Kế hoạch Đồng bộ hóa Ngược 5 Bước (5-Step Backward Synchronization Plan) bảo đảm file MP3 khớp tuyệt đối 100% với câu hỏi và đáp án trên đề thi.",
+      "BỘ KIỂM ĐỊNH ĐỒNG BỘ TỰ ĐỘNG (ListeningSyncValidator - QA Gate): Tự động đối chiếu chéo 100% nhãn neo [Q1..Qn], kiểm tra trình tự tuyến tính nghiêm ngặt (Strict Linear Order) và kiểm tra từ điền khuyết Gap-fill / giới hạn số từ trước khi sinh âm thanh.",
+      "BỘ CHUẨN HÓA VĂN BẢN NÓI (SpokenTextNormalizer): Tự động xóa nhãn neo câu hỏi khi đọc, chuẩn hóa tiền tệ ($60 -> 60 dollars), phần trăm (20% -> 20 percent), thế kỷ/số thứ tự (7th -> seventh), từ viết tắt (Dr., Prof., Mr., Ms.) và hỗ trợ đánh vần tên riêng [SPELL: ...].",
+      "PHỐI ÂM ĐA GIỌNG ĐỌC BẢN XỨ & NHẠC HIỆU PHÒNG THI: Sử dụng Microsoft Edge Neural Voices (Anh-Anh RP & Anh-Mỹ, phân vai Nam/Nữ tự nhiên), tự động chèn lời dẫn quy chế, tiếng chuông báo hiệu (Chime tone), khoảng lặng đọc đề (30s-45s), phát lặp lại 2 lần và xuất đồng thời cả File Master toàn bài lẫn các File lẻ từng Part."
     ]
   }
 }

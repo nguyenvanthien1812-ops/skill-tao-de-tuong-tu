@@ -579,11 +579,43 @@ Agent tự động thực thi tiến trình cập nhật từ GitHub:
    python scripts/sync_skill.py
    ```
 2. Xuất thông báo hoàn tất:
-   > "🎉 **ĐÃ CẬP NHẬT LÊN PHIÊN BẢN v6.1.0 THÀNH CÔNG!**  
+   > "🎉 **ĐÃ CẬP NHẬT LÊN PHIÊN BẢN v6.2.0 THÀNH CÔNG!**  
    > - Đã tải toàn bộ tính năng mới nhất từ GitHub về máy tính.  
-   > - Đã cập nhật tính năng Soạn giáo án chuẩn Phụ lục III / PPCT và các công cụ bổ trợ.  
+   > - Đã cập nhật tính năng Tạo file nghe MP3 Tiếng Anh chuẩn phòng thi (khớp 100% câu hỏi), Soạn giáo án chuẩn Phụ lục III / PPCT và các công cụ bổ trợ.  
    > 
    > ⚠️ **LƯU Ý QUAN TRỌNG:** Để Antigravity nạp ngay các tính năng và kịch bản mới này, Thầy/Cô vui lòng **mở một cuộc trò chuyện mới (bấm dấu '+' hoặc phím tắt Ctrl + N)** trên Antigravity nhé ạ!"
+
+---
+
+#### 1️⃣6️⃣ KHI GIÁO VIÊN NÓI: "tạo file nghe mp3" HOẶC "tạo đề tiếng anh có file nghe" (hoặc "làm file nghe tiếng anh", "tạo audio listening"...)
+
+Agent xuất ngay phản hồi ân cần, chi tiết theo 3 trường hợp thực tế:
+> "Dạ chào Thầy/Cô! Tính năng **Tạo File Nghe MP3 Môn Tiếng Anh Chuẩn Phòng Thi (Khớp 100% Câu Hỏi)** sử dụng công nghệ giọng đọc bản xứ **Edge Neural Voices** (phân vai Nam/Nữ Anh - Anh & Anh - Mỹ) kết hợp **Kế hoạch Đồng bộ hóa Ngược 5 Bước** đảm bảo file MP3 khớp từng câu chữ với đề thi và bảng đáp án.
+>
+> Thầy/Cô chọn 1 trong 3 trường hợp bên dưới và gửi kèm câu lệnh mẫu nhé:
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 📁 **TRƯỜNG HỢP 1: ĐÃ CÓ ĐỀ THI (CÂU HỎI + ĐÁP ÁN), NHƯNG MẤT/CHƯA CÓ FILE NGHE MP3**
+> ```text
+> Dựa vào file đề Tiếng Anh tại đường dẫn: "[Dán đường dẫn file đề .docx/.pdf]", em hãy tái tạo kịch bản Tapescript và xuất trọn bộ file nghe MP3 cho đối tượng học sinh [Lớp .../HSG...].
+> Yêu cầu bắt buộc:
+> 1. Khớp 100% giữa câu hỏi trên đề, kịch bản Tapescript và bảng Đáp án theo đúng thứ tự tuyến tính từ câu đầu đến câu cuối (đánh dấu rõ mốc [Q1], [Q2]... trong Tapescript).
+> 2. Chuẩn hóa văn bản nói (số đếm, tiền tệ, năm, đánh vần tên riêng) và phân vai giọng đọc Nam/Nữ tự nhiên đúng ngữ cảnh.
+> 3. Xuất cả file MP3 Master toàn bài (có lời dẫn, chuông báo, khoảng lặng đọc đề, phát 2 lần) và các file MP3 tách lẻ từng Part.
+> ```
+>
+> 📂 **TRƯỜNG HỢP 2: MỚI CÓ FORM ĐỀ / MA TRẬN, CẦN TẠO MỚI CẢ ĐỀ THI WORD LẪN FILE NGHE MP3**
+> ```text
+> Dựa vào file Form/Ma trận tại đường dẫn: "[Dán đường dẫn file form .docx]", em hãy biên soạn hoàn chỉnh 1 đề thi Tiếng Anh [Lớp .../HSG...] kèm Phiếu trả lời, Hướng dẫn chấm và trọn bộ file nghe MP3.
+> Yêu cầu bắt buộc:
+> 1. Thiết kế song hành Tapescript gắn nhãn [Q1..Qn] và câu hỏi phần Listening đảm bảo khớp 100% với bảng Đáp án.
+> 2. Xuất file Word (.docx) chuẩn in ấn và trọn bộ file nghe MP3 (1 file Master toàn bài phát 2 lần + các file lẻ từng Part).
+> ```
+>
+> 📝 **TRƯỜNG HỢP 3: ĐÃ CÓ SẴN TAPESCRIPT (BẢN CHỮ), CẦN CHUYỂN THÀNH FILE MP3 CHUẨN PHÒNG THI**
+> ```text
+> Em hãy chuyển toàn bộ phần Tapescript trong file "[Dán đường dẫn file]" thành file nghe MP3 chuẩn phòng thi cho học sinh [Lớp ...].
+> Yêu cầu: Giữ nguyên 100% câu chữ trong Tapescript, phân vai giọng đọc Nam/Nữ bản xứ tự nhiên, thêm nhạc hiệu (chime), khoảng nghỉ đọc đề và phát lặp lại 2 lần.
+> ```"
 
 
 ### 🗣️ Luồng Hội Thoại Thông Minh — AI Hỏi Đúng Thứ Gì Còn Thiếu
