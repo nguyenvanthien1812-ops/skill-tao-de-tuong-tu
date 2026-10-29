@@ -1680,6 +1680,11 @@
     function startMonitoring() {
       if (monitorInterval) clearInterval(monitorInterval);
       monitorInterval = setInterval(() => {
+        // Nếu câu hỏi đang mở hiển thị, KHÔNG quét hoặc kích hoạt lại để chống xóa chữ đang gõ!
+        if (activeCheckpoint || (document.getElementById('quizOverlay') && document.getElementById('quizOverlay').classList.contains('active'))) {
+          return;
+        }
+
         const currentTime = PlayerEngine.getTime();
         videoDuration = PlayerEngine.getDuration() || videoDuration;
 
@@ -1792,6 +1797,9 @@
 
     // --- 5. INSTANT 1-CLICK QUIZ EVALUATION (NO EXTRA BUTTON NEEDED) ---
     function pauseAndOpenQuiz(cp) {
+      if (activeCheckpoint && activeCheckpoint.id === cp.id && document.getElementById('quizOverlay') && document.getElementById('quizOverlay').classList.contains('active')) {
+        return; // Đang mở câu hỏi này rồi, không render đè làm mất chữ học sinh đang gõ!
+      }
       activeCheckpoint = cp;
       activeCheckpointSolved = false;
       if (autoResumeTimer) clearInterval(autoResumeTimer);
@@ -1851,7 +1859,7 @@
         inst.innerHTML = '⌨️ Nhập số kết quả rồi bấm <strong>Kiểm tra</strong> (hoặc nhấn phím Enter):';
         cArea.innerHTML = `
           <div class="input-group">
-            <input type="text" class="fill-input" id="fillInput" inputmode="numeric" pattern="[0-9]*" placeholder="Nhập số kết quả tại đây..." onkeydown="handleFillKeyDown(event)" autofocus>
+            <input type="text" class="fill-input" id="fillInput" autocomplete="off" spellcheck="false" inputmode="numeric" pattern="[0-9]*" placeholder="Nhập số kết quả tại đây..." onkeydown="handleFillKeyDown(event)" autofocus>
             <button class="btn-check-fill" onclick="handleInstantFill()">Kiểm tra kết quả ✔️</button>
           </div>
         `;
@@ -2191,6 +2199,8 @@
       if (autoResumeTimer) clearInterval(autoResumeTimer);
       document.getElementById('quizOverlay').classList.remove('active');
       const reviewTime = Math.max(0, activeCheckpoint.time - 35);
+      activeCheckpoint = null;
+      activeCheckpointSolved = false;
       PlayerEngine.seekTo(reviewTime);
       PlayerEngine.play();
     }
