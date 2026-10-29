@@ -184,6 +184,30 @@ Biến các hình vẽ tĩnh, sơ đồ thí nghiệm trong SGK thành phòng th
 
 ---
 
+---
+
+### 🎬 NHÓM 7: Tạo Video Tương Tác E-Learning (Chống tua nhanh, Google Sheets, Chuẩn đạt 80%)
+
+```
+"Em hãy tạo video tương tác e-learning cho Bài [X] môn [Toán/Lý/Hóa] lớp [Y].
+Link YouTube: [Link YouTube]
+Link Google Sheets: [Link Google Sheets]
+Yêu cầu học sinh không tua nhanh được, đạt từ 80% trở lên mới tính hoàn thành."
+```
+
+**Bộ tính năng đỉnh cao tích hợp sẵn trong sản phẩm:**
+* 🔒 **Chống tua nhanh 100%:** Giám sát 250ms, giật lại vị trí hợp lệ khi học sinh cố tình tua vượt bài giảng.
+* 🎯 **Chuẩn đạt $\ge$ 80%:** Học sinh phải đạt từ 80% số điểm (ví dụ $\ge 6/7$ câu đúng) mới được công nhận Hoàn thành (`🟢 ĐÃ HOÀN THÀNH`), dưới 80% sẽ đánh dấu `🔴 CHƯA ĐẠT (Cần học lại)`.
+* 🛡️ **Chống đoán mò (Spam Click):** Làm đúng lần 1 (+1.0đ), tự sửa đúng sau lần 1 (+0.5đ), sai 2 lần hiện đáp án + lời giải và cho đi tiếp (0đ) để không bị kẹt video.
+* 📱 **Tối ưu di động tràn màn hình:** Bảng câu hỏi tự động phóng to toàn màn hình điện thoại, nút bấm $\ge 48\text{px}$ chuẩn ngón tay chạm, chống co giật màn hình trên iPhone.
+* 👤 **Đổi tên & lớp trực tiếp:** Nút `👤 Tên (Lớp) ✏️ Đổi` trên thanh tiêu đề cho phép sửa nhanh lỗi gõ sai tên/lớp hoặc cho bạn khác mượn máy học (reset lượt làm bài độc lập).
+* ⚙️ **Chế độ Thầy Cô (Mật khẩu: `123456`):** Mở khóa tua tự do và các nút nhảy nhanh tới từng trạm câu hỏi để giáo viên duyệt bài trước khi giao cho học sinh.
+* 🔄 **Tự động nhớ tiến độ:** Rớt mạng, reload F5 hoặc hết pin mở lại sẽ hỏi tiếp tục học từ giây đang xem dở, không mất điểm.
+* 📊 **Google Sheets tự động tách tab:** Mỗi lớp 1 tab riêng (`6A`, `6B`...), tự sinh tab mới khi có lớp mới vào, mỗi học sinh đúng 1 dòng duy nhất, kèm bảng thống kê thời gian thực (Sĩ số, Hoàn thành, Điểm TB).
+* 🌐 **Đóng gói Netlify Drop 3 giây:** Tự động tạo thư mục chứa `index.html`, chỉ cần kéo thả vào [app.netlify.com](https://app.netlify.com) là có link web online bảo mật HTTPS miễn phí vĩnh viễn!
+
+---
+
 ## V. MÔ TẢ CHI TIẾT CÁC FILE KẾT QUẢ
 
 ### 1. `[MÃ]_DE_HOC_SINH_OLE.docx` – Bản Đề Thi Học Sinh

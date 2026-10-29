@@ -1,8 +1,8 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.1.0",
-  "release_date": "2026-10-27",
-  "description": "Siêu Skill Toàn Năng GDPT 2018 (5-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Soạn giáo án tích hợp NLS (TT 02/2025) & AI (QĐ 3439) + Soạn Slide PowerPoint 16:9 chuẩn mực sư phạm + Video khởi động bài học Veo 3.",
+  "version": "6.3.0",
+  "release_date": "2026-10-29",
+  "description": "Siêu Skill Toàn Năng GDPT 2018 (7-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Tạo đề Tiếng Anh & xuất file nghe MP3 chuẩn khảo thí + Soạn giáo án tích hợp NLS & AI + Soạn Slide PowerPoint 16:9 + Video khởi động Veo 3 + Video Tương Tác E-Learning (chống tua nhanh, tự phân lớp Google Sheets, chuẩn đạt 80%).",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
@@ -216,6 +216,24 @@
       "NÂNG CẤP TOÀN DIỆN KỊCH BẢN ONBOARDING SOẠN GIÁO ÁN TÍCH HỢP NĂNG LỰC SỐ (TT 02/2025) & AI (QĐ 3439): Hỗ trợ chi tiết 3 cách chuẩn chỉ thực tế: (1) Đã có Giáo án cũ + Phụ lục III/PPCT của trường (bốc đúng mã NLS và AI đã duyệt, giữ nguyên 100% MathType OLE và bảng 2 cột); (2) Tự động đề xuất mã chuẩn Thông tư 02 và QĐ 3439 theo khối lớp khi trường chưa có Phụ lục III; (3) Soạn mới từ đầu theo SGK và Phụ lục III.",
       "BỔ SUNG KỊCH BẢN 15: Tự động chạy updater.py --force và sync_skill.py khi giáo viên yêu cầu 'cập nhật tính năng mới', tự động hướng dẫn mở New Chat.",
       "ĐỒNG BỘ 100% TOÀN BỘ BỘ CÔNG CỤ: Đồng bộ cả 2 skill tao-de-toan-tuong-tu và soan-giao-an-tich-hop-nls trên toàn bộ các môi trường."
+    ],
+    "6.2.0": [
+      "TÍCH HỢP BỘ MÁY TẠO FILE NGHE MP3 MÔN TIẾNG ANH CHUẨN KHẢO THÍ (scripts/english_listening_mp3_builder.py & references/tao_file_nghe_mp3_tieng_anh.md): Thực thi Kế hoạch Đồng bộ hóa Ngược 5 Bước (5-Step Backward Synchronization Plan) bảo đảm file MP3 khớp tuyệt đối 100% với câu hỏi và đáp án trên đề thi.",
+      "BỘ KIỂM ĐỊNH ĐỒNG BỘ TỰ ĐỘNG (ListeningSyncValidator - QA Gate): Tự động đối chiếu chéo 100% nhãn neo [Q1..Qn], kiểm tra trình tự tuyến tính nghiêm ngặt (Strict Linear Order) và kiểm tra từ điền khuyết Gap-fill / giới hạn số từ trước khi sinh âm thanh.",
+      "BỘ CHUẨN HÓA VĂN BẢN NÓI (SpokenTextNormalizer): Tự động xóa nhãn neo câu hỏi khi đọc, chuẩn hóa tiền tệ ($60 -> 60 dollars), phần trăm (20% -> 20 percent), thế kỷ/số thứ tự (7th -> seventh), từ viết tắt (Dr., Prof., Mr., Ms.) và hỗ trợ đánh vần tên riêng [SPELL: ...].",
+      "PHỐI ÂM ĐA GIỌNG ĐỌC BẢN XỨ & NHẠC HIỆU PHÒNG THI: Sử dụng Microsoft Edge Neural Voices (Anh-Anh RP & Anh-Mỹ, phân vai Nam/Nữ tự nhiên), tự động chèn lời dẫn quy chế, tiếng chuông báo hiệu (Chime tone), khoảng lặng đọc đề (30s-45s), phát lặp lại 2 lần và xuất đồng thời cả File Master toàn bài lẫn các File lẻ từng Part."
+    ],
+    "6.3.0": [
+      "TÍCH HỢP TÍNH NĂNG TẠO VIDEO TƯƠNG TÁC E-LEARNING CHUẨN GDPT 2018 (scripts/interactive_video_builder.py, templates/video_tuong_tac_template.html, references/tao_video_tuong_tac.md).",
+      "KHÓA CHỐNG TUA NHANH 100% (Anti-Skip System): Giám sát tiến độ 250ms, theo dõi maxWatchedTime, tự động snap-back và phát âm thanh cảnh báo khi học sinh cố tình tua vượt bài giảng.",
+      "TIÊU CHUẨN HOÀN THÀNH BÀI HỌC (Mastery Threshold >= 80%): Học sinh bắt buộc đạt tối thiểu 80% điểm số (tối thiểu 6/7 câu) mới được công nhận Hoàn thành (🟢 ĐÃ HOÀN THÀNH), nếu dưới 80% sẽ đánh dấu Chưa đạt (🔴 CHƯA ĐẠT) và yêu cầu xem lại bài giảng.",
+      "CHẤM ĐIỂM SƯ PHẠM 2 LẦN THỬ CHỐNG ĐOÁN MÒ (Spam Click Protection): Làm đúng ngay lần đầu (+1.0đ), tự sửa đúng sau lần 1 (+0.5đ), sai 2 lần hiện đáp án + lời giải chi tiết và cho đi tiếp (0đ) để không bị kẹt video.",
+      "TỐI ƯU HÓA DI ĐỘNG TRÀN MÀN HÌNH (Mobile Viewport Take-over): Khung câu hỏi tự động phóng to toàn màn hình điện thoại khi dừng video, phím bấm >= 48px chuẩn Apple/Google, chống giật co màn hình trên iOS Safari.",
+      "ĐỔI TÊN & LỚP HỌC SINH 1-CHẠM TRỰC TIẾP TRÊN GIAO DIỆN: Nút 👤 Tên (Lớp) ✏️ Đổi cho phép sửa nhanh lỗi gõ sai tên/lớp hoặc chuyển đổi giữa các học sinh học chung máy (reset lượt học độc lập).",
+      "CHẾ ĐỘ THẦY CÔ KIỂM DUYỆT (Teacher Preview Mode): Nút ⚙️ Thầy Cô bảo vệ bằng mật khẩu (mặc định 123456) mở khóa tua tự do và các nút nhảy nhanh tới từng trạm câu hỏi để giáo viên duyệt bài trước khi giao cho học sinh.",
+      "TỰ ĐỘNG BẢO LƯU TIẾN ĐỘ KHI RỚT MẠNG (Smart Auto-Resume): Lưu trữ localStorage theo thời gian thực, khôi phục vị trí video và trạm đã giải khi học sinh bị mất mạng, hết pin hoặc tải lại trang.",
+      "ĐỒNG BỘ GOOGLE SHEETS & APPS SCRIPT V4 TỰ ĐỘNG PHÂN TAB LỚP: Tự động tạo tab riêng cho từng lớp (6A, 6B...), mỗi học sinh 1 dòng duy nhất (Upsert), banner thống kê trực tiếp trên đầu sheet (Sĩ số, Hoàn thành, Điểm TB).",
+      "QUY TRÌNH XUẤT BẢN 0 ĐỒNG CHI PHÍ: YouTube (Unlisted) + Netlify Drop (HTTPS miễn phí vĩnh viễn) + Google Sheets."
     ]
   }
 }

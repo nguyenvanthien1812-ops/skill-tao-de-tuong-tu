@@ -147,6 +147,8 @@ def verify_matrix_docx(docx_path: Path) -> list[str]:
 
 def sync_directory(src: Path, dst: Path, preserve_files: set[str] = None):
     """Đồng bộ toàn bộ file từ src sang dst (bỏ qua __pycache__ và giữ nguyên preserve_files ở dst)."""
+    if src.resolve() == dst.resolve():
+        return
     preserve_files = preserve_files or set()
     dst.mkdir(parents=True, exist_ok=True)
     for root, dirs, files in os.walk(src):
@@ -193,12 +195,16 @@ def run_all() -> int:
         clean_junk_in_skill_dir(GLOBAL_SKILL_DIR)
         print(f"  [✓] Đã đồng bộ sang Global Config: {GLOBAL_SKILL_DIR}")
 
-        # Đồng bộ sang Antigravity Skills directory nếu có
-        agy_skill_dir = Path.home() / ".gemini" / "antigravity" / "skills" / "tao-de-toan-tuong-tu"
-        if agy_skill_dir.parent.exists():
-            sync_directory(SKILL_DIR, agy_skill_dir, preserve_files={"license.key"})
-            clean_junk_in_skill_dir(agy_skill_dir)
-            print(f"  [✓] Đã đồng bộ sang Antigravity Skills: {agy_skill_dir}")
+        # Đồng bộ sang Antigravity Skills directory và các thư mục dự án nếu có
+        for extra_skill_dir in [
+            Path.home() / ".gemini" / "antigravity" / "skills" / "tao-de-toan-tuong-tu",
+            Path(r"D:\skill-Nguyen-Thien\tao-de-toan-tuong-tu"),
+            Path(r"D:\skill-quan-trong\.agents\skills\tao-de-toan-tuong-tu"),
+        ]:
+            if extra_skill_dir.parent.exists() and extra_skill_dir.resolve() != SKILL_DIR.resolve():
+                sync_directory(SKILL_DIR, extra_skill_dir, preserve_files={"license.key"})
+                clean_junk_in_skill_dir(extra_skill_dir)
+                print(f"  [✓] Đã đồng bộ sang: {extra_skill_dir}")
 
         # Đồng bộ luôn skill video khởi động bài học nếu có
         vid_src = WORKSPACE_SKILLS_ROOT / "tao-video-khoi-dong-bai-hoc"

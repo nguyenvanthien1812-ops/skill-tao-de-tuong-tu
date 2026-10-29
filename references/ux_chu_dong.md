@@ -25,7 +25,7 @@
 >    • **Cách 1 (Dễ nhất):** Nhìn sang cột bên trái bấm vào **Desktop** $\rightarrow$ chọn file **`Times_14pt_Chuan_BGD.eqp`** $\rightarrow$ bấm **Open**.  
 >    • **Cách 2 (Siêu nhanh):** Dán trực tiếp đường dẫn này vào ô `File name:` rồi bấm **Open**:  
 >      `C:\Users\admin\Desktop\Times_14pt_Chuan_BGD.eqp`  
-> 4. Tích chọn **Whole document** $\rightarrow$ Bấm **OK**. (Toàn bộ đề thi sẽ đồng bộ chuẩn 14pt, phân số to rõ cân đối tuyệt đối! Nếu dùng cỡ khác, Thầy/Cô chọn file `Times_11pt_Chuan_BGD.eqp`, `Times_12pt_Chuan_BGD.eqp` hoặc `Times_13pt_Chuan_BGD.eqp` tương ứng).  
+> 4. Tích chọn **Whole document** $\rightarrow$ Bấm **OK**. (Toàn bộ đề thi sẽ đồng bộ chuẩn 14pt, phân số to rõ cân đối tuyệt đối!)  
 > *(Hoặc Thầy/Cô có thể dùng ngay bản song hành `..._WORD_EQ.docx` đi kèm để công thức tự động co giãn theo cỡ chữ khi bôi đen).*
 
 ### 6.2 Contextual Suggestions (Gợi Ý Theo Ngữ Cảnh)

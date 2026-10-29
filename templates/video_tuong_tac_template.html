@@ -1,0 +1,2461 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Video Tương Tác: Lũy Thừa Với Số Mũ Tự Nhiên - Toán 6</title>
+  
+  <!-- KaTeX for math formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #3b82f6;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-subtle: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #0f172a);
+      border-bottom: 2px solid #334155;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .header-title h1 {
+      font-size: 1.2rem;
+      color: #fbbf24;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-title p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .stat-badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 5px 12px;
+      border-radius: 9999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-badge.student-info {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: #3b82f6;
+      color: #93c5fd;
+    }
+
+    .stat-badge.lock-status {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: #ef4444;
+      color: #fca5a5;
+    }
+
+    .stat-badge.score-badge {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10b981;
+      color: #6ee7b7;
+    }
+
+    .stat-badge.cloud-status {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #059669;
+      color: #a7f3d0;
+      font-size: 0.82rem;
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Video Player Wrapper */
+    .player-container {
+      position: relative;
+      width: 100%;
+      background: #000;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      aspect-ratio: 16 / 9;
+      max-height: 72vh;
+    }
+
+    #localVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: none;
+    }
+
+    #ytContainer {
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+
+    #ytplayer {
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* Transparent Click-shield over video */
+    .video-shield {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(100% - 52px);
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    .source-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #94a3b8;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      z-index: 15;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Warning Alert */
+    .seek-warning {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: rgba(220, 38, 38, 0.95);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .seek-warning.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Custom Player Controls Bar */
+    .controls-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.8));
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+      z-index: 25;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-ctrl {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-ctrl:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.08);
+    }
+
+    .time-display {
+      font-size: 0.85rem;
+      font-variant-numeric: tabular-nums;
+      color: #cbd5e1;
+      min-width: 95px;
+    }
+
+    .timeline-container {
+      position: relative;
+      flex: 1;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+      cursor: pointer;
+      overflow: visible;
+    }
+
+    .timeline-unlocked {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: rgba(59, 130, 246, 0.4);
+      border-radius: 5px;
+      pointer-events: none;
+    }
+
+    .timeline-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa);
+      border-radius: 5px;
+      pointer-events: none;
+    }
+
+    .checkpoint-marker {
+      position: absolute;
+      top: 50%;
+      width: 14px;
+      height: 14px;
+      background: #f59e0b;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+      transition: transform 0.2s;
+    }
+    .checkpoint-marker.passed {
+      background: #10b981;
+    }
+    .checkpoint-marker:hover {
+      transform: translate(-50%, -50%) scale(1.3);
+    }
+
+    .timeline-locked-zone {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(239, 68, 68, 0.25),
+        rgba(239, 68, 68, 0.25) 6px,
+        rgba(239, 68, 68, 0.1) 6px,
+        rgba(239, 68, 68, 0.1) 12px
+      );
+      border-radius: 0 5px 5px 0;
+      pointer-events: none;
+    }
+
+    /* ========================================================
+       INSTANT 1-CLICK QUIZ MODAL WITH EXPLICIT SIGNALS
+       ======================================================== */
+    .quiz-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(8px);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .quiz-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .quiz-box {
+      background: #1e293b;
+      border: 2px solid #3b82f6;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 660px;
+      max-height: 94%;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 20px 14px 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.94); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .quiz-header {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 8px;
+    }
+
+    .quiz-badge {
+      background: #f59e0b;
+      color: #000;
+      font-weight: 800;
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Prominent Feedback Banner for Clear Signals */
+    .quiz-feedback-banner {
+      display: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      align-items: center;
+      gap: 8px;
+    }
+    .quiz-feedback-banner.show-wrong {
+      display: flex;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1.5px solid #ef4444;
+      color: #fca5a5;
+      animation: shake 0.4s ease-in-out;
+    }
+    .quiz-feedback-banner.show-correct {
+      display: flex;
+      background: rgba(16, 185, 129, 0.25);
+      border: 1.5px solid #10b981;
+      color: #6ee7b7;
+      animation: popIn 0.25s ease-out;
+    }
+
+    .quiz-scroll-body {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+      margin-bottom: 8px;
+    }
+    .quiz-scroll-body::-webkit-scrollbar {
+      width: 6px;
+    }
+    .quiz-scroll-body::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 3px;
+    }
+
+    .quiz-question {
+      font-size: 1.08rem;
+      font-weight: 600;
+      color: #f8fafc;
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+
+    /* 2-Column Responsive Options Grid */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 580px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Shake Animation for Wrong Answers */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .shake {
+      animation: shake 0.4s ease-in-out;
+    }
+
+    .option-btn {
+      background: #334155;
+      border: 2px solid #475569;
+      color: #f1f5f9;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      transition: all 0.2s;
+      line-height: 1.35;
+      position: relative;
+    }
+    .option-btn:hover:not(:disabled) {
+      background: #475569;
+      border-color: #60a5fa;
+      transform: translateY(-2px);
+    }
+    .option-btn.correct-ans {
+      background: rgba(16, 185, 129, 0.3) !important;
+      border-color: #10b981 !important;
+      color: #6ee7b7 !important;
+      font-weight: 700;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    }
+    .option-btn.wrong-ans {
+      background: rgba(239, 68, 68, 0.3) !important;
+      border-color: #ef4444 !important;
+      color: #fca5a5 !important;
+      font-weight: 600;
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+    }
+
+    .opt-status-badge {
+      font-size: 0.76rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+      display: none;
+      flex-shrink: 0;
+    }
+    .opt-status-badge.badge-wrong {
+      display: inline-block;
+      background: #ef4444;
+      color: #fff;
+    }
+    .opt-status-badge.badge-correct {
+      display: inline-block;
+      background: #10b981;
+      color: #fff;
+    }
+
+    /* True/False Buttons */
+    .tf-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .tf-btn {
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      border: 2px solid #475569;
+      background: #334155;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 18px;
+      transition: all 0.2s;
+    }
+    .tf-btn:hover:not(:disabled) {
+      background: #475569;
+      border-color: #3b82f6;
+    }
+    .tf-btn.correct-ans {
+      background: rgba(16, 185, 129, 0.3) !important;
+      border-color: #10b981 !important;
+      color: #6ee7b7 !important;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    }
+    .tf-btn.wrong-ans {
+      background: rgba(239, 68, 68, 0.3) !important;
+      border-color: #ef4444 !important;
+      color: #fca5a5 !important;
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+    }
+
+    /* Fill in blank */
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .fill-input {
+      flex: 1;
+      padding: 12px 14px;
+      background: #0f172a;
+      border: 2px solid #475569;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1.1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .fill-input:focus {
+      border-color: #3b82f6;
+    }
+    .fill-input.wrong-ans {
+      border-color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.1);
+    }
+    .fill-input.correct-ans {
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .btn-check-fill {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-check-fill:hover {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    }
+
+    /* Explanation Box */
+    .explanation-box {
+      display: none;
+      background: #0f172a;
+      border-left: 4px solid #3b82f6;
+      padding: 12px 14px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 8px;
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+    .explanation-box.show {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* QUIZ ACTIONS BAR */
+    .quiz-actions {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-top: 1px solid #334155;
+      padding-top: 10px;
+      background: #1e293b;
+    }
+
+    .btn-continue {
+      display: none;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border: none;
+      padding: 11px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+      animation: pulseBtn 1.5s infinite;
+    }
+    .btn-continue:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+      transform: translateY(-2px);
+    }
+    @keyframes pulseBtn {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    .btn-review {
+      background: #475569;
+      color: #e2e8f0;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: none;
+    }
+    .btn-review:hover {
+      background: #64748b;
+    }
+
+    .quiz-instruction {
+      font-size: 0.82rem;
+      color: #94a3b8;
+    }
+
+    /* Student Registration Modal */
+    .register-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.96);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .register-box {
+      background: #1e293b;
+      border: 2px solid #3b82f6;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 100%;
+      padding: 30px 26px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+      text-align: center;
+    }
+
+    .register-box h2 {
+      color: #fbbf24;
+      font-size: 1.45rem;
+      margin-bottom: 8px;
+    }
+
+    .register-box p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 22px;
+      line-height: 1.4;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      background: #0f172a;
+      border: 1.5px solid #475569;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+    .form-group input:focus {
+      border-color: #3b82f6;
+    }
+
+    .btn-start {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border: none;
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+    .btn-start:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+      transform: translateY(-2px);
+    }
+
+    /* Final Score Screen */
+    .completion-screen {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.97);
+      z-index: 50;
+      padding: 24px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow-y: auto;
+    }
+    .completion-screen.show {
+      display: flex;
+    }
+
+    .completion-card {
+      background: #1e293b;
+      border: 2px solid #10b981;
+      border-radius: 20px;
+      padding: 28px;
+      max-width: 580px;
+      width: 100%;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    .score-circle {
+      width: 105px;
+      height: 105px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #047857);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 14px auto;
+      border: 4px solid #34d399;
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.5);
+    }
+    .score-number {
+      font-size: 2.1rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+    .score-total {
+      font-size: 0.85rem;
+      color: #d1fae5;
+    }
+
+    .sync-status-box {
+      margin-top: 16px;
+      padding: 11px 15px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .sync-status-box.loading {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid #3b82f6;
+      color: #93c5fd;
+    }
+    .sync-status-box.success {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid #10b981;
+      color: #6ee7b7;
+    }
+    .sync-status-box.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+    }
+
+    /* Lesson info footer */
+    .lesson-info {
+      margin-top: 14px;
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 12px 18px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      border: 1px solid #334155;
+    }
+    .lesson-info-left h3 {
+      font-size: 1rem;
+      color: #f1f5f9;
+      margin-bottom: 2px;
+    }
+    .lesson-info-left p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .checklist-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .check-pill {
+      background: #334155;
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .check-pill.done {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+      border: 1px solid #10b981;
+    }
+  
+    /* --- Phase 1: Teacher Mode & Auto Resume Styles --- */
+    .stat-badge.teacher-btn {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: #f59e0b;
+      color: #fbbf24;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .stat-badge.teacher-btn:hover {
+      background: rgba(245, 158, 11, 0.35);
+      transform: translateY(-1px);
+    }
+    .stat-badge.teacher-active {
+      background: #f59e0b !important;
+      border-color: #d97706 !important;
+      color: #0f172a !important;
+      font-weight: 700;
+    }
+    .stat-badge.lock-unlocked {
+      background: rgba(16, 185, 129, 0.2) !important;
+      border-color: #10b981 !important;
+      color: #6ee7b7 !important;
+    }
+    .teacher-jump-btn {
+      background: #334155;
+      color: #f8fafc;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 10px 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .teacher-jump-btn:hover {
+      background: #3b82f6;
+      border-color: #60a5fa;
+      transform: translateY(-2px);
+    }
+
+  
+    /* --- Mobile & Responsive Touch Optimizations --- */
+    .stat-badge.student-info {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .stat-badge.student-info:hover {
+      background: rgba(59, 130, 246, 0.35);
+      border-color: #60a5fa;
+      transform: translateY(-1px);
+    }
+    .btn-edit-hint {
+      font-size: 0.72rem;
+      opacity: 0.8;
+      margin-left: 4px;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 8px 10px;
+        gap: 6px;
+      }
+      .header-title h1 {
+        font-size: 0.98rem;
+      }
+      .header-title p {
+        font-size: 0.75rem;
+      }
+      .header-stats {
+        gap: 5px;
+        width: 100%;
+        justify-content: space-between;
+      }
+      .stat-badge {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+      }
+      #cloudBadge {
+        display: none; /* Hide cloud status on mobile to save precious screen width */
+      }
+
+      /* CRUCIAL FIX FOR MOBILE: Quiz Overlay takes over viewport instead of 200px box */
+      .quiz-overlay {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 9999 !important;
+        padding: 8px !important;
+        backdrop-filter: blur(12px) !important;
+        background: rgba(15, 23, 42, 0.98) !important;
+      }
+      .quiz-box {
+        max-width: 100% !important;
+        max-height: 94vh !important;
+        padding: 12px 14px !important;
+        border-radius: 12px !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+      .question-text {
+        font-size: 0.98rem !important;
+        margin-bottom: 12px !important;
+        line-height: 1.45 !important;
+      }
+      .option-item {
+        min-height: 48px !important; /* Touch target recommended by Apple/Google */
+        padding: 12px 14px !important;
+        font-size: 0.92rem !important;
+      }
+      .quiz-footer {
+        flex-direction: column !important;
+        gap: 8px !important;
+      }
+      .quiz-footer button {
+        width: 100% !important;
+        min-height: 44px !important;
+      }
+
+      /* Prevent iOS Safari from zooming into inputs */
+      input[type="text"], input[type="password"], input[type="number"] {
+        font-size: 16px !important;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-title">
+      <h1>📚 TOÁN 6 - BÀI 6: LŨY THỪA VỚI SỐ MŨ TỰ NHIÊN</h1>
+      <p>SGK Kết Nối Tri Thức Với Cuộc Sống • GV: Nguyễn Thiện (THCS Ứng Hòe)</p>
+    </div>
+    <div class="header-stats">
+      <button type="button" class="stat-badge student-info" id="studentBadge" onclick="openChangeStudentModal()" title="Bấm vào đây để đổi tên hoặc đổi lớp bất kỳ lúc nào">
+        👤 Học sinh: Chưa đăng ký <span class="btn-edit-hint">✏️ Đổi</span>
+      </button>
+      <div class="stat-badge lock-status" id="lockBadge">
+        🔒 Chống tua nhanh: BẬT
+      </div>
+      <div class="stat-badge score-badge" id="scoreBadge">
+        ⭐ Điểm: 0/7
+      </div>
+      <div class="stat-badge cloud-status" id="cloudBadge" title="Hệ thống tự động lưu kết quả theo thời gian thực">
+        ☁️ Sổ điểm: Đã kết nối
+      </div>
+      <button class="stat-badge teacher-btn" id="teacherBadge" onclick="handleTeacherBadgeClick()" title="Nhấp để mở Chế độ Thầy Cô (mở khóa tua & duyệt nhanh câu hỏi)">
+        ⚙️ Thầy Cô: TẮT
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+    <div class="player-container" id="playerContainer">
+      <!-- Source Indicator -->
+      <div class="source-badge" id="sourceBadge">
+        <span>🎬 Nguồn: Đang tải...</span>
+      </div>
+
+      <!-- Warning Alert -->
+      <div class="seek-warning" id="seekWarning">
+        ⚠️ Em chưa hoàn thành câu hỏi tương tác! Hãy xem hết bài giảng để trả lời nhé.
+      </div>
+
+      <!-- Video Engines (Local MP4 and YouTube Iframe) -->
+      <video id="localVideo" preload="metadata" playsinline></video>
+      <div id="ytContainer"><div id="ytplayer"></div></div>
+
+      <!-- Transparent shield to block native controls / scrubbing -->
+      <div class="video-shield" id="videoShield" onclick="PlayerEngine.togglePlay()"></div>
+
+      <!-- CUSTOM CONTROLS BAR -->
+      <div class="controls-bar">
+        <button class="btn-ctrl" id="playBtn" onclick="PlayerEngine.togglePlay()" title="Phát / Tạm dừng">
+          ▶️
+        </button>
+
+        <span class="time-display" id="timeDisplay">00:00 / --:--</span>
+
+        <!-- Anti-skip Timeline -->
+        <div class="timeline-container" id="timelineContainer" onclick="handleTimelineClick(event)">
+          <div class="timeline-unlocked" id="timelineUnlocked"></div>
+          <div class="timeline-progress" id="timelineProgress"></div>
+          <div class="timeline-locked-zone" id="timelineLockedZone"></div>
+          <div id="checkpointMarkersContainer"></div>
+        </div>
+
+        <button class="btn-ctrl" onclick="PlayerEngine.rewind10s()" title="Xem lại 10 giây trước">
+          ⏪
+        </button>
+
+        <button class="btn-ctrl" id="muteBtn" onclick="PlayerEngine.toggleMute()" title="Bật/Tắt âm thanh">
+          🔊
+        </button>
+
+        <button class="btn-ctrl" onclick="toggleFullscreen()" title="Toàn màn hình">
+          ⛶
+        </button>
+      </div>
+
+      <!-- INSTANT 1-CLICK INTERACTIVE QUIZ MODAL -->
+      <div class="quiz-overlay" id="quizOverlay">
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-badge" id="quizBadge">CÂU HỎI TƯƠNG TÁC 1/7</span>
+            <span style="font-size:0.85rem; color:#94a3b8;" id="quizTime">⏱️ Điểm dừng: 03:10</span>
+          </div>
+
+          <!-- PROMINENT VISUAL FEEDBACK BANNER -->
+          <div class="quiz-feedback-banner" id="quizFeedbackBanner">
+            <span id="feedbackIcon" style="font-size:1.2rem;"></span>
+            <span id="feedbackText"></span>
+          </div>
+
+          <!-- SCROLLABLE BODY -->
+          <div class="quiz-scroll-body">
+            <div class="quiz-question" id="quizQuestion">
+              Nội dung câu hỏi...
+            </div>
+
+            <div id="quizContentArea">
+              <!-- Dynamic Options -->
+            </div>
+
+            <div class="explanation-box" id="explanationBox">
+              <div id="explanationTitle" style="font-weight:700; margin-bottom:4px;">💡 Hướng dẫn & Giải thích:</div>
+              <div id="explanationText">Chi tiết đáp án...</div>
+            </div>
+          </div>
+
+          <!-- ACTIONS FOOTER -->
+          <div class="quiz-actions">
+            <div class="quiz-instruction" id="quizInstruction">
+              👆 Bấm trực tiếp vào đáp án em chọn để kiểm tra ngay!
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn-review" id="btnReview30s" onclick="reviewPrevious30s()">
+                ⏪ Xem lại 30s bài giảng
+              </button>
+              <button class="btn-continue" id="btnContinue" onclick="continueLesson()">
+                Tiếp tục bài học ▶️
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FINAL COMPLETION SCREEN -->
+      <div class="completion-screen" id="completionScreen">
+        <div class="completion-card">
+          <div class="score-circle" id="completionScoreCircle">
+            <div class="score-number" id="finalScoreText">7/7</div>
+            <div class="score-total" id="finalScorePct">Điểm số</div>
+          </div>
+          <h2 id="completionTitle" style="color:#10b981; font-size:1.35rem; margin-bottom:6px;">🎉 CHÚC MỪNG EM ĐÃ HOÀN THÀNH BÀI HỌC!</h2>
+          <p style="color:#cbd5e1; font-size:0.92rem; margin-bottom:16px;">
+            Học sinh: <strong id="summaryStudentName" style="color:#fbbf24;">Nguyễn Văn A</strong> - Lớp: <strong id="summaryStudentClass" style="color:#fbbf24;">6A</strong>
+          </p>
+
+          <div id="summaryDetails" style="background:#0f172a; padding:12px; border-radius:10px; font-size:0.88rem; text-align:left; line-height:1.6; margin-bottom:14px;">
+          </div>
+
+          <div class="sync-status-box loading" id="syncStatusBox">
+            ⏳ Đang lưu kết quả cuối cùng vào Sổ điểm Google Sheets của Thầy Cô...
+          </div>
+
+          <div style="margin-top:18px; display:flex; gap:10px; justify-content:center;">
+            <button class="btn-continue" style="display:inline-block;" onclick="restartLesson()">
+              🔄 Xem lại bài giảng
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LESSON INFO FOOTER -->
+    <div class="lesson-info">
+      <div class="lesson-info-left">
+        <h3>Tiến độ các điểm dừng tương tác (7 trạm thử thách):</h3>
+        <p>Học sinh phải hoàn thành từng câu hỏi mới mở khóa đoạn video tiếp theo.</p>
+      </div>
+      <div class="checklist-pills" id="checklistPills">
+      </div>
+    </div>
+  </main>
+
+  <!-- STUDENT REGISTRATION MODAL -->
+  <div class="register-modal" id="registerModal">
+    <div class="register-box">
+      <h2>👋 CHÀO MỪNG EM ĐẾN VỚI BÀI HỌC!</h2>
+      <p>
+        <strong>Toán 6 - Bài 6: Lũy thừa với số mũ tự nhiên</strong><br>
+        Video có tích hợp các câu hỏi tương tác chống tua nhanh. Hãy điền thông tin để lưu kết quả vào sổ điểm của Thầy Cô nhé!
+      </p>
+
+      <form onsubmit="handleRegistration(event)">
+        <div class="form-group">
+          <label for="regName">Họ và tên của em (*):</label>
+          <input type="text" id="regName" placeholder="Ví dụ: Nguyễn Văn An" required autofocus>
+        </div>
+
+        <div class="form-group">
+          <label for="regClass">Lớp học (*):</label>
+          <input type="text" id="regClass" placeholder="Ví dụ: 6A, 6B, 6/1..." required>
+        </div>
+
+        <button type="submit" class="btn-start">
+          BẮT ĐẦU BÀI HỌC NGAY ▶️
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- AUDIO SYNTHESIS FOR SOUND EFFECTS -->
+  <script>
+    const AudioFX = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+      },
+      playSuccess() {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc1.frequency.setValueAtTime(523.25, now);
+        osc1.frequency.exponentialRampToValueAtTime(659.25, now + 0.12);
+        osc2.frequency.setValueAtTime(659.25, now + 0.12);
+        osc2.frequency.exponentialRampToValueAtTime(783.99, now + 0.28);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+        osc1.connect(gain); osc2.connect(gain); gain.connect(this.ctx.destination);
+        osc1.start(now); osc1.stop(now + 0.15);
+        osc2.start(now + 0.12); osc2.stop(now + 0.5);
+      },
+      playWrong() {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.linearRampToValueAtTime(140, now + 0.35);
+        gain.gain.setValueAtTime(0.28, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(now); osc.stop(now + 0.4);
+      },
+      playWarning() {
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(350, now);
+        osc.frequency.setValueAtTime(280, now + 0.1);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(now); osc.stop(now + 0.25);
+      }
+    };
+  </script>
+
+  <!-- MAIN SCRIPT -->
+  <script>
+    // --- 1. CONFIGURATION ---
+    const SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwIeeyHcAPgvFMgGGDQtxNguRg0iOFWGKNvB88pxQ3UW4r8uhJmUQG0lX5TBJGQ-RwV/exec';
+    const YOUTUBE_VIDEO_ID = 'EaYtq5u1Wzw';
+    
+    const PASSING_THRESHOLD_PCT = 80; // Học sinh phải đạt ít nhất 80% số câu hỏi mới tính hoàn thành
+    const LOCAL_VIDEO_PATH = './c1_b6_luy_thua_vs_mu.f2c2 (2)_CoLoiBinh_DaLongTieng_Video.mp4';
+
+    let studentData = {
+      name: localStorage.getItem('nls_toan6_name') || '',
+      class: localStorage.getItem('nls_toan6_class') || '',
+      startTime: new Date().toISOString(),
+      score: 0,
+      attempts: {}
+    };
+
+    // --- 2. 7 PEDAGOGICAL CHECKPOINTS ---
+    const checkpoints = [
+      {
+        id: 1,
+        time: 190, // 03:10
+        type: 'mcq',
+        question: 'Cho lũy thừa 7⁴. Hãy xác định cơ số và số mũ của lũy thừa này?',
+        options: [
+          'A. Cơ số là 4, số mũ là 7',
+          'B. Cơ số là 7, số mũ là 4',
+          'C. Cơ số là 7, số mũ là 28',
+          'D. Cơ số là 28, số mũ là 7'
+        ],
+        correct: 1, // B
+        explanation: 'Trong lũy thừa aⁿ, a gọi là cơ số và n gọi là số mũ. Do đó trong 7⁴, cơ số là 7 và số mũ là 4.'
+      },
+      {
+        id: 2,
+        time: 255, // 04:15
+        type: 'mcq',
+        question: 'Trong các số sau: 15; 20; 25; 30, số nào là bình phương của một số tự nhiên (số chính phương)?',
+        options: [
+          'A. Số 15',
+          'B. Số 20',
+          'C. Số 25',
+          'D. Số 30'
+        ],
+        correct: 2, // C
+        explanation: 'Vì 25 = 5 · 5 = 5² nên 25 là bình phương của số tự nhiên 5 (số chính phương).'
+      },
+      {
+        id: 3,
+        time: 445, // 07:25
+        type: 'fill',
+        question: 'Khi nhân hai lũy thừa cùng cơ số: 2³ · 2⁴ = 2ˣ. Em hãy điền giá trị của số mũ x vào ô dưới đây:',
+        correct: '7',
+        explanation: 'Quy tắc: Khi nhân hai lũy thừa cùng cơ số, ta giữ nguyên cơ số và cộng các số mũ: aᵐ · aⁿ = aᵐ⁺ⁿ. Do đó: 2³ · 2⁴ = 2³⁺⁴ = 2⁷. Vậy số mũ x = 7.'
+      },
+      {
+        id: 4,
+        time: 530, // 08:50
+        type: 'tf',
+        question: 'Khẳng định sau đây ĐÚNG hay SAI: "Với mọi số tự nhiên a, ta luôn có a⁰ = 1."',
+        correct: false, // SAI
+        explanation: 'Khẳng định trên là SAI! Quy ước a⁰ = 1 chỉ đúng với điều kiện a ≠ 0. Số 0⁰ không có nghĩa trong toán học.'
+      },
+      {
+        id: 5,
+        time: 600, // 10:00
+        type: 'fill',
+        question: 'Thực hiện phép chia: 2⁷ : 2² = 2⁵. Em hãy tính giá trị bằng số của lũy thừa 2⁵:',
+        correct: '32',
+        explanation: 'Ta có 2⁵ = 2 · 2 · 2 · 2 · 2 = 32. Chú ý tính đúng giá trị của 5 thừa số 2 nhân với nhau.'
+      },
+      {
+        id: 6,
+        time: 695, // 11:35
+        type: 'mcq',
+        question: 'Trong các khẳng định dưới đây, khẳng định nào SAI?',
+        options: [
+          'A. aᵐ · aⁿ = aᵐ⁺ⁿ',
+          'B. aᵐ : aⁿ = aᵐ⁻ⁿ  (với a ≠ 0 và m ≥ n)',
+          'C. a¹ = a',
+          'D. a¹ = 0'
+        ],
+        correct: 3, // D
+        explanation: 'Khẳng định SAI là D: a¹ = 0. Theo quy ước chuẩn SGK Toán 6, ta có quy ước a¹ = a.'
+      },
+      {
+        id: 7,
+        time: 795, // 13:15
+        type: 'fill',
+        question: 'Tìm số tự nhiên n biết: 5⁹ : 5³ = 5ⁿ. Giá trị của n là:',
+        correct: '6',
+        explanation: 'Áp dụng quy tắc chia hai lũy thừa cùng cơ số: 5⁹ : 5³ = 5⁹⁻³ = 5⁶. Do 5ⁿ = 5⁶ nên n = 6.'
+      }
+    ];
+
+    // --- 3. DUAL-ENGINE VIDEO CONTROLLER ---
+    let maxWatchedTime = 0;
+    let activeCheckpoint = null;
+    let activeCheckpointSolved = false;
+    let monitorInterval = null;
+    let autoResumeTimer = null;
+    let autoResumeSeconds = 4;
+    let videoDuration = 860;
+
+    const PlayerEngine = {
+      isLocal: (window.location.protocol === 'file:'),
+      mode: 'local',
+      localEl: null,
+      ytPlayer: null,
+
+      init() {
+        this.localEl = document.getElementById('localVideo');
+        if (this.isLocal) {
+          this.initLocalMode();
+        } else {
+          this.initYouTubeMode();
+        }
+      },
+
+      initLocalMode() {
+        this.mode = 'local';
+        document.getElementById('localVideo').style.display = 'block';
+        document.getElementById('ytContainer').style.display = 'none';
+        document.getElementById('sourceBadge').innerHTML = '📁 Nguồn: Video máy tính (1080p)';
+        
+        this.localEl.src = LOCAL_VIDEO_PATH;
+        this.localEl.onloadedmetadata = () => {
+          videoDuration = this.localEl.duration || 860;
+          renderCheckpoints();
+          updateTimelineUI(0);
+        };
+        this.localEl.onplay = () => {
+          document.getElementById('playBtn').innerHTML = '⏸️';
+          startMonitoring();
+        };
+        this.localEl.onpause = () => {
+          document.getElementById('playBtn').innerHTML = '▶️';
+        };
+        this.localEl.onended = () => {
+          showCompletionScreen();
+        };
+        this.localEl.onerror = () => {
+          this.initYouTubeMode();
+        };
+      },
+
+      initYouTubeMode() {
+        this.mode = 'youtube';
+        document.getElementById('localVideo').style.display = 'none';
+        document.getElementById('ytContainer').style.display = 'block';
+        document.getElementById('sourceBadge').innerHTML = '▶️ Nguồn: YouTube';
+
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      },
+
+      getTime() {
+        if (this.mode === 'local') return this.localEl.currentTime || 0;
+        return (this.ytPlayer && typeof this.ytPlayer.getCurrentTime === 'function') ? this.ytPlayer.getCurrentTime() : 0;
+      },
+
+      getDuration() {
+        if (this.mode === 'local') return this.localEl.duration || videoDuration;
+        return (this.ytPlayer && typeof this.ytPlayer.getDuration === 'function') ? this.ytPlayer.getDuration() : videoDuration;
+      },
+
+      play() {
+        if (this.mode === 'local') this.localEl.play();
+        else if (this.ytPlayer && typeof this.ytPlayer.playVideo === 'function') this.ytPlayer.playVideo();
+      },
+
+      pause() {
+        if (this.mode === 'local') this.localEl.pause();
+        else if (this.ytPlayer && typeof this.ytPlayer.pauseVideo === 'function') this.ytPlayer.pauseVideo();
+      },
+
+      seekTo(t) {
+        if (this.mode === 'local') this.localEl.currentTime = t;
+        else if (this.ytPlayer && typeof this.ytPlayer.seekTo === 'function') this.ytPlayer.seekTo(t, true);
+      },
+
+      togglePlay() {
+        if (this.mode === 'local') {
+          if (this.localEl.paused) this.play();
+          else this.pause();
+        } else {
+          if (!this.ytPlayer || typeof this.ytPlayer.getPlayerState !== 'function') return;
+          const state = this.ytPlayer.getPlayerState();
+          if (state === YT.PlayerState.PLAYING) this.pause();
+          else this.play();
+        }
+      },
+
+      toggleMute() {
+        const btn = document.getElementById('muteBtn');
+        if (this.mode === 'local') {
+          this.localEl.muted = !this.localEl.muted;
+          btn.innerHTML = this.localEl.muted ? '🔇' : '🔊';
+        } else {
+          if (!this.ytPlayer) return;
+          if (this.ytPlayer.isMuted()) {
+            this.ytPlayer.unMute();
+            btn.innerHTML = '🔊';
+          } else {
+            this.ytPlayer.mute();
+            btn.innerHTML = '🔇';
+          }
+        }
+      },
+
+      rewind10s() {
+        const cur = this.getTime();
+        this.seekTo(Math.max(0, cur - 10));
+      }
+    };
+
+    function onYouTubeIframeAPIReady() {
+      PlayerEngine.ytPlayer = new YT.Player('ytplayer', {
+        videoId: YOUTUBE_VIDEO_ID,
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          modestbranding: 1,
+          rel: 0,
+          showinfo: 0,
+          iv_load_policy: 3
+        },
+        events: {
+          'onReady': () => {
+            videoDuration = PlayerEngine.getDuration();
+            renderCheckpoints();
+            updateTimelineUI(0);
+          },
+          'onStateChange': (e) => {
+            if (e.data === YT.PlayerState.PLAYING) {
+              document.getElementById('playBtn').innerHTML = '⏸️';
+              startMonitoring();
+            } else {
+              document.getElementById('playBtn').innerHTML = '▶️';
+              if (e.data === YT.PlayerState.ENDED) showCompletionScreen();
+            }
+          }
+        }
+      });
+    }
+
+    // --- 4. STRICT ANTI-SKIP LOOP ---
+    
+    // === PHASE 1: TEACHER MODE & SMART AUTO-RESUME LOGIC ===
+    let isTeacherMode = false;
+    const TEACHER_PASSWORD = '123456';
+    let pendingResumeState = null;
+
+    function handleTeacherBadgeClick() {
+      const modal = document.getElementById('teacherModal');
+      modal.style.display = 'flex';
+      const loginView = document.getElementById('teacherLoginView');
+      const controlView = document.getElementById('teacherControlView');
+      const err = document.getElementById('teacherPwdError');
+      err.style.display = 'none';
+
+      if (isTeacherMode) {
+        loginView.style.display = 'none';
+        controlView.style.display = 'block';
+        populateTeacherJumpButtons();
+      } else {
+        loginView.style.display = 'block';
+        controlView.style.display = 'none';
+        const pwdInput = document.getElementById('teacherPwd');
+        pwdInput.value = '';
+        setTimeout(() => pwdInput.focus(), 100);
+      }
+    }
+
+    function closeTeacherModal() {
+      document.getElementById('teacherModal').style.display = 'none';
+    }
+
+    function unlockTeacherMode() {
+      const pwd = document.getElementById('teacherPwd').value.trim();
+      const err = document.getElementById('teacherPwdError');
+      if (pwd === TEACHER_PASSWORD) {
+        isTeacherMode = true;
+        err.style.display = 'none';
+        updateTeacherBadgeUI();
+        document.getElementById('teacherLoginView').style.display = 'none';
+        document.getElementById('teacherControlView').style.display = 'block';
+        populateTeacherJumpButtons();
+        AudioFX.playSuccess();
+      } else {
+        err.style.display = 'block';
+        AudioFX.playWrong();
+      }
+    }
+
+    function lockTeacherMode() {
+      isTeacherMode = false;
+      updateTeacherBadgeUI();
+      closeTeacherModal();
+      AudioFX.playWarning();
+    }
+
+    function updateTeacherBadgeUI() {
+      const badge = document.getElementById('teacherBadge');
+      const lockBadge = document.getElementById('lockBadge');
+      if (isTeacherMode) {
+        badge.innerHTML = '🔓 Thầy Cô: BẬT';
+        badge.classList.add('teacher-active');
+        lockBadge.innerHTML = '🔓 Tua tự do: BẬT (Thầy Cô)';
+        lockBadge.classList.remove('lock-status');
+        lockBadge.classList.add('lock-unlocked');
+      } else {
+        badge.innerHTML = '⚙️ Thầy Cô: TẮT';
+        badge.classList.remove('teacher-active');
+        lockBadge.innerHTML = '🔒 Chống tua nhanh: BẬT';
+        lockBadge.classList.add('lock-status');
+        lockBadge.classList.remove('lock-unlocked');
+      }
+    }
+
+    function populateTeacherJumpButtons() {
+      const container = document.getElementById('teacherJumpButtons');
+      container.innerHTML = '';
+      checkpoints.forEach((cp, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'teacher-jump-btn';
+        btn.innerHTML = `<strong>Trạm ${idx+1}</strong> (${formatTime(cp.time)})<br><span style="font-size:0.75rem; opacity:0.8;">${cp.type.toUpperCase()}</span>`;
+        btn.onclick = () => jumpToTeacherCp(cp);
+        container.appendChild(btn);
+      });
+    }
+
+    function jumpToTeacherCp(cp) {
+      closeTeacherModal();
+      maxWatchedTime = Math.max(maxWatchedTime, cp.time);
+      PlayerEngine.seekTo(Math.max(0, cp.time - 0.5));
+      pauseAndOpenQuiz(cp);
+    }
+
+    // --- AUTO-RESUME LOCAL STORAGE PROGRESS ---
+    function saveStudentProgressLocally() {
+      if (!studentData.name || isTeacherMode) return;
+      const progressObj = {
+        name: studentData.name,
+        class: studentData.class,
+        score: studentData.score,
+        attempts: studentData.attempts,
+        maxWatchedTime: maxWatchedTime,
+        lastTime: PlayerEngine.getCurrentTime() || 0,
+        savedAt: new Date().toISOString()
+      };
+      localStorage.setItem('nls_toan6_saved_progress', JSON.stringify(progressObj));
+    }
+
+    function checkSavedProgressOnStartup() {
+      try {
+        const raw = localStorage.getItem('nls_toan6_saved_progress');
+        if (!raw) return false;
+        const saved = JSON.parse(raw);
+        if (saved && saved.name && (saved.maxWatchedTime > 15 || Object.keys(saved.attempts || {}).length > 0)) {
+          pendingResumeState = saved;
+          return true;
+        }
+      } catch(e) {}
+      return false;
+    }
+
+    function showResumeModal() {
+      if (!pendingResumeState) return;
+      const details = document.getElementById('resumeDetails');
+      const cpCount = Object.keys(pendingResumeState.attempts || {}).length;
+      details.innerHTML = `
+        👤 Học sinh: <strong>${pendingResumeState.name} (${pendingResumeState.class})</strong><br>
+        ⭐ Điểm số đã đạt: <strong>${pendingResumeState.score}/7</strong><br>
+        🎯 Trạm đã giải: <strong>${cpCount}/7 trạm</strong><br>
+        ⏱️ Vị trí bài giảng: <strong>${formatTime(pendingResumeState.lastTime || pendingResumeState.maxWatchedTime)}</strong>
+      `;
+      document.getElementById('registerModal').style.display = 'none';
+      document.getElementById('resumeModal').style.display = 'flex';
+    }
+
+    function confirmResumeProgress() {
+      if (!pendingResumeState) return;
+      studentData.name = pendingResumeState.name;
+      studentData.class = pendingResumeState.class;
+      studentData.score = pendingResumeState.score || 0;
+      studentData.attempts = pendingResumeState.attempts || {};
+      maxWatchedTime = pendingResumeState.maxWatchedTime || 0;
+
+      document.getElementById('resumeModal').style.display = 'none';
+      updateStudentHeader();
+      updateScoreBadge();
+      renderCheckpoints();
+
+      const seekTarget = pendingResumeState.lastTime || pendingResumeState.maxWatchedTime || 0;
+      PlayerEngine.seekTo(seekTarget);
+      PlayerEngine.play();
+      syncProgressToGoogleSheets(`🟡 Tiếp tục học (Trạm ${Object.keys(studentData.attempts).length}/7)`);
+      pendingResumeState = null;
+    }
+
+    function confirmRestartProgress() {
+      localStorage.removeItem('nls_toan6_saved_progress');
+      pendingResumeState = null;
+      document.getElementById('resumeModal').style.display = 'none';
+      studentData.attempts = {};
+      studentData.score = 0;
+      maxWatchedTime = 0;
+      updateScoreBadge();
+      renderCheckpoints();
+      PlayerEngine.seekTo(0);
+      PlayerEngine.play();
+    }
+
+    function startMonitoring() {
+      if (monitorInterval) clearInterval(monitorInterval);
+      monitorInterval = setInterval(() => {
+        const currentTime = PlayerEngine.getTime();
+        videoDuration = PlayerEngine.getDuration() || videoDuration;
+
+        if (currentTime > maxWatchedTime + 1.5) {
+          if (isTeacherMode) {
+            maxWatchedTime = Math.max(maxWatchedTime, currentTime);
+          } else {
+            triggerAntiSkipLock();
+            return;
+          }
+        }
+
+        const pendingCp = checkpoints.find(cp => 
+          !studentData.attempts[cp.id] && 
+          currentTime >= (cp.time - 0.5) && 
+          currentTime <= (cp.time + 1.5)
+        );
+
+        if (pendingCp) {
+          pauseAndOpenQuiz(pendingCp);
+          return;
+        }
+
+        if (currentTime > maxWatchedTime) {
+          maxWatchedTime = currentTime;
+        }
+
+        updateTimelineUI(currentTime);
+        saveStudentProgressLocally();
+      }, 250);
+    }
+
+    function triggerAntiSkipLock() {
+      PlayerEngine.seekTo(maxWatchedTime);
+      showSeekWarning();
+      AudioFX.playWarning();
+    }
+
+    function showSeekWarning() {
+      const warn = document.getElementById('seekWarning');
+      warn.classList.add('show');
+      setTimeout(() => warn.classList.remove('show'), 2500);
+    }
+
+    function handleTimelineClick(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const targetTime = (clickX / rect.width) * videoDuration;
+
+      if (isTeacherMode || targetTime <= maxWatchedTime) {
+        if (isTeacherMode) {
+          maxWatchedTime = Math.max(maxWatchedTime, targetTime);
+        }
+        PlayerEngine.seekTo(targetTime);
+      } else {
+        triggerAntiSkipLock();
+      }
+    }
+
+    function toggleFullscreen() {
+      const container = document.getElementById('playerContainer');
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(err => alert(err.message));
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    function formatTime(sec) {
+      sec = Math.floor(sec || 0);
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function updateTimelineUI(currentTime) {
+      if (!videoDuration) return;
+      const curPercent = (currentTime / videoDuration) * 100;
+      const maxPercent = (maxWatchedTime / videoDuration) * 100;
+
+      document.getElementById('timelineProgress').style.width = `${curPercent}%`;
+      document.getElementById('timelineUnlocked').style.width = `${maxPercent}%`;
+      document.getElementById('timelineLockedZone').style.width = `${100 - maxPercent}%`;
+
+      document.getElementById('timeDisplay').innerText = 
+        `${formatTime(currentTime)} / ${formatTime(videoDuration)}`;
+    }
+
+    function renderCheckpoints() {
+      const container = document.getElementById('checkpointMarkersContainer');
+      const pillsContainer = document.getElementById('checklistPills');
+      container.innerHTML = '';
+      pillsContainer.innerHTML = '';
+
+      checkpoints.forEach((cp, idx) => {
+        const dot = document.createElement('div');
+        dot.className = 'checkpoint-marker' + (studentData.attempts[cp.id] ? ' passed' : '');
+        dot.id = `cp-dot-${cp.id}`;
+        dot.style.left = `${(cp.time / videoDuration) * 100}%`;
+        dot.title = `Trạm ${idx+1} (${formatTime(cp.time)}): ${cp.question}`;
+        container.appendChild(dot);
+
+        const pill = document.createElement('div');
+        pill.className = 'check-pill' + (studentData.attempts[cp.id] ? ' done' : '');
+        pill.id = `cp-pill-${cp.id}`;
+        pill.innerHTML = `<span>Trạm ${idx+1} (${formatTime(cp.time)})</span> ${studentData.attempts[cp.id] ? '✅' : '🔒'}`;
+        pillsContainer.appendChild(pill);
+      });
+    }
+
+    // --- 5. INSTANT 1-CLICK QUIZ EVALUATION (NO EXTRA BUTTON NEEDED) ---
+    function pauseAndOpenQuiz(cp) {
+      activeCheckpoint = cp;
+      activeCheckpointSolved = false;
+      if (autoResumeTimer) clearInterval(autoResumeTimer);
+
+      PlayerEngine.pause();
+      PlayerEngine.seekTo(cp.time);
+
+      const overlay = document.getElementById('quizOverlay');
+      const qBadge = document.getElementById('quizBadge');
+      const qTime = document.getElementById('quizTime');
+      const qText = document.getElementById('quizQuestion');
+      const cArea = document.getElementById('quizContentArea');
+      const expBox = document.getElementById('explanationBox');
+      const banner = document.getElementById('quizFeedbackBanner');
+      const btnCont = document.getElementById('btnContinue');
+      const btnRev = document.getElementById('btnReview30s');
+      const inst = document.getElementById('quizInstruction');
+
+      expBox.classList.remove('show');
+      banner.className = 'quiz-feedback-banner';
+      banner.style.display = 'none';
+      btnCont.style.display = 'none';
+      btnRev.style.display = 'none';
+
+      qBadge.innerText = `CÂU HỎI TƯƠNG TÁC ${cp.id}/7`;
+      qTime.innerText = `⏱️ Dừng tại: ${formatTime(cp.time)}`;
+      qText.innerText = cp.question;
+
+      if (cp.type === 'mcq') {
+        inst.innerHTML = '👆 <strong>Bấm trực tiếp vào đáp án</strong> để kiểm tra kết quả ngay!';
+        let html = '<div class="options-grid">';
+        cp.options.forEach((opt, oIdx) => {
+          html += `
+            <button class="option-btn" id="opt-btn-${oIdx}" onclick="handleInstantMCQ(${oIdx})">
+              <span>${opt}</span>
+              <span class="opt-status-badge" id="opt-badge-${oIdx}"></span>
+            </button>
+          `;
+        });
+        html += '</div>';
+        cArea.innerHTML = html;
+      } else if (cp.type === 'tf') {
+        inst.innerHTML = '👆 <strong>Bấm vào ĐÚNG hoặc SAI</strong> để kiểm tra kết quả ngay!';
+        cArea.innerHTML = `
+          <div class="tf-grid">
+            <button class="tf-btn" id="tf-true" onclick="handleInstantTF(true)">
+              <span>✅ ĐÚNG</span>
+              <span class="opt-status-badge" id="tf-badge-true"></span>
+            </button>
+            <button class="tf-btn" id="tf-false" onclick="handleInstantTF(false)">
+              <span>❌ SAI</span>
+              <span class="opt-status-badge" id="tf-badge-false"></span>
+            </button>
+          </div>
+        `;
+      } else if (cp.type === 'fill') {
+        inst.innerHTML = '⌨️ Nhập số kết quả rồi bấm <strong>Kiểm tra</strong> (hoặc nhấn phím Enter):';
+        cArea.innerHTML = `
+          <div class="input-group">
+            <input type="text" class="fill-input" id="fillInput" inputmode="numeric" pattern="[0-9]*" placeholder="Nhập số kết quả tại đây..." onkeydown="handleFillKeyDown(event)" autofocus>
+            <button class="btn-check-fill" onclick="handleInstantFill()">Kiểm tra kết quả ✔️</button>
+          </div>
+        `;
+        setTimeout(() => {
+          const inp = document.getElementById('fillInput');
+          if (inp) inp.focus();
+        }, 300);
+      }
+
+      overlay.classList.add('active');
+    }
+
+    // 1-Click MCQ Handler
+    function handleInstantMCQ(selectedIdx) {
+      if (activeCheckpointSolved) return;
+
+      const cp = activeCheckpoint;
+      const isCorrect = (selectedIdx === cp.correct);
+      const clickedBtn = document.getElementById(`opt-btn-${selectedIdx}`);
+      const clickedBadge = document.getElementById(`opt-badge-${selectedIdx}`);
+
+      // Initialize attempt stats for this checkpoint
+      if (!studentData.questionStats) studentData.questionStats = {};
+      if (!studentData.questionStats[cp.id]) {
+        studentData.questionStats[cp.id] = { wrongCount: 0, points: 0, passed: false };
+      }
+      const qStat = studentData.questionStats[cp.id];
+
+      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('shake'));
+
+      if (isCorrect) {
+        activeCheckpointSolved = true;
+        AudioFX.playSuccess();
+        triggerConfettiMini();
+
+        let earnedPts = 1;
+        if (qStat.wrongCount === 0) {
+          earnedPts = 1;
+          showFeedbackBanner(true, '🎉 CHÍNH XÁC! Em làm đúng ngay lần đầu (+1.0 điểm)!');
+        } else {
+          earnedPts = 0.5;
+          showFeedbackBanner(true, '👍 TỐT LẮM! Em đã tự sửa đúng sau lần thử đầu (+0.5 điểm)!');
+        }
+
+        qStat.points = earnedPts;
+        qStat.passed = true;
+
+        clickedBtn.classList.remove('wrong-ans');
+        clickedBtn.classList.add('correct-ans');
+        clickedBadge.className = 'opt-status-badge badge-correct';
+        clickedBadge.innerHTML = `✅ ĐÚNG (+${earnedPts}đ)`;
+
+        document.querySelectorAll('.option-btn').forEach((b, i) => {
+          if (i !== selectedIdx) {
+            b.style.opacity = '0.4';
+            b.style.pointerEvents = 'none';
+          }
+        });
+
+        showExplanation(cp.explanation);
+
+        studentData.attempts[cp.id] = { correct: true, points: earnedPts, wrongCount: qStat.wrongCount, timestamp: new Date().toISOString() };
+        recalculateScore();
+        maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
+
+        updateScoreBadge();
+        renderCheckpoints();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đã qua Trạm ${cp.id}/7 - ${studentData.score}đ)`);
+        startAutoResumeCountdown();
+
+      } else {
+        qStat.wrongCount++;
+        AudioFX.playWrong();
+        clickedBtn.classList.remove('correct-ans');
+        void clickedBtn.offsetWidth;
+        clickedBtn.classList.add('wrong-ans', 'shake');
+        clickedBadge.className = 'opt-status-badge badge-wrong';
+        clickedBadge.innerHTML = '❌ SAI';
+
+        if (qStat.wrongCount >= 2) {
+          // 2nd wrong: reveal answer and allow continuing with 0 points
+          activeCheckpointSolved = true;
+          qStat.points = 0;
+          qStat.passed = true;
+
+          showFeedbackBanner(false, `❌ Em đã chọn chưa đúng 2 lần. Đáp án đúng là: ${cp.options[cp.correct]} (0 điểm)`);
+          showExplanation(cp.explanation);
+
+          const correctBtn = document.getElementById(`opt-btn-${cp.correct}`);
+          if (correctBtn) {
+            correctBtn.classList.add('correct-ans');
+            const corBadge = document.getElementById(`opt-badge-${cp.correct}`);
+            if (corBadge) {
+              corBadge.className = 'opt-status-badge badge-correct';
+              corBadge.innerHTML = '✅ ĐÁP ÁN ĐÚNG';
+            }
+          }
+
+          document.querySelectorAll('.option-btn').forEach((b, i) => {
+            if (i !== cp.correct && i !== selectedIdx) {
+              b.style.opacity = '0.4';
+            }
+          });
+
+          studentData.attempts[cp.id] = { correct: false, points: 0, wrongCount: qStat.wrongCount, timestamp: new Date().toISOString() };
+          recalculateScore();
+          maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
+
+          updateScoreBadge();
+          renderCheckpoints();
+          syncProgressToGoogleSheets(`🟡 Đang học (Trạm ${cp.id}/7 chưa đạt: 0đ)`);
+          startAutoResumeCountdown();
+
+        } else {
+          showFeedbackBanner(false, '❌ Chưa chính xác! Em còn 1 cơ hội thử lại hoặc đọc gợi ý bên dưới để chọn lại.');
+          showExplanation(cp.explanation);
+          document.getElementById('btnReview30s').style.display = 'block';
+          syncProgressToGoogleSheets(`🟡 Đang học (Thử lại Trạm ${cp.id}/7)`);
+        }
+      }
+    }
+
+    function handleInstantTF(val) {
+      if (activeCheckpointSolved) return;
+
+      const cp = activeCheckpoint;
+      const isCorrect = (val === cp.correct);
+      const clickedBtn = document.getElementById(val ? 'tf-btn-true' : 'tf-btn-false');
+      const otherBtn = document.getElementById(val ? 'tf-btn-false' : 'tf-btn-true');
+
+      if (!studentData.questionStats) studentData.questionStats = {};
+      if (!studentData.questionStats[cp.id]) {
+        studentData.questionStats[cp.id] = { wrongCount: 0, points: 0, passed: false };
+      }
+      const qStat = studentData.questionStats[cp.id];
+
+      document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('shake'));
+
+      if (isCorrect) {
+        activeCheckpointSolved = true;
+        AudioFX.playSuccess();
+        triggerConfettiMini();
+
+        let earnedPts = (qStat.wrongCount === 0) ? 1 : 0.5;
+        qStat.points = earnedPts;
+        qStat.passed = true;
+
+        clickedBtn.classList.remove('wrong-ans');
+        clickedBtn.classList.add('correct-ans');
+        otherBtn.style.opacity = '0.35';
+        otherBtn.style.pointerEvents = 'none';
+
+        showFeedbackBanner(true, `🎉 CHÍNH XÁC! Nhận định của em hoàn toàn đúng (+${earnedPts}đ)!`);
+        showExplanation(cp.explanation);
+
+        studentData.attempts[cp.id] = { correct: true, points: earnedPts, wrongCount: qStat.wrongCount, timestamp: new Date().toISOString() };
+        recalculateScore();
+        maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
+
+        updateScoreBadge();
+        renderCheckpoints();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đã qua Trạm ${cp.id}/7 - ${studentData.score}đ)`);
+        startAutoResumeCountdown();
+
+      } else {
+        qStat.wrongCount++;
+        AudioFX.playWrong();
+        clickedBtn.classList.remove('correct-ans');
+        void clickedBtn.offsetWidth;
+        clickedBtn.classList.add('wrong-ans', 'shake');
+
+        if (qStat.wrongCount >= 2) {
+          activeCheckpointSolved = true;
+          qStat.points = 0;
+          qStat.passed = true;
+
+          showFeedbackBanner(false, `❌ Đáp án đúng là: ${cp.correct ? 'ĐÚNG' : 'SAI'} (0 điểm)`);
+          showExplanation(cp.explanation);
+          otherBtn.classList.add('correct-ans');
+
+          studentData.attempts[cp.id] = { correct: false, points: 0, wrongCount: qStat.wrongCount, timestamp: new Date().toISOString() };
+          recalculateScore();
+          maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
+
+          updateScoreBadge();
+          renderCheckpoints();
+          syncProgressToGoogleSheets(`🟡 Đang học (Trạm ${cp.id}/7 chưa đạt: 0đ)`);
+          startAutoResumeCountdown();
+        } else {
+          showFeedbackBanner(false, '❌ Chưa chính xác! Hãy đọc kỹ giải thích bên dưới và chọn lại.');
+          showExplanation(cp.explanation);
+          document.getElementById('btnReview30s').style.display = 'block';
+          syncProgressToGoogleSheets(`🟡 Đang học (Thử lại Trạm ${cp.id}/7)`);
+        }
+      }
+    }
+
+    function handleInstantFill() {
+      if (activeCheckpointSolved) return;
+
+      const cp = activeCheckpoint;
+      const inp = document.getElementById('fillInput');
+      const val = inp.value.trim();
+
+      if (!val) {
+        inp.focus();
+        return;
+      }
+
+      if (!studentData.questionStats) studentData.questionStats = {};
+      if (!studentData.questionStats[cp.id]) {
+        studentData.questionStats[cp.id] = { wrongCount: 0, points: 0, passed: false };
+      }
+      const qStat = studentData.questionStats[cp.id];
+
+      const isCorrect = (val.toLowerCase() === cp.correct.toLowerCase());
+      inp.classList.remove('shake');
+
+      if (isCorrect) {
+        activeCheckpointSolved = true;
+        AudioFX.playSuccess();
+        triggerConfettiMini();
+
+        let earnedPts = (qStat.wrongCount === 0) ? 1 : 0.5;
+        qStat.points = earnedPts;
+        qStat.passed = true;
+
+        inp.classList.remove('wrong-ans');
+        inp.classList.add('correct-ans');
+        inp.disabled = true;
+
+        showFeedbackBanner(true, `🎉 CHÍNH XÁC! Số điền hoàn toàn đúng (+${earnedPts}đ)!`);
+        showExplanation(cp.explanation);
+
+        studentData.attempts[cp.id] = { correct: true, points: earnedPts, wrongCount: qStat.wrongCount, timestamp: new Date().toISOString() };
+        recalculateScore();
+        maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
+
+        updateScoreBadge();
+        renderCheckpoints();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đã qua Trạm ${cp.id}/7 - ${studentData.score}đ)`);
+        startAutoResumeCountdown();
+
+      } else {
+        qStat.wrongCount++;
+        AudioFX.playWrong();
+        void inp.offsetWidth;
+        inp.classList.add('wrong-ans', 'shake');
+
+        if (qStat.wrongCount >= 2) {
+          activeCheckpointSolved = true;
+          qStat.points = 0;
+          qStat.passed = true;
+          inp.disabled = true;
+
+          showFeedbackBanner(false, `❌ Đáp án chính xác là số: ${cp.correct} (0 điểm)`);
+          showExplanation(cp.explanation);
+
+          studentData.attempts[cp.id] = { correct: false, points: 0, wrongCount: qStat.wrongCount, timestamp: new Date().toISOString() };
+          recalculateScore();
+          maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
+
+          updateScoreBadge();
+          renderCheckpoints();
+          syncProgressToGoogleSheets(`🟡 Đang học (Trạm ${cp.id}/7 chưa đạt: 0đ)`);
+          startAutoResumeCountdown();
+        } else {
+          showFeedbackBanner(false, `❌ Số "${val}" chưa chính xác! Em còn 1 cơ hội nhập lại sau khi xem gợi ý.`);
+          showExplanation(cp.explanation);
+          document.getElementById('btnReview30s').style.display = 'block';
+          syncProgressToGoogleSheets(`🟡 Đang học (Thử lại Trạm ${cp.id}/7)`);
+        }
+      }
+    }
+
+    function recalculateScore() {
+      let total = 0;
+      for (const id in (studentData.attempts || {})) {
+        total += Number(studentData.attempts[id].points || 0);
+      }
+      studentData.score = Math.round(total * 10) / 10;
+    }
+
+    function handleFillKeyDown(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleInstantFill();
+      }
+    }
+
+    function showFeedbackBanner(isCorrect, message) {
+      const banner = document.getElementById('quizFeedbackBanner');
+      const icon = document.getElementById('feedbackIcon');
+      const text = document.getElementById('feedbackText');
+      
+      icon.innerHTML = isCorrect ? '🎉' : '❌';
+      text.innerHTML = message;
+      banner.className = 'quiz-feedback-banner ' + (isCorrect ? 'show-correct' : 'show-wrong');
+      banner.style.display = 'flex';
+    }
+
+    function showExplanation(text) {
+      const box = document.getElementById('explanationBox');
+      const expText = document.getElementById('explanationText');
+      expText.innerHTML = text;
+      box.classList.add('show');
+    }
+
+    function startAutoResumeCountdown() {
+      const btnCont = document.getElementById('btnContinue');
+      btnCont.style.display = 'inline-block';
+      autoResumeSeconds = 4;
+      btnCont.innerHTML = `Tiếp tục bài học ▶️ (${autoResumeSeconds}s)`;
+
+      if (autoResumeTimer) clearInterval(autoResumeTimer);
+      autoResumeTimer = setInterval(() => {
+        autoResumeSeconds--;
+        if (autoResumeSeconds > 0) {
+          btnCont.innerHTML = `Tiếp tục bài học ▶️ (${autoResumeSeconds}s)`;
+        } else {
+          clearInterval(autoResumeTimer);
+          continueLesson();
+        }
+      }, 1000);
+    }
+
+    function continueLesson() {
+      if (autoResumeTimer) clearInterval(autoResumeTimer);
+      document.getElementById('quizOverlay').classList.remove('active');
+      activeCheckpoint = null;
+      activeCheckpointSolved = false;
+      PlayerEngine.play();
+    }
+
+    function reviewPrevious30s() {
+      if (!activeCheckpoint) return;
+      if (autoResumeTimer) clearInterval(autoResumeTimer);
+      document.getElementById('quizOverlay').classList.remove('active');
+      const reviewTime = Math.max(0, activeCheckpoint.time - 35);
+      PlayerEngine.seekTo(reviewTime);
+      PlayerEngine.play();
+    }
+
+    function triggerConfettiMini() {
+      confetti({
+        particleCount: 50,
+        spread: 60,
+        origin: { y: 0.6 }
+      });
+    }
+
+    // --- 6. REAL-TIME GOOGLE SHEETS PROGRESS SYNC ---
+    function syncProgressToGoogleSheets(statusText) {
+      if (!SCRIPT_WEB_APP_URL || !studentData.name) return;
+
+      const payload = {
+        timestamp: new Date().toLocaleString('vi-VN'),
+        studentName: studentData.name,
+        studentClass: studentData.class,
+        score: studentData.score,
+        totalQuestions: 7,
+        status: statusText || '🟡 Đang học',
+        lesson: 'Bài 6: Lũy thừa với số mũ tự nhiên (Toán 6)',
+        details: JSON.stringify(studentData.attempts)
+      };
+
+      fetch(SCRIPT_WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }).catch(err => console.warn('Sync error:', err));
+    }
+
+    // --- 7. REGISTRATION & COMPLETION ---
+    function handleRegistration(e) {
+      e.preventDefault();
+      const name = document.getElementById('regName').value.trim();
+      const cls = document.getElementById('regClass').value.trim();
+      if (!name || !cls) return;
+
+      studentData.name = name;
+      studentData.class = cls;
+      localStorage.setItem('nls_toan6_name', name);
+      localStorage.setItem('nls_toan6_class', cls);
+
+      document.getElementById('registerModal').style.display = 'none';
+      updateStudentHeader();
+
+      // Immediately log student into Google Sheet upon entrance!
+      syncProgressToGoogleSheets('🟡 Đang học (Vừa vào lớp)');
+
+      PlayerEngine.play();
+    }
+
+    function updateStudentHeader() {
+      document.getElementById('studentBadge').innerHTML = 
+        `👤 <strong>${studentData.name} (${studentData.class})</strong> <span class="btn-edit-hint">✏️ Đổi</span>`;
+    }
+
+    function updateScoreBadge() {
+      document.getElementById('scoreBadge').innerHTML = 
+        `⭐ Điểm: ${studentData.score}/7`;
+    }
+
+    function showCompletionScreen() {
+      recalculateScore();
+      const totalQ = checkpoints.length;
+      const pct = Math.round((studentData.score / totalQ) * 100);
+      const isPassed = (pct >= PASSING_THRESHOLD_PCT);
+
+      const screen = document.getElementById('completionScreen');
+      const titleEl = document.getElementById('completionTitle');
+      const scoreCircle = document.getElementById('completionScoreCircle');
+      const scoreText = document.getElementById('finalScoreText');
+      const scorePct = document.getElementById('finalScorePct');
+      const details = document.getElementById('summaryDetails');
+      const box = document.getElementById('syncStatusBox');
+
+      document.getElementById('summaryStudentName').innerText = studentData.name || 'Em học sinh';
+      document.getElementById('summaryStudentClass').innerText = studentData.class || 'Toán 6';
+      scoreText.innerText = `${studentData.score}/${totalQ}`;
+      if (scorePct) scorePct.innerText = `${pct}%`;
+
+      let statusMsg = '';
+      if (isPassed) {
+        confetti({ particleCount: 130, spread: 85, origin: { y: 0.6 } });
+        AudioFX.playSuccess();
+        titleEl.style.color = '#10b981';
+        titleEl.innerHTML = '🎉 CHÚC MỪNG EM ĐÃ HOÀN THÀNH BÀI HỌC!';
+        if (scoreCircle) scoreCircle.style.borderColor = '#10b981';
+
+        details.innerHTML = `
+          <div style="color:#6ee7b7; font-weight:600; margin-bottom:6px;">🎯 XẾP LOẠI: ĐẠT YÊU CẦU HOÀN THÀNH (≥ 80%)</div>
+          <div>✅ <strong>Điểm số:</strong> ${studentData.score}/${totalQ} điểm (${pct}%).</div>
+          <div>⏱️ <strong>Thời gian:</strong> ${new Date().toLocaleTimeString('vi-VN')} ngày ${new Date().toLocaleDateString('vi-VN')}.</div>
+          <div>🏆 <strong>Đánh giá:</strong> Em đã nắm vững kiến thức trọng tâm Bài 6 (Lũy thừa với số mũ tự nhiên).</div>
+        `;
+        statusMsg = `🟢 ĐÃ HOÀN THÀNH (ĐẠT: ${studentData.score}/${totalQ} - ${pct}%)`;
+      } else {
+        AudioFX.playWarning();
+        titleEl.style.color = '#ef4444';
+        titleEl.innerHTML = '⚠️ CHƯA ĐẠT TIÊU CHUẨN HOÀN THÀNH BÀI';
+        if (scoreCircle) scoreCircle.style.borderColor = '#ef4444';
+
+        details.innerHTML = `
+          <div style="color:#fca5a5; font-weight:600; margin-bottom:6px;">⚠️ XẾP LOẠI: CHƯA ĐẠT (CẦN ÔN TẬP LẠI)</div>
+          <div>❌ <strong>Điểm số:</strong> ${studentData.score}/${totalQ} điểm (${pct}%).</div>
+          <div>📌 <strong>Quy định:</strong> Bài học yêu cầu đạt tối thiểu <strong>80% (từ 5.6 ~ 6/7 câu đúng trở lên)</strong> mới được tính hoàn thành.</div>
+          <div style="margin-top:6px; color:#cbd5e1;">💡 <em>Em hãy bấm nút <strong>"Học lại bài giảng"</strong> bên dưới để xem kỹ lại các phần chưa vững và nâng cao điểm số nhé!</em></div>
+        `;
+        statusMsg = `🔴 CHƯA ĐẠT (Cần học lại: ${studentData.score}/${totalQ} - ${pct}%)`;
+      }
+
+      screen.classList.add('show');
+      box.className = 'sync-status-box loading';
+      box.innerHTML = '⏳ Đang lưu kết quả cuối cùng vào Sổ điểm Google Sheets của Thầy Cô...';
+
+      const payload = {
+        timestamp: new Date().toLocaleString('vi-VN'),
+        studentName: studentData.name,
+        studentClass: studentData.class,
+        score: studentData.score,
+        totalQuestions: totalQ,
+        status: statusMsg,
+        lesson: 'Bài 6: Lũy thừa với số mũ tự nhiên (Toán 6)',
+        details: JSON.stringify(studentData.attempts)
+      };
+
+      fetch(SCRIPT_WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        box.className = 'sync-status-box success';
+        box.innerHTML = isPassed 
+          ? '✅ Đã lưu kết quả ĐẠT vào Sổ điểm Thầy Cô thành công!'
+          : '⚠️ Đã ghi nhận kết quả vào Sổ điểm. Em hãy học lại để cải thiện nhé!';
+      })
+      .catch(err => {
+        box.className = 'sync-status-box error';
+        box.innerHTML = '⚠️ Lỗi kết nối Google Sheets: ' + err.message;
+      });
+    }
+
+    function restartLesson() {
+      document.getElementById('completionScreen').classList.remove('show');
+      PlayerEngine.seekTo(0);
+      PlayerEngine.play();
+    }
+
+    // --- 8. INITIALIZATION ON LOAD ---
+    window.addEventListener('DOMContentLoaded', () => {
+      PlayerEngine.init();
+
+      const hasResume = checkSavedProgressOnStartup();
+      if (hasResume) {
+        showResumeModal();
+      } else if (studentData.name && studentData.class) {
+        document.getElementById('registerModal').style.display = 'none';
+        updateStudentHeader();
+      }
+      updateScoreBadge();
+    });
+  </script>
+
+  <!-- MODAL: CHẾ ĐỘ THẦY CÔ (TEACHER PREVIEW MODE) -->
+  <div class="modal-overlay" id="teacherModal" style="display:none; z-index:9998;">
+    <div class="modal-card" style="max-width:520px;">
+      <div class="modal-header">
+        <h2 style="color:#fbbf24;">⚙️ CHẾ ĐỘ THẦY CÔ (KIỂM DUYỆT BÀI GIẢNG)</h2>
+        <p>Mở khóa tính năng tua nhanh & duyệt kiểm tra các trạm câu hỏi</p>
+      </div>
+
+      <div id="teacherLoginView">
+        <div class="form-group">
+          <label for="teacherPwd">Mật mã bảo mật Thầy Cô:</label>
+          <input type="password" id="teacherPwd" placeholder="Mặc định: 123456" onkeydown="if(event.key==='Enter') unlockTeacherMode()">
+          <div id="teacherPwdError" style="color:#ef4444; font-size:0.85rem; margin-top:6px; display:none;">
+            ❌ Mật mã không đúng, vui lòng thử lại!
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:16px;">
+          <button type="button" class="btn-start" onclick="unlockTeacherMode()">MỞ KHÓA DUYỆT BÀI 🔓</button>
+          <button type="button" class="btn-ctrl" onclick="closeTeacherModal()" style="flex:1;">Đóng</button>
+        </div>
+      </div>
+
+      <div id="teacherControlView" style="display:none;">
+        <div style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; border-radius:8px; padding:12px; margin-bottom:14px; font-size:0.9rem;">
+          ✅ <strong>Đang bật Chế độ Thầy Cô!</strong><br>
+          • Đã mở khóa tua video tự do đến bất kỳ giây nào.<br>
+          • Bấm vào các trạm bên dưới để nhảy ngay tới kiểm tra câu hỏi:
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:8px; margin-bottom:16px;" id="teacherJumpButtons">
+          <!-- Populated by JS -->
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="btn-ctrl" onclick="lockTeacherMode()" style="background:#ef4444; color:#fff; border:none; flex:1;">
+            🔒 TẮT CHẾ ĐỘ THẦY CÔ
+          </button>
+          <button type="button" class="btn-ctrl" onclick="closeTeacherModal()" style="flex:1;">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: BẢO LƯU TIẾN ĐỘ HỌC SINH (SMART AUTO-RESUME) -->
+  <div class="modal-overlay" id="resumeModal" style="display:none; z-index:9999;">
+    <div class="modal-card" style="max-width:480px;">
+      <div class="modal-header">
+        <h2 style="color:#60a5fa;">🔄 TIẾP TỤC BÀI HỌC</h2>
+        <p>Hệ thống ghi nhận em đã học bài này trước đó</p>
+      </div>
+      <div style="background:rgba(59,130,246,0.15); border:1px solid #3b82f6; border-radius:8px; padding:14px; margin-bottom:16px; font-size:0.92rem; line-height:1.6;" id="resumeDetails">
+        <!-- Populated by JS -->
+      </div>
+      <div style="display:flex; gap:12px;">
+        <button type="button" class="btn-start" onclick="confirmResumeProgress()" style="flex:2;">
+          TIẾP TỤC HỌC ▶️
+        </button>
+        <button type="button" class="btn-ctrl" onclick="confirmRestartProgress()" style="flex:1; background:#475569; color:#f8fafc;">
+          Học lại từ đầu 🔄
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL: ĐỔI TÊN & ĐỔI LỚP HỌC SINH (HỖ TRỢ CẢ ĐIỆN THOẠI & MÁY TÍNH) -->
+  <div class="modal-overlay" id="changeStudentModal" style="display:none; z-index:9999;">
+    <div class="modal-card" style="max-width:440px;">
+      <div class="modal-header">
+        <h2 style="color:#60a5fa;">👤 ĐỔI TÊN & LỚP HỌC SINH</h2>
+        <p>Sửa lại khi gõ nhầm hoặc khi học sinh khác dùng chung thiết bị</p>
+      </div>
+
+      <form onsubmit="handleUpdateStudentInfo(event)">
+        <div class="form-group">
+          <label for="editStudentName">Họ và tên của em (*):</label>
+          <input type="text" id="editStudentName" required placeholder="Ví dụ: Nguyễn Văn An" style="font-size:16px;">
+        </div>
+
+        <div class="form-group">
+          <label for="editStudentClass">Lớp học (*):</label>
+          <input type="text" id="editStudentClass" required placeholder="Ví dụ: 6A, 6B, 6/1..." style="font-size:16px;">
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:16px;">
+          <button type="submit" class="btn-start" style="width:100%;">
+            LƯU THÔNG TIN MỚI ✅
+          </button>
+          <button type="button" class="btn-ctrl" onclick="startAsNewStudent()" style="background:#334155; color:#93c5fd; border:1px solid #475569; width:100%; font-size:0.85rem; padding:10px;">
+            🔄 Đây là học sinh khác (Bắt đầu lượt học mới)
+          </button>
+          <button type="button" class="btn-ctrl" onclick="closeChangeStudentModal()" style="width:100%; font-size:0.85rem;">
+            Đóng / Quay lại
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
