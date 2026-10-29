@@ -744,3 +744,17 @@ html = build_interactive_video_html(
 
 # 3. Kéo thả thư mục 'dist' vào app.netlify.com là xong!
 ```
+
+
+### L. Bộ Kiểm Định Chất Lượng Tự Động (Future-Proof QA Gate): `validate_checkpoints()`
+
+Để bảo đảm **100% các video bài giảng tạo mới trong tương lai** đều chạy mượt mà, học sinh trả lời trôi chảy, không bao giờ gặp lỗi kẹt video hay lỗi biến mất chữ, hệ thống tích hợp sẵn cổng kiểm định chất lượng tự động:
+
+1. **Tự động sắp xếp tuyến tính:** Tự động sắp xếp lại các trạm theo thứ tự thời gian tăng dần, đánh số `Trạm 1, Trạm 2, Trạm 3...` chuẩn xác kể cả khi người dùng nhập lộn xộn.
+2. **Kiểm tra tính hợp lệ của từng dạng câu hỏi:**
+   - **MCQ:** Bắt buộc số phương án $\ge 2$, chỉ số `correct` phải nằm trong khoảng hợp lệ ($0 \le 	ext{correct} < 	ext{len}(	ext{options})$).
+   - **Đúng / Sai:** Tự động chuyển đổi các giá trị linh hoạt (`true`, `đúng`, `1`) thành Boolean chuẩn.
+   - **Điền số:** Bắt buộc có chuỗi đáp án chuẩn, tự động bật `autocomplete="off"` và tạm dừng vòng lặp quét 250ms để học sinh gõ số thoải mái không bao giờ bị mất chữ.
+   - **Kéo thả / Chạm thẻ số:** Kiểm tra danh sách thẻ `tiles` và vị trí rơi hợp lệ.
+3. **Cảnh báo nhịp độ sư phạm (Pacing Check):** Cảnh báo nếu 2 câu hỏi quá sát nhau ($< 45	ext{s}$) gây ức chế ngắt quãng, hoặc quá thưa ($> 300	ext{s}$) khiến học sinh xem thụ động.
+4. **Kế thừa Master Template:** Mọi bài giảng mới đều được sinh từ [`templates/video_tuong_tac_template.html`](../templates/video_tuong_tac_template.html) đã được kiểm thử thực tế và tích hợp trọn vẹn toàn bộ các bản vá lỗi (chống tua, tự nhớ tiến độ, đổi tên học sinh, chuẩn đạt 80%, di động tràn màn hình).
