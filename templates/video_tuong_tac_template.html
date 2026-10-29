@@ -2227,6 +2227,114 @@
     }
 
     // --- 7. REGISTRATION & COMPLETION ---
+    
+    // === CHANGE STUDENT NAME & CLASS LOGIC (MOBILE & PC) ===
+    function openChangeStudentModal() {
+      const modal = document.getElementById('changeStudentModal');
+      if (!modal) {
+        console.error('changeStudentModal not found!');
+        return;
+      }
+      document.getElementById('editStudentName').value = studentData.name || '';
+      document.getElementById('editStudentClass').value = studentData.class || '';
+      modal.style.display = 'flex';
+      setTimeout(() => {
+        const inp = document.getElementById('editStudentName');
+        if (inp) inp.focus();
+      }, 100);
+    }
+
+    function closeChangeStudentModal() {
+      const modal = document.getElementById('changeStudentModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function handleUpdateStudentInfo(e) {
+      if (e) e.preventDefault();
+      const newName = document.getElementById('editStudentName').value.trim();
+      const newClass = document.getElementById('editStudentClass').value.trim();
+      if (!newName || !newClass) {
+        alert('Vui lòng nhập đầy đủ Họ tên và Lớp!');
+        return;
+      }
+
+      const oldName = studentData.name;
+      const oldClass = studentData.class;
+
+      studentData.name = newName;
+      studentData.class = newClass;
+      localStorage.setItem('nls_toan6_name', newName);
+      localStorage.setItem('nls_toan6_class', newClass);
+
+      // Save locally
+      saveStudentProgressLocally();
+      updateStudentHeader();
+      closeChangeStudentModal();
+
+      AudioFX.playSuccess();
+      showToastBanner(`✅ Đã đổi thông tin thành công: ${newName} (${newClass})`);
+
+      // Sync updated name and class to Google Sheets (moves to correct class tab!)
+      syncProgressToGoogleSheets(`🟡 Cập nhật tên/lớp (trước: ${oldName} - ${oldClass})`);
+    }
+
+    function startAsNewStudent() {
+      const newName = document.getElementById('editStudentName').value.trim();
+      const newClass = document.getElementById('editStudentClass').value.trim();
+      if (!newName || !newClass) {
+        alert('Vui lòng nhập Họ tên và Lớp của học sinh mới trước!');
+        return;
+      }
+
+      if (!confirm(`Xác nhận bắt đầu lượt học mới cho bạn ${newName} (${newClass})?\nTiến độ bài học sẽ tính từ đầu.`)) {
+        return;
+      }
+
+      // Reset state for new student
+      studentData.name = newName;
+      studentData.class = newClass;
+      studentData.score = 0;
+      studentData.attempts = {};
+      studentData.questionStats = {};
+      maxWatchedTime = 0;
+      localStorage.setItem('nls_toan6_name', newName);
+      localStorage.setItem('nls_toan6_class', newClass);
+      localStorage.removeItem('nls_toan6_saved_progress');
+
+      updateStudentHeader();
+      updateScoreBadge();
+      renderCheckpoints();
+      closeChangeStudentModal();
+
+      PlayerEngine.seekTo(0);
+      PlayerEngine.play();
+      syncProgressToGoogleSheets('🟡 Bắt đầu học (Học sinh mới)');
+      AudioFX.playSuccess();
+    }
+
+    function openChangeFromResume() {
+      const resModal = document.getElementById('resumeModal');
+      if (resModal) resModal.style.display = 'none';
+      openChangeStudentModal();
+    }
+
+    function showToastBanner(msg) {
+      let toast = document.getElementById('quickToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'quickToast';
+        toast.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#10b981; color:#fff; padding:10px 20px; border-radius:9999px; font-weight:600; font-size:0.9rem; z-index:10000; box-shadow:0 10px 25px rgba(0,0,0,0.5); transition:opacity 0.3s;';
+        document.body.appendChild(toast);
+      }
+      toast.innerText = msg;
+      toast.style.opacity = '1';
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.style.display = 'none', 300);
+      }, 3500);
+    }
+
     function handleRegistration(e) {
       e.preventDefault();
       const name = document.getElementById('regName').value.trim();
