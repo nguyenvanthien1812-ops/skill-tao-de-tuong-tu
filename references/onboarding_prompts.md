@@ -643,6 +643,25 @@ Agent xuất ngay phản hồi **"Cầm tay chỉ việc chi tiết từ đầu 
 >   + Ngay khi em xuất sẵn thư mục `Web_Video_Tuong_Tac_...` ra ngoài **Desktop**, Thầy/Cô chỉ cần mở [app.netlify.com](https://app.netlify.com), kéo thả thư mục đó vào trang **Deploys** là nhận ngay đường link Web gửi vào Zalo lớp cho học sinh học trên điện thoại & máy tính!
 >
 > ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 🎯 **BẢNG MENU 10 DẠNG CÂU HỎI TƯƠNG TÁC CHUẨN GDPT 2018 (THẦY/CÔ TÙY CHỌN)**
+> *(Thầy/Cô không cần nhớ mã kỹ thuật — chỉ cần gọi tên tiếng Việt hoặc để AI tự phối hợp đa dạng)*
+>
+> 1. **Trắc nghiệm 1 lựa chọn (`A, B, C, D`):** Chạm 1 lần chấm ngay, khóa phương án sai chống chạm đúp.
+> 2. **Đúng / Sai đơn (1 nhận định):** Chọn `✅ ĐÚNG` hoặc `❌ SAI` (chọn sai khóa 3 giây suy ngẫm chống bấm bừa).
+> 3. **Đúng / Sai đa mệnh đề (`4 ý a, b, c, d` chuẩn Phần II Bộ GD&ĐT):** Mỗi dòng `a), b), c), d)` có nút `[Đúng] / [Sai]` riêng; làm sai chỉ báo tổng số ý đúng (*"Đúng 2/4 ý"*), không lộ ý sai.
+> 4. **Trắc nghiệm nhiều đáp án đúng (`Checkbox ☐`):** Tích chọn tất cả các khẳng định đúng (từ 2 đáp án đúng trở lên).
+> 5. **Điền đáp án ngắn / Điền số:** Học sinh gõ số nguyên, số âm, thập phân (`3,5 = 3.5`) hoặc từ khóa ngắn.
+> 6. **Điền khuyết nhiều chỗ trống `(1), (2), (3)`:** Điền nhiều vị trí khuyết trong định lý / quy tắc / phương trình Hóa học (hỗ trợ **chạm chọn từ ngân hàng từ gợi ý** hoặc **gõ trực tiếp**).
+> 7. **Chạm / Ghép thẻ vào 1 ô kết quả:** Chạm chọn 1 thẻ hoặc ghép nhiều thẻ từ ngân hàng bên dưới.
+> 8. **Nối cặp tương ứng 2 cột (`Cột A ↔ Cột B`):** Chạm 1 ô Cột A rồi chạm 1 ô Cột B để nối cặp gắn nhãn màu (`Cặp 1`, `Cặp 2`...).
+> 9. **Sắp xếp thứ tự quy trình / dãy số:** Dùng nút `▲ / ▼` hoặc chạm 2 thẻ để sắp xếp các bước giải / dãy số / sự kiện.
+> 10. **Phân loại thẻ vào `2–4` nhóm kiến thức:** Chạm thẻ dữ kiện rồi chạm vào Rổ/Nhóm tương ứng (*ví dụ: Số nguyên tố vs Hợp số*).
+>
+> 💡 **Cách chọn dạng câu hỏi cực dễ:**
+> - **Cách A (Nhanh nhất):** Ghi `"Tự phối hợp đa dạng từ 10 dạng"` $	o$ AI tự chọn các dạng hợp nhất với từng mục bài giảng.
+> - **Cách B (Chọn theo ý thích):** Ghi tên các dạng muốn có vào dòng `- Các dạng câu hỏi muốn dùng:` trong câu lệnh (*ví dụ: "Cho tôi 2 câu Trắc nghiệm, 1 câu Đúng/Sai 4 ý a-b-c-d, 1 câu Nối cặp A-B, 1 câu Điền khuyết và 1 câu Phân loại nhóm"*).
+>
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 > ✍️ **PHẦN 2: CÁC MẪU CÂU LỆNH CHI TIẾT (THẦY/CÔ CHỌN 1 MẪU, COPY & ĐIỀN THÔNG TIN TRONG NGOẶC `[...]` RỒI GỬI EM)**
 >
 > 🟢 **MẪU 1 — ĐÃ CÓ VIDEO YOUTUBE, MUỐN AI TỰ SOẠN CÂU HỎI TƯƠNG TÁC TỪ ĐẦU (Nhanh nhất):**
@@ -671,6 +690,7 @@ Agent xuất ngay phản hồi **"Cầm tay chỉ việc chi tiết từ đầu 
 > - Thời lượng video: [Ví dụ: 15 phút 30 giây]
 > - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi "Hướng dẫn tôi tạo Sổ điểm Google Sheets"]
 > - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng của Thầy/Cô, ví dụ: KHTN7@2026]
+> - Các dạng câu hỏi muốn dùng: [Ghi "Tự phối hợp đa dạng trong 10 dạng" HOẶC ghi tên các dạng muốn có]
 > - Yêu cầu bắt buộc:
 >   1. Đọc kỹ file Giáo án / SGK đính kèm để thiết kế [5 - 7] câu hỏi tương tác bám sát 100% khái niệm, ký hiệu, ví dụ và Yêu cầu cần đạt của bài học này.
 >   2. Chống tua nhanh 100%, trả lời ĐÚNG mới mở giải thích, tự phân lớp trên Google Sheets và đóng gói thư mục chuẩn ra ngoài Desktop để đưa lên Netlify.
@@ -687,13 +707,14 @@ Agent xuất ngay phản hồi **"Cầm tay chỉ việc chi tiết từ đầu 
 > - Hình thức sử dụng Video Tương Tác: [Online cho học sinh học tại nhà qua YouTube + Netlify / hoặc Offline dạy trực tiếp trên TV lớp học]
 > - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi "Hướng dẫn tôi tạo Sổ điểm Google Sheets"]
 > - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng của Thầy/Cô, ví dụ: Thien2026]
+> - Các dạng câu hỏi muốn dùng: [Ghi "Tự phối hợp đa dạng trong 10 dạng" HOẶC ghi tên các dạng muốn có]
 > - Yêu cầu quy trình:
 >   1. Bóc tách nội dung & hình ảnh gốc từ file Giáo án / SGK, lập bảng kịch bản Slide (Storyboard) + danh sách câu hỏi tương tác gửi tôi duyệt trước.
 >   2. Khi tôi duyệt OK: Tự động thiết kế bộ Slide PowerPoint 16:9 chuẩn sư phạm, viết lời giảng chi tiết vào Notes, lồng tiếng AI và kết xuất ra file Video bài giảng Full HD 1080p (.mp4).
 >   3. Căn đúng mốc giây kết thúc từng phần kiến thức trong video vừa xuất để đóng gói thành Trang Web Video Tương Tác chống tua nhanh hoàn chỉnh ngoài Desktop.
 > ```
 >
-> 🟠 **MẪU 4 — ĐÃ CÓ VIDEO YOUTUBE + THẦY/CÔ ĐÃ TỰ SOẠN SẴN DANH SÁCH CÂU HỎI & MỐC PHÚT DỪNG:**
+> 🟠 **MẪU 4 — ĐÃ CÓ VIDEO YOUTUBE + THẦY/CÔ ĐÃ TỰ SOẠN SẴN CÂU HỎI (DÙNG DẠNG NÀO GIỮ DÒNG ĐÓ, XÓA DÒNG KHÔNG DÙNG):**
 > ```text
 > Em hãy tạo trang Web Video Tương Tác E-Learning theo đúng danh sách câu hỏi và mốc thời gian tôi đã chuẩn bị sẵn:
 > - Môn & Lớp: [...] - Tên bài học: [...]
@@ -702,11 +723,17 @@ Agent xuất ngay phản hồi **"Cầm tay chỉ việc chi tiết từ đầu 
 > - Thời lượng video: [Ví dụ: 14 phút 20 giây]
 > - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi "Hướng dẫn tôi tạo Sổ điểm Google Sheets"]
 > - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: 246810]
-> - Danh sách các trạm câu hỏi:
->   + Trạm 1 (dừng tại phút 03:10 - Trắc nghiệm): [Nội dung câu hỏi | A... B... C... D... | Đáp án đúng | Lời giải thích khi làm đúng]
->   + Trạm 2 (dừng tại phút 05:20 - Đúng/Sai): [Nội dung khẳng định | Đáp án: Đúng hoặc Sai | Lời giải thích khi làm đúng]
->   + Trạm 3 (dừng tại phút 08:00 - Điền đáp án): [Nội dung câu hỏi | Đáp án số/chữ | Lời giải thích khi làm đúng]
->   + Trạm 4 (dừng tại phút 10:45 - Ghép thẻ): [Nội dung câu hỏi | Các thẻ lựa chọn | Thẻ đúng | Lời giải thích khi làm đúng]
+> - Danh sách các trạm câu hỏi (giữ lại các dạng muốn dùng):
+>   + Trạm 1 (phút 02:30 - Trắc nghiệm 1 đáp án): [Câu hỏi | A... B... C... D... | Đáp án đúng | Giải thích]
+>   + Trạm 2 (phút 04:00 - Đúng/Sai đơn): [Nhận định | Đáp án: Đúng hoặc Sai | Giải thích]
+>   + Trạm 3 (phút 05:30 - Đúng/Sai 4 ý a,b,c,d): [Đề dẫn | a) ... (Đúng/Sai); b) ... (Đúng/Sai); c) ... (Đúng/Sai); d) ... (Đúng/Sai) | Giải thích]
+>   + Trạm 4 (phút 07:00 - Chọn nhiều đáp án đúng): [Câu hỏi | Các phương án | Các đáp án đúng | Giải thích]
+>   + Trạm 5 (phút 08:20 - Điền đáp án ngắn/số): [Câu hỏi | Đáp án đúng | Giải thích]
+>   + Trạm 6 (phút 09:40 - Điền khuyết nhiều chỗ trống): [Đoạn văn có (1), (2), (3) | Đáp án (1), (2), (3) | Các từ gợi ý (nếu có) | Giải thích]
+>   + Trạm 7 (phút 11:00 - Ghép thẻ): [Câu hỏi | Các thẻ lựa chọn | Thẻ đúng | Giải thích]
+>   + Trạm 8 (phút 12:10 - Nối cặp 2 cột A-B): [Câu hỏi | Cặp 1: A1 - B1; Cặp 2: A2 - B2; Cặp 3: A3 - B3 | Giải thích]
+>   + Trạm 9 (phút 13:15 - Sắp xếp thứ tự): [Câu hỏi | Thứ tự đúng: Bước 1 -> Bước 2 -> Bước 3 | Giải thích]
+>   + Trạm 10 (phút 14:00 - Phân loại nhóm): [Câu hỏi | Nhóm 1: (các thẻ...); Nhóm 2: (các thẻ...) | Giải thích]
 > ```"
 
 > [!IMPORTANT]
