@@ -758,3 +758,39 @@ html = build_interactive_video_html(
    - **Kéo thả / Chạm thẻ số:** Kiểm tra danh sách thẻ `tiles` và vị trí rơi hợp lệ.
 3. **Cảnh báo nhịp độ sư phạm (Pacing Check):** Cảnh báo nếu 2 câu hỏi quá sát nhau ($< 45	ext{s}$) gây ức chế ngắt quãng, hoặc quá thưa ($> 300	ext{s}$) khiến học sinh xem thụ động.
 4. **Kế thừa Master Template:** Mọi bài giảng mới đều được sinh từ [`templates/video_tuong_tac_template.html`](../templates/video_tuong_tac_template.html) đã được kiểm thử thực tế và tích hợp trọn vẹn toàn bộ các bản vá lỗi (chống tua, tự nhớ tiến độ, đổi tên học sinh, chuẩn đạt 80%, di động tràn màn hình).
+
+---
+
+## 🐛 M. Lỗi Đã Biết & Đã Vá (Bug Tracker)
+
+> Ghi lại để tránh tái phát khi tạo video mới. **Master Template đã được vá toàn bộ**.
+
+| # | Dạng câu hỏi | Triệu chứng | Nguyên nhân gốc | Trạng thái |
+|---|---|---|---|---|
+| 1 | **Điền số (Fill)** | Chữ học sinh gõ biến mất ngay khi nhập | `startMonitoring()` chạy 250ms gọi `pauseAndOpenQuiz()` → re-render `cArea.innerHTML` xóa text đang gõ | ✅ Đã vá: thêm guard `if (activeCheckpoint \|\| overlay.active) return;` ở đầu monitoring loop |
+| 2 | **Đúng/Sai (TF)** | Sau khi chọn đáp án đúng: phát âm thanh nhưng video kẹt cứng, không hiện nút Tiếp tục | ID button bị lệch: HTML tạo `id="tf-true"/"tf-false"` nhưng JS tìm `id="tf-btn-true"/"tf-btn-false"` → `null` → JS crash → `startAutoResumeCountdown()` không được gọi | ✅ Đã vá: đổi HTML id thành `tf-btn-true` / `tf-btn-false` cho khớp JS handler |
+| 3 | **Nút đổi tên/lớp** | Bấm nút không có phản ứng gì | Hàm `openChangeStudentModal()` tồn tại trong HTML button nhưng thiếu trong JS | ✅ Đã vá: bổ sung đầy đủ JS function |
+| 4 | **Google Sheets** | Nhiều hàng trùng tên học sinh | Race condition: nhiều POST song song cùng tạo hàng mới trước khi tìm thấy hàng cũ | ✅ Đã vá: thêm `LockService.getScriptLock().waitLock(10000)` trong Apps Script |
+
+### ⚠️ Quy tắc bắt buộc khi tạo HTML câu hỏi Đúng/Sai:
+
+```html
+<!-- ĐÚNG ✅ — ID phải khớp với handleInstantTF() -->
+<button class="tf-btn" id="tf-btn-true"  onclick="handleInstantTF(true)">✅ ĐÚNG</button>
+<button class="tf-btn" id="tf-btn-false" onclick="handleInstantTF(false)">❌ SAI</button>
+
+<!-- SAI ❌ — id="tf-true" sẽ gây crash JS -->
+<button class="tf-btn" id="tf-true"  onclick="handleInstantTF(true)">✅ ĐÚNG</button>
+<button class="tf-btn" id="tf-false" onclick="handleInstantTF(false)">❌ SAI</button>
+```
+
+### ✅ Checklist kiểm tra sau khi tạo video mới:
+
+- [ ] Câu MCQ: Bấm đúng → màu xanh + âm thanh + đếm ngược 4s + video tiếp tục
+- [ ] Câu MCQ: Bấm sai lần 1 → rung + banner đỏ + hiện giải thích + nút "Xem lại 30s"
+- [ ] Câu MCQ: Bấm sai lần 2 → hiện đáp án đúng màu xanh + 0 điểm + đếm ngược tiếp tục
+- [ ] Câu Đúng/Sai: Bấm đúng → màu xanh + âm thanh + **hiện nút Tiếp tục** + đếm ngược 4s
+- [ ] Câu Đúng/Sai: Bấm sai → rung + banner đỏ + xem lại
+- [ ] Câu Điền số: Gõ số → chữ **KHÔNG biến mất** khi đang gõ
+- [ ] Câu Điền số: Bấm Kiểm tra (hoặc Enter) → phản hồi ngay
+- [ ] Đổi tên/lớp: Bấm nút "Đổi" → hiện modal → nhập tên mới → lưu được
