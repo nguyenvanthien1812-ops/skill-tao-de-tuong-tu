@@ -98,12 +98,42 @@ def inject_notes_to_pptx(pptx_path, notes_dict, output_path=None):
     prs = Presentation(pptx_path)
     written_count = 0
 
+    if isinstance(notes_dict, list):
+        normalized = {}
+        for i, item in enumerate(notes_dict, start=1):
+            if isinstance(item, dict):
+                s_idx = item.get("slide_index", item.get("slide", item.get("id", i)))
+                s_txt = item.get("notes", item.get("text", item.get("script", item.get("existing_notes", ""))))
+                normalized[str(s_idx)] = s_txt
+            elif isinstance(item, str):
+                normalized[str(i)] = item
+        notes_dict = normalized
+
+    from copy import deepcopy
+    from pptx.util import Inches
+
+    template_notes_sp = None
+    for s in prs.slides:
+        try:
+            ns = s.notes_slide
+            if ns.notes_placeholder is not None:
+                template_notes_sp = deepcopy(ns.notes_placeholder._element)
+                break
+        except Exception:
+            pass
+
     for idx, slide in enumerate(prs.slides, start=1):
         str_key = str(idx)
         script_text = notes_dict.get(idx) if idx in notes_dict else notes_dict.get(str_key)
         if script_text and str(script_text).strip():
             notes_slide = slide.notes_slide
             text_frame = notes_slide.notes_text_frame
+            if text_frame is None and template_notes_sp is not None:
+                notes_slide.shapes._spTree.append(deepcopy(template_notes_sp))
+                text_frame = notes_slide.notes_text_frame
+            if text_frame is None:
+                tb = notes_slide.shapes.add_textbox(Inches(1), Inches(4), Inches(6), Inches(4))
+                text_frame = tb.text_frame
             text_frame.text = str(script_text).strip()
             written_count += 1
 

@@ -189,8 +189,14 @@ def process_long_tieng(pptx_path, voice_choice="1", output_pptx=None):
     has_any_notes = False
     for idx, slide in enumerate(prs.slides, start=1):
         note_text = ""
-        if slide.has_notes_slide and slide.notes_slide.notes_text_frame:
-            note_text = clean_text_for_tts(slide.notes_slide.notes_text_frame.text)
+        if slide.has_notes_slide:
+            if slide.notes_slide.notes_text_frame:
+                note_text = clean_text_for_tts(slide.notes_slide.notes_text_frame.text)
+            else:
+                for sh in slide.notes_slide.shapes:
+                    if sh.has_text_frame and sh.text.strip() and not sh.text.strip().isdigit():
+                        note_text = clean_text_for_tts(sh.text)
+                        break
 
         if note_text:
             has_any_notes = True
@@ -256,6 +262,11 @@ def process_long_tieng(pptx_path, voice_choice="1", output_pptx=None):
                 f"""
     try {{
         $slide = $presentation.Slides.Item({idx})
+        try {{
+            while ($slide.TimeLine.MainSequence.Count -gt 0) {{
+                $slide.TimeLine.MainSequence.Item(1).Delete()
+            }}
+        }} catch {{}}
         $shape = $slide.Shapes.AddMediaObject2({ps_quote(mp3)}, $false, $true, 20, 20, 40, 40)
         $shape.AnimationSettings.PlaySettings.PlayOnEntry = [Microsoft.Office.Core.MsoTriState]::msoTrue
         $shape.AnimationSettings.PlaySettings.HideWhileNotPlaying = [Microsoft.Office.Core.MsoTriState]::msoTrue

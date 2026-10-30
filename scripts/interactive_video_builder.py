@@ -557,14 +557,25 @@ def print_netlify_next_steps(folder_path: str, is_update: bool = False):
     print("=" * 72 + "\n")
 
 
-def package_netlify_folder(html_content: str, folder_path: str):
+def package_netlify_folder(
+    html_content: str,
+    folder_path: str,
+    source_video_file: str = None,
+    target_video_filename: str = "video_bai_giang.mp4"
+):
     """
-    Đóng gói thư mục chuẩn index.html để giáo viên kéo thả vào Netlify Drop.
+    Đóng gói thư mục chuẩn index.html (kèm file video MP4 nếu có) để giáo viên kéo thả vào Netlify Drop hoặc mở Offline.
     """
+    import shutil
     os.makedirs(folder_path, exist_ok=True)
     index_file = os.path.join(folder_path, "index.html")
     with open(index_file, "w", encoding="utf-8") as f:
         f.write(html_content)
+    if source_video_file and os.path.exists(source_video_file):
+        dst_video = os.path.join(folder_path, target_video_filename)
+        if os.path.abspath(source_video_file) != os.path.abspath(dst_video):
+            shutil.copy2(source_video_file, dst_video)
+        print(f"🎬 Đã đính kèm video bài giảng: {dst_video}")
     print(f"📦 Đã đóng gói thư mục Netlify: {folder_path} (chứa index.html)")
     print_netlify_next_steps(folder_path, is_update=False)
     return folder_path

@@ -2009,7 +2009,7 @@
     }
 
     // Per-video progress key để khi học nhiều video bài khác nhau không bị lẫn tiến độ
-    const PROGRESS_STORAGE_KEY = 'nls_saved_progress_' + (YOUTUBE_VIDEO_ID || 'local_lesson');
+    const PROGRESS_STORAGE_KEY = 'nls_saved_progress_' + (YOUTUBE_VIDEO_ID || LESSON_TITLE.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 40) || 'local_lesson');
     const LEGACY_PROGRESS_KEY = 'nls_toan6_saved_progress';
 
     let studentData = {
@@ -2161,13 +2161,16 @@
 
     const PlayerEngine = {
       isLocal: (window.location.protocol === 'file:'),
+      hasYouTubeId() {
+        return Boolean(YOUTUBE_VIDEO_ID && YOUTUBE_VIDEO_ID !== 'LOCAL' && YOUTUBE_VIDEO_ID !== 'NONE');
+      },
       mode: 'local',
       localEl: null,
       ytPlayer: null,
 
       init() {
         this.localEl = document.getElementById('localVideo');
-        if (this.isLocal) {
+        if (this.isLocal || !this.hasYouTubeId()) {
           this.initLocalMode();
         } else {
           this.initYouTubeMode();
@@ -2178,7 +2181,9 @@
         this.mode = 'local';
         document.getElementById('localVideo').style.display = 'block';
         document.getElementById('ytContainer').style.display = 'none';
-        document.getElementById('sourceBadge').innerHTML = '📁 Nguồn: Video máy tính (1080p)';
+        document.getElementById('sourceBadge').innerHTML = this.isLocal
+          ? '📁 Nguồn: Video máy tính (1080p)'
+          : '🎬 Nguồn: Video Bài Giảng HD (1080p)';
 
         this.localEl.src = LOCAL_VIDEO_PATH;
         this.localEl.onloadedmetadata = () => {
@@ -2201,7 +2206,9 @@
           showCompletionScreen();
         };
         this.localEl.onerror = () => {
-          this.initYouTubeMode();
+          if (this.hasYouTubeId()) {
+            this.initYouTubeMode();
+          }
         };
       },
 
