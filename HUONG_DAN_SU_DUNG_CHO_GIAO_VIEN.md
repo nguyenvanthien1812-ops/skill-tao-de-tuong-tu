@@ -191,9 +191,10 @@ Biến các hình vẽ tĩnh, sơ đồ thí nghiệm trong SGK thành phòng th
 > 💡 **Mẹo nhanh cho người mới:** Thầy/Cô chỉ cần gõ ngắn gọn **`"tôi muốn tạo video tương tác"`** (hoặc **`"tôi muốn thay đổi mật khẩu chế độ thầy cô"`**), AI sẽ lập tức hiện bảng hướng dẫn cầm tay chỉ việc từng bước từ đầu!
 
 #### 1️⃣ Quy trình 4 bước từ đầu cho Giáo viên mới làm lần đầu:
-1. **Bước 1 — Chuẩn bị nguồn bài giảng:**
+1. **Bước 1 — Chuẩn bị nguồn bài giảng (Hỗ trợ cả 3 trường hợp thực tế):**
    - *Nếu đã có video trên YouTube:* Copy đường link YouTube bài giảng (có thể đính kèm thêm file **Giáo án Word `.docx`** hoặc **file/ảnh Sách giáo khoa SGK** để câu hỏi khớp 100% tiết dạy trên lớp).
-   - *Nếu CHƯA CÓ VIDEO (chỉ mới có Giáo án Word hoặc SGK):* Kéo thả file Giáo án Word (`.docx`) hoặc file PDF / ảnh chụp trang SGK vào khung chat — AI sẽ tự tạo Slide 16:9 $\to$ viết lời giảng $\to$ lồng tiếng AI (**Cô Hoài My** / **Thầy Nam Minh**) $\to$ kết xuất **Video MP4 Full HD 1080p** $\to$ nhúng câu hỏi tương tác đúng từng giây!
+   - *Nếu CHƯA CÓ VIDEO & CHƯA CÓ SLIDE (mới có Giáo án Word hoặc SGK):* Kéo thả file Giáo án Word (`.docx`) hoặc file PDF / ảnh chụp trang SGK vào khung chat — AI sẽ tự tạo Slide 16:9 $\to$ viết lời giảng $\to$ lồng tiếng AI (**Cô Hoài My** / **Thầy Nam Minh**) $\to$ kết xuất **Video MP4 Full HD 1080p** $\to$ nhúng câu hỏi tương tác đúng từng giây!
+   - *Nếu ĐÃ CÓ SẴN FILE SLIDE POWERPOINT (`.pptx`):* Kéo thả file `.pptx` có sẵn vào khung chat — AI sẽ tự động viết lời bình vào Notes $\to$ lồng tiếng AI (đo mốc giây `_SlideTimeline.json`) $\to$ xuất **Video MP4 Full HD 1080p** $\to$ đóng gói **Trang Web Video Tương Tác**!
 2. **Bước 2 — Kết nối Sổ điểm Google Sheets tự chia lớp:** Nếu chưa biết tạo link Web App (`/exec`), Thầy/Cô chỉ cần ghi trong câu lệnh: **`"Hướng dẫn tôi tạo Sổ điểm Google Sheets"`** (AI sẽ cấp sẵn đoạn mã copy-paste 30 giây là xong).
 3. **Bước 3 — Gửi 1 trong các Mẫu Câu Lệnh rõ ràng bên dưới** để AI xuất sẵn thư mục `Web_Video_Tuong_Tac_...` ra ngoài **Desktop**.
 4. **Bước 4 — Đưa lên Web miễn phí 3 giây:** Mở [app.netlify.com](https://app.netlify.com) $\to$ kéo thả thư mục ngoài Desktop vào khung Deploys là có ngay đường link HTTPS gửi Zalo cho học sinh!
@@ -259,6 +260,24 @@ Em hãy tạo trang Web Video Tương Tác E-Learning theo đúng danh sách câ
   + Trạm 8 (phút 12:10 - Nối cặp 2 cột A-B): [Câu hỏi | Cặp 1: A1 - B1; Cặp 2: A2 - B2; Cặp 3: A3 - B3 | Giải thích]
   + Trạm 9 (phút 13:15 - Sắp xếp thứ tự): [Câu hỏi | Thứ tự đúng: Bước 1 -> Bước 2 -> Bước 3 | Giải thích]
   + Trạm 10 (phút 14:00 - Phân loại nhóm): [Câu hỏi | Nhóm 1: (các thẻ...); Nhóm 2: (các thẻ...) | Giải thích]
+```
+
+* **🟡 Mẫu D — ĐÃ CÓ SẴN FILE SLIDE POWERPOINT (`.pptx`): Viết lời bình $\to$ Lồng tiếng AI $\to$ Xuất Video MP4 $\to$ Tạo Web Video Tương Tác:**
+```text
+Tôi đã có sẵn file bài giảng Slide PowerPoint (.pptx) tại: "[Kéo thả file .pptx vào chat HOẶC giữ Shift + Chuột phải vào file .pptx chọn Copy as path rồi dán vào đây]".
+Em hãy thực hiện nối tiếp trọn gói từ file Slide này giúp tôi (Viết lời bình -> Lồng tiếng AI -> Xuất Video MP4 -> Tạo Web Video Tương Tác):
+- Môn & Lớp: [Ví dụ: Toán 6 - Kết nối tri thức]
+- Tên bài học: [Ví dụ: Bài 6 - Lũy thừa với số mũ tự nhiên]
+- Giáo viên & Trường: [Tên Thầy/Cô - Tên trường]
+- Giọng đọc AI lồng tiếng cho Slide: [Cô Hoài My (Nữ miền Bắc truyền cảm) / hoặc Thầy Nam Minh (Nam miền Bắc trầm ấm)]
+- Hình thức sử dụng Video Tương Tác: [Online cho học sinh học tại nhà qua YouTube + Netlify / hoặc Offline dạy trực tiếp trên TV lớp học]
+- Link Web App Google Sheets: [Dán link .../exec HOẶC ghi "Hướng dẫn tôi tạo Sổ điểm Google Sheets"]
+- Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng của Thầy/Cô, ví dụ: Thien2026 - để trống mặc định là 123456]
+- Các dạng câu hỏi muốn dùng: [Ghi "Tự phối hợp đa dạng trong 10 dạng" HOẶC ghi tên các dạng muốn có]
+- Yêu cầu quy trình:
+  1. Đọc toàn bộ nội dung các slide trong file .pptx của tôi, tự động viết lời bình giảng dạy tự nhiên truyền cảm vào phần Notes của từng slide (nếu slide nào chưa có lời bình) và đề xuất bộ [5 - 7] câu hỏi tương tác bám sát nội dung slide.
+  2. Lồng tiếng AI chuẩn phát thanh viên vào từng slide, tự động đo mốc giây chuyển slide (_SlideTimeline.json) và kết xuất ra file Video bài giảng Full HD 1080p (.mp4).
+  3. Căn đúng mốc giây kết thúc các slide kiến thức trong video vừa xuất để đóng gói thành Trang Web Video Tương Tác (chống tua nhanh 100%, ẩn điểm dừng ở chế độ Học sinh, trả lời ĐÚNG mới mở giải thích, tự phân lớp Google Sheets) ra ngoài Desktop.
 ```
 
 #### 3️⃣ Bộ tính năng sư phạm đỉnh cao tích hợp sẵn:
