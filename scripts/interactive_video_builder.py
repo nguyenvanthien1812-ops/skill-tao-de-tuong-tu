@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 =============================================================================
-MODULE: interactive_video_builder.py (v6.3.1 - Future-Proof QA Gate)
+MODULE: interactive_video_builder.py (v6.3.3 - Mastery Gate & Future-Proof QA Gate)
 HỆ THỐNG TỰ ĐỘNG TẠO VIDEO TƯƠNG TÁC E-LEARNING (CHUẨN GDPT 2018)
-- Bộ kiểm định chất lượng sư phạm tự động (Checkpoint QA Validator)
-- Khóa chống tua nhanh 100% (Anti-Skip System)
-- Khung câu hỏi tràn màn hình di động, chống mất chữ khi điền số
-- Phản hồi tức thì 1-chạm & Thang điểm sư phạm chống đoán mò
-- Tiêu chuẩn hoàn thành bài học (Mastery Threshold >= 80%)
+- Bộ kiểm định chất lượng sư phạm tự động (Checkpoint QA Validator cho cả 4 dạng: mcq, tf, fill, drag)
+- Khóa chống tua nhanh 100% (Anti-Skip System) & Chặn YouTube phát ngầm khi mở câu hỏi
+- Khung câu hỏi tràn màn hình di động (100dvh), chống mất chữ khi điền số
+- Cơ chế Vượt trạm đến khi Đúng (Mastery Gate): Sai KHÔNG hiện giải thích (kèm nút Xem lại 30s & 3s suy ngẫm ở Đúng/Sai); ĐÚNG mới hiện Giải thích + cộng trọn +1 điểm + nút Tiếp tục (6s)
+- Tiêu chuẩn hoàn thành bài học công bằng (Mastery Threshold >= 80% số câu hoàn thành + thống kê số câu đúng ngay lần đầu)
 - Tự động bảo lưu tiến độ khi rớt mạng (Smart Auto-Resume)
 - Đổi tên & lớp học sinh 1-chạm
 - Chế độ Thầy Cô kiểm duyệt (Teacher Preview Mode - Mật mã 123456)

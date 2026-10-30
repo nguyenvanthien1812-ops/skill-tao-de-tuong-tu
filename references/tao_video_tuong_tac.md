@@ -4,6 +4,13 @@
 
 ## 📌 GIỚI THIỆU TÍNH NĂNG
 
+> [!IMPORTANT]
+> **CHỈ THỊ BẮT BUỘC CHO AI AGENT KHI TẠO MỌI VIDEO TƯƠNG TÁC MỚI (ZERO-REGRESSION RULE):**
+> 1. **BẮT BUỘC 100%** gọi hàm `build_interactive_video_html()` trong [`scripts/interactive_video_builder.py`](../scripts/interactive_video_builder.py) để kế thừa trọn vẹn Master Template [`templates/video_tuong_tac_template.html`](../templates/video_tuong_tac_template.html). **TUYỆT ĐỐI KHÔNG tự gõ lại code HTML/JS từ đầu** (để không bao giờ tái phát lỗi kẹt nút Đúng/Sai, lỗi mất chữ ô điền số, lỗi hộp thoại trôi xuống đáy trang hay lỗi YouTube chạy ngầm).
+> 2. **QUY TẮC SƯ PHẠM MASTERY GATE (VƯỢT TRẠM ĐẾN KHI ĐÚNG):**
+>    - **Khi học sinh trả lời SAI:** **TUYỆT ĐỐI KHÔNG hiện hộp `💡 Hướng dẫn & Giải thích`** (`hideExplanation()`), không lộ đáp án đúng, hiện nút **`⏪ Xem lại 30s bài giảng`** để học sinh tự suy nghĩ làm lại đến khi đúng (câu Đúng/Sai khóa nút còn lại 3 giây suy ngẫm chống bấm bừa 2 nút liên tiếp).
+>    - **CHỈ khi học sinh trả lời ĐÚNG:** Mới hiện hộp **`💡 Hướng dẫn & Giải thích`**, cộng trọn **`+1 điểm` (1 câu hoàn thành)** và mở nút **`Tiếp tục bài học ▶️ (6s)`** để mọi học sinh kiên trì học hết video đều đạt chuẩn Hoàn thành $\ge 80\%$ (kèm thống kê số câu đúng ngay lần đầu cho Thầy Cô).
+
 **Video Tương Tác E-Learning** là một file HTML độc lập (single-file, không cần server riêng) cho phép giáo viên:
 
 | Tính năng | Mô tả |
@@ -438,9 +445,9 @@ Agent dựa vào template bên dưới, thay thế các placeholder:
 > **Lưu ý:** `inputmode="numeric"` được tự động thêm vào ô nhập — bàn phím số tự bật trên điện thoại.
 > Học sinh nhấn **Enter** hoặc bấm nút **"Kiểm tra →"** để nộp.
 
-### Dạng 4 (Dành cho bài tiếp theo): Kéo thả / Chạm thẻ số
+### Dạng 4 (Đã tích hợp sẵn 100% trên Điện thoại & Máy tính): Chạm / Ghép thẻ đáp án (`drag`)
 
-**Thiết kế dự kiến** (chưa implement trong bài này — dành cho bài tiếp theo):
+Hỗ trợ cả chạm chọn 1 thẻ (`multiSelect: false`) hoặc ghép chuỗi nhiều thẻ (`multiSelect: true`):
 
 ```javascript
 {
@@ -486,16 +493,16 @@ let maxWatchedTime = 0;
 const SKIP_TOLERANCE = 3; // Cho phép seek tối đa 3 giây phía trước
 
 setInterval(() => {
-  const current = PlayerEngine.getCurrentTime();
-  if (current > maxWatchedTime + SKIP_TOLERANCE) {
-    // Học sinh cố tua — snap back
+  // BẮT BUỘC dừng quét khi bảng câu hỏi đang mở để không xóa chữ học sinh đang gõ!
+  if (isQuizCurrentlyOpen()) return;
+
+  const current = PlayerEngine.getTime();
+  if (current > maxWatchedTime + 1.5 && !isTeacherMode) {
     PlayerEngine.seekTo(maxWatchedTime);
     AudioFX.playWarning();
-    // Hiện cảnh báo...
+    return;
   }
-  if (!activeCheckpoint) {
-    maxWatchedTime = Math.max(maxWatchedTime, current);
-  }
+  maxWatchedTime = Math.max(maxWatchedTime, current);
 }, 250); // Poll mỗi 250ms
 ```
 
@@ -541,18 +548,19 @@ const AudioFX = {
 };
 ```
 
-### D. Phản hồi 1-Chạm (Instant Feedback — không cần Submit)
+### D. Phản hồi Tức Thì & Cơ Chế Vượt Trạm Đến Khi Đúng (Mastery Gate)
 
-**Luồng MCQ/TF:**
-1. HS bấm vào phương án → `handleInstantChoice(optionIndex)` gọi ngay
-2. So sánh với `checkpoint.correct`
-3. **Nếu đúng:** Đổi màu xanh lá (#10b981) + âm chuông + confetti mini + đếm ngược 4s tự tiếp tục
-4. **Nếu sai:** Đổi màu đỏ (#ef4444) + shake animation + âm rè + hiện giải thích + nút "Xem lại 30 giây trước"
-
-**Luồng Fill:**
-1. HS nhập số → nhấn Enter hoặc bấm nút
-2. So sánh sau khi trim
-3. Phản hồi tương tự MCQ
+**Luồng chung cho cả 4 dạng (`mcq`, `tf`, `fill`, `drag`):**
+1. Học sinh chọn hoặc nhập đáp án → hệ thống chấm tức thì.
+2. **Nếu SAI:**
+   - Đổi màu đỏ (`#ef4444`) + hiệu ứng rung `shake` + âm báo sai.
+   - **TUYỆT ĐỐI KHÔNG hiện hộp `💡 Hướng dẫn & Giải thích`** (`hideExplanation()`) để không lộ đáp án.
+   - Hiện nổi bật nút **`⏪ Xem lại 30s bài giảng`** để học sinh ôn lại đoạn vừa giảng và tự làm lại đến khi đúng.
+   - Riêng dạng **Đúng/Sai (`tf`)**: Khóa phương án vừa chọn sai và đếm ngược **3 giây suy ngẫm** (`⏳ 3s → 2s → 1s`) trên phương án còn lại trước khi mở lại (chống bấm bừa 2 nút liên tiếp trong 0.5 giây).
+3. **CHỈ khi trả lời ĐÚNG:**
+   - Đổi màu xanh lá (`#10b981`) + âm chúc mừng + pháo giấy Confetti.
+   - **Mở hộp `💡 Hướng dẫn & Giải thích`** (`showExplanation(cp.explanation)`) để củng cố bản chất kiến thức.
+   - Cộng trọn **`+1 điểm` (1 câu hoàn thành)** và hiện nút **`Tiếp tục bài học ▶️ (6s)`** đếm ngược tự phát tiếp video.
 
 ### E. Google Sheets Sync
 
@@ -694,20 +702,18 @@ Giáo viên mở Google Sheets đã cung cấp → Tab `Dữ liệu học sinh`:
   2. **Đổi sang học sinh khác:** Khi anh/chị/em trong nhà dùng chung 1 chiếc điện thoại $\to$ Chọn *"Đây là học sinh khác"* để bắt đầu lượt học mới từ đầu (điểm số và trạm giải reset về 0 cho học sinh mới).
 
 
-### J. Tiêu Chuẩn Hoàn Thành Bài Học (Mastery Threshold ≥ 80%)
+### J. Tiêu Chuẩn Hoàn Thành Bài Học (Mastery Gate & Chuẩn Đạt ≥ 80%)
 
-- **Quy tắc tính điểm chống đoán mò / spam click:**
-  - **Đúng ngay lần đầu (Lần 1):** Được trọn vẹn **+1.0 điểm**.
-  - **Đúng ở lần 2 (tự sửa lỗi sau gợi ý):** Được **+0.5 điểm**.
-  - **Sai từ 2 lần trở lên:** Hệ thống hiển thị đáp án đúng + lời giải chi tiết, tính **0 điểm** cho câu đó, và tự động mở khóa cho học sinh tiếp tục xem video (tránh học sinh bị kẹt mãi ở 1 câu).
+- **Quy tắc Vượt trạm công bằng & sư phạm:**
+  - Học sinh **bắt buộc phải tự trả lời ĐÚNG mới vượt qua được từng trạm câu hỏi** (khi sai không hiện giải thích, có nút `⏪ Xem lại 30s bài giảng` để nghe lại và tự sửa cho đến khi đúng).
+  - Mỗi trạm câu hỏi sau khi học sinh tự trả lời **ĐÚNG** được ghi nhận **trọn vẹn `+1 điểm` (1 câu hoàn thành)** — không cắt giảm xuống `0.5đ` hay `0đ`.
+  - Đồng thời, hệ thống vẫn lưu lại chính xác số lần thử sai (`wrongCount`) và thống kê **số câu trả lời đúng ngay lần đầu tiên** trên màn hình tổng kết cũng như cột Chi tiết Google Sheets để Thầy Cô phân hóa năng lực học sinh.
 - **Phân loại kết quả cuối bài:**
-  - **Đạt từ 80% trở lên (tối thiểu 6/7 câu đúng):**
-    - Giao diện: Vòng tròn điểm xanh lá, bắn pháo hoa Confetti, công nhận hoàn thành bài.
-    - Sổ điểm Google Sheets: `🟢 ĐÃ HOÀN THÀNH (ĐẠT: X/7 - Y%)` $\to$ Tính vào mục hoàn thành của lớp.
-  - **Dưới 80% (< 5.6 điểm, tức dưới 6 câu):**
-    - Giao diện: Vòng tròn điểm màu cam/đỏ, cảnh báo *"⚠️ CHƯA ĐẠT TIÊU CHUẨN HOÀN THÀNH BÀI (Yêu cầu ≥ 80%)"*, không bắn pháo hoa.
-    - Nút hành động: Nổi bật nút *"🔄 Học lại bài giảng để đạt chuẩn ≥ 80%"*.
-    - Sổ điểm Google Sheets: `🔴 CHƯA ĐẠT (Cần học lại: X/7 - Y%)` $\to$ Thầy Cô nhìn vào là biết ngay học sinh cần ôn tập lại.
+  - **Học hết video và vượt qua ≥ 80% số trạm (ví dụ 7/7 trạm = 100% ≥ 80%):**
+    - Giao diện: Vòng tròn điểm xanh lá, bắn pháo hoa Confetti, công nhận hoàn thành bài học kèm thống kê số câu đúng ngay lần đầu.
+    - Sổ điểm Google Sheets: `🟢 ĐÃ HOÀN THÀNH (ĐẠT: 7/7 - 100%)` $\to$ Mọi học sinh kiên trì học hết video đều chắc chắn Hoàn thành bài học, không bị kẹt điểm dưới 80%.
+  - **Học dở giữa chừng / chưa vượt đủ 80% số trạm:**
+    - Sổ điểm Google Sheets giữ trạng thái `🟡 Đang học (Đã vượt Trạm X/N)` (hoặc `🔴 CHƯA ĐẠT` kèm nút **🎯 Ôn & làm lại câu chưa đạt** nếu nhảy tới cuối bài khi chưa làm đủ 80% số trạm).
 
 
 ### K. Công Cụ Sinh Tự Động Bằng Python: `scripts/interactive_video_builder.py`

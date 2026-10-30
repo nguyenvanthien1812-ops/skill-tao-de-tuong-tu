@@ -197,8 +197,8 @@ Yêu cầu học sinh không tua nhanh được, đạt từ 80% trở lên mớ
 
 **Bộ tính năng đỉnh cao tích hợp sẵn trong sản phẩm:**
 * 🔒 **Chống tua nhanh 100%:** Giám sát 250ms, giật lại vị trí hợp lệ khi học sinh cố tình tua vượt bài giảng.
-* 🎯 **Chuẩn đạt $\ge$ 80%:** Học sinh phải đạt từ 80% số điểm (ví dụ $\ge 6/7$ câu đúng) mới được công nhận Hoàn thành (`🟢 ĐÃ HOÀN THÀNH`), dưới 80% sẽ đánh dấu `🔴 CHƯA ĐẠT (Cần học lại)`.
-* 🛡️ **Chống đoán mò (Spam Click):** Làm đúng lần 1 (+1.0đ), tự sửa đúng sau lần 1 (+0.5đ), sai 2 lần hiện đáp án + lời giải và cho đi tiếp (0đ) để không bị kẹt video.
+* 🎯 **Vượt trạm đến khi Đúng & Chuẩn đạt $\ge$ 80%:** Học sinh bắt buộc tự trả lời **ĐÚNG** mới vượt qua được từng trạm câu hỏi và được ghi nhận trọn `+1 điểm` (1 câu hoàn thành). Mọi học sinh kiên trì học hết video và vượt qua từ 80% số trạm trở lên đều được công nhận Hoàn thành (`🟢 ĐÃ HOÀN THÀNH`), đồng thời Sổ điểm vẫn thống kê riêng số câu đúng ngay từ lần thử đầu tiên.
+* 🛡️ **Giấu giải thích khi sai — Chỉ mở giải thích khi ĐÚNG:** Khi trả lời sai, hệ thống **tuyệt đối không lộ đáp án hay lời giải thích**, chỉ nhắc suy nghĩ lại kèm nút `⏪ Xem lại 30s bài giảng` (câu Đúng/Sai có 3 giây suy ngẫm chống bấm bừa 2 nút liên tiếp). Chỉ khi trả lời **ĐÚNG** mới mở hộp `💡 Hướng dẫn & Giải thích` để khắc sâu kiến thức.
 * 📱 **Tối ưu di động tràn màn hình:** Bảng câu hỏi tự động phóng to toàn màn hình điện thoại, nút bấm $\ge 48\text{px}$ chuẩn ngón tay chạm, chống co giật màn hình trên iPhone.
 * 👤 **Đổi tên & lớp trực tiếp:** Nút `👤 Tên (Lớp) ✏️ Đổi` trên thanh tiêu đề cho phép sửa nhanh lỗi gõ sai tên/lớp hoặc cho bạn khác mượn máy học (reset lượt làm bài độc lập).
 * ⚙️ **Chế độ Thầy Cô (Mật khẩu: `123456`):** Mở khóa tua tự do và các nút nhảy nhanh tới từng trạm câu hỏi để giáo viên duyệt bài trước khi giao cho học sinh.
