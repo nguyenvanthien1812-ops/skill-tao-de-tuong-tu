@@ -579,7 +579,7 @@ Agent tự động thực thi tiến trình cập nhật từ GitHub:
    python scripts/sync_skill.py
    ```
 2. Xuất thông báo hoàn tất:
-   > "🎉 **ĐÃ CẬP NHẬT LÊN PHIÊN BẢN v6.3.5 THÀNH CÔNG!**  
+   > "🎉 **ĐÃ CẬP NHẬT LÊN PHIÊN BẢN v6.3.6 THÀNH CÔNG!**  
    > - Đã tải toàn bộ tính năng mới nhất từ GitHub về máy tính.  
    > - Đã cập nhật tính năng Tạo file nghe MP3 Tiếng Anh chuẩn phòng thi (khớp 100% câu hỏi), Soạn giáo án chuẩn Phụ lục III / PPCT và các công cụ bổ trợ.  
    > 
@@ -709,6 +709,9 @@ Agent xuất ngay phản hồi **"Cầm tay chỉ việc chi tiết từ đầu 
 >   + Trạm 4 (dừng tại phút 10:45 - Ghép thẻ): [Nội dung câu hỏi | Các thẻ lựa chọn | Thẻ đúng | Lời giải thích khi làm đúng]
 > ```"
 
+> [!IMPORTANT]
+> **CHỈ THỊ BƯỚC TIẾP THEO SAU KHI TẠO XONG VIDEO TƯƠNG TÁC:** Ngay sau khi Giáo viên gửi thông tin và Agent chạy `interactive_video_builder.py` đóng gói xong thư mục ra ngoài Desktop, ở cuối câu trả lời bàn giao sản phẩm, Agent **BẮT BUỘC PHẢI HIỂN THỊ ĐẦY ĐỦ 5 BƯỚC ĐƯA LÊN WEB NETLIFY** (vào `app.netlify.com` $\to$ `Projects / Sites` $\to$ `Add new project` $\to$ `Deploy manually` $\to$ kéo thả **CẢ THƯ MỤC** không kéo lẻ file `index.html` $\to$ vào `Project configuration -> Change project name` đổi tên link đẹp $\to$ bật Chế độ Thầy Cô duyệt thử rồi gửi link vào Zalo lớp)!
+
 ---
 
 #### 1️⃣8️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn thay đổi mật khẩu chế độ thầy cô" (hoặc "thay đổi mật khẩu chế độ thầy cô", "đổi mật khẩu chế độ thầy cô", "đổi mật khẩu thầy cô", "đặt mật khẩu chế độ thầy cô", "cách đổi mật mã thầy cô"...)
@@ -757,6 +760,9 @@ Agent xuất ngay phản hồi **hướng dẫn chi tiết từng bước cho c�
 > * **Bước 3:** Cầm nguyên thư mục bài giảng trên Desktop (ví dụ `Web_Video_Tuong_Tac_Toan6` chứa file `index.html` vừa đổi mật khẩu) **kéo thả thẳng vào ô nét đứt** *"Need to update your site? Drag and drop your site output folder here"*.
 > * **Bước 4:** Chờ đúng 3 giây hiện chữ **`Published`** màu xanh lá $\to$ Mở lại đường link bài giảng bấm **`Ctrl + F5`** để làm mới trình duyệt.
 > 👉 **Ưu điểm tuyệt vời:** Đường link bài giảng đã gửi trong nhóm Zalo cho học sinh **vẫn giữ nguyên 100% không thay đổi**, nhưng mật khẩu Chế độ Thầy Cô trên Web đã lập tức đổi sang mật khẩu mới!"
+
+> [!IMPORTANT]
+> **CHỈ THỊ BƯỚC TIẾP THEO SAU KHI ĐỔI MẬT KHẨU XONG:** Bất cứ khi nào Agent vừa chạy `update_teacher_password()` đổi mật khẩu xong cho Giáo viên, ở cuối thông báo xác nhận thành công, Agent **BẮT BUỘC PHẢI NHẮC LẠI NGAY 4 BƯỚC CẬP NHẬT LÊN NETLIFY GIỮ NGUYÊN LINK CŨ** (Mở `app.netlify.com` $\to$ bấm vào **tên bài giảng cũ** [không bấm *Add new project*] $\to$ vào tab **`Deploys`** $\to$ kéo thả **CẢ THƯ MỤC** vừa đổi mật khẩu vào khung cập nhật $\to$ bấm `Ctrl + F5` kiểm tra)!
 
 
 

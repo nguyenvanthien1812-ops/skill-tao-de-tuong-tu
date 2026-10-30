@@ -244,6 +244,19 @@ Em hãy làm trọn gói từ đầu giúp tôi ra cả Video bài giảng MP4 l
 4. **Tình huống 4 — Cập nhật mật khẩu mới lên Web Netlify mà KHÔNG BỊ ĐỔI LINK đã gửi học sinh *(3 giây)*:**
    - Mở [app.netlify.com](https://app.netlify.com) $\to$ bấm chọn **tên bài giảng** $\to$ vào tab **`Deploys`** $\to$ **kéo thả lại thư mục bài giảng** vừa đổi mật khẩu vào khung cập nhật. Chờ 3 giây hiện *Published* rồi bấm `Ctrl + F5`: **đường link cũ trên Zalo học sinh giữ nguyên 100%**, mật khẩu mới có hiệu lực ngay!
 
+#### 5️⃣ 🌐 Hướng dẫn bước tiếp theo đưa bài giảng lên Web Netlify miễn phí (Sau khi tạo mới hoặc cập nhật):
+> ⚠️ **Quy tắc vàng chống lỗi `404 Not Found`:** Thầy/Cô phải cầm chuột **kéo CẢ THƯ MỤC VÀNG ngoài Desktop** (ví dụ `Web_Video_Tuong_Tac_...`) thả vào Netlify — **tuyệt đối không** mở thư mục ra kéo lẻ file `index.html`!
+
+* **🆕 Khi đưa bài giảng MỚI lên Web lần đầu tiên (30 giây):**
+  1. Mở **[app.netlify.com](https://app.netlify.com)** $\to$ đăng nhập miễn phí 1 lần bằng tài khoản **Google (Gmail)**.
+  2. Ở cột trái bấm **`Projects`** *(hoặc `Sites`)* $\to$ góc phải bấm **`Add new project`** *(hoặc `Add new site`)* $\to$ chọn **`Deploy manually`**.
+  3. Cầm **cả thư mục bài giảng ngoài Desktop** kéo thả vào vòng tròn nét đứt $\to$ chờ 3 giây hiện **`Published`** màu xanh lá!
+  4. **Đổi tên đường link đẹp:** Vào **`Project configuration`** *(hoặc `Site configuration`)* $\to$ **`Change project name`** *(hoặc `Change site name`)* $\to$ đặt tên bài không dấu nối bằng gạch ngang (ví dụ: `toan6-bai6-thcs-unghoe`) $\to$ bấm **`Save`**.
+  5. Mở link vừa tạo $\to$ bấm **`⚙️ Thầy Cô: TẮT`** nhập mật khẩu duyệt thử các câu hỏi $\to$ tắt Chế độ Thầy Cô rồi gửi link vào nhóm Zalo lớp!
+* **🔄 Khi CẬP NHẬT lại bài đã có (sau khi Đổi mật khẩu / Sửa câu hỏi — Giữ nguyên 100% link cũ):**
+  1. Mở **[app.netlify.com](https://app.netlify.com)** $\to$ nhấp trực tiếp vào **tên bài giảng cũ** trong danh sách *(không bấm Add new project)*.
+  2. Bấm vào tab **`Deploys`** $\to$ kéo thả **cả thư mục vừa cập nhật ngoài Desktop** vào khung nét đứt giữa trang $\to$ chờ 3 giây hiện **`Published`** $\to$ bấm **`Ctrl + F5`** làm mới trang web!
+
 ---
 
 ## V. MÔ TẢ CHI TIẾT CÁC FILE KẾT QUẢ

@@ -13,6 +13,10 @@
 > 3. **QUY TẮC BẢO MẬT & ĐỔI MẬT KHẨU CHẾ ĐỘ THẦY CÔ (`TEACHER_PASSWORD`):**
 >    - Cho phép giáo viên đặt mật khẩu riêng qua tham số `teacher_password="..."` trong `build_interactive_video_html()` (mặc định là `'123456'` nếu giáo viên không chỉ định), hoặc đổi mật khẩu trong 1 giây cho bài giảng/thư mục Netlify đã tạo sẵn bằng `update_teacher_password(target_path, new_password)` (CLI: `python scripts/interactive_video_builder.py --set-password "<MAT_KHAU_MOI>" "<DUONG_DAN_FILE_HOAC_THU_MUC>"`).
 >    - **BẢO MẬT TUYỆT ĐỐI:** Trên giao diện HTML (`#teacherPwd`), **TUYỆT ĐỐI KHÔNG bao giờ ghi `placeholder="Mặc định: 123456"`** hay gợi ý mật khẩu trên màn hình để học sinh bấm vào không thể nhìn thấy mật mã mở khóa tua nhanh!
+> 4. **CHỈ THỊ BÀN GIAO BƯỚC TIẾP THEO LÊN NETLIFY (BẮT BUỘC 100% SAU MỌI LỆNH):**
+>    - Ngay sau khi thực hiện xong **BẤT KỲ** câu lệnh nào của giáo viên (Tạo mới Video Tương Tác từ YouTube, Tạo Video từ Giáo án Word/SGK, Sửa/thêm câu hỏi, hoặc Thay đổi mật khẩu Chế độ Thầy Cô), ở cuối câu trả lời, Agent **BẮT BUỘC PHẢI HIỂN THỊ KHUNG "🌐 BƯỚC TIẾP THEO ĐỂ ĐƯA LÊN WEB NETLIFY"** (xem mẫu chuẩn tại **Bước 3** bên dưới và Mục `6.1b` trong [`references/ux_chu_dong.md`](./ux_chu_dong.md)):
+>      + Nếu là **bài tạo mới lần đầu**: Hướng dẫn rõ 5 bước vào `app.netlify.com` $\to$ `Projects` (`Sites`) $\to$ `Add new project` $\to$ `Deploy manually` $\to$ kéo **CẢ THƯ MỤC** (cấm kéo lẻ file `index.html` tránh lỗi 404) $\to$ đổi tên link đẹp tại `Project configuration -> Change project name` $\to$ mở khóa Chế độ Thầy Cô duyệt thử trước khi gửi Zalo.
+>      + Nếu là **đổi mật khẩu / sửa bài đã có**: Hướng dẫn rõ 4 bước bấm vào **tên bài giảng cũ** trên `app.netlify.com` $\to$ vào tab **`Deploys`** $\to$ kéo thả đè **CẢ THƯ MỤC** vào khung cập nhật $\to$ bấm `Ctrl + F5` để **giữ nguyên 100% đường link cũ** đã gửi học sinh!
 
 **Video Tương Tác E-Learning** là một file HTML độc lập (single-file, không cần server riêng) cho phép giáo viên:
 
@@ -472,19 +476,32 @@ Agent dựa vào template bên dưới, thay thế các placeholder:
 
 ---
 
-### Bước 3: Deploy lên Netlify
+### Bước 3: Bàn giao & Hướng dẫn Giáo viên đưa lên Web Netlify (BẮT BUỘC HIỂN THỊ SAU KHI XONG LỆNH)
 
-**⚠️ LỖI HAY GẶP:** Netlify KHÔNG nhận file lẻ — phải drag **THƯ MỤC** chứa file `index.html`.
+> [!IMPORTANT]
+> Sau khi chạy xong `package_netlify_folder()` hoặc `update_teacher_password()`, Agent **BẮT BUỘC** gửi kèm hướng dẫn chi tiết từng cú click chuột dưới đây cho Giáo viên (phân rõ Đăng bài mới vs. Cập nhật bài cũ / Đổi mật khẩu):
 
-**Cách đúng:**
-1. Tạo thư mục mới (ví dụ: `Video_Toan6_Bai6`)
-2. Đặt file HTML vào thư mục, **đổi tên thành `index.html`**
-3. Truy cập [app.netlify.com](https://app.netlify.com) → `Sites` → `Add new site` → `Deploy manually`
-4. Kéo thả **CẢ THƯ MỤC** `Video_Toan6_Bai6` vào ô deploy
-5. Netlify tự tạo link dạng: `https://ten-ngau-nhien.netlify.app`
-6. Tùy chỉnh tên: `Site configuration` → `Change site name` (ví dụ: `toan-6-luy-thua`)
+#### ⚠️ Quy tắc sống còn chống lỗi `404 Page Not Found`:
+- Netlify **KHÔNG nhận kéo thả lẻ 1 file `.html`**.
+- Agent luôn dùng `package_netlify_folder()` tạo sẵn **1 thư mục ngoài Desktop** (ví dụ `C:\Users\...\Desktop\Web_Video_Tuong_Tac_Toan6`) bên trong chứa file đã đặt tên chuẩn là **`index.html`**.
+- Giáo viên phải giữ nguyên ở ngoài Desktop và **cầm kéo CẢ THƯ MỤC VÀNG** thả vào Netlify!
 
-> 💡 **Mẹo:** Lần cập nhật sau, kéo thả lại thư mục vào site cũ để **overwrite** (không mất link cũ).
+#### 🆕 Trường hợp 3A — Đưa bài giảng MỚI lên Netlify lần đầu tiên (Chỉ mất 30 giây):
+1. **Đăng nhập miễn phí:** Truy cập **[app.netlify.com](https://app.netlify.com)** $\to$ nếu lần đầu sử dụng, bấm **Sign up / Log in with Google** (đăng nhập bằng Gmail trong 10 giây, hoàn toàn miễn phí).
+2. **Mở khung kéo thả:** Ở cột menu bên trái, bấm **`Projects`** *(hoặc **`Sites`** ở giao diện cũ)* $\to$ nhìn sang góc phải bấm nút **`Add new project`** *(hoặc `Add new site`)* $\to$ chọn dòng **`Deploy manually`**.
+3. **Kéo thả cả thư mục:** Thu nhỏ cửa sổ trình duyệt, cầm **CẢ THƯ MỤC bài giảng ngoài Desktop** (ví dụ `Web_Video_Tuong_Tac_Toan6`) kéo thả vào vòng tròn / ô nét đứt giữa trang $\to$ chờ 3–5 giây hiện chữ **`Published`** màu xanh lá!
+4. **Đổi tên đường link cho đẹp & dễ nhớ:**
+   - Mặc định Netlify cấp tên ngẫu nhiên (ví dụ `https://magical-unicorn-12a3.netlify.app`).
+   - Bấm vào mục **`Project configuration`** *(hoặc `Site configuration`)* $\to$ bấm nút **`Change project name`** *(hoặc `Change site name`)* $\to$ gõ tên bài viết liền không dấu nối bằng gạch ngang (ví dụ: `toan6-bai6-thcs-unghoe`) $\to$ bấm **`Save`**.
+   - Nhận ngay link chính thức: `https://toan6-bai6-thcs-unghoe.netlify.app`.
+5. **Kiểm duyệt bằng Chế độ Thầy Cô trước khi gửi học sinh:** Mở đường link vừa tạo $\to$ bấm nút **`⚙️ Thầy Cô: TẮT`** ở góc phải $\to$ nhập mật khẩu Thầy/Cô để nhảy kiểm tra nhanh từng trạm câu hỏi $\to$ bấm **`🔒 TẮT CHẾ ĐỘ THẦY CÔ`** rồi copy đường link gửi vào nhóm Zalo lớp!
+
+#### 🔄 Trường hợp 3B — Cập nhật lại bài giảng ĐÃ CÓ trên Netlify (Sau khi ĐỔI MẬT KHẨU CHẾ ĐỘ THẦY CÔ hoặc SỬA/THÊM CÂU HỎI — Giữ nguyên 100% link cũ):
+- **⚠️ Tuyệt đối KHÔNG bấm `Add new project`** (vì sẽ tạo ra link mới khác với link đã gửi cho học sinh!).
+1. Mở **[app.netlify.com](https://app.netlify.com)** $\to$ tại danh sách **`Projects` (`Sites`)**, **nhấp chuột trực tiếp vào tên bài giảng cũ** cần cập nhật.
+2. Trên thanh menu ngang của bài giảng đó, bấm chọn tab **`Deploys`**.
+3. Cầm **CẢ THƯ MỤC bài giảng vừa đổi mật khẩu / sửa câu hỏi ngoài Desktop** kéo thả thẳng vào khung nét đứt *"Need to update your site? Drag and drop your site output folder here"*.
+4. Chờ đúng 3 giây hiện chữ **`Published`** $\to$ mở lại đường link bài giảng bấm **`Ctrl + F5`** làm mới bộ nhớ đệm. **Đường link cũ đã gửi trong Zalo học sinh vẫn giữ nguyên 100%**, toàn bộ bảng điểm Google Sheets giữ nguyên, còn mật khẩu mới / câu hỏi mới có hiệu lực ngay lập tức!
 
 ---
 

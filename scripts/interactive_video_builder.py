@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 =============================================================================
-MODULE: interactive_video_builder.py (v6.3.4 - Mastery Gate, Secure Teacher Password & QA Gate)
+MODULE: interactive_video_builder.py (v6.3.6 - Mastery Gate, Secure Password & Mandatory Netlify Handoff)
 HỆ THỐNG TỰ ĐỘNG TẠO VIDEO TƯƠNG TÁC E-LEARNING (CHUẨN GDPT 2018)
 - Bộ kiểm định chất lượng sư phạm tự động (Checkpoint QA Validator cho cả 4 dạng: mcq, tf, fill, drag)
 - Khóa chống tua nhanh 100% (Anti-Skip System) & Chặn YouTube phát ngầm khi mở câu hỏi
@@ -227,6 +227,32 @@ def build_interactive_video_html(
     return html
 
 
+def print_netlify_next_steps(folder_path: str, is_update: bool = False):
+    """
+    In hướng dẫn bước tiếp theo đưa lên Netlify (hiển thị tự động sau mọi lệnh tạo mới hoặc đổi mật khẩu).
+    """
+    abs_folder = os.path.abspath(folder_path)
+    print("\n" + "=" * 72)
+    if not is_update:
+        print("🌐 BƯỚC TIẾP THEO ĐỂ ĐƯA BÀI GIẢNG LÊN WEB NETLIFY (CHỈ MẤT 30 GIÂY):")
+        print(f"   📁 Thư mục cần kéo thả: {abs_folder}")
+        print("   ⚠️ LƯU Ý SỐNG CÒN: Kéo CẢ THƯ MỤC trên (TUYỆT ĐỐI KHÔNG kéo lẻ file index.html để tránh lỗi 404)!")
+        print("   1. Mở trình duyệt vào https://app.netlify.com (đăng nhập miễn phí bằng Google/Gmail).")
+        print("   2. Ở cột trái bấm 'Projects' (hoặc 'Sites') -> bấm 'Add new project' ('Add new site') -> chọn 'Deploy manually'.")
+        print(f"   3. Cầm CẢ THƯ MỤC '{os.path.basename(abs_folder)}' kéo thả vào ô nét đứt -> chờ 3 giây hiện 'Published'!")
+        print("   4. Đổi tên link đẹp: Vào 'Project configuration' ('Site configuration') -> 'Change project name' -> đặt tên không dấu (vd: toan6-bai6) -> Save.")
+        print("   5. Mở link -> bấm '⚙️ Thầy Cô: TẮT' nhập mật khẩu kiểm tra nhanh câu hỏi -> tắt Chế độ Thầy Cô rồi gửi link vào Zalo lớp!")
+    else:
+        print("🌐 BƯỚC TIẾP THEO ĐỂ CẬP NHẬT LÊN WEB NETLIFY (GIỮ NGUYÊN 100% LINK CŨ):")
+        print(f"   📁 Thư mục vừa cập nhật: {abs_folder}")
+        print("   ⚠️ LƯU Ý: KHÔNG bấm 'Add new project' để không bị đổi đường link đã gửi cho học sinh!")
+        print("   1. Mở https://app.netlify.com -> trong mục 'Projects' ('Sites'), bấm trực tiếp vào TÊN BÀI GIẢNG CŨ cần cập nhật.")
+        print("   2. Bấm vào tab 'Deploys' trên thanh menu ngang.")
+        print(f"   3. Cầm CẢ THƯ MỤC '{os.path.basename(abs_folder)}' kéo thả vào khung nét đứt cập nhật ở giữa trang.")
+        print("   4. Chờ 3 giây hiện 'Published' -> mở lại link bài giảng bấm Ctrl + F5 (link Zalo học sinh giữ nguyên 100%, mật khẩu/nội dung mới có hiệu lực ngay!).")
+    print("=" * 72 + "\n")
+
+
 def package_netlify_folder(html_content: str, folder_path: str):
     """
     Đóng gói thư mục chuẩn index.html để giáo viên kéo thả vào Netlify Drop.
@@ -236,6 +262,7 @@ def package_netlify_folder(html_content: str, folder_path: str):
     with open(index_file, "w", encoding="utf-8") as f:
         f.write(html_content)
     print(f"📦 Đã đóng gói thư mục Netlify: {folder_path} (chứa index.html)")
+    print_netlify_next_steps(folder_path, is_update=False)
     return folder_path
 
 
@@ -279,6 +306,7 @@ def update_teacher_password(target_path: str, new_password: str) -> str:
         f.write(html)
 
     print(f"🔑 Đã cập nhật mật khẩu Chế độ Thầy Cô thành công tại: {html_file}")
+    print_netlify_next_steps(os.path.dirname(html_file), is_update=True)
     return html_file
 
 
@@ -301,4 +329,4 @@ if __name__ == "__main__":
         new_pwd, target = args.set_password
         update_teacher_password(target, new_pwd)
     else:
-        print("Module interactive_video_builder (v6.3.4) with QA Gate & Teacher Password Manager ready.")
+        print("Module interactive_video_builder (v6.3.6) with QA Gate, Teacher Password Manager & Netlify Handoff ready.")

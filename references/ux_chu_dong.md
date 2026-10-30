@@ -28,6 +28,31 @@
 > 4. Tích chọn **Whole document** $\rightarrow$ Bấm **OK**. (Toàn bộ đề thi sẽ đồng bộ chuẩn 14pt, phân số to rõ cân đối tuyệt đối!)  
 > *(Hoặc Thầy/Cô có thể dùng ngay bản song hành `..._WORD_EQ.docx` đi kèm để công thức tự động co giãn theo cỡ chữ khi bôi đen).*
 
+### 6.1b Post-Task Menu Bắt Buộc Sau Mọi Câu Lệnh Video Tương Tác & Đổi Mật Khẩu Chế Độ Thầy Cô
+
+> [!IMPORTANT]
+> **CHỈ THỊ BÀN GIAO NETLIFY BẮT BUỘC 100%:**
+> Bất cứ khi nào Agent vừa thực thi xong một câu lệnh **Tạo mới Video Tương Tác** (từ YouTube / Giáo án Word / SGK), **Cập nhật thêm/sửa câu hỏi**, hoặc **Thay đổi mật khẩu Chế độ Thầy Cô**, ở cuối phản hồi bàn giao kết quả cho Giáo viên, Agent **BẮT BUỘC PHẢI HIỂN THỊ KHUNG "🌐 BƯỚC TIẾP THEO ĐỂ ĐƯA LÊN WEB NETLIFY"** tương ứng dưới đây (điền đúng đường dẫn thư mục thực tế vừa tạo/cập nhật trên máy Giáo viên):
+>
+> **1️⃣ Nếu vừa TẠO BÀI GIẢNG MỚI (lần đầu đưa bài này lên Web):**
+> > 🌐 **BƯỚC TIẾP THEO ĐỂ ĐƯA BÀI GIẢNG LÊN WEB NETLIFY (CHỈ MẤT 30 GIÂY — MIỄN PHÍ VĨNH VIỄN):**  
+> > Em đã đóng gói sẵn thư mục chuẩn tại: **`[Đường dẫn thư mục, ví dụ: C:\Users\...\Desktop\Web_Video_Tuong_Tac_...]`** *(bên trong đã đặt tên chuẩn `index.html`)*.  
+> > ⚠️ **Lưu ý quan trọng nhất:** Thầy/Cô phải kéo **CẢ THƯ MỤC VÀNG** ở ngoài Desktop thả vào Netlify (**tuyệt đối không** mở thư mục ra kéo lẻ file `index.html` để tránh lỗi *404 Not Found*)!  
+> > 1. Mở trình duyệt vào **[app.netlify.com](https://app.netlify.com)** *(nếu lần đầu dùng, bấm **Sign up / Log in with Google** đăng nhập miễn phí 10 giây)*.  
+> > 2. Nhìn cột bên trái bấm **`Projects`** *(hoặc `Sites`)* $\rightarrow$ nhìn góc phải bấm **`Add new project`** *(hoặc `Add new site`)* $\rightarrow$ chọn dòng **`Deploy manually`**.  
+> > 3. Cầm nguyên **cả thư mục `[Tên_Thư_Mục]`** ngoài Desktop kéo thả thẳng vào vòng tròn nét đứt giữa màn hình $\rightarrow$ chờ 3 giây hiện chữ **`Published`** màu xanh lá!  
+> > 4. **Đổi tên đường link cho đẹp:** Bấm **`Project configuration`** *(hoặc `Site configuration`)* $\rightarrow$ bấm **`Change project name`** *(hoặc `Change site name`)* $\rightarrow$ gõ tên bài không dấu nối bằng gạch ngang (ví dụ: `toan6-bai6-luy-thua`) $\rightarrow$ bấm **`Save`**.  
+> > 5. **Duyệt thử trước khi gửi học sinh:** Mở đường link vừa tạo $\rightarrow$ bấm nút **`⚙️ Thầy Cô: TẮT`** ở góc trên $\rightarrow$ nhập mật khẩu Thầy/Cô để nhảy kiểm tra nhanh các trạm câu hỏi $\rightarrow$ bấm **`🔒 TẮT CHẾ ĐỘ THẦY CÔ`** rồi copy link gửi vào nhóm Zalo lớp!
+>
+> **2️⃣ Nếu vừa ĐỔI MẬT KHẨU CHẾ ĐỘ THẦY CÔ hoặc SỬA/THÊM CÂU HỎI cho bài giảng đã có trên Netlify:**
+> > 🌐 **BƯỚC TIẾP THEO ĐỂ CẬP NHẬT LÊN WEB NETLIFY (GIỮ NGUYÊN 100% ĐƯỜNG LINK ĐÃ GỬI HỌC SINH):**  
+> > Em đã cập nhật xong trực tiếp vào thư mục: **`[Đường dẫn thư mục vừa cập nhật]`**. Nếu bài giảng này đã đưa lên Netlify trước đó, Thầy/Cô cập nhật trong 3 giây như sau:  
+> > ⚠️ **Lưu ý:** Tuyệt đối **KHÔNG** bấm *Add new project* (để không tạo ra link mới làm hỏng link cũ đã gửi học sinh).  
+> > 1. Mở **[app.netlify.com](https://app.netlify.com)** $\rightarrow$ trong danh sách **`Projects`** (`Sites`), bấm chuột trực tiếp vào **tên bài giảng cũ** cần cập nhật.  
+> > 2. Trên thanh menu ngang của bài giảng, bấm chọn mục **`Deploys`**.  
+> > 3. Cầm nguyên **cả thư mục `[Tên_Thư_Mục]`** vừa cập nhật ngoài Desktop kéo thả vào khung nét đứt *"Need to update your site? Drag and drop your site output folder here"*.  
+> > 4. Chờ 3 giây hiện chữ **`Published`** $\rightarrow$ mở lại link bài giảng bấm **`Ctrl + F5`** làm mới trình duyệt. **Đường link cũ trên Zalo học sinh giữ nguyên 100%**, còn mật khẩu mới / nội dung mới đã áp dụng ngay lập tức!
+
 ### 6.2 Contextual Suggestions (Gợi Ý Theo Ngữ Cảnh)
 
 | Khi giáo viên nói... | Agent tự gợi ý thêm... |

@@ -1,11 +1,15 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.3.5",
+  "version": "6.3.6",
   "release_date": "2026-10-30",
   "description": "Siêu Skill Toàn Năng GDPT 2018 (7-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Tạo đề Tiếng Anh & xuất file nghe MP3 chuẩn khảo thí + Soạn giáo án tích hợp NLS & AI + Soạn Slide PowerPoint 16:9 + Video khởi động Veo 3 + Video Tương Tác E-Learning (chống tua nhanh, tự phân lớp Google Sheets, chuẩn đạt 80%).",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "6.3.6": [
+      "CHỈ THỊ BẮT BUỘC HIỂN THỊ BƯỚC TIẾP THEO ĐƯA LÊN NETLIFY SAU MỌI LỆNH VIDEO & ĐỔI MẬT KHẨU (references/ux_chu_dong.md Mục 6.1b, SKILL.md, references/tao_video_tuong_tac.md Quy tắc #4, references/onboarding_prompts.md, scripts/interactive_video_builder.py): Ngay sau khi tạo mới Video Tương Tác, làm video từ Giáo án/SGK, sửa câu hỏi hoặc đổi mật khẩu Chế độ Thầy Cô, cả script Python lẫn AI Agent đều bắt buộc hiển thị hướng dẫn cầm tay chỉ việc đưa lên Netlify.",
+      "PHÂN TÁCH RÕ 2 QUY TRÌNH NETLIFY CHUẨN GIAO DIỆN MỚI NHẤT (Projects / Sites): (1) Đưa bài mới lần đầu (Projects -> Add new project -> Deploy manually -> kéo CẢ THƯ MỤC chống lỗi 404 -> Project configuration -> Change project name đặt tên link đẹp -> bật Chế độ Thầy Cô duyệt bài); (2) Cập nhật bài đã có sau khi đổi mật khẩu / sửa câu hỏi (bấm vào tên bài cũ -> tab Deploys -> kéo đè CẢ THƯ MỤC -> Ctrl+F5 giữ nguyên 100% link Zalo đã gửi học sinh)."
+    ],
     "6.3.5": [
       "KỊCH BẢN HƯỚNG DẪN TỪ ĐẦU & ĐỔI MẬT KHẨU CHẾ ĐỘ THẦY CÔ 4 TÌNH HUỐNG (references/onboarding_prompts.md Mục 17 & Mục 18): Tách riêng kịch bản chuyên biệt khi giáo viên nói 'tôi muốn thay đổi mật khẩu chế độ thầy cô' (hướng dẫn đầy đủ 4 tình huống: đặt khi tạo mới, nhờ AI đổi 3s, tự sửa Notepad 10s, kéo cập nhật Netlify Deploys giữ nguyên 100% link cũ) và kịch bản cầm tay chỉ việc A-Z khi giáo viên nói 'tôi muốn tạo video tương tác'.",
       "QUY TRÌNH KHÉP KÍN 6 BƯỚC LÀM VIDEO & VIDEO TƯƠNG TÁC TỪ GIÁO ÁN WORD (.DOCX) HOẶC SÁCH GIÁO KHOA (PDF/ẢNH CHỤP) (references/tao_video_tuong_tac.md & HUONG_DAN_SU_DUNG_CHO_GIAO_VIEN.md): Tích hợp trọn bộ boc_tach_tai_lieu.py -> tao_slide_chuan.py -> them_loi_binh_pptx.py -> long_tieng_pptx.py -> xuat_video_pptx.py -> interactive_video_builder.py ngay trong thư mục scripts/ của Skill.",
