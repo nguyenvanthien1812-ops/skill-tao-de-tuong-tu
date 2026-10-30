@@ -1,11 +1,14 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.4.0",
+  "version": "6.4.1",
   "release_date": "2026-10-30",
   "description": "Siêu Skill Toàn Năng GDPT 2018 (7-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Tạo đề Tiếng Anh & xuất file nghe MP3 chuẩn khảo thí + Soạn giáo án tích hợp NLS & AI + Soạn Slide PowerPoint 16:9 + Video khởi động Veo 3 + Video Tương Tác E-Learning (chống tua nhanh, tự phân lớp Google Sheets, chuẩn đạt 80%).",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "6.4.1": [
+      "TẬP TRUNG SƯ PHẠM TUYỆT ĐỐI CHO HỌC SINH — ẨN CÁC ĐIỂM DỪNG & CHẤM MỐC GIÂY KHI TẮT CHẾ ĐỘ THẦY CÔ (templates/video_tuong_tac_template.html): Ở chế độ Học sinh (⚙️ Thầy Cô: TẮT), ẩn hoàn toàn khung Tiến độ các điểm dừng tương tác (#lessonInfoBox) và các chấm mốc giây trên thanh tua (#checkpointMarkersContainer) để học sinh tập trung nghe giảng thay vì chỉ canh mốc giây chờ câu hỏi; chỉ khi bật Chế độ Thầy Cô (🔓 Thầy Cô: BẬT) mới hiển thị để giáo viên bấm nhảy tới kiểm tra từng trạm."
+    ],
     "6.4.0": [
       "MỞ RỘNG LÊN TRỌN BỘ 10 DẠNG CÂU HỎI VIDEO TƯƠNG TÁC E-LEARNING CHUẨN GDPT 2018 (templates/video_tuong_tac_template.html & scripts/interactive_video_builder.py): Bổ sung 6 dạng câu hỏi tương tác mới bên cạnh 4 dạng cũ (mcq, tf, fill, drag): (5) Đúng/Sai đa mệnh đề a, b, c, d chuẩn Phần II Bộ GD&ĐT (tf_group); (6) Trắc nghiệm nhiều đáp án đúng Checkbox (multi); (7) Nối cặp tương ứng 2 cột A <-> B chạm-để-nối (match); (8) Sắp xếp thứ tự quy trình / dãy số (order); (9) Điền khuyết nhiều chỗ trống {{1}}, {{2}} có ngân hàng từ gợi ý hoặc gõ trực tiếp (cloze); (10) Phân loại thẻ vào 2-4 nhóm kiến thức (classify).",
       "THỐNG NHẤT QUY TẮC SƯ PHẠM MASTERY GATE & CHỐNG ĐOÁN MÒ TRÊN CẢ 10 DẠNG: Khi học sinh trả lời SAI ở bất kỳ dạng nào, hệ thống tuyệt đối KHÔNG hiện hộp Giải thích và KHÔNG chỉ điểm từng ý/cặp sai (chỉ báo số lượng ý đã đúng như 'Đúng 2/4 mệnh đề', 'Đúng 2/3 cặp' kèm nút Xem lại 30s bài giảng); chỉ khi tự làm ĐÚNG 100% mới mở khóa hộp Giải thích chi tiết + cộng trọn +1 điểm hoàn thành trạm.",

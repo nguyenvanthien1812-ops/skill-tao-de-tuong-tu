@@ -1501,14 +1501,14 @@
       color: #fca5a5;
     }
 
-    /* Lesson info footer */
+    /* Lesson info footer (ẩn mặc định ở chế độ Học sinh để tập trung nghe giảng, chỉ hiện khi bật Chế độ Thầy Cô) */
     .lesson-info {
       margin-top: 14px;
       background: #1e293b;
       border-radius: 12px;
       padding: 12px 18px;
       width: 100%;
-      display: flex;
+      display: none;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
@@ -1786,7 +1786,7 @@
           <div class="timeline-unlocked" id="timelineUnlocked"></div>
           <div class="timeline-progress" id="timelineProgress"></div>
           <div class="timeline-locked-zone" id="timelineLockedZone"></div>
-          <div id="checkpointMarkersContainer"></div>
+          <div id="checkpointMarkersContainer" style="display:none;"></div>
         </div>
 
         <button class="btn-ctrl" onclick="PlayerEngine.rewind10s()" title="Xem lại 10 giây trước">
@@ -1881,11 +1881,11 @@
 
     </div>
 
-    <!-- LESSON INFO FOOTER -->
-    <div class="lesson-info">
+    <!-- LESSON INFO FOOTER (ẨN KHI TẮT CHẾ ĐỘ THẦY CÔ ĐỂ HỌC SINH TẬP TRUNG XEM VIDEO, CHỈ HIỆN KHI BẬT CHẾ ĐỘ THẦY CÔ) -->
+    <div class="lesson-info" id="lessonInfoBox" style="display:none;">
       <div class="lesson-info-left">
         <h3 id="lessonProgressTitle">Tiến độ các điểm dừng tương tác (7 trạm thử thách):</h3>
-        <p>Học sinh phải hoàn thành từng câu hỏi mới mở khóa đoạn video tiếp theo.</p>
+        <p id="lessonProgressDesc">Đang bật Chế độ Thầy Cô — Bấm vào trạm bất kỳ bên dưới để nhảy tới kiểm tra câu hỏi.</p>
       </div>
       <div class="checklist-pills" id="checklistPills">
       </div>
@@ -2393,18 +2393,24 @@
     function updateTeacherBadgeUI() {
       const badge = document.getElementById('teacherBadge');
       const lockBadge = document.getElementById('lockBadge');
+      const lessonInfoBox = document.getElementById('lessonInfoBox') || document.querySelector('.lesson-info');
+      const markersContainer = document.getElementById('checkpointMarkersContainer');
       if (isTeacherMode) {
         badge.innerHTML = '🔓 Thầy Cô: BẬT';
         badge.classList.add('teacher-active');
         lockBadge.innerHTML = '🔓 Tua tự do: BẬT (Thầy Cô)';
         lockBadge.classList.remove('lock-status');
         lockBadge.classList.add('lock-unlocked');
+        if (lessonInfoBox) lessonInfoBox.style.display = 'flex';
+        if (markersContainer) markersContainer.style.display = 'block';
       } else {
         badge.innerHTML = '⚙️ Thầy Cô: TẮT';
         badge.classList.remove('teacher-active');
         lockBadge.innerHTML = '🔒 Chống tua nhanh: BẬT';
         lockBadge.classList.add('lock-status');
         lockBadge.classList.remove('lock-unlocked');
+        if (lessonInfoBox) lessonInfoBox.style.display = 'none';
+        if (markersContainer) markersContainer.style.display = 'none';
       }
     }
 
@@ -2652,8 +2658,11 @@
         progressTitle.innerText = `Tiến độ các điểm dừng tương tác (${totalQ} trạm thử thách):`;
       }
 
+      const lessonInfoBox = document.getElementById('lessonInfoBox') || document.querySelector('.lesson-info');
       const container = document.getElementById('checkpointMarkersContainer');
       const pillsContainer = document.getElementById('checklistPills');
+      if (lessonInfoBox) lessonInfoBox.style.display = isTeacherMode ? 'flex' : 'none';
+      if (container) container.style.display = isTeacherMode ? 'block' : 'none';
       container.innerHTML = '';
       pillsContainer.innerHTML = '';
 
@@ -2667,11 +2676,23 @@
         dot.id = `cp-dot-${cp.id}`;
         dot.style.left = `${Math.min(99, Math.max(1, (cp.time / (videoDuration || 860)) * 100))}%`;
         dot.title = `Trạm ${idx + 1} (${formatTime(cp.time)}): ${cp.question}`;
+        dot.style.cursor = 'pointer';
+        dot.onclick = (e) => {
+          if (isTeacherMode) {
+            e.stopPropagation();
+            jumpToTeacherCp(cp);
+          }
+        };
         container.appendChild(dot);
 
         const pill = document.createElement('div');
         pill.className = 'check-pill' + (isSolved ? ' done' : '');
         pill.id = `cp-pill-${cp.id}`;
+        pill.style.cursor = 'pointer';
+        pill.title = `Nhảy tới Trạm ${idx + 1} (${formatTime(cp.time)})`;
+        pill.onclick = () => {
+          if (isTeacherMode) jumpToTeacherCp(cp);
+        };
         const icon = !isSolved ? '🔒' : (isPerfect ? '✅ (+1đ)' : '⚠️ (0đ)');
         pill.innerHTML = `<span>Trạm ${idx + 1} (${formatTime(cp.time)})</span> ${icon}`;
         pillsContainer.appendChild(pill);
