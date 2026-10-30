@@ -773,28 +773,21 @@ html = build_interactive_video_html(
 | 4 | **Chạm / Ghép thẻ (`drag`)** | Video mới dùng dạng `drag` bị treo khung câu hỏi | `validate_checkpoints()` cho phép `drag` nhưng HTML template thiếu nhánh render & `handleInstantDrag()` | ✅ Đã vá: tích hợp đầy đủ UI chạm/ghép thẻ trên điện thoại & máy tính + chấm 2 lượt + tự phát tiếp |
 | 5 | **Đổi tên/lớp & Auto-Resume** | Bấm "Lưu thông tin mới" không đóng modal; tự lưu tiến độ lỗi ngầm | `saveStudentProgressLocally()` gọi `PlayerEngine.getCurrentTime()` (chỉ có `getTime()`) gây `TypeError` | ✅ Đã vá: bổ sung alias `getCurrentTime()`, bọc `safeStorage*` chống lỗi Safari ẩn danh/Zalo WebView, tách key lưu tiến độ riêng theo từng `YOUTUBE_VIDEO_ID` |
 | 6 | **YouTube chạy ngầm & Di động** | YouTube tự chạy ngầm sau khi mở câu hỏi; nút Tiếp tục bị che bởi thanh điều hướng di động | `ytPlayer.seekTo()` sau `pauseVideo()` kích hoạt buffer & auto-play; CSS mobile dùng sai tên class cũ và thiếu `100dvh` | ✅ Đã vá: chặn tuyệt đối phát ngầm trong `onStateChange` khi quiz đang mở; chuẩn hóa CSS `100dvh`/`92dvh` ghim cố định nút Tiếp tục |
-| 7 | **Học lại khi < 80%** | Học sinh chưa đạt 80% bấm Học lại nhưng không hiện lại câu hỏi để nâng điểm | `restartLesson()` cũ chỉ `seekTo(0)` mà không xóa `attempts` các câu sai | ✅ Đã vá: thêm nút **🎯 Ôn & làm lại câu chưa đạt (Nâng điểm)** (`retryFailedQuestions()`) xóa riêng các câu `< 1đ` và nhảy tới trước câu sai 25s, kèm nút **🔄 Học lại toàn bộ từ đầu** |
-| 8 | **Google Sheets** | Nhiều hàng trùng tên học sinh; tổng số câu bị cố định `/7` cho bài khác | Race condition khi POST song song; hằng số `/7` & tên bài bị hardcode | ✅ Đã vá: thêm `LockService` trong Apps Script V4 + tự động hóa 100% theo `checkpoints.length` và `LESSON_TITLE` |
+| 7 | **Lộ giải thích khi sai & kẹt dưới 80% điểm** | Học sinh trả lời sai lần 1 đã hiện luôn `💡 Giải thích` (lộ đáp án); nếu trừ xuống `0.5đ`/`0đ` thì học sinh làm hết bài vẫn dễ dưới 80% không hoàn thành được bài | Gọi `showExplanation()` ngay ở nhánh `else` (trả lời sai) và cắt điểm khi thử lại | ✅ Đã vá chuẩn **Mastery Gate (v6.3.3)**: **Khi trả lời SAI tuyệt đối KHÔNG hiện Giải thích** — yêu cầu xem lại 30s video và tự làm lại đến khi **ĐÚNG** mới hiện `💡 Giải thích` + cộng trọn `+1đ` (1 câu hoàn thành) → ai học hết video & vượt đủ các trạm đều chắc chắn Hoàn thành (≥ 80%), đồng thời vẫn lưu thống kê số câu đúng ngay lần đầu cho Thầy Cô |
+| 8 | **Hộp thoại Thầy Cô bị trôi xuống đáy trang** | Bấm nút `⚙️ Thầy Cô` hộp thoại hiện ở góc dưới cùng bên trái trang web; banner lặp 2 icon `❌ ❌` | Thiếu CSS `.modal-overlay` (`position: fixed; inset: 0`) trong `<style>`; chuỗi thông báo chứa sẵn emoji trùng với `#feedbackIcon` | ✅ Đã vá: thêm CSS `.modal-overlay` / `.modal-card` căn giữa màn hình + tự động lọc sạch emoji lặp đầu câu |
+| 9 | **Google Sheets** | Nhiều hàng trùng tên học sinh; tổng số câu bị cố định `/7` cho bài khác | Race condition khi POST song song; hằng số `/7` & tên bài bị hardcode | ✅ Đã vá: thêm `LockService` trong Apps Script V4 + tự động hóa 100% theo `checkpoints.length` và `LESSON_TITLE` |
 
-### ⚠️ Quy tắc bắt buộc khi tạo HTML câu hỏi Đúng/Sai:
+### ⚠️ Quy tắc Sư phạm Bắt buộc (Mastery Gate v6.3.3):
 
-```html
-<!-- ĐÚNG ✅ — ID phải khớp với handleInstantTF() -->
-<button class="tf-btn" id="tf-btn-true"  onclick="handleInstantTF(true)">✅ ĐÚNG</button>
-<button class="tf-btn" id="tf-btn-false" onclick="handleInstantTF(false)">❌ SAI</button>
-
-<!-- SAI ❌ — id="tf-true" sẽ gây crash JS -->
-<button class="tf-btn" id="tf-true"  onclick="handleInstantTF(true)">✅ ĐÚNG</button>
-<button class="tf-btn" id="tf-false" onclick="handleInstantTF(false)">❌ SAI</button>
-```
+1. **TUYỆT ĐỐI KHÔNG hiện `💡 Hướng dẫn & Giải thích` khi học sinh trả lời SAI** (gọi `hideExplanation()`). Chỉ hiện thông báo chưa chính xác + nút **`⏪ Xem lại 30s bài giảng`** để học sinh tự suy nghĩ làm lại.
+2. **Bắt buộc trả lời ĐÚNG mới qua trạm:** Học sinh phải tự chọn/nhập ra đáp án **ĐÚNG** thì hệ thống mới mở hộp **`💡 Hướng dẫn & Giải thích`**, cộng trọn **`+1 điểm` (1 câu hoàn thành)** và hiện nút **`Tiếp tục bài học ▶️ (6s)`**.
+3. **Ở câu Đúng/Sai (`tf`):** ID nút bắt buộc là `id="tf-btn-true"` và `id="tf-btn-false"`. Khi chọn sai, ẩn giải thích, hiện nút `⏪ Xem lại 30s bài giảng` và khóa nút còn lại **3 giây suy ngẫm** trước khi cho chọn lại (chống bấm bừa 2 nút liên tiếp trong 0.5s).
 
 ### ✅ Checklist kiểm tra sau khi tạo video mới:
 
-- [ ] Câu MCQ: Bấm đúng → màu xanh + âm thanh + đếm ngược 4s + video tiếp tục
-- [ ] Câu MCQ: Bấm sai lần 1 → rung + banner đỏ + hiện giải thích + nút "Xem lại 30s"
-- [ ] Câu MCQ: Bấm sai lần 2 → hiện đáp án đúng màu xanh + 0 điểm + đếm ngược tiếp tục
-- [ ] Câu Đúng/Sai: Bấm đúng → màu xanh + âm thanh + **hiện nút Tiếp tục** + đếm ngược 4s
-- [ ] Câu Đúng/Sai: Bấm sai → rung + banner đỏ + xem lại
+- [ ] Câu MCQ / Điền số / Ghép thẻ: Chọn hoặc nhập **SAI** → rung + banner đỏ (không lặp `❌ ❌`) + **KHÔNG hiện hộp Giải thích** + hiện nút `⏪ Xem lại 30s bài giảng`
+- [ ] Câu Đúng/Sai: Chọn **SAI** → **KHÔNG hiện Giải thích** + đếm ngược 3s suy ngẫm trên nút còn lại + hiện nút `⏪ Xem lại 30s bài giảng`
+- [ ] Tất cả 4 dạng: Khi trả lời **ĐÚNG** → màu xanh + âm thanh + **LÚC NÀY MỚI HIỆN hộp `💡 Giải thích`** + cộng trọn `+1đ` + hiện nút `Tiếp tục bài học ▶️ (6s)`
 - [ ] Câu Điền số: Gõ số → chữ **KHÔNG biến mất** khi đang gõ
-- [ ] Câu Điền số: Bấm Kiểm tra (hoặc Enter) → phản hồi ngay
-- [ ] Đổi tên/lớp: Bấm nút "Đổi" → hiện modal → nhập tên mới → lưu được
+- [ ] Hộp thoại `⚙️ Thầy Cô` và `✏️ Đổi tên/lớp`: Hiện nổi chính giữa màn hình (`position: fixed`), lưu và đóng mượt mà
+- [ ] Hoàn thành bài học: Vượt qua các trạm và xem hết video → đạt `100% (≥ 80%)` Hoàn thành bài, ghi nhận cả số câu đúng ngay lần đầu lên màn hình tổng kết & Google Sheets

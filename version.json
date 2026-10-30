@@ -1,11 +1,16 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.3.2",
+  "version": "6.3.3",
   "release_date": "2026-10-30",
   "description": "Siêu Skill Toàn Năng GDPT 2018 (7-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Tạo đề Tiếng Anh & xuất file nghe MP3 chuẩn khảo thí + Soạn giáo án tích hợp NLS & AI + Soạn Slide PowerPoint 16:9 + Video khởi động Veo 3 + Video Tương Tác E-Learning (chống tua nhanh, tự phân lớp Google Sheets, chuẩn đạt 80%).",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "6.3.3": [
+      "CƠ CHẾ VƯỢT TRẠM ĐẾN KHI ĐÚNG & CHỈ HIỆN GIẢI THÍCH KHI TRẢ LỜI ĐÚNG (MASTERY GATE v6.3.3 - templates/video_tuong_tac_template.html): Khi học sinh chọn/nhập SAI ở bất kỳ dạng câu hỏi nào (MCQ, Đúng/Sai, Điền số, Ghép thẻ), hệ thống TUYỆT ĐỐI KHÔNG hiện hộp Hướng dẫn & Giải thích (chống lộ đáp án), chỉ báo chưa chính xác và hiện nổi bật nút Xem lại 30s bài giảng (riêng câu Đúng/Sai khóa nút còn lại 3 giây suy ngẫm chống bấm bừa 2 nút liên tiếp).",
+      "CHUẨN HOÀN THÀNH BÀI HỌC >= 80% CÔNG BẰNG & HỢP LÝ 100%: Học sinh bắt buộc tự trả lời ĐÚNG mới mở khóa hộp Giải thích + nút Tiếp tục bài học (6s) và được cộng trọn +1 điểm (1 câu hoàn thành). Mọi học sinh kiên trì học hết video và vượt qua đủ các trạm đều chắc chắn đạt chuẩn Hoàn thành bài học (100% >= 80%), đồng thời hệ thống vẫn thống kê riêng số câu trả lời đúng ngay lần đầu tiên trên màn hình tổng kết và Sổ điểm Google Sheets.",
+      "HOÀN THIỆN GIAO DIỆN POPUP & THANH THÔNG BÁO: Bổ sung CSS .modal-overlay / .modal-card căn giữa màn hình (position: fixed) cho các hộp thoại Chế độ Thầy Cô, Đổi tên/lớp, Tiếp tục bài học; khử icon lặp trên thanh thông báo và đệm khoảng cách dòng câu hỏi hiển thị rõ số mũ lũy thừa."
+    ],
     "6.3.2": [
       "KHẮC PHỤC TRIỆT ĐỂ LỖI KẸT VIDEO Ở CÂU ĐÚNG/SAI & CHUẨN HÓA TOÀN BỘ 4 DẠNG CÂU HỎI VIDEO TƯƠNG TÁC (templates/video_tuong_tac_template.html & scripts/interactive_video_builder.py): Sửa lỗi lệch ID nút Đúng/Sai (tf-true -> tf-btn-true) gây dừng JS ngay sau khi phát âm thanh; thiết kế chấm 1-chạm dứt điểm cho câu Đúng/Sai để nút 'Tiếp tục bài học' luôn xuất hiện ngay lập tức dù chọn Đúng hay Sai.",
       "HOÀN THIỆN TRỌN VẸN 4 DẠNG CÂU HỎI TƯƠNG TÁC CHO MỌI VIDEO TƯƠNG LAI: (1) MCQ trắc nghiệm khóa nút sai lần 1 chống chạm đúp mất lượt trên di động + escapeHtml chống vỡ thẻ khi có dấu bất đẳng thức < > + render KaTeX; (2) Đúng/Sai phản hồi 1-chạm kèm huy hiệu trạng thái; (3) Điền đáp án chống mất chữ, chống bấm đúp Kiểm tra/Enter, tự nhận diện bàn phím số nguyên/số âm/thập phân dấu phẩy (3,5 = 3.5); (4) Chạm/Ghép thẻ (drag/tap-to-place) mượt trên cả điện thoại và máy tính.",

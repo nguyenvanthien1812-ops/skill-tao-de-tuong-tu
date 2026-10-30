@@ -413,7 +413,8 @@
     .quiz-scroll-body {
       flex: 1;
       overflow-y: auto;
-      padding-right: 4px;
+      padding-top: 6px;
+      padding-right: 6px;
       margin-bottom: 8px;
     }
     .quiz-scroll-body::-webkit-scrollbar {
@@ -429,7 +430,7 @@
       font-weight: 600;
       color: #f8fafc;
       margin-bottom: 12px;
-      line-height: 1.45;
+      line-height: 1.58;
     }
 
     /* 2-Column Responsive Options Grid */
@@ -740,23 +741,70 @@
     }
 
     .btn-review {
-      background: #475569;
-      color: #e2e8f0;
-      border: none;
+      background: rgba(59, 130, 246, 0.22);
+      color: #93c5fd;
+      border: 1.5px solid #3b82f6;
       padding: 10px 16px;
       border-radius: 10px;
-      font-weight: 600;
-      font-size: 0.88rem;
+      font-weight: 700;
+      font-size: 0.9rem;
       cursor: pointer;
       display: none;
+      transition: all 0.2s;
     }
     .btn-review:hover {
-      background: #64748b;
+      background: #2563eb;
+      color: #fff;
+      transform: translateY(-1px);
     }
 
     .quiz-instruction {
       font-size: 0.82rem;
       color: #94a3b8;
+    }
+
+    /* Generic Overlay Modals (Teacher Mode, Auto-Resume, Change Student) */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      z-index: 9998;
+    }
+    .modal-card {
+      background: #1e293b;
+      border: 2px solid #3b82f6;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 500px;
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 24px 22px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+      color: #f8fafc;
+      animation: popIn 0.25s ease-out;
+    }
+    .modal-header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .modal-header h2 {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+    .modal-header p {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.4;
     }
 
     /* Student Registration Modal */
@@ -1531,9 +1579,21 @@
     let activeCheckpointSolved = false;
     let monitorInterval = null;
     let autoResumeTimer = null;
-    let autoResumeSeconds = 4;
+    let tfCooldownTimer = null;
+    let autoResumeSeconds = 6;
     let videoDuration = 860;
     let currentDragSelectedIndices = [];
+
+    function clearQuizTimers() {
+      if (autoResumeTimer) {
+        clearInterval(autoResumeTimer);
+        autoResumeTimer = null;
+      }
+      if (tfCooldownTimer) {
+        clearInterval(tfCooldownTimer);
+        tfCooldownTimer = null;
+      }
+    }
 
     const PlayerEngine = {
       isLocal: (window.location.protocol === 'file:'),
@@ -1801,10 +1861,7 @@
 
     function jumpToTeacherCp(cp) {
       closeTeacherModal();
-      if (autoResumeTimer) {
-        clearInterval(autoResumeTimer);
-        autoResumeTimer = null;
-      }
+      clearQuizTimers();
       activeCheckpoint = null;
       activeCheckpointSolved = false;
       document.getElementById('quizOverlay').classList.remove('active');
@@ -2040,7 +2097,7 @@
         const pill = document.createElement('div');
         pill.className = 'check-pill' + (isSolved ? ' done' : '');
         pill.id = `cp-pill-${cp.id}`;
-        const icon = !isSolved ? '🔒' : (isPerfect ? `✅ (+${attempt.points}đ)` : '⚠️ (0đ)');
+        const icon = !isSolved ? '🔒' : (isPerfect ? '✅ (+1đ)' : '⚠️ (0đ)');
         pill.innerHTML = `<span>Trạm ${idx + 1} (${formatTime(cp.time)})</span> ${icon}`;
         pillsContainer.appendChild(pill);
       });
@@ -2096,10 +2153,7 @@
       activeCheckpoint = cp;
       activeCheckpointSolved = false;
       currentDragSelectedIndices = [];
-      if (autoResumeTimer) {
-        clearInterval(autoResumeTimer);
-        autoResumeTimer = null;
-      }
+      clearQuizTimers();
 
       // Tạm dừng video ngay; chỉ seek lại nếu lệch quá 2 giây để tránh YouTube tự buffer & play lại
       PlayerEngine.pause();
@@ -2119,19 +2173,21 @@
       const btnCont = document.getElementById('btnContinue');
       const btnRev = document.getElementById('btnReview30s');
       const inst = document.getElementById('quizInstruction');
+      const scrollBody = document.querySelector('.quiz-scroll-body');
 
       expBox.classList.remove('show');
       banner.className = 'quiz-feedback-banner';
       banner.style.display = 'none';
       btnCont.style.display = 'none';
       btnRev.style.display = 'none';
+      if (scrollBody) scrollBody.scrollTop = 0;
 
       qBadge.innerText = `CÂU HỎI TƯƠNG TÁC ${cpNum}/${totalQ}`;
       qTime.innerText = `⏱️ Dừng tại: ${formatTime(cp.time)}`;
       qText.innerHTML = escapeHtml(cp.question);
 
       if (cp.type === 'mcq') {
-        inst.innerHTML = '👆 <strong>Bấm trực tiếp vào đáp án</strong> để kiểm tra kết quả ngay!';
+        inst.innerHTML = '👆 <strong>Bấm trực tiếp vào đáp án đúng</strong> để vượt qua trạm câu hỏi này!';
         let html = '<div class="options-grid">';
         (cp.options || []).forEach((opt, oIdx) => {
           html += `
@@ -2145,7 +2201,7 @@
         cArea.innerHTML = html;
 
       } else if (cp.type === 'tf') {
-        inst.innerHTML = '👆 <strong>Bấm chọn ĐÚNG hoặc SAI</strong> để kiểm tra kết quả ngay!';
+        inst.innerHTML = '👆 <strong>Bấm chọn ĐÚNG hoặc SAI</strong> để vượt qua trạm câu hỏi này!';
         cArea.innerHTML = `
           <div class="tf-grid">
             <button type="button" class="tf-btn" id="tf-btn-true" onclick="handleInstantTF(true)">
@@ -2162,7 +2218,7 @@
       } else if (cp.type === 'fill') {
         const inpMode = detectFillInputMode(cp.correct);
         const placeholderText = (inpMode === 'text') ? 'Nhập đáp án của em tại đây...' : 'Nhập số kết quả tại đây...';
-        inst.innerHTML = '⌨️ Nhập đáp án rồi bấm <strong>Kiểm tra kết quả</strong> (hoặc nhấn Enter):';
+        inst.innerHTML = '⌨️ Nhập đáp án đúng rồi bấm <strong>Kiểm tra kết quả</strong> (hoặc nhấn Enter):';
         cArea.innerHTML = `
           <div class="input-group">
             <input type="text" class="fill-input" id="fillInput" autocomplete="off" spellcheck="false" inputmode="${inpMode}" placeholder="${placeholderText}" onkeydown="handleFillKeyDown(event)">
@@ -2207,12 +2263,20 @@
       return studentData.questionStats[cpId];
     }
 
-    function finalizeCheckpointAttempt(cp, isCorrect, earnedPts, wrongCount, countdownSec) {
+    function hideExplanation() {
+      const box = document.getElementById('explanationBox');
+      if (box) box.classList.remove('show');
+    }
+
+    function finalizeCheckpointMastery(cp, wrongCount, countdownSec = 6) {
       const totalQ = checkpoints.length;
       const cpNum = getCheckpointOrderNumber(cp);
+      // Cơ chế Vượt trạm đến khi Đúng (Mastery Gate): Khi học sinh đã tự làm ĐÚNG để vượt trạm, ghi nhận trọn 1 câu hoàn thành (+1đ)
+      const earnedPts = 1;
       studentData.attempts[cp.id] = {
-        correct: isCorrect,
+        correct: true,
         points: earnedPts,
+        firstTryCorrect: (wrongCount === 0),
         wrongCount: wrongCount,
         timestamp: new Date().toISOString()
       };
@@ -2221,14 +2285,17 @@
       updateScoreBadge();
       renderCheckpoints();
       saveStudentProgressLocally();
-      const sheetStatusMsg = isCorrect
-        ? `🟡 Đang học (Đã qua Trạm ${cpNum}/${totalQ} - ${studentData.score}đ)`
-        : `🟡 Đang học (Trạm ${cpNum}/${totalQ} chưa đạt: 0đ - Tổng ${studentData.score}đ)`;
+
+      // Ẩn nút Xem lại 30s khi đã giải đúng để dồn sự chú ý vào lời giải thích và nút Tiếp tục
+      const btnRev = document.getElementById('btnReview30s');
+      if (btnRev) btnRev.style.display = 'none';
+
+      const sheetStatusMsg = `🟡 Đang học (Đã vượt Trạm ${cpNum}/${totalQ} - Đúng ${studentData.score}/${totalQ} câu)`;
       syncProgressToGoogleSheets(sheetStatusMsg);
       startAutoResumeCountdown(countdownSec);
     }
 
-    // 7.1. MCQ Handler (Trắc nghiệm nhiều lựa chọn - 2 lượt thử, khóa nút sai lần 1 chống chạm đúp)
+    // 7.1. MCQ Handler (Bắt buộc chọn ĐÚNG mới hiện Giải thích & qua trạm; chọn SAI tuyệt đối KHÔNG lộ giải thích!)
     function handleInstantMCQ(selectedIdx) {
       if (activeCheckpointSolved || !activeCheckpoint) return;
 
@@ -2248,21 +2315,20 @@
         AudioFX.playSuccess();
         triggerConfettiMini();
 
-        const earnedPts = (qStat.wrongCount === 0) ? 1 : 0.5;
-        qStat.points = earnedPts;
+        qStat.points = 1;
         qStat.passed = true;
 
         if (qStat.wrongCount === 0) {
-          showFeedbackBanner(true, '🎉 CHÍNH XÁC! Em làm đúng ngay lần đầu (+1.0 điểm)!');
+          showFeedbackBanner(true, 'CHÍNH XÁC! Em trả lời đúng ngay lần đầu tiên (+1 điểm)!');
         } else {
-          showFeedbackBanner(true, '👍 TỐT LẮM! Em đã tự sửa đúng ở lượt thứ hai (+0.5 điểm)!');
+          showFeedbackBanner(true, 'CHÍNH XÁC! Em đã tự tìm ra đáp án đúng để vượt qua trạm này (+1 điểm)!');
         }
 
         clickedBtn.classList.remove('wrong-ans');
         clickedBtn.classList.add('correct-ans');
         if (clickedBadge) {
           clickedBadge.className = 'opt-status-badge badge-correct';
-          clickedBadge.innerHTML = `✅ ĐÚNG (+${earnedPts}đ)`;
+          clickedBadge.innerHTML = '✅ CHÍNH XÁC';
         }
 
         document.querySelectorAll('.option-btn').forEach((b, i) => {
@@ -2271,62 +2337,34 @@
           if (i !== selectedIdx) b.style.opacity = '0.4';
         });
 
+        // CHỈ KHI TRẢ LỜI ĐÚNG MỚI HIỆN LỜI GIẢI THÍCH!
         showExplanation(cp.explanation);
-        finalizeCheckpointAttempt(cp, true, earnedPts, qStat.wrongCount, 4);
+        finalizeCheckpointMastery(cp, qStat.wrongCount, 6);
 
       } else {
         qStat.wrongCount++;
         AudioFX.playWrong();
+        // TUYỆT ĐỐI KHÔNG HIỆN GIẢI THÍCH KHI TRẢ LỜI SAI!
+        hideExplanation();
+
         clickedBtn.classList.remove('correct-ans');
         void clickedBtn.offsetWidth;
         clickedBtn.classList.add('wrong-ans', 'shake');
-        // Khóa phương án vừa chọn sai để học sinh không bấm đúp nhầm mất lượt thứ 2
         clickedBtn.disabled = true;
         clickedBtn.style.pointerEvents = 'none';
         if (clickedBadge) {
           clickedBadge.className = 'opt-status-badge badge-wrong';
-          clickedBadge.innerHTML = '❌ SAI';
+          clickedBadge.innerHTML = '❌ CHƯA ĐÚNG';
         }
 
-        if (qStat.wrongCount >= 2) {
-          activeCheckpointSolved = true;
-          qStat.points = 0;
-          qStat.passed = true;
-
-          const correctLabel = (cp.options && cp.options[cp.correct]) ? cp.options[cp.correct] : '';
-          showFeedbackBanner(false, `❌ Em đã chọn chưa đúng 2 lần. Đáp án đúng là: ${escapeHtml(correctLabel)} (0 điểm)`);
-          showExplanation(cp.explanation);
-
-          const correctBtn = document.getElementById(`opt-btn-${cp.correct}`);
-          if (correctBtn) {
-            correctBtn.classList.add('correct-ans');
-            correctBtn.style.opacity = '1';
-            const corBadge = document.getElementById(`opt-badge-${cp.correct}`);
-            if (corBadge) {
-              corBadge.className = 'opt-status-badge badge-correct';
-              corBadge.innerHTML = '✅ ĐÁP ÁN ĐÚNG';
-            }
-          }
-
-          document.querySelectorAll('.option-btn').forEach((b, i) => {
-            b.disabled = true;
-            b.style.pointerEvents = 'none';
-            if (i !== cp.correct && i !== selectedIdx) b.style.opacity = '0.4';
-          });
-
-          document.getElementById('btnReview30s').style.display = 'inline-block';
-          finalizeCheckpointAttempt(cp, false, 0, qStat.wrongCount, 7);
-        } else {
-          showFeedbackBanner(false, '❌ Chưa chính xác! Em hãy đọc gợi ý bên dưới (hoặc xem lại 30s video) rồi chọn đáp án đúng nhé (còn 1 lượt).');
-          showExplanation(cp.explanation);
-          document.getElementById('btnReview30s').style.display = 'inline-block';
-          saveStudentProgressLocally();
-          syncProgressToGoogleSheets(`🟡 Đang học (Thử lại Trạm ${cpNum}/${totalQ})`);
-        }
+        showFeedbackBanner(false, 'Phương án vừa chọn chưa chính xác! Em hãy suy nghĩ kỹ lại hoặc bấm "⏪ Xem lại 30s bài giảng" rồi chọn đáp án đúng nhé.');
+        document.getElementById('btnReview30s').style.display = 'inline-block';
+        saveStudentProgressLocally();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đang suy nghĩ lại Trạm ${cpNum}/${totalQ} - sai lần ${qStat.wrongCount})`);
       }
     }
 
-    // 7.2. True/False Handler (Đúng/Sai - chấm dứt điểm 1 chạm, luôn hiện nút Tiếp tục ngay lập tức, không bao giờ kẹt!)
+    // 7.2. True/False Handler (Bắt buộc chọn ĐÚNG mới hiện Giải thích & qua trạm; chọn SAI ẩn giải thích + khóa 3s suy ngẫm chống bấm bừa)
     function handleInstantTF(val) {
       if (activeCheckpointSolved || !activeCheckpoint) return;
 
@@ -2339,75 +2377,99 @@
       const otherBtn = document.getElementById(val ? 'tf-btn-false' : 'tf-btn-true');
       const clickedBadge = document.getElementById(val ? 'tf-badge-true' : 'tf-badge-false');
       const otherBadge = document.getElementById(val ? 'tf-badge-false' : 'tf-badge-true');
+      if (!clickedBtn || clickedBtn.disabled) return;
 
       const qStat = ensureQuestionStat(cp.id);
-      activeCheckpointSolved = true;
-
-      if (clickedBtn) {
-        clickedBtn.disabled = true;
-        clickedBtn.style.pointerEvents = 'none';
-      }
-      if (otherBtn) {
-        otherBtn.disabled = true;
-        otherBtn.style.pointerEvents = 'none';
-      }
 
       if (isCorrect) {
+        activeCheckpointSolved = true;
+        if (tfCooldownTimer) {
+          clearInterval(tfCooldownTimer);
+          tfCooldownTimer = null;
+        }
         AudioFX.playSuccess();
         triggerConfettiMini();
 
-        const earnedPts = 1;
-        qStat.points = earnedPts;
+        qStat.points = 1;
         qStat.passed = true;
 
-        if (clickedBtn) {
-          clickedBtn.classList.remove('wrong-ans');
-          clickedBtn.classList.add('correct-ans');
-        }
+        clickedBtn.disabled = true;
+        clickedBtn.style.pointerEvents = 'none';
+        clickedBtn.classList.remove('wrong-ans');
+        clickedBtn.classList.add('correct-ans');
         if (clickedBadge) {
           clickedBadge.className = 'opt-status-badge badge-correct';
-          clickedBadge.innerHTML = '✅ ĐÚNG (+1đ)';
+          clickedBadge.innerHTML = '✅ CHÍNH XÁC';
         }
         if (otherBtn) {
+          otherBtn.disabled = true;
+          otherBtn.style.pointerEvents = 'none';
           otherBtn.style.opacity = '0.35';
         }
 
-        showFeedbackBanner(true, '🎉 CHÍNH XÁC! Nhận định của em hoàn toàn đúng (+1.0 điểm)!');
+        showFeedbackBanner(true, 'CHÍNH XÁC! Nhận định của em hoàn toàn đúng (+1 điểm)!');
+        // CHỈ KHI TRẢ LỜI ĐÚNG MỚI HIỆN LỜI GIẢI THÍCH!
         showExplanation(cp.explanation);
+        finalizeCheckpointMastery(cp, qStat.wrongCount, 6);
 
-        finalizeCheckpointAttempt(cp, true, earnedPts, 0, 4);
       } else {
-        qStat.wrongCount = 1;
-        qStat.points = 0;
-        qStat.passed = true;
+        qStat.wrongCount++;
         AudioFX.playWrong();
+        // TUYỆT ĐỐI KHÔNG HIỆN GIẢI THÍCH KHI TRẢ LỜI SAI!
+        hideExplanation();
 
-        if (clickedBtn) {
-          clickedBtn.classList.remove('correct-ans');
-          void clickedBtn.offsetWidth;
-          clickedBtn.classList.add('wrong-ans', 'shake');
-        }
+        clickedBtn.classList.remove('correct-ans');
+        void clickedBtn.offsetWidth;
+        clickedBtn.classList.add('wrong-ans', 'shake');
+        clickedBtn.disabled = true;
+        clickedBtn.style.pointerEvents = 'none';
         if (clickedBadge) {
           clickedBadge.className = 'opt-status-badge badge-wrong';
           clickedBadge.innerHTML = '❌ CHƯA ĐÚNG';
         }
-        if (otherBtn) {
-          otherBtn.classList.add('correct-ans');
-        }
-        if (otherBadge) {
-          otherBadge.className = 'opt-status-badge badge-correct';
-          otherBadge.innerHTML = '✅ ĐÁP ÁN ĐÚNG';
-        }
 
-        showFeedbackBanner(false, `❌ Chưa chính xác! Đáp án đúng là: ${cp.correct ? 'ĐÚNG' : 'SAI'} (0 điểm). Em xem kỹ giải thích rồi bấm Tiếp tục nhé!`);
-        showExplanation(cp.explanation);
         document.getElementById('btnReview30s').style.display = 'inline-block';
+        showFeedbackBanner(false, 'Nhận định vừa chọn chưa chính xác! Em hãy bấm "⏪ Xem lại 30s bài giảng" để nghe lại quy tắc, hoặc suy nghĩ kỹ 3 giây rồi chọn lại nhé.');
 
-        finalizeCheckpointAttempt(cp, false, 0, qStat.wrongCount, 7);
+        // Khóa nút còn lại 3 giây suy ngẫm để học sinh không bấm bừa 2 nút liên tiếp trong 0.5s
+        if (otherBtn) {
+          otherBtn.disabled = true;
+          otherBtn.style.pointerEvents = 'none';
+          otherBtn.style.opacity = '0.6';
+          let waitSec = 3;
+          if (otherBadge) {
+            otherBadge.className = 'opt-status-badge badge-wrong';
+            otherBadge.style.background = '#475569';
+            otherBadge.innerHTML = `⏳ ${waitSec}s`;
+          }
+          if (tfCooldownTimer) clearInterval(tfCooldownTimer);
+          tfCooldownTimer = setInterval(() => {
+            waitSec--;
+            if (waitSec > 0) {
+              if (otherBadge) otherBadge.innerHTML = `⏳ ${waitSec}s`;
+            } else {
+              clearInterval(tfCooldownTimer);
+              tfCooldownTimer = null;
+              if (!activeCheckpointSolved && otherBtn) {
+                otherBtn.disabled = false;
+                otherBtn.style.pointerEvents = 'auto';
+                otherBtn.style.opacity = '1';
+                if (otherBadge) {
+                  otherBadge.className = 'opt-status-badge';
+                  otherBadge.style.background = '';
+                  otherBadge.innerHTML = '';
+                }
+              }
+            }
+          }, 1000);
+        }
+
+        saveStudentProgressLocally();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đang suy nghĩ lại Trạm ${cpNum}/${totalQ} - sai lần ${qStat.wrongCount})`);
       }
     }
 
-    // 7.3. Fill-in-the-blank Handler (Điền số / Điền từ - chống mất chữ, chống bấm đúp mất lượt, hỗ trợ số âm & thập phân dấu phẩy/chấm)
+    // 7.3. Fill-in-the-blank Handler (Bắt buộc nhập ĐÚNG mới hiện Giải thích & qua trạm; nhập SAI tuyệt đối KHÔNG lộ giải thích!)
     function handleInstantFill() {
       if (activeCheckpointSolved || !activeCheckpoint) return;
 
@@ -2421,21 +2483,13 @@
       const val = inp.value.trim();
       if (!val) {
         inp.focus();
-        showFeedbackBanner(false, '⚠️ Em hãy nhập câu trả lời vào ô trống trước khi bấm Kiểm tra nhé!');
+        hideExplanation();
+        showFeedbackBanner(false, 'Em hãy nhập câu trả lời vào ô trống trước khi bấm Kiểm tra nhé!');
         return;
       }
 
       const qStat = ensureQuestionStat(cp.id);
       const normVal = normalizeAnswerToken(val);
-
-      // Chống lỗi bấm đúp nút Kiểm tra / nhấn Enter 2 lần liên tiếp làm mất oan lượt thử thứ 2
-      if (qStat.wrongCount === 1 && qStat.lastWrongVal === normVal) {
-        inp.focus();
-        if (typeof inp.select === 'function') inp.select();
-        showFeedbackBanner(false, `⚠️ Kết quả "${escapeHtml(val)}" chưa đúng. Em hãy nhập một đáp án khác rồi bấm Kiểm tra nhé (còn 1 lượt)!`);
-        return;
-      }
-
       const isCorrect = isFillAnswerMatch(val, cp.correct);
       inp.classList.remove('shake');
 
@@ -2444,8 +2498,7 @@
         AudioFX.playSuccess();
         triggerConfettiMini();
 
-        const earnedPts = (qStat.wrongCount === 0) ? 1 : 0.5;
-        qStat.points = earnedPts;
+        qStat.points = 1;
         qStat.passed = true;
 
         inp.classList.remove('wrong-ans');
@@ -2453,48 +2506,43 @@
         inp.disabled = true;
         if (btnCheck) btnCheck.disabled = true;
 
-        showFeedbackBanner(true, `🎉 CHÍNH XÁC! Đáp án hoàn toàn đúng (+${earnedPts} điểm)!`);
-        showExplanation(cp.explanation);
+        if (qStat.wrongCount === 0) {
+          showFeedbackBanner(true, 'CHÍNH XÁC! Kết quả em tính hoàn toàn đúng ngay lần đầu (+1 điểm)!');
+        } else {
+          showFeedbackBanner(true, 'CHÍNH XÁC! Em đã tự tính đúng kết quả để vượt qua trạm này (+1 điểm)!');
+        }
 
-        finalizeCheckpointAttempt(cp, true, earnedPts, qStat.wrongCount, 4);
+        // CHỈ KHI TRẢ LỜI ĐÚNG MỚI HIỆN LỜI GIẢI THÍCH!
+        showExplanation(cp.explanation);
+        finalizeCheckpointMastery(cp, qStat.wrongCount, 6);
 
       } else {
-        qStat.wrongCount++;
-        qStat.lastWrongVal = normVal;
+        // TUYỆT ĐỐI KHÔNG HIỆN GIẢI THÍCH KHI TRẢ LỜI SAI!
+        hideExplanation();
+
+        // Nếu học sinh bấm Kiểm tra 2 lần liên tiếp cùng 1 số sai thì không tăng số lần sai ảo
+        if (qStat.lastWrongVal !== normVal) {
+          qStat.wrongCount++;
+          qStat.lastWrongVal = normVal;
+        }
         AudioFX.playWrong();
         void inp.offsetWidth;
         inp.classList.add('wrong-ans', 'shake');
 
-        if (qStat.wrongCount >= 2) {
-          activeCheckpointSolved = true;
-          qStat.points = 0;
-          qStat.passed = true;
-          inp.disabled = true;
-          if (btnCheck) btnCheck.disabled = true;
-
-          const primaryAns = String(cp.correct).split('|')[0];
-          showFeedbackBanner(false, `❌ Em đã nhập chưa đúng 2 lần. Đáp án chính xác là: ${escapeHtml(primaryAns)} (0 điểm)`);
-          showExplanation(cp.explanation);
-          document.getElementById('btnReview30s').style.display = 'inline-block';
-
-          finalizeCheckpointAttempt(cp, false, 0, qStat.wrongCount, 7);
-        } else {
-          showFeedbackBanner(false, `❌ Kết quả "${escapeHtml(val)}" chưa chính xác! Em hãy xem gợi ý bên dưới và sửa lại đáp án nhé (còn 1 cơ hội).`);
-          showExplanation(cp.explanation);
-          document.getElementById('btnReview30s').style.display = 'inline-block';
-          setTimeout(() => {
-            if (!activeCheckpointSolved && inp) {
-              inp.focus();
-              if (typeof inp.select === 'function') inp.select();
-            }
-          }, 150);
-          saveStudentProgressLocally();
-          syncProgressToGoogleSheets(`🟡 Đang học (Thử lại Trạm ${cpNum}/${totalQ})`);
-        }
+        showFeedbackBanner(false, `Kết quả "${escapeHtml(val)}" chưa chính xác! Em hãy tính toán lại hoặc bấm "⏪ Xem lại 30s bài giảng" để nghe lại quy tắc rồi nhập lại nhé.`);
+        document.getElementById('btnReview30s').style.display = 'inline-block';
+        setTimeout(() => {
+          if (!activeCheckpointSolved && inp) {
+            inp.focus();
+            if (typeof inp.select === 'function') inp.select();
+          }
+        }, 120);
+        saveStudentProgressLocally();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đang tính lại Trạm ${cpNum}/${totalQ} - sai lần ${qStat.wrongCount})`);
       }
     }
 
-    // 7.4. Tap-to-Place / Drag Tiles Handler (Dạng câu hỏi thứ 4: Chạm/Ghép thẻ đáp án trên Điện thoại & Máy tính)
+    // 7.4. Tap-to-Place / Drag Tiles Handler (Bắt buộc ghép ĐÚNG mới hiện Giải thích & qua trạm; ghép SAI ẩn giải thích!)
     function toggleDragTile(tileIdx) {
       if (activeCheckpointSolved || !activeCheckpoint) return;
       const cp = activeCheckpoint;
@@ -2557,19 +2605,14 @@
       const btnClear = document.getElementById('btnClearDrag');
 
       if (currentDragSelectedIndices.length === 0) {
-        showFeedbackBanner(false, '⚠️ Em hãy chạm chọn ít nhất một thẻ đáp án đưa vào ô trống trước khi bấm Kiểm tra nhé!');
+        hideExplanation();
+        showFeedbackBanner(false, 'Em hãy chạm chọn ít nhất một thẻ đáp án đưa vào ô trống trước khi bấm Kiểm tra nhé!');
         return;
       }
 
       const chosenAnswer = currentDragSelectedIndices.map(i => (cp.tiles || [])[i]).join(' ').trim();
       const normChosen = normalizeAnswerToken(chosenAnswer);
       const qStat = ensureQuestionStat(cp.id);
-
-      if (qStat.wrongCount === 1 && qStat.lastWrongVal === normChosen) {
-        showFeedbackBanner(false, '⚠️ Lựa chọn thẻ này chưa đúng. Em hãy chọn thẻ khác rồi bấm Kiểm tra nhé (còn 1 cơ hội)!');
-        return;
-      }
-
       const isCorrect = isFillAnswerMatch(chosenAnswer, cp.correct);
 
       if (isCorrect) {
@@ -2577,8 +2620,7 @@
         AudioFX.playSuccess();
         triggerConfettiMini();
 
-        const earnedPts = (qStat.wrongCount === 0) ? 1 : 0.5;
-        qStat.points = earnedPts;
+        qStat.points = 1;
         qStat.passed = true;
 
         if (zone) {
@@ -2589,54 +2631,39 @@
         if (btnCheck) btnCheck.disabled = true;
         if (btnClear) btnClear.disabled = true;
 
-        showFeedbackBanner(true, `🎉 CHÍNH XÁC! Em ghép thẻ hoàn toàn đúng (+${earnedPts} điểm)!`);
+        showFeedbackBanner(true, 'CHÍNH XÁC! Em ghép thẻ đáp án hoàn toàn đúng (+1 điểm)!');
+        // CHỈ KHI TRẢ LỜI ĐÚNG MỚI HIỆN LỜI GIẢI THÍCH!
         showExplanation(cp.explanation);
+        finalizeCheckpointMastery(cp, qStat.wrongCount, 6);
 
-        finalizeCheckpointAttempt(cp, true, earnedPts, qStat.wrongCount, 4);
       } else {
-        qStat.wrongCount++;
-        qStat.lastWrongVal = normChosen;
+        // TUYỆT ĐỐI KHÔNG HIỆN GIẢI THÍCH KHI TRẢ LỜI SAI!
+        hideExplanation();
+        if (qStat.lastWrongVal !== normChosen) {
+          qStat.wrongCount++;
+          qStat.lastWrongVal = normChosen;
+        }
         AudioFX.playWrong();
         if (zone) {
           void zone.offsetWidth;
           zone.classList.add('wrong-ans', 'shake');
         }
 
-        if (qStat.wrongCount >= 2) {
-          activeCheckpointSolved = true;
-          qStat.points = 0;
-          qStat.passed = true;
-
-          const primaryAns = String(cp.correct).split('|')[0];
-          if (zone) {
-            zone.classList.remove('wrong-ans');
-            zone.classList.add('correct-ans');
-            zone.innerHTML = `<span style="color:#6ee7b7; font-weight:700;">✅ Đáp án đúng: ${escapeHtml(primaryAns)}</span>`;
-            renderMathInContainer(zone);
-          }
-          document.querySelectorAll('.drag-tile').forEach(b => { b.disabled = true; });
-          if (btnCheck) btnCheck.disabled = true;
-          if (btnClear) btnClear.disabled = true;
-
-          showFeedbackBanner(false, `❌ Đáp án đúng là: ${escapeHtml(primaryAns)} (0 điểm)`);
-          showExplanation(cp.explanation);
-          document.getElementById('btnReview30s').style.display = 'inline-block';
-
-          finalizeCheckpointAttempt(cp, false, 0, qStat.wrongCount, 7);
-        } else {
-          showFeedbackBanner(false, '❌ Thẻ đã chọn chưa chính xác! Em hãy xem gợi ý bên dưới rồi chọn lại thẻ khác nhé (còn 1 cơ hội).');
-          showExplanation(cp.explanation);
-          document.getElementById('btnReview30s').style.display = 'inline-block';
-          saveStudentProgressLocally();
-          syncProgressToGoogleSheets(`🟡 Đang học (Thử lại Trạm ${cpNum}/${totalQ})`);
-        }
+        showFeedbackBanner(false, 'Thẻ em chọn chưa chính xác! Hãy bấm "↺ Chọn lại" hoặc "⏪ Xem lại 30s bài giảng" để tìm đáp án đúng nhé.');
+        document.getElementById('btnReview30s').style.display = 'inline-block';
+        saveStudentProgressLocally();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đang ghép lại Trạm ${cpNum}/${totalQ} - sai lần ${qStat.wrongCount})`);
       }
     }
 
     function recalculateScore() {
       let total = 0;
       for (const id in (studentData.attempts || {})) {
-        total += Number(studentData.attempts[id].points || 0);
+        if (studentData.attempts[id] && studentData.attempts[id].correct) {
+          total += 1;
+        } else {
+          total += Number((studentData.attempts[id] && studentData.attempts[id].points) || 0);
+        }
       }
       studentData.score = Math.round(total * 10) / 10;
     }
@@ -2653,8 +2680,10 @@
       const icon = document.getElementById('feedbackIcon');
       const text = document.getElementById('feedbackText');
 
+      // Khử triệt để các icon bị lặp ở đầu câu thông báo (như "❌ ❌")
+      const cleanMessage = String(message || '').replace(/^(?:[🎉👍❌⚠️]\s*)+/u, '');
       icon.innerHTML = isCorrect ? '🎉' : '❌';
-      text.innerHTML = message;
+      text.innerHTML = cleanMessage;
       banner.className = 'quiz-feedback-banner ' + (isCorrect ? 'show-correct' : 'show-wrong');
       banner.style.display = 'flex';
       renderMathInContainer(text);
@@ -2666,16 +2695,21 @@
       expText.innerHTML = escapeHtml(text);
       renderMathInContainer(expText);
       box.classList.add('show');
+      setTimeout(() => {
+        if (box && typeof box.scrollIntoView === 'function') {
+          try { box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+        }
+      }, 80);
     }
 
-    function startAutoResumeCountdown(seconds = 4) {
+    function startAutoResumeCountdown(seconds = 6) {
       const btnCont = document.getElementById('btnContinue');
       const inst = document.getElementById('quizInstruction');
-      autoResumeSeconds = Number(seconds) || 4;
+      autoResumeSeconds = Number(seconds) || 6;
       btnCont.style.display = 'inline-block';
       btnCont.innerHTML = `Tiếp tục bài học ▶️ (${autoResumeSeconds}s)`;
       if (inst) {
-        inst.innerHTML = '✅ Bấm <strong>Tiếp tục bài học</strong> để xem tiếp ngay (hoặc tự động phát tiếp)...';
+        inst.innerHTML = '✅ Đã mở khóa! Em đọc giải thích bên trên rồi bấm <strong>Tiếp tục bài học</strong> nhé...';
       }
 
       if (autoResumeTimer) clearInterval(autoResumeTimer);
@@ -2692,10 +2726,7 @@
     }
 
     function continueLesson() {
-      if (autoResumeTimer) {
-        clearInterval(autoResumeTimer);
-        autoResumeTimer = null;
-      }
+      clearQuizTimers();
       const solvedCp = activeCheckpoint;
       document.getElementById('quizOverlay').classList.remove('active');
       activeCheckpoint = null;
@@ -2708,10 +2739,7 @@
 
     function reviewPrevious30s() {
       if (!activeCheckpoint) return;
-      if (autoResumeTimer) {
-        clearInterval(autoResumeTimer);
-        autoResumeTimer = null;
-      }
+      clearQuizTimers();
       const reviewTime = Math.max(0, activeCheckpoint.time - 35);
       document.getElementById('quizOverlay').classList.remove('active');
       activeCheckpoint = null;
@@ -2818,10 +2846,7 @@
         return;
       }
 
-      if (autoResumeTimer) {
-        clearInterval(autoResumeTimer);
-        autoResumeTimer = null;
-      }
+      clearQuizTimers();
       activeCheckpoint = null;
       activeCheckpointSolved = false;
       document.getElementById('quizOverlay').classList.remove('active');
@@ -2935,11 +2960,15 @@
         titleEl.innerHTML = '🎉 CHÚC MỪNG EM ĐÃ HOÀN THÀNH BÀI HỌC!';
         if (scoreCircle) scoreCircle.style.borderColor = '#10b981';
 
+        const firstTryCount = checkpoints.filter(cp => {
+          const att = studentData.attempts[cp.id];
+          return att && att.correct && Number(att.wrongCount || 0) === 0;
+        }).length;
         details.innerHTML = `
-          <div style="color:#6ee7b7; font-weight:600; margin-bottom:6px;">🎯 XẾP LOẠI: ĐẠT YÊU CẦU HOÀN THÀNH (≥ ${PASSING_THRESHOLD_PCT}%)</div>
-          <div>✅ <strong>Điểm số:</strong> ${studentData.score}/${totalQ} điểm (${pct}%).</div>
-          <div>⏱️ <strong>Thời gian:</strong> ${new Date().toLocaleTimeString('vi-VN')} ngày ${new Date().toLocaleDateString('vi-VN')}.</div>
-          <div>🏆 <strong>Đánh giá:</strong> Em đã nắm vững kiến thức trọng tâm <strong>${escapeHtml(LESSON_TITLE)}</strong>.</div>
+          <div style="color:#6ee7b7; font-weight:600; margin-bottom:6px;">🎯 XẾP LOẠI: ĐẠT YÊU CẦU HOÀN THÀNH BÀI HỌC (${pct}% ≥ ${PASSING_THRESHOLD_PCT}%)</div>
+          <div>✅ <strong>Trạm câu hỏi hoàn thành:</strong> ${studentData.score}/${totalQ} câu đúng (${pct}%) — trả lời đúng ngay lần đầu ${firstTryCount}/${totalQ} câu.</div>
+          <div>⏱️ <strong>Thời gian hoàn thành:</strong> ${new Date().toLocaleTimeString('vi-VN')} ngày ${new Date().toLocaleDateString('vi-VN')}.</div>
+          <div>🏆 <strong>Đánh giá:</strong> Em đã hoàn thành đầy đủ bài giảng <strong>${escapeHtml(LESSON_TITLE)}</strong>.</div>
         `;
         statusMsg = `🟢 ĐÃ HOÀN THÀNH (ĐẠT: ${studentData.score}/${totalQ} - ${pct}%)`;
       } else {
