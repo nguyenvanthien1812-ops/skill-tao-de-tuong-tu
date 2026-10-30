@@ -12,6 +12,7 @@ Tác giả: Thầy Nguyễn Văn Thiện - THCS Ứng Hòe
 
 import sys
 import os
+import json
 import asyncio
 import argparse
 import subprocess
@@ -122,28 +123,49 @@ def process_long_tieng(pptx_path, voice_choice="1", output_pptx=None):
     print(f"\n[*] Đã sinh xong {len(audio_files)} đoạn giọng đọc AI.")
     print("[*] Đang tự động nhúng âm thanh vào từng slide PowerPoint...")
 
-    # Tạo script PowerShell để nhúng âm thanh vào PowerPoint COM
+    timeline_json_path = os.path.splitext(output_pptx)[0] + "_SlideTimeline.json"
+    timeline_raw_path = os.path.join(temp_dir, "slide_durations.txt")
+
+    # Tạo script PowerShell để nhúng âm thanh vào PowerPoint COM & đo chính xác thời lượng từng slide
     ps_lines = [
         '$ErrorActionPreference = "Stop"',
         f'$pptxPath = "{pptx_path.replace("\\", "\\\\")}"',
         f'$outPath = "{output_pptx.replace("\\", "\\\\")}"',
+        f'$durLogPath = "{timeline_raw_path.replace("\\", "\\\\")}"',
         'if (Test-Path -LiteralPath $outPath) { Remove-Item -LiteralPath $outPath -Force }',
+        '$durLines = @()',
         '$powerPoint = New-Object -ComObject PowerPoint.Application',
         '$presentation = $powerPoint.Presentations.Open($pptxPath, [Microsoft.Office.Core.MsoTriState]::msoTrue, [Microsoft.Office.Core.MsoTriState]::msoFalse, [Microsoft.Office.Core.MsoTriState]::msoFalse)',
     ]
 
-    for idx, mp3 in audio_files.items():
-        mp3_escaped = mp3.replace("\\", "\\\\")
-        ps_lines.append(f"""
+    for idx in range(1, total_slides + 1):
+        mp3 = audio_files.get(idx)
+        if mp3:
+            mp3_escaped = mp3.replace("\\", "\\\\")
+            ps_lines.append(f"""
 try {{
     $slide = $presentation.Slides.Item({idx})
     $shape = $slide.Shapes.AddMediaObject2("{mp3_escaped}", $false, $true, 20, 20, 50, 50)
     $shape.AnimationSettings.PlaySettings.PlayOnEntry = [Microsoft.Office.Core.MsoTriState]::msoTrue
     $shape.AnimationSettings.PlaySettings.HideWhileNotPlaying = [Microsoft.Office.Core.MsoTriState]::msoTrue
     $slide.SlideShowTransition.AdvanceOnTime = [Microsoft.Office.Core.MsoTriState]::msoTrue
-}} catch {{}}
+    $lenMs = 0
+    try {{ $lenMs = [int]$shape.MediaFormat.Length }} catch {{ $lenMs = 0 }}
+    if ($lenMs -gt 0) {{
+        $durSec = [math]::Round(($lenMs / 1000.0) + 1.0, 1)
+        $slide.SlideShowTransition.AdvanceTime = $durSec
+    }} else {{
+        $durSec = 8.0
+    }}
+    $durLines += "{idx}|$durSec"
+}} catch {{
+    $durLines += "{idx}|8.0"
+}}
 """)
+        else:
+            ps_lines.append(f'$durLines += "{idx}|5.0"')
 
+    ps_lines.append('$durLines | Set-Content -LiteralPath $durLogPath -Encoding UTF8')
     ps_lines.append('$presentation.SaveAs($outPath)')
     ps_lines.append('$presentation.Close()')
     ps_lines.append('$powerPoint.Quit()')
@@ -161,6 +183,45 @@ try {{
             timeout=180
         )
         if os.path.exists(output_pptx) and os.path.getsize(output_pptx) > 0:
+            # Xuất bảng mốc thời gian từng slide (_SlideTimeline.json) phục vụ đặt Trạm câu hỏi Video Tương Tác chính xác từng giây
+            try:
+                dur_map = {}
+                if os.path.exists(timeline_raw_path):
+                    with open(timeline_raw_path, "r", encoding="utf-8") as df:
+                        for line in df:
+                            parts = line.strip().split("|")
+                            if len(parts) == 2:
+                                dur_map[int(parts[0])] = float(parts[1])
+                cum_sec = 0.0
+                timeline_entries = []
+                for idx, slide in enumerate(prs.slides, start=1):
+                    d_sec = dur_map.get(idx, 6.0)
+                    start_s = round(cum_sec, 1)
+                    cum_sec += d_sec
+                    end_s = round(cum_sec, 1)
+                    titles = [
+                        p.text.strip()
+                        for sh in slide.shapes if sh.has_text_frame
+                        for p in sh.text_frame.paragraphs if p.text.strip()
+                    ]
+                    mm, ss = divmod(int(end_s), 60)
+                    timeline_entries.append({
+                        "slide": idx,
+                        "title": titles[0] if titles else f"Slide {idx}",
+                        "start_sec": start_s,
+                        "duration_sec": d_sec,
+                        "end_sec": int(end_s),
+                        "end_mmss": f"{mm:02d}:{ss:02d}"
+                    })
+                with open(timeline_json_path, "w", encoding="utf-8") as tf:
+                    json.dump({
+                        "total_duration_sec": int(round(cum_sec)),
+                        "slides": timeline_entries
+                    }, tf, ensure_ascii=False, indent=2)
+                print(f"  • Bảng mốc giây từng Slide (để gắn câu hỏi Video Tương Tác): {timeline_json_path}")
+            except Exception as te:
+                print(f"  [!] Ghi chú: Không xuất được file timeline phụ ({te})")
+
             print("\n" + "=" * 68)
             print("  🎉 [LỒNG TIẾNG AI THÀNH CÔNG!]")
             print(f"  • File PowerPoint đã lồng tiếng: {output_pptx}")

@@ -1,11 +1,16 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.3.4",
+  "version": "6.3.5",
   "release_date": "2026-10-30",
   "description": "Siêu Skill Toàn Năng GDPT 2018 (7-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Tạo đề Tiếng Anh & xuất file nghe MP3 chuẩn khảo thí + Soạn giáo án tích hợp NLS & AI + Soạn Slide PowerPoint 16:9 + Video khởi động Veo 3 + Video Tương Tác E-Learning (chống tua nhanh, tự phân lớp Google Sheets, chuẩn đạt 80%).",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "6.3.5": [
+      "KỊCH BẢN HƯỚNG DẪN TỪ ĐẦU & ĐỔI MẬT KHẨU CHẾ ĐỘ THẦY CÔ 4 TÌNH HUỐNG (references/onboarding_prompts.md Mục 17 & Mục 18): Tách riêng kịch bản chuyên biệt khi giáo viên nói 'tôi muốn thay đổi mật khẩu chế độ thầy cô' (hướng dẫn đầy đủ 4 tình huống: đặt khi tạo mới, nhờ AI đổi 3s, tự sửa Notepad 10s, kéo cập nhật Netlify Deploys giữ nguyên 100% link cũ) và kịch bản cầm tay chỉ việc A-Z khi giáo viên nói 'tôi muốn tạo video tương tác'.",
+      "QUY TRÌNH KHÉP KÍN 6 BƯỚC LÀM VIDEO & VIDEO TƯƠNG TÁC TỪ GIÁO ÁN WORD (.DOCX) HOẶC SÁCH GIÁO KHOA (PDF/ẢNH CHỤP) (references/tao_video_tuong_tac.md & HUONG_DAN_SU_DUNG_CHO_GIAO_VIEN.md): Tích hợp trọn bộ boc_tach_tai_lieu.py -> tao_slide_chuan.py -> them_loi_binh_pptx.py -> long_tieng_pptx.py -> xuat_video_pptx.py -> interactive_video_builder.py ngay trong thư mục scripts/ của Skill.",
+      "TỰ ĐỘNG XUẤT BẢNG MỐC GIÂY TỪNG SLIDE (_SlideTimeline.json trong scripts/long_tieng_pptx.py): Khi lồng tiếng AI (Cô Hoài My / Thầy Nam Minh) vào Slide, hệ thống tự đo chính xác thời điểm kết thúc từng slide (end_sec, end_mmss) để đặt Trạm câu hỏi Video Tương Tác khớp từng giây không cắt ngang lời giảng, hỗ trợ cả phát hành Online (YouTube + Netlify) và Offline (Dual-Engine MP4 trên TV lớp học)."
+    ],
     "6.3.4": [
       "BẢO MẬT & TÙY CHỈNH MẬT KHẨU CHẾ ĐỘ THẦY CÔ (v6.3.4 - templates/video_tuong_tac_template.html & scripts/interactive_video_builder.py): Xóa bỏ gợi ý placeholder 'Mặc định: 123456' trong ô nhập mật mã #teacherPwd để học sinh bấm vào nút Thầy Cô không bao giờ nhìn thấy mật khẩu mở khóa tua nhanh.",
       "BỔ SUNG CÔNG CỤ ĐỔI MẬT KHẨU 1-CLICK (update_teacher_password & CLI --set-password): Cho phép đổi nhanh mật khẩu Chế độ Thầy Cô cho mọi file HTML hoặc thư mục Netlify đã tạo sẵn chỉ trong 1 giây mà không cần sinh lại câu hỏi.",

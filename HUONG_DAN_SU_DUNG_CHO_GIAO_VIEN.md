@@ -186,37 +186,63 @@ Biến các hình vẽ tĩnh, sơ đồ thí nghiệm trong SGK thành phòng th
 
 ---
 
-### 🎬 NHÓM 7: Tạo Video Tương Tác E-Learning (Chống tua nhanh, Google Sheets, Chuẩn đạt 80%)
+### 🎬 NHÓM 7: Tạo Video Tương Tác E-Learning (Từ Link YouTube, Giáo Án Word Hoặc Sách Giáo Khoa)
 
-```
-"Em hãy tạo video tương tác e-learning cho Bài [X] môn [Toán/Lý/Hóa] lớp [Y].
-Link YouTube: [Link YouTube]
-Link Google Sheets: [Link Google Sheets]
-Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: Thien2026 - để trống mặc định là 123456]
-Yêu cầu học sinh không tua nhanh được, đạt từ 80% trở lên mới tính hoàn thành."
+> 💡 **Mẹo nhanh cho người mới:** Thầy/Cô chỉ cần gõ ngắn gọn **`"tôi muốn tạo video tương tác"`** (hoặc **`"tôi muốn thay đổi mật khẩu chế độ thầy cô"`**), AI sẽ lập tức hiện bảng hướng dẫn cầm tay chỉ việc từng bước từ đầu!
+
+#### 1️⃣ Quy trình 4 bước từ đầu cho Giáo viên mới làm lần đầu:
+1. **Bước 1 — Chuẩn bị nguồn bài giảng:**
+   - *Nếu đã có video trên YouTube:* Copy đường link YouTube bài giảng (có thể đính kèm thêm file **Giáo án Word `.docx`** hoặc **file/ảnh Sách giáo khoa SGK** để câu hỏi khớp 100% tiết dạy trên lớp).
+   - *Nếu CHƯA CÓ VIDEO (chỉ mới có Giáo án Word hoặc SGK):* Kéo thả file Giáo án Word (`.docx`) hoặc file PDF / ảnh chụp trang SGK vào khung chat — AI sẽ tự tạo Slide 16:9 $\to$ viết lời giảng $\to$ lồng tiếng AI (**Cô Hoài My** / **Thầy Nam Minh**) $\to$ kết xuất **Video MP4 Full HD 1080p** $\to$ nhúng câu hỏi tương tác đúng từng giây!
+2. **Bước 2 — Kết nối Sổ điểm Google Sheets tự chia lớp:** Nếu chưa biết tạo link Web App (`/exec`), Thầy/Cô chỉ cần ghi trong câu lệnh: **`"Hướng dẫn tôi tạo Sổ điểm Google Sheets"`** (AI sẽ cấp sẵn đoạn mã copy-paste 30 giây là xong).
+3. **Bước 3 — Gửi 1 trong các Mẫu Câu Lệnh rõ ràng bên dưới** để AI xuất sẵn thư mục `Web_Video_Tuong_Tac_...` ra ngoài **Desktop**.
+4. **Bước 4 — Đưa lên Web miễn phí 3 giây:** Mở [app.netlify.com](https://app.netlify.com) $\to$ kéo thả thư mục ngoài Desktop vào khung Deploys là có ngay đường link HTTPS gửi Zalo cho học sinh!
+
+#### 2️⃣ Các mẫu câu lệnh chi tiết (Copy – Điền thông tin – Gửi ngay):
+
+* **🟢 Mẫu A — Đã có Link YouTube (có thể kèm Giáo án Word / SGK để AI tự soạn câu hỏi chuẩn bài dạy):**
+```text
+Em hãy tạo giúp tôi 1 trang Web Video Tương Tác E-Learning hoàn chỉnh:
+- Môn & Lớp: [Ví dụ: Toán 6 - Kết nối tri thức]
+- Tên bài học: [Ví dụ: Bài 6 - Lũy thừa với số mũ tự nhiên]
+- Giáo viên & Trường: [Ví dụ: GV Nguyễn Thiện - THCS Ứng Hòe]
+- Link video YouTube: [Dán link YouTube] (Thời lượng: [Ví dụ: 14 phút 20 giây])
+- Tài liệu bám sát (nếu có): [Kéo thả file Giáo án Word .docx hoặc PDF/ảnh SGK vào chat, hoặc bỏ qua]
+- Link Web App Google Sheets: [Dán link .../exec HOẶC ghi "Hướng dẫn tôi tạo Sổ điểm Google Sheets"]
+- Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: Thien2026 - để trống mặc định là 123456]
+- Yêu cầu: Tự thiết kế [5 - 7] câu hỏi tương tác (Trắc nghiệm, Đúng/Sai, Điền số, Ghép thẻ) rải đều theo bài giảng; chống tua nhanh 100%; trả lời ĐÚNG mới hiện giải thích; đóng gói thư mục chuẩn ra ngoài Desktop để kéo thả lên Netlify.
 ```
 
-**Bộ tính năng đỉnh cao tích hợp sẵn trong sản phẩm:**
+* **🟣 Mẫu B — CHƯA CÓ VIDEO: Làm mới trọn gói từ File Giáo án Word (`.docx`) hoặc Sách giáo khoa (`.pdf` / ảnh chụp):**
+```text
+Hiện tại tôi chưa có video bài giảng, mới chỉ có file Giáo án / Sách giáo khoa tại: "[Kéo thả file vào chat HOẶC giữ Shift + Chuột phải vào file chọn Copy as path rồi dán vào đây]".
+Em hãy làm trọn gói từ đầu giúp tôi ra cả Video bài giảng MP4 lẫn Trang Web Video Tương Tác:
+- Môn & Lớp: [...] - Tên bài học: [...] - Giáo viên & Trường: [...]
+- Giọng đọc AI lồng tiếng: [Cô Hoài My (Nữ miền Bắc) / hoặc Thầy Nam Minh (Nam miền Bắc)]
+- Hình thức sử dụng: [Online qua YouTube + Netlify / hoặc Offline dạy trực tiếp trên TV lớp học]
+- Link Web App Google Sheets: [Dán link .../exec HOẶC ghi "Hướng dẫn tôi tạo Sổ điểm Google Sheets"]
+- Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: Thien2026]
+- Yêu cầu: (1) Bóc tách nội dung & ảnh gốc từ Giáo án/SGK, lập kịch bản Slide + danh sách câu hỏi gửi tôi duyệt; (2) Tạo Slide PowerPoint 16:9 chuẩn sư phạm, viết lời giảng vào Notes, lồng tiếng AI và xuất Video MP4 Full HD 1080p; (3) Căn đúng mốc giây kết thúc từng mục kiến thức trong video vừa xuất để đóng gói Trang Web Video Tương Tác ra ngoài Desktop.
+```
+*(Lưu ý khi làm từ Giáo án/SGK: Sau khi AI xuất xong file `.mp4`, nếu muốn gửi link Online cho học sinh học ở nhà trên điện thoại, Thầy/Cô chỉ cần tải file `.mp4` đó lên YouTube ở chế độ **Không công khai / Unlisted** mất 1 phút rồi gửi link YouTube cho AI gắn vào gói Netlify; nếu chỉ dạy trên máy chiếu/TV lớp học thì chạy Offline trực tiếp file `.mp4` ngay trong thư mục mà không cần đăng YouTube!).*
+
+#### 3️⃣ Bộ tính năng sư phạm đỉnh cao tích hợp sẵn:
 * 🔒 **Chống tua nhanh 100%:** Giám sát 250ms, giật lại vị trí hợp lệ khi học sinh cố tình tua vượt bài giảng.
-* 🎯 **Vượt trạm đến khi Đúng & Chuẩn đạt $\ge$ 80%:** Học sinh bắt buộc tự trả lời **ĐÚNG** mới vượt qua được từng trạm câu hỏi và được ghi nhận trọn `+1 điểm` (1 câu hoàn thành). Mọi học sinh kiên trì học hết video và vượt qua từ 80% số trạm trở lên đều được công nhận Hoàn thành (`🟢 ĐÃ HOÀN THÀNH`), đồng thời Sổ điểm vẫn thống kê riêng số câu đúng ngay từ lần thử đầu tiên.
-* 🛡️ **Giấu giải thích khi sai — Chỉ mở giải thích khi ĐÚNG:** Khi trả lời sai, hệ thống **tuyệt đối không lộ đáp án hay lời giải thích**, chỉ nhắc suy nghĩ lại kèm nút `⏪ Xem lại 30s bài giảng` (câu Đúng/Sai có 3 giây suy ngẫm chống bấm bừa 2 nút liên tiếp). Chỉ khi trả lời **ĐÚNG** mới mở hộp `💡 Hướng dẫn & Giải thích` để khắc sâu kiến thức.
-* 📱 **Tối ưu di động tràn màn hình:** Bảng câu hỏi tự động phóng to toàn màn hình điện thoại, nút bấm $\ge 48\text{px}$ chuẩn ngón tay chạm, chống co giật màn hình trên iPhone.
-* 👤 **Đổi tên & lớp trực tiếp:** Nút `👤 Tên (Lớp) ✏️ Đổi` trên thanh tiêu đề cho phép sửa nhanh lỗi gõ sai tên/lớp hoặc cho bạn khác mượn máy học (reset lượt làm bài độc lập).
+* 🎯 **Vượt trạm đến khi Đúng & Chuẩn đạt $\ge$ 80%:** Học sinh bắt buộc tự trả lời **ĐÚNG** mới vượt qua được từng trạm câu hỏi và được ghi nhận trọn `+1 điểm` (1 câu hoàn thành). Mọi học sinh kiên trì học hết video đều đạt chuẩn Hoàn thành (`🟢 ĐÃ HOÀN THÀNH`), đồng thời Sổ điểm vẫn thống kê riêng số câu đúng ngay từ lần thử đầu tiên.
+* 🛡️ **Giấu giải thích khi sai — Chỉ mở giải thích khi ĐÚNG:** Khi trả lời sai, hệ thống **tuyệt đối không lộ đáp án hay lời giải thích**, chỉ nhắc suy nghĩ lại kèm nút `⏪ Xem lại 30s bài giảng` (câu Đúng/Sai có 3 giây suy ngẫm chống bấm bừa 2 nút liên tiếp). Chỉ khi trả lời **ĐÚNG** mới mở hộp `💡 Hướng dẫn & Giải thích`.
+* 📱 **Tối ưu di động tràn màn hình + Đổi tên/lớp 1-chạm + Tự động nhớ tiến độ** khi rớt mạng hay hết pin.
+* 📊 **Google Sheets tự động tách tab từng lớp (`6A`, `6B`...)** kèm bảng thống kê Sĩ số, Hoàn thành, Điểm TB thời gian thực.
+* ⚙️ **Chế độ Thầy Cô bảo mật tuyệt đối:** Mở khóa tua tự do & nhảy nhanh tới từng trạm câu hỏi để duyệt bài; ô nhập mật mã ẩn hoàn toàn gợi ý mật khẩu trên màn hình học sinh.
 
-* 🔄 **Tự động nhớ tiến độ:** Rớt mạng, reload F5 hoặc hết pin mở lại sẽ hỏi tiếp tục học từ giây đang xem dở, không mất điểm.
-* 📊 **Google Sheets tự động tách tab:** Mỗi lớp 1 tab riêng (`6A`, `6B`...), tự sinh tab mới khi có lớp mới vào, mỗi học sinh đúng 1 dòng duy nhất, kèm bảng thống kê thời gian thực (Sĩ số, Hoàn thành, Điểm TB).
-* ⚙️ **Chế độ Thầy Cô (Bảo mật mật khẩu riêng — mặc định `123456`):** Mở khóa tua tự do và các nút nhảy nhanh tới từng trạm câu hỏi để giáo viên duyệt bài trước khi giao cho học sinh (ô nhập mật mã trên màn hình học sinh ẩn hoàn toàn gợi ý mật khẩu để học sinh không thể đoán được).
-* 🌐 **Đóng gói Netlify Drop 3 giây:** Tự động tạo thư mục chứa `index.html`, chỉ cần kéo thả vào [app.netlify.com](https://app.netlify.com) là có link web online bảo mật HTTPS miễn phí vĩnh viễn!
-
-#### 🔑 Hướng dẫn Thầy/Cô thay đổi mật khẩu Chế độ Thầy Cô (3 cách cực nhanh):
-1. **Cách 1 — Đặt ngay từ đầu khi tạo video mới *(Khuyên dùng)*:** Ghi thêm dòng `Mật khẩu Chế độ Thầy Cô: [Mật khẩu riêng, ví dụ: 246810]` vào câu lệnh gửi cho AI.
-2. **Cách 2 — Nhờ AI đổi mật khẩu cho bài giảng đã tạo sẵn *(3 giây)*:** Gõ vào khung chat:
-   > *"Em hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng tại thư mục `C:\Users\admin\Desktop\Web_Video_Tuong_Tac_...` thành `Toan6@2026` giúp tôi."*  
-   Sau đó kéo thả lại thư mục đó vào mục **Deploys** trên Netlify là cập nhật ngay (vẫn giữ nguyên link cũ đã gửi học sinh).
-3. **Cách 3 — Tự đổi thủ công bằng Notepad *(10 giây, không cần mở AI)*:**
+#### 4️⃣ 🔑 Hướng dẫn chi tiết 4 tình huống thay đổi mật khẩu Chế độ Thầy Cô:
+1. **Tình huống 1 — Đặt mật khẩu riêng ngay từ đầu khi tạo bài mới *(Khuyên dùng)*:** Ghi dòng `- Mật khẩu Chế độ Thầy Cô: [Mật khẩu riêng, ví dụ: Thien2026]` ngay trong câu lệnh tạo video.
+2. **Tình huống 2 — Bài giảng đã tạo sẵn trên máy, nhờ AI đổi tự động *(3 giây)*:** Giữ `Shift + Chuột phải` vào thư mục bài giảng chọn `Copy as path` rồi nhắn vào khung chat:
+   > *"Em hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng tại đường dẫn: `[Dán đường dẫn thư mục]` thành mật khẩu mới là: `Toan6@2026` giúp tôi."*
+3. **Tình huống 3 — Tự đổi thủ công bằng Notepad trên máy tính *(10 giây, không cần mở AI)*:**
    - Mở thư mục bài giảng ngoài Desktop $\to$ Chuột phải vào file **`index.html`** $\to$ chọn **Open with $\to$ Notepad**.
-   - Nhấn **`Ctrl + F`**, gõ `TEACHER_PASSWORD` $\to$ sửa `'123456'` thành mật khẩu mới bên trong cặp dấu nháy đơn (ví dụ: `const TEACHER_PASSWORD = '246810';`).
-   - Nhấn **`Ctrl + S`** để lưu lại $\to$ Kéo thả lại thư mục vào Netlify để cập nhật lên web!
+   - Nhấn **`Ctrl + F`**, gõ `TEACHER_PASSWORD` $\to$ sửa `'123456'` thành mật khẩu mới bên trong cặp dấu nháy đơn (ví dụ: `const TEACHER_PASSWORD = '246810';`) $\to$ nhấn **`Ctrl + S`** lưu lại.
+4. **Tình huống 4 — Cập nhật mật khẩu mới lên Web Netlify mà KHÔNG BỊ ĐỔI LINK đã gửi học sinh *(3 giây)*:**
+   - Mở [app.netlify.com](https://app.netlify.com) $\to$ bấm chọn **tên bài giảng** $\to$ vào tab **`Deploys`** $\to$ **kéo thả lại thư mục bài giảng** vừa đổi mật khẩu vào khung cập nhật. Chờ 3 giây hiện *Published* rồi bấm `Ctrl + F5`: **đường link cũ trên Zalo học sinh giữ nguyên 100%**, mật khẩu mới có hiệu lực ngay!
 
 ---
 

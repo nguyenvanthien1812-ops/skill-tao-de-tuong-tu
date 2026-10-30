@@ -579,7 +579,7 @@ Agent tự động thực thi tiến trình cập nhật từ GitHub:
    python scripts/sync_skill.py
    ```
 2. Xuất thông báo hoàn tất:
-   > "🎉 **ĐÃ CẬP NHẬT LÊN PHIÊN BẢN v6.3.4 THÀNH CÔNG!**  
+   > "🎉 **ĐÃ CẬP NHẬT LÊN PHIÊN BẢN v6.3.5 THÀNH CÔNG!**  
    > - Đã tải toàn bộ tính năng mới nhất từ GitHub về máy tính.  
    > - Đã cập nhật tính năng Tạo file nghe MP3 Tiếng Anh chuẩn phòng thi (khớp 100% câu hỏi), Soạn giáo án chuẩn Phụ lục III / PPCT và các công cụ bổ trợ.  
    > 
@@ -620,44 +620,144 @@ Agent xuất ngay phản hồi ân cần, chi tiết theo 3 trường hợp th�
 
 ---
 
-#### 1️⃣7️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn tạo video tương tác" HOẶC "đổi mật khẩu chế độ thầy cô" (hoặc "làm video có câu hỏi tương tác", "video chống tua nhanh", "tạo video e-learning", "video ghi điểm vào google sheet"...)
+#### 1️⃣7️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn tạo video tương tác" HOẶC "làm video từ giáo án word" HOẶC "làm video từ sách giáo khoa" (hoặc "hướng dẫn tạo video tương tác", "làm video có câu hỏi tương tác", "video chống tua nhanh", "tạo video e-learning", "tạo video tương tác từ giáo án", "tạo video tương tác từ sgk"...)
 
-Agent xuất ngay phản hồi "cầm tay chỉ việc" rõ ràng từ A–Z:
-> "Dạ chào Thầy/Cô! Tính năng **Tạo Video Tương Tác E-Learning (Chống Tua Nhanh + 4 Dạng Câu Hỏi Nhúng + Tự Phân Tab Lớp Trên Google Sheets + Chuẩn Đạt $\ge$ 80%)** giúp Thầy/Cô biến video bài giảng YouTube thành trang học tập trực tuyến chuyên nghiệp: học sinh **không thể tua nhanh**, trả lời **SAI không bị lộ lời giải thích** (chỉ khi tự làm **ĐÚNG** mới mở lời giải thích và cộng trọn `+1 điểm`), kết quả tự động tách riêng từng lớp (`6A`, `6B`...) trên Google Sheets.
+Agent xuất ngay phản hồi **"Cầm tay chỉ việc chi tiết từ đầu (A → Z)"** để giáo viên chưa từng làm bao giờ cũng thực hiện trơn tru 100%:
+> "Dạ chào Thầy/Cô! Tính năng **Tạo Video Tương Tác E-Learning (Chống Tua Nhanh + 4 Dạng Câu Hỏi Nhúng + Tự Phân Tab Lớp Trên Google Sheets + Chuẩn Đạt $\ge$ 80%)** giúp Thầy/Cô tạo trang học tập trực tuyến chuẩn sư phạm: học sinh **không thể tua nhanh**, trả lời **SAI không bị lộ lời giải thích** (chỉ khi tự làm **ĐÚNG** mới mở giải thích và cộng trọn `+1 điểm`), kết quả tự động tách riêng từng lớp (`6A`, `6B`...) trên Google Sheets.
 >
-> Thầy/Cô chọn mẫu câu lệnh phù hợp bên dưới, điền thông tin và gửi cho em nhé:
+> Em xin hướng dẫn Thầy/Cô **từng bước từ đầu (A → Z)** cực kỳ đơn giản như sau ạ:
+>
 > ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-> 🟢 **MẪU 1 — CHỈ CẦN LINK YOUTUBE, AI TỰ SOẠN CÂU HỎI TƯƠNG TÁC (Nhanh nhất):**
+> 🗺️ **PHẦN 1: QUY TRÌNH 4 BƯỚC TỪ ĐẦU ĐẾN KHI CÓ LINK GỬI ZALO HỌC SINH**
+>
+> * **Bước 1 — Chuẩn bị nguồn bài giảng (Hỗ trợ cả khi ĐÃ CÓ VIDEO hoặc CHƯA CÓ VIDEO):**
+>   + **Lộ trình A *(Đã có sẵn Video YouTube)*:** Thầy/Cô chỉ cần copy đường link video YouTube bài giảng (có thể gửi kèm thêm file **Giáo án Word `.docx`** hoặc **file/ảnh Sách giáo khoa SGK** để em ra câu hỏi bám sát 100% tiết dạy trên lớp).
+>   + **Lộ trình B *(Chưa có Video — Chỉ có Giáo án Word `.docx` hoặc Sách giáo khoa `.pdf` / ảnh chụp trang SGK)*:** Em sẽ tự động làm trọn gói cho Thầy/Cô từ con số 0: **Bóc tách nội dung & hình ảnh gốc từ Giáo án/SGK $\to$ Thiết kế bộ Slide PowerPoint 16:9 chuẩn sư phạm $\to$ Viết lời giảng truyền cảm $\to$ Lồng tiếng AI chuẩn phát thanh viên (Cô Hoài My / Thầy Nam Minh) $\to$ Xuất ra file Video bài giảng Full HD 1080p (`.mp4`) $\to$ Gắn trạm câu hỏi tương tác khớp chính xác từng giây kết thúc mỗi mục kiến thức!**
+> * **Bước 2 — Cách gửi file Giáo án Word hoặc Sách giáo khoa vào đây (nếu dùng):**
+>   + *Cách 1 (Nhanh nhất):* Kéo thả trực tiếp file Giáo án (`.docx`), file SGK (`.pdf`) hoặc ảnh chụp trang sách vào khung chat này.
+>   + *Cách 2 (Lấy đường dẫn file trên máy):* Nhấn giữ phím **`Shift` + Chuột phải** vào file $\to$ chọn **`Copy as path`** *(Windows 11 bấm `Ctrl + Shift + C`)* rồi dán vào câu lệnh bên dưới.
+> * **Bước 3 — Kết nối Sổ điểm Google Sheets tự động chia tab lớp (`6A`, `6B`...):**
+>   + Nếu đã có link Web App (`/exec`), Thầy/Cô dán vào câu lệnh.
+>   + Nếu **lần đầu làm chưa có**, Thầy/Cô chỉ cần ghi trong câu lệnh là: **`Hướng dẫn tôi tạo Sổ điểm Google Sheets`** — em sẽ cấp sẵn đoạn mã copy-paste 1 lần (30 giây) là tự động phân lớp và tính điểm trung bình!
+> * **Bước 4 — Đưa lên Web miễn phí trong 3 giây (Netlify Drop):**
+>   + Ngay khi em xuất sẵn thư mục `Web_Video_Tuong_Tac_...` ra ngoài **Desktop**, Thầy/Cô chỉ cần mở [app.netlify.com](https://app.netlify.com), kéo thả thư mục đó vào trang **Deploys** là nhận ngay đường link Web gửi vào Zalo lớp cho học sinh học trên điện thoại & máy tính!
+>
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> ✍️ **PHẦN 2: CÁC MẪU CÂU LỆNH CHI TIẾT (THẦY/CÔ CHỌN 1 MẪU, COPY & ĐIỀN THÔNG TIN TRONG NGOẶC `[...]` RỒI GỬI EM)**
+>
+> 🟢 **MẪU 1 — ĐÃ CÓ VIDEO YOUTUBE, MUỐN AI TỰ SOẠN CÂU HỎI TƯƠNG TÁC TỪ ĐẦU (Nhanh nhất):**
 > ```text
-> Em hãy tạo cho tôi 1 trang Web Video Tương Tác E-Learning với thông tin sau:
-> - Môn & Lớp: [Ví dụ: Toán 6 - SGK Kết nối tri thức]
+> Em hãy tạo giúp tôi 1 trang Web Video Tương Tác E-Learning hoàn chỉnh với thông tin sau:
+> - Môn & Lớp: [Ví dụ: Toán 6 - Bộ sách Kết nối tri thức]
 > - Tên bài học: [Ví dụ: Bài 6 - Lũy thừa với số mũ tự nhiên]
-> - Giáo viên & Trường: [Ví dụ: GV Nguyễn Thiện - THCS Ứng Hòe]
+> - Giáo viên & Trường: [Ví dụ: GV Nguyễn Thiện - Trường THCS Ứng Hòe]
 > - Link video YouTube bài giảng: [Dán link YouTube vào đây]
-> - Độ dài video: [Ví dụ: 14 phút 20 giây]
-> - Link Web App Google Sheets (nếu đã tạo, nếu chưa có hãy ghi "Hướng dẫn tôi tạo"): [Dán link /exec hoặc ghi "Hướng dẫn tôi tạo"]
-> - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu bí mật riêng của Thầy/Cô, ví dụ: Thien2026 - nếu để trống mặc định là 123456]
-> - Yêu cầu: Tự thiết kế [5 - 7] câu hỏi tương tác (kết hợp Trắc nghiệm, Đúng/Sai, Điền đáp án, Ghép thẻ) rải đều theo mạch bài giảng; đóng gói thư mục chuẩn sẵn ngoài Desktop để tôi kéo thả lên Netlify.
+> - Thời lượng video: [Ví dụ: 14 phút 20 giây]
+> - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi "Hướng dẫn tôi tạo Sổ điểm Google Sheets"]
+> - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng của Thầy/Cô, ví dụ: Thien2026 - để trống mặc định là 123456]
+> - Yêu cầu sư phạm:
+>   1. Tự thiết kế [5 - 7] trạm câu hỏi tương tác đa dạng (Trắc nghiệm 4 lựa chọn, Đúng/Sai, Điền đáp án số, Ghép thẻ) rải đều theo mạch bài giảng.
+>   2. Khóa chống tua nhanh 100%; học sinh trả lời SAI không được hiện lời giải thích, chỉ khi tự làm ĐÚNG mới hiện giải thích và cộng +1 điểm để đạt chuẩn Hoàn thành >= 80%.
+>   3. Đóng gói sẵn thư mục chuẩn index.html ra ngoài Desktop để tôi kéo thả lên Netlify.
 > ```
 >
-> 🔵 **MẪU 2 — GIÁO VIÊN ĐÃ CÓ SẴN CÂU HỎI & MỐC PHÚT DỪNG VIDEO:**
+> 🔵 **MẪU 2 — ĐÃ CÓ VIDEO YOUTUBE + ĐÍNH KÈM FILE GIÁO ÁN WORD HOẶC SÁCH GIÁO KHOA (ĐỂ CÂU HỎI KHỚP 100% BÀI DẠY TRÊN LỚP):**
 > ```text
-> Em hãy tạo trang Web Video Tương Tác E-Learning với danh sách câu hỏi tôi soạn sẵn:
+> Dựa vào file Giáo án Word / Sách giáo khoa tại: "[Kéo thả file vào chat HOẶC dán đường dẫn Copy as path vào đây]" và video bài giảng YouTube dưới đây, em hãy tạo giúp tôi 1 trang Web Video Tương Tác E-Learning:
+> - Môn & Lớp: [Ví dụ: KHTN 7 - Kết nối tri thức]
+> - Tên bài học: [Ví dụ: Bài 22 - Quang hợp ở thực vật]
+> - Giáo viên & Trường: [Tên Thầy/Cô - Tên trường]
+> - Link video YouTube bài giảng: [Dán link YouTube]
+> - Thời lượng video: [Ví dụ: 15 phút 30 giây]
+> - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi "Hướng dẫn tôi tạo Sổ điểm Google Sheets"]
+> - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng của Thầy/Cô, ví dụ: KHTN7@2026]
+> - Yêu cầu bắt buộc:
+>   1. Đọc kỹ file Giáo án / SGK đính kèm để thiết kế [5 - 7] câu hỏi tương tác bám sát 100% khái niệm, ký hiệu, ví dụ và Yêu cầu cần đạt của bài học này.
+>   2. Chống tua nhanh 100%, trả lời ĐÚNG mới mở giải thích, tự phân lớp trên Google Sheets và đóng gói thư mục chuẩn ra ngoài Desktop để đưa lên Netlify.
+> ```
+>
+> 🟣 **MẪU 3 — CHƯA CÓ VIDEO: LÀM TRỌN GÓI TỪ FILE GIÁO ÁN WORD (.DOCX) HOẶC FILE/ẢNH SÁCH GIÁO KHOA (TỰ TẠO SLIDE $\to$ LỒNG TIẾNG AI $\to$ XUẤT VIDEO MP4 $\to$ TẠO WEB VIDEO TƯƠNG TÁC):**
+> ```text
+> Hiện tại tôi chưa có video bài giảng, mới chỉ có tài liệu tại: "[Kéo thả file Giáo án Word .docx / file PDF Sách giáo khoa / Ảnh chụp trang SGK vào chat HOẶC dán đường dẫn Copy as path]".
+> Em hãy thực hiện trọn gói từ đầu giúp tôi để tạo ra cả Video bài giảng MP4 lẫn Trang Web Video Tương Tác E-Learning:
+> - Môn & Lớp: [Ví dụ: Toán 6 - Kết nối tri thức]
+> - Tên bài học: [Ví dụ: Bài 6 - Lũy thừa với số mũ tự nhiên]
+> - Giáo viên & Trường: [Tên Thầy/Cô - Tên trường]
+> - Giọng đọc AI lồng tiếng cho video: [Cô Hoài My (Nữ miền Bắc truyền cảm) / hoặc Thầy Nam Minh (Nam miền Bắc trầm ấm)]
+> - Hình thức sử dụng Video Tương Tác: [Online cho học sinh học tại nhà qua YouTube + Netlify / hoặc Offline dạy trực tiếp trên TV lớp học]
+> - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi "Hướng dẫn tôi tạo Sổ điểm Google Sheets"]
+> - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng của Thầy/Cô, ví dụ: Thien2026]
+> - Yêu cầu quy trình:
+>   1. Bóc tách nội dung & hình ảnh gốc từ file Giáo án / SGK, lập bảng kịch bản Slide (Storyboard) + danh sách câu hỏi tương tác gửi tôi duyệt trước.
+>   2. Khi tôi duyệt OK: Tự động thiết kế bộ Slide PowerPoint 16:9 chuẩn sư phạm, viết lời giảng chi tiết vào Notes, lồng tiếng AI và kết xuất ra file Video bài giảng Full HD 1080p (.mp4).
+>   3. Căn đúng mốc giây kết thúc từng phần kiến thức trong video vừa xuất để đóng gói thành Trang Web Video Tương Tác chống tua nhanh hoàn chỉnh ngoài Desktop.
+> ```
+>
+> 🟠 **MẪU 4 — ĐÃ CÓ VIDEO YOUTUBE + THẦY/CÔ ĐÃ TỰ SOẠN SẴN DANH SÁCH CÂU HỎI & MỐC PHÚT DỪNG:**
+> ```text
+> Em hãy tạo trang Web Video Tương Tác E-Learning theo đúng danh sách câu hỏi và mốc thời gian tôi đã chuẩn bị sẵn:
 > - Môn & Lớp: [...] - Tên bài học: [...]
 > - Giáo viên & Trường: [...]
 > - Link video YouTube: [Dán link YouTube]
-> - Link Web App Google Sheets: [Dán link /exec hoặc ghi "Hướng dẫn tôi tạo"]
-> - Mật khẩu Chế độ Thầy Cô: [Mật khẩu riêng của Thầy/Cô, ví dụ: 246810]
+> - Thời lượng video: [Ví dụ: 14 phút 20 giây]
+> - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi "Hướng dẫn tôi tạo Sổ điểm Google Sheets"]
+> - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: 246810]
 > - Danh sách các trạm câu hỏi:
->   + Trạm 1 (phút 03:10 - Trắc nghiệm): [Nội dung câu hỏi + A, B, C, D + Đáp án + Giải thích]
->   + Trạm 2 (phút 05:20 - Đúng/Sai): [Nội dung mệnh đề + Đáp án Đúng/Sai + Giải thích]
->   + Trạm 3 (phút 08:00 - Điền đáp án): [Nội dung câu hỏi + Đáp án số + Giải thích]
-> ```
+>   + Trạm 1 (dừng tại phút 03:10 - Trắc nghiệm): [Nội dung câu hỏi | A... B... C... D... | Đáp án đúng | Lời giải thích khi làm đúng]
+>   + Trạm 2 (dừng tại phút 05:20 - Đúng/Sai): [Nội dung khẳng định | Đáp án: Đúng hoặc Sai | Lời giải thích khi làm đúng]
+>   + Trạm 3 (dừng tại phút 08:00 - Điền đáp án): [Nội dung câu hỏi | Đáp án số/chữ | Lời giải thích khi làm đúng]
+>   + Trạm 4 (dừng tại phút 10:45 - Ghép thẻ): [Nội dung câu hỏi | Các thẻ lựa chọn | Thẻ đúng | Lời giải thích khi làm đúng]
+> ```"
+
+---
+
+#### 1️⃣8️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn thay đổi mật khẩu chế độ thầy cô" (hoặc "thay đổi mật khẩu chế độ thầy cô", "đổi mật khẩu chế độ thầy cô", "đổi mật khẩu thầy cô", "đặt mật khẩu chế độ thầy cô", "cách đổi mật mã thầy cô"...)
+
+Agent xuất ngay phản hồi **hướng dẫn chi tiết từng bước cho cả 4 tình huống thực tế** để giáo viên đang ở giai đoạn nào cũng thực hiện được ngay trong vài giây:
+> "Dạ chào Thầy/Cô! Ở **Chế độ Thầy Cô** (nút **`⚙️ Thầy Cô: TẮT`** trên góc phải bài giảng), mật khẩu mặc định ban đầu là `123456` (đã được **ẩn hoàn toàn gợi ý trên màn hình** để học sinh bấm vào cũng không thể nhìn thấy hay đoán được).
 >
-> 🔑 **MẪU 3 — ĐỔI MẬT KHẨU CHẾ ĐỘ THẦY CÔ CHO BÀI GIẢNG ĐÃ TẠO SẴN:**
-> - **Cách A (Nhờ AI đổi trong 3 giây):** Gửi câu lệnh:
->   `Em hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng tại thư mục "[Đường dẫn thư mục bài giảng trên Desktop]" thành "[Mật khẩu mới]" giúp tôi.`
-> - **Cách B (Thầy/Cô tự đổi trong 10 giây bằng Notepad):** Mở thư mục bài giảng $\to$ chuột phải vào file `index.html` $\to$ **Open with $\to$ Notepad** $\to$ nhấn `Ctrl + F` tìm `TEACHER_PASSWORD` $\to$ sửa `'123456'` thành mật khẩu mới trong dấu nháy đơn $\to$ nhấn `Ctrl + S` lưu lại $\to$ kéo thả lại thư mục vào Netlify!"
+> Để thay đổi sang mật khẩu bí mật riêng của mình, Thầy/Cô xem mình đang thuộc **Tình huống nào trong 4 tình huống dưới đây** và làm theo đúng hướng dẫn nhé:
+>
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 🟢 **TÌNH HUỐNG 1: THẦY/CÔ ĐANG CHUẨN BỊ TẠO BÀI GIẢNG VIDEO TƯƠNG TÁC MỚI *(Đặt mật khẩu riêng ngay từ đầu — Khuyên dùng)***
+> * Ngay trong câu lệnh yêu cầu tạo Video Tương Tác gửi cho em, Thầy/Cô chỉ cần ghi thêm 1 dòng:
+>   ```text
+>   - Mật khẩu Chế độ Thầy Cô: [Mật khẩu riêng của Thầy/Cô, ví dụ: Thien2026]
+>   ```
+> * Em sẽ nhúng thẳng mật khẩu này vào bài giảng ngay từ lúc xuất file mà không dùng số `123456` nữa.
+>
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 🔵 **TÌNH HUỐNG 2: BÀI GIẢNG ĐÃ TẠO SẴN TRÊN MÁY TÍNH — NHỜ AI ĐỔI TỰ ĐỘNG *(Chỉ mất 3 giây)***
+> * **Bước 1:** Thầy/Cô tìm thư mục bài giảng đã tạo (thường nằm ngoài Desktop, ví dụ `Web_Video_Tuong_Tac_Toan6`), nhấn giữ phím **`Shift` + Chuột phải** vào thư mục đó $\to$ chọn **`Copy as path`** *(trên Windows 11 bấm `Ctrl + Shift + C`; hoặc kéo thả file `index.html` vào khung chat)*.
+> * **Bước 2:** Copy câu lệnh mẫu dưới đây, dán đường dẫn và mật khẩu mới rồi gửi cho em:
+>   ```text
+>   Em hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng tại đường dẫn: "[Dán đường dẫn thư mục bài giảng hoặc file index.html vào đây]" thành mật khẩu mới là: "[Nhập mật khẩu mới, ví dụ: Toan6@2026]" giúp tôi.
+>   ```
+> * Em sẽ tự động cập nhật mật khẩu mới vào đúng file `index.html` trong tích tắc mà giữ nguyên 100% câu hỏi và Sổ điểm Google Sheets! *(Nếu bài này đã đưa lên Web Netlify, Thầy/Cô làm tiếp Tình huống 4 bên dưới nhé).*
+>
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 🟠 **TÌNH HUỐNG 3: THẦY/CÔ MUỐN TỰ ĐỔI THỦ CÔNG TRÊN MÁY TÍNH *(10 giây bằng Notepad — Không cần mở phần mềm AI)***
+> * **Bước 1:** Mở thư mục chứa bài giảng trên máy tính (ví dụ thư mục `Web_Video_Tuong_Tac_Toan6` ngoài Desktop).
+> * **Bước 2:** Nhấp **chuột phải** vào file **`index.html`** $\to$ chọn **Open with (Mở bằng)** $\to$ chọn **Notepad**.
+> * **Bước 3:** Trên bàn phím, nhấn tổ hợp **`Ctrl + F`**, gõ chữ **`TEACHER_PASSWORD`** rồi nhấn **Enter**. Con trỏ sẽ nhảy ngay tới dòng:
+>   ```javascript
+>   const TEACHER_PASSWORD = '123456';
+>   ```
+> * **Bước 4:** Xóa mật khẩu cũ và gõ mật khẩu mới **nằm bên trong cặp dấu nháy đơn `'...'`**, ví dụ:
+>   ```javascript
+>   const TEACHER_PASSWORD = '246810';
+>   ```
+> * **Bước 5:** Nhấn **`Ctrl + S`** để lưu lại và đóng Notepad là hoàn tất trên máy tính!
+>
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 🌐 **TÌNH HUỐNG 4: BÀI GIẢNG ĐÃ ĐƯA LÊN WEB NETLIFY — CẬP NHẬT MẬT KHẨU MỚI LÊN WEB MÀ KHÔNG BỊ ĐỔI LINK ĐÃ GỬI HỌC SINH *(3 giây)***
+> Sau khi đã đổi mật khẩu trong file `index.html` trên máy tính (bằng Tình huống 2 hoặc Tình huống 3), Thầy/Cô cập nhật lên trang Web như sau:
+> * **Bước 1:** Mở trình duyệt vào [app.netlify.com](https://app.netlify.com) $\to$ bấm chọn vào **tên trang Web bài giảng** cần cập nhật.
+> * **Bước 2:** Trên thanh menu ngang của bài giảng đó, bấm vào mục **`Deploys`**.
+> * **Bước 3:** Cầm nguyên thư mục bài giảng trên Desktop (ví dụ `Web_Video_Tuong_Tac_Toan6` chứa file `index.html` vừa đổi mật khẩu) **kéo thả thẳng vào ô nét đứt** *"Need to update your site? Drag and drop your site output folder here"*.
+> * **Bước 4:** Chờ đúng 3 giây hiện chữ **`Published`** màu xanh lá $\to$ Mở lại đường link bài giảng bấm **`Ctrl + F5`** để làm mới trình duyệt.
+> 👉 **Ưu điểm tuyệt vời:** Đường link bài giảng đã gửi trong nhóm Zalo cho học sinh **vẫn giữ nguyên 100% không thay đổi**, nhưng mật khẩu Chế độ Thầy Cô trên Web đã lập tức đổi sang mật khẩu mới!"
+
 
 
 ### 🗣️ Luồng Hội Thoại Thông Minh — AI Hỏi Đúng Thứ Gì Còn Thiếu

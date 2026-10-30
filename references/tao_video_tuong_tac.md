@@ -29,54 +29,138 @@
 
 ## 🔑 TỪ KHÓA KÍCH HOẠT
 
-Khi giáo viên nói một trong các câu sau, agent hiểu cần thực hiện tính năng này:
+Khi giáo viên nói một trong các nhóm câu sau, agent kích hoạt ngay tính năng tương ứng (nếu giáo viên mới gõ câu ngắn chưa kèm dữ liệu, **bắt buộc phản hồi theo đúng kịch bản Mục `1️⃣7️⃣` hoặc Mục `1️⃣8️⃣` trong [`references/onboarding_prompts.md`](./onboarding_prompts.md)**):
 
-- *"tôi muốn tạo video tương tác"*
-- *"làm video có câu hỏi tương tác"*
-- *"video chống tua nhanh cho học sinh"*
-- *"tạo video e-learning"*
-- *"video tích hợp câu hỏi"*
-- *"làm video học sinh không tua được"*
-- *"tạo interactive video"*
-- *"video dừng hỏi câu hỏi"*
-- *"video ghi điểm vào google sheet"*
+1. **Nhóm kích hoạt Tạo Video Tương Tác từ đầu:**
+   - *"tôi muốn tạo video tương tác"*, *"hướng dẫn tạo video tương tác"*
+   - *"làm video có câu hỏi tương tác"*, *"video chống tua nhanh cho học sinh"*
+   - *"tạo video e-learning"*, *"video tích hợp câu hỏi"*, *"làm video học sinh không tua được"*
+   - *"tạo interactive video"*, *"video dừng hỏi câu hỏi"*, *"video ghi điểm vào google sheet"*
+2. **Nhóm kích hoạt Làm Video & Video Tương Tác từ Giáo án Word hoặc Sách giáo khoa (SGK):**
+   - *"làm video từ giáo án"*, *"làm video từ giáo án word"*, *"tạo video tương tác từ giáo án"*
+   - *"làm video từ sách giáo khoa"*, *"làm video từ file sgk"*, *"tạo video tương tác từ sách giáo khoa"*, *"tạo video tương tác từ sgk"*
+3. **Nhóm kích hoạt Thay đổi mật khẩu Chế độ Thầy Cô:**
+   - *"tôi muốn thay đổi mật khẩu chế độ thầy cô"*, *"thay đổi mật khẩu chế độ thầy cô"*
+   - *"đổi mật khẩu chế độ thầy cô"*, *"đổi mật khẩu thầy cô"*, *"đặt mật khẩu chế độ thầy cô"*
 
 ---
 
-## 📋 CÁC CÂU LỆNH MẪU CHO GIÁO VIÊN (COPY-PASTE NGAY)
+## 📋 TRỌN BỘ 5 CÂU LỆNH MẪU CHI TIẾT CHO GIÁO VIÊN (COPY-PASTE NGAY)
 
+```text
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 BỘ 5 CÂU LỆNH MẪU TẠO & QUẢN TRỊ VIDEO TƯƠNG TÁC E-LEARNING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🟢 MẪU 1 — ĐÃ CÓ VIDEO YOUTUBE, AI TỰ SOẠN CÂU HỎI TƯƠNG TÁC TỪ ĐẦU:
+   "Em hãy tạo giúp tôi 1 trang Web Video Tương Tác E-Learning hoàn chỉnh với thông tin sau:
+    - Môn & Lớp: [Ví dụ: Toán 6 - Bộ sách Kết nối tri thức]
+    - Tên bài học: [Ví dụ: Bài 6 - Lũy thừa với số mũ tự nhiên]
+    - Giáo viên & Trường: [Ví dụ: GV Nguyễn Thiện - Trường THCS Ứng Hòe]
+    - Link video YouTube bài giảng: [https://youtu.be/VIDEO_ID]
+    - Thời lượng video: [Ví dụ: 14 phút 20 giây]
+    - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi 'Hướng dẫn tôi tạo Sổ điểm Google Sheets']
+    - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: Thien2026 - để trống mặc định là 123456]
+    - Yêu cầu: Tự thiết kế [5 - 7] câu hỏi tương tác đa dạng (Trắc nghiệm, Đúng/Sai, Điền đáp án, Ghép thẻ) rải đều theo mạch bài giảng; chống tua nhanh 100%; trả lời ĐÚNG mới hiện giải thích; đóng gói thư mục chuẩn ra ngoài Desktop để kéo thả lên Netlify."
+
+🔵 MẪU 2 — ĐÃ CÓ VIDEO YOUTUBE + ĐÍNH KÈM FILE GIÁO ÁN WORD (.DOCX) HOẶC SÁCH GIÁO KHOA (PDF/ẢNH):
+   "Dựa vào file Giáo án Word / Sách giáo khoa tại: '[Kéo thả file HOẶC dán đường dẫn Copy as path]' và video YouTube dưới đây, em hãy tạo trang Web Video Tương Tác E-Learning:
+    - Môn & Lớp: [Ví dụ: KHTN 7 - Kết nối tri thức] - Tên bài học: [Bài 22 - Quang hợp ở thực vật]
+    - Giáo viên & Trường: [Tên Thầy/Cô - Tên trường]
+    - Link video YouTube bài giảng: [https://youtu.be/VIDEO_ID] (Thời lượng: [15 phút 30 giây])
+    - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi 'Hướng dẫn tôi tạo Sổ điểm Google Sheets']
+    - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: KHTN7@2026]
+    - Yêu cầu: Đọc kỹ file Giáo án / SGK đính kèm để thiết kế [5 - 7] trạm câu hỏi bám sát 100% định nghĩa, ký hiệu, ví dụ và Yêu cầu cần đạt của tiết dạy trên lớp; đóng gói thư mục chuẩn ra Desktop."
+
+🟣 MẪU 3 — CHƯA CÓ VIDEO: LÀM TRỌN GÓI TỪ FILE GIÁO ÁN WORD (.DOCX) HOẶC FILE/ẢNH SÁCH GIÁO KHOA:
+   "Hiện tại tôi chưa có video bài giảng, mới chỉ có tài liệu tại: '[Kéo thả file Giáo án Word .docx / PDF SGK / Ảnh chụp trang SGK HOẶC dán đường dẫn Copy as path]'.
+    Em hãy làm trọn gói từ đầu giúp tôi ra cả Video bài giảng MP4 lẫn Trang Web Video Tương Tác:
+    - Môn & Lớp: [...] - Tên bài học: [...] - Giáo viên & Trường: [...]
+    - Giọng đọc AI lồng tiếng: [Cô Hoài My (Nữ miền Bắc) / hoặc Thầy Nam Minh (Nam miền Bắc)]
+    - Hình thức sử dụng: [Online qua YouTube + Netlify / hoặc Offline dạy trực tiếp trên TV lớp học]
+    - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi 'Hướng dẫn tôi tạo Sổ điểm Google Sheets']
+    - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: Thien2026]
+    - Yêu cầu: (1) Bóc tách nội dung & hình ảnh gốc từ Giáo án/SGK, lập bảng kịch bản Slide + danh sách câu hỏi gửi tôi duyệt; (2) Tạo Slide PowerPoint 16:9 chuẩn sư phạm, viết lời giảng vào Notes, lồng tiếng AI và kết xuất Video MP4 Full HD 1080p; (3) Căn đúng mốc giây từng phần trong video vừa xuất để đóng gói Trang Web Video Tương Tác ra ngoài Desktop."
+
+🟠 MẪU 4 — ĐÃ CÓ VIDEO YOUTUBE + GIÁO VIÊN ĐÃ TỰ SOẠN SẴN DANH SÁCH CÂU HỎI & MỐC PHÚT DỪNG:
+   "Em hãy tạo video tương tác cho video YouTube [https://youtu.be/VIDEO_ID] (thời lượng [14:20]):
+    - Môn & Lớp: [...] - Tên bài: [...] - Giáo viên & Trường: [...]
+    - Link Web App Google Sheets: [Dán link .../exec]
+    - Mật khẩu Chế độ Thầy Cô: [Mật khẩu riêng, ví dụ: 246810]
+    - Các trạm câu hỏi như sau:
+      + Trạm 1 (phút 03:10 - Trắc nghiệm): [Câu hỏi | A, B, C, D | Đáp án đúng | Giải thích]
+      + Trạm 2 (phút 05:00 - Đúng/Sai): [Mệnh đề | Đúng/Sai | Giải thích]
+      + Trạm 3 (phút 07:25 - Điền số): [Câu hỏi | Đáp án = 7 | Giải thích]
+      + Trạm 4 (phút 10:15 - Ghép thẻ): [Câu hỏi | Các thẻ | Thẻ đúng | Giải thích]"
+
+🔑 MẪU 5 — ĐỔI MẬT KHẨU CHẾ ĐỘ THẦY CÔ CHO BÀI GIẢNG ĐÃ TẠO SẴN:
+   "Em hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng tại đường dẫn: '[Đường dẫn thư mục Web_Video_Tuong_Tac_... hoặc file index.html]' thành mật khẩu mới là: '[Mật khẩu mới, ví dụ: Toan6@2026]' giúp thầy/cô."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📌 CÂU LỆNH MẪU TẠO VIDEO TƯƠNG TÁC E-LEARNING
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🟢 CÂU LỆNH 1 — Tạo nhanh từ video YouTube có sẵn:
-   "Em hãy tạo video tương tác e-learning cho Bài [tên bài], [môn] lớp [X].
-    Link YouTube: [https://youtu.be/VIDEO_ID]
-    Link Google Sheets: [https://docs.google.com/spreadsheets/d/SHEET_ID/edit]
-    Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: Thien2026 - nếu để trống mặc định là 123456]
-    Bài có [N] câu hỏi tương tác, học sinh không tua nhanh được.
-    Kết quả học sinh tự động ghi vào Google Sheets của thầy/cô."
+---
 
-🟢 CÂU LỆNH 2 — Tạo với danh sách câu hỏi cụ thể:
-   "Em hãy tạo video tương tác cho video YouTube [VIDEO_ID].
-    Mật khẩu Chế độ Thầy Cô: [Mật khẩu riêng của thầy/cô, ví dụ: 246810]
-    Các câu hỏi như sau (thầy/cô sẽ ghi rõ từng câu):
-    - Câu 1 (tại phút 3:10): [nội dung câu hỏi trắc nghiệm A/B/C/D]
-    - Câu 2 (tại phút 5:00): [câu hỏi đúng/sai]
-    - Câu 3 (tại phút 7:25): [điền số, đáp án = 7]
-    Đồng bộ Google Sheets: [link sheets] và đưa lên Netlify giúp thầy/cô."
+## 📚 QUY TRÌNH CHI TIẾT A–Z: LÀM VIDEO BÀI GIẢNG & VIDEO TƯƠNG TÁC TỪ GIÁO ÁN WORD (.DOCX) HOẶC FILE SÁCH GIÁO KHOA (PDF / ẢNH CHỤP)
 
-🟢 CÂU LỆNH 3 — Cập nhật bài đã có, thêm câu hỏi mới:
-   "Em hãy thêm 2 câu hỏi mới vào video tương tác [tên bài] đã làm:
-    - Câu mới 1 (tại phút 8:00): Câu trắc nghiệm — [nội dung]
-    - Câu mới 2 (tại phút 9:30): Câu điền số — đáp án = [N]"
+Khi giáo viên chưa có sẵn video bài giảng (hoặc muốn nội dung video & câu hỏi tương tác khớp tuyệt đối với hồ sơ bài dạy của mình), hệ thống hỗ trợ **3 kịch bản thực chiến** từ tài liệu Giáo án Word / Sách giáo khoa:
 
-🟢 CÂU LỆNH 4 — Đổi mật khẩu Chế độ Thầy Cô cho bài giảng đã tạo sẵn:
-   "Em hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng [tên bài hoặc đường dẫn thư mục Web_Video_Tuong_Tac_...] thành [Mật khẩu mới, ví dụ: Toan6@2026] giúp thầy/cô."
+### 1. Phân loại 3 kịch bản đầu vào từ Giáo án Word & Sách giáo khoa
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
+| Kịch bản thực tế | Đầu vào Giáo viên cung cấp | Quy trình AI thực hiện tự động |
+| :--- | :--- | :--- |
+| **Kịch bản A *(Làm mới từ con số 0 — Chưa có video)*** | Chỉ có file **Giáo án Word (`.docx`)** hoặc **file SGK (`.pdf`)** hoặc **Ảnh chụp các trang SGK** | Chạy trọn gói 6 bước: Bóc tách chữ & ảnh gốc $\to$ Duyệt Storyboard & bộ câu hỏi $\to$ Sinh Slide `.pptx` 16:9 chuẩn sư phạm $\to$ Viết lời giảng vào Notes $\to$ Lồng tiếng AI & đo mốc giây từng slide (`_SlideTimeline.json`) $\to$ Kết xuất **Video `.mp4` Full HD 1080p** $\to$ Đóng gói **Web Video Tương Tác**! |
+| **Kịch bản B *(Đã có Video YouTube + Kèm Giáo án Word / SGK)*** | Link YouTube bài giảng + File **Giáo án Word (`.docx`)** hoặc **SGK (`.pdf`/ảnh)** | Dùng `scripts/boc_tach_tai_lieu.py` đọc toàn bộ Giáo án/SGK để trích xuất đúng định nghĩa, công thức, ký hiệu, ví dụ và Yêu cầu cần đạt của tiết học $\to$ Thiết kế bộ 5–7 trạm câu hỏi tương tác chuẩn xác 100% $\to$ Gắn vào video YouTube qua `interactive_video_builder.py`. |
+| **Kịch bản C *(Đã có sẵn Slide PowerPoint `.pptx` nhưng chưa có Video)*** | File bài chiếu **PowerPoint (`.pptx`)** của giáo viên | Dùng `them_loi_binh_pptx.py` đọc từng slide & viết lời giảng truyền cảm vào Notes $\to$ `long_tieng_pptx.py` lồng tiếng AI + xuất `_SlideTimeline.json` $\to$ `xuat_video_pptx.py` kết xuất **Video `.mp4` 1080p** $\to$ Đóng gói **Web Video Tương Tác**! |
+
+---
+
+### 2. Chi tiết 6 Bước Tự Động Hóa Khép Kín cho Kịch bản A (Từ Giáo án Word / SGK $\to$ Video MP4 $\to$ Web Video Tương Tác)
+
+#### 🔹 Bước A1: Bóc tách toàn bộ văn bản & hình ảnh phân giải gốc từ Giáo án Word hoặc SGK PDF
+- Agent chạy công cụ tích hợp sẵn trong Skill:
+  ```bash
+  python scripts/boc_tach_tai_lieu.py "<duong_dan_giao_an.docx_hoac_sgk.pdf>" -o extracted_lesson/
+  ```
+-*(Nếu giáo viên gửi ảnh chụp trang SGK bằng điện thoại, Agent đọc trực tiếp nội dung và sơ đồ từ các bức ảnh đính kèm).*
+- Kết quả thu được: File văn bản cấu trúc `extracted_lesson/content.txt` và toàn bộ hình vẽ/sơ đồ gốc sắc nét trong `extracted_lesson/images/`.
+
+#### 🔹 Bước A2: Thiết kế Bảng Phác Thảo Kịch Bản (Storyboard) + Bộ Câu Hỏi Tương Tác trình Giáo viên duyệt
+- **Quy tắc lọc nội dung sư phạm:** Loại bỏ 100% mục hành chính trong giáo án (*Mục tiêu, Năng lực số, Thiết bị dạy học, Bảng 2 cột hành chính*), chỉ chắt lọc mạch kiến thức dành cho học sinh theo tiến trình: `Trang bìa` $\to$ `Khởi động` $\to$ `Mục 1, Mục 2, Mục 3...` (mỗi mục đi theo 3 bước: *Quan sát hình ảnh $\to$ Câu hỏi gợi mở $\to$ 💡 Em cần ghi nhớ*) $\to$ `Luyện tập & Tổng kết`.
+- **Quy tắc đặt Trạm câu hỏi tương tác:** Ngay sau slide chốt kiến thức (`💡 Em cần ghi nhớ`) của mỗi mục lớn, đặt **1 Trạm câu hỏi tương tác** (`mcq`, `tf`, `fill`, hoặc `drag`) kiểm tra đúng đơn vị kiến thức vừa giảng xong.
+- Agent trình bảng tóm tắt các Slide + danh sách 5–7 câu hỏi tương tác lên khung chat để Giáo viên xác nhận (hoặc góp ý chỉnh sửa nếu cần).
+
+#### 🔹 Bước A3: Khởi tạo Slide PowerPoint 16:9 chuẩn mực & Ghi lời giảng vào Notes
+- Agent sử dụng [`scripts/tao_slide_chuan.py`](../scripts/tao_slide_chuan.py) dựng file `[TenBai]_ChuanSuPham.pptx` (tỉ lệ 16:9, font `Times New Roman`, công thức Toán/Lý/Hóa chuẩn Native OMML không đè chữ, chèn hình ảnh gốc từ `extracted_lesson/images/` hoặc hình vẽ Matplotlib 300 DPI).
+- Tiếp theo, Agent dùng [`scripts/them_loi_binh_pptx.py`](../scripts/them_loi_binh_pptx.py) ghi lời giảng chi tiết, thân thiện như thầy cô đang giảng bài trên lớp vào ô **Notes** của từng slide (xuất ra `[TenBai]_CoLoiBinh.pptx`).
+
+#### 🔹 Bước A4: Lồng tiếng AI chuẩn phát thanh viên & Đo chính xác mốc giây từng Slide (`_SlideTimeline.json`)
+- Agent chạy công cụ lồng tiếng tự động (Microsoft Edge Neural TTS miễn phí):
+  ```bash
+  # --voice 1: Cô Hoài My (Nữ miền Bắc nhẹ nhàng, truyền cảm)
+  # --voice 2: Thầy Nam Minh (Nam miền Bắc dõng dạc, trầm ấm)
+  python scripts/long_tieng_pptx.py "<duong_dan_CoLoiBinh.pptx>" --voice 1
+  ```
+- Script tự động:
+  1. Chuyển toàn bộ lời giảng ở từng slide thành giọng đọc AI truyền cảm và nhúng trực tiếp vào PowerPoint (`[TenBai]_CoLoiBinh_DaLongTieng.pptx`).
+  2. Tự động đặt thời gian chuyển trang khớp khít với độ dài giọng đọc của từng slide.
+  3. **Xuất tự động file `[TenBai]_CoLoiBinh_DaLongTieng_SlideTimeline.json`** lưu chính xác thời điểm kết thúc (`end_sec` và `end_mmss`) của từng slide — giúp đặt các Trạm câu hỏi Video Tương Tác **chuẩn xác đến từng giây**, không bao giờ bị cắt ngang khi giọng AI đang đọc dở câu!
+
+#### 🔹 Bước A5: Kết xuất ra file Video Bài Giảng Full HD 1080p (`.mp4`)
+- Agent gọi trực tiếp bộ giải mã video của Microsoft PowerPoint trên máy Windows:
+  ```bash
+  python scripts/xuat_video_pptx.py "<duong_dan_DaLongTieng.pptx>"
+  ```
+- Thu được file video hoàn chỉnh `[TenBai]_CoLoiBinh_DaLongTieng_Video.mp4` (Full HD `1920x1080`, `30fps`, âm thanh trong trẻo).
+
+#### 🔹 Bước A6: Đóng gói thành Trang Web Video Tương Tác E-Learning (2 phương án linh hoạt cho Giáo viên)
+- **🌐 Phương án 1 — Giao bài tập Online qua Zalo cho học sinh toàn khối học trên Điện thoại / Máy tính *(Khuyên dùng)*:**
+  1. Giáo viên mở [studio.youtube.com](https://studio.youtube.com) (hoặc nút biểu tượng Máy quay `➕ Tạo -> Tải video lên` trên YouTube), tải file `.mp4` vừa xuất lên ở chế độ **Không công khai (Unlisted)** hoặc **Công khai** (chỉ mất ~1 phút) rồi copy đường link `https://youtu.be/...` gửi vào khung chat cho AI.
+  2. AI lấy chính xác các mốc `end_sec` từ file `_SlideTimeline.json` ở Bước A4 để đặt `time` cho từng câu hỏi trong `checkpoints`, gọi `build_interactive_video_html()` + `package_netlify_folder()` xuất thư mục `Web_Video_Tuong_Tac_...` ra ngoài **Desktop**.
+  3. Giáo viên kéo thả thư mục đó vào [app.netlify.com](https://app.netlify.com) (3 giây) là có đường link Web gửi Zalo cho học sinh!
+- **🖥️ Phương án 2 — Dạy & Kiểm tra Offline trực tiếp trên Máy tính / TV cảm ứng lớp học *(Không cần đăng YouTube)*:**
+  1. AI copy trực tiếp file `.mp4` vừa xuất vào trong thư mục bài giảng (cùng cấp với `index.html`) và truyền `local_video_path="./Ten_Video.mp4"`, `video_duration=<total_duration_sec từ _SlideTimeline.json>`.
+  2. Nhờ kiến trúc **Dual-Engine (`file://` + HTTPS)** tích hợp sẵn trong Master Template, giáo viên chỉ cần copy thư mục đó ra USB hoặc mở thẳng `index.html` trên máy chiếu/TV lớp học là video phát Offline mượt mà 100% kèm đầy đủ khóa chống tua nhanh và các trạm câu hỏi tương tác!
 
 ---
 
@@ -485,27 +569,32 @@ Hỗ trợ cả chạm chọn 1 thẻ (`multiSelect: false`) hoặc ghép chuỗ
   - Xuất hiện danh sách các nút **[Trạm 1: 03:10] [Trạm 2: 04:15]...** để bấm vào là video nhảy ngay đến đúng trạm và bật câu hỏi kiểm tra lập tức!
   - Bấm nút **"🔒 Tắt Chế độ Thầy Cô"** để khóa lại như học sinh.
 
-#### 🔑 3 Cách Thay Đổi Mật Khẩu Chế Độ Thầy Cô (Dành Cho Giáo Viên)
+#### 🔑 Hướng Dẫn Chi Tiết 4 Tình Huống Thay Đổi Mật Khẩu Chế Độ Thầy Cô (Dành Cho Giáo Viên & AI)
 
-> **Lưu ý bảo mật:** Ô nhập mật mã trên giao diện học sinh (`#teacherPwd`) đã được ẩn hoàn toàn mọi gợi ý mật khẩu mặc định để học sinh bấm vào nút `⚙️ Thầy Cô: TẮT` cũng không thể nhìn thấy hay đoán được mật khẩu.
+> **Lưu ý bảo mật:** Ô nhập mật mã trên giao diện học sinh (`#teacherPwd`) đã được ẩn hoàn toàn mọi gợi ý mật khẩu mặc định (`placeholder="Nhập mật mã bảo mật dành riêng cho Thầy Cô..."`) để học sinh bấm vào nút `⚙️ Thầy Cô: TẮT` cũng không bao giờ nhìn thấy hay đoán được mật khẩu. Khi giáo viên hỏi *"tôi muốn thay đổi mật khẩu chế độ thầy cô"*, Agent bắt buộc hướng dẫn đầy đủ cả **4 tình huống** dưới đây:
 
-1. **Cách 1 — Đặt mật khẩu riêng ngay từ đầu khi tạo video bằng AI *(Khuyên dùng)*:**
-   - Trong câu lệnh gửi AI khi tạo bài giảng mới, Thầy/Cô chỉ cần thêm 1 dòng:
+1. **Tình huống 1 — Đặt mật khẩu riêng ngay từ đầu khi bắt đầu tạo bài giảng mới *(Khuyên dùng)*:**
+   - Trong câu lệnh gửi AI khi tạo bài giảng mới, Giáo viên chỉ cần thêm 1 dòng:
      `- Mật khẩu Chế độ Thầy Cô: [Mật khẩu riêng, ví dụ: Thien2026]`
    - Agent truyền trực tiếp vào tham số `teacher_password="Thien2026"` của hàm `build_interactive_video_html()`.
-2. **Cách 2 — Nhờ AI đổi mật khẩu cho bài giảng đã tạo sẵn *(Chỉ mất 3 giây)*:**
-   - Giáo viên gõ câu lệnh ngắn vào khung chat Antigravity:
+2. **Tình huống 2 — Bài giảng đã tạo sẵn trên máy tính: Nhờ AI đổi tự động *(Chỉ mất 3 giây)*:**
+   - Giáo viên lấy đường dẫn thư mục bài giảng (`Shift + Chuột phải -> Copy as path`, hoặc kéo thả file `index.html` vào khung chat) và gửi câu lệnh:
      ```text
-     Hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng tại thư mục "[Đường dẫn thư mục Web_Video_Tuong_Tac_...]" thành "[Mật khẩu mới]" giúp tôi.
+     Em hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng tại đường dẫn: "[Đường dẫn thư mục Web_Video_Tuong_Tac_... hoặc file index.html]" thành mật khẩu mới là: "[Mật khẩu mới]" giúp tôi.
      ```
-   - Agent gọi hàm `update_teacher_password(target_path, new_password)` (hoặc chạy lệnh `python scripts/interactive_video_builder.py --set-password "<MẬT_KHẨU_MỚI>" "<ĐƯỜNG_DẪN_THƯ_MỤC_HOẶC_FILE_HTML>"`) để cập nhật ngay file `index.html`.
-   - Sau đó Thầy/Cô chỉ cần **kéo thả lại thư mục đó vào mục Deploys trên Netlify** (3 giây) là trang web cập nhật mật khẩu mới ngay mà **vẫn giữ nguyên đường link cũ** đã gửi cho học sinh!
-3. **Cách 3 — Giáo viên tự đổi thủ công trên máy tính *(10 giây, không cần mở AI)*:**
-   - **Bước 1:** Mở thư mục bài giảng trên máy tính (ví dụ `Web_Video_Tuong_Tac_Toan6` ngoài Desktop), nhấp **chuột phải** vào file `index.html` $\to$ chọn **Open with (Mở bằng) $\to$ Notepad**.
-   - **Bước 2:** Nhấn tổ hợp phím **`Ctrl + F`**, gõ `TEACHER_PASSWORD` rồi nhấn **Enter** để nhảy tới dòng:
+   - Agent gọi hàm `update_teacher_password(target_path, new_password)` (hoặc chạy CLI `python scripts/interactive_video_builder.py --set-password "<MẬT_KHẨU_MỚI>" "<ĐƯỜNG_DẪN_THƯ_MỤC_HOẶC_FILE_HTML>"`) để cập nhật ngay file `index.html` mà giữ nguyên 100% câu hỏi và cấu hình Google Sheets.
+3. **Tình huống 3 — Giáo viên tự đổi thủ công trên máy tính bằng Notepad *(10 giây, không cần mở AI)*:**
+   - **Bước 1:** Mở thư mục bài giảng trên máy tính (ví dụ `Web_Video_Tuong_Tac_Toan6` ngoài Desktop).
+   - **Bước 2:** Nhấp **chuột phải** vào file `index.html` $\to$ chọn **Open with (Mở bằng) $\to$ Notepad**.
+   - **Bước 3:** Nhấn tổ hợp phím **`Ctrl + F`**, gõ `TEACHER_PASSWORD` rồi nhấn **Enter** để nhảy ngay tới dòng:
      `const TEACHER_PASSWORD = '123456';`
-   - **Bước 3:** Sửa số `123456` bên trong cặp dấu nháy đơn `'...'` thành mật khẩu mới của Thầy/Cô (ví dụ: `const TEACHER_PASSWORD = '246810';`).
-   - **Bước 4:** Nhấn **`Ctrl + S`** lưu lại $\to$ Kéo thả lại thư mục bài giảng vào mục **Deploys** trên Netlify để cập nhật lên web!
+   - **Bước 4:** Sửa chuỗi bên trong cặp dấu nháy đơn `'...'` thành mật khẩu mới (ví dụ: `const TEACHER_PASSWORD = '246810';`).
+   - **Bước 5:** Nhấn **`Ctrl + S`** để lưu lại và đóng Notepad.
+4. **Tình huống 4 — Bài giảng ĐÃ ĐƯA LÊN WEB NETLIFY: Cập nhật mật khẩu mới lên Web mà KHÔNG BỊ ĐỔI LINK đã gửi học sinh *(3 giây)*:**
+   - **Bước 1:** Sau khi file `index.html` trên máy đã đổi mật khẩu (qua Tình huống 2 hoặc 3), mở [app.netlify.com](https://app.netlify.com) $\to$ bấm vào **tên dự án bài giảng** cần cập nhật.
+   - **Bước 2:** Chọn tab **`Deploys`** trên thanh menu ngang.
+   - **Bước 3:** Kéo thả nguyên thư mục bài giảng vừa đổi mật khẩu (ví dụ `Web_Video_Tuong_Tac_Toan6`) vào khung nét đứt *"Drag and drop your site output folder here"*.
+   - **Bước 4:** Chờ 3 giây hiện chữ **`Published`** $\to$ Mở lại đường link bài giảng nhấn **`Ctrl + F5`** để làm mới bộ nhớ đệm. **Đường link cũ đã gửi trong nhóm Zalo học sinh vẫn giữ nguyên 100%**, nhưng mật khẩu mới đã có hiệu lực ngay lập tức!
 
 ### G. Tự Động Bảo Lưu Tiến Độ (Smart Auto-Resume)
 
