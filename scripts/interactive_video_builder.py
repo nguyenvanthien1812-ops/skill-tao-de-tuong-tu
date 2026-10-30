@@ -111,6 +111,7 @@ def validate_checkpoints(checkpoints: list, video_duration: int = 900) -> list:
                 "question": cp_q,
                 "tiles": [str(t).strip() for t in tiles],
                 "correct": correct_val,
+                "multiSelect": bool(cp.get("multiSelect", False)),
                 "explanation": cp_exp
             }
         else:
@@ -137,12 +138,13 @@ def build_interactive_video_html(
     passing_threshold_pct: int = 80,
     teacher_password: str = "123456",
     local_video_path: str = "./video.mp4",
+    video_duration: int = 860,
     output_html_path: str = None
 ) -> str:
     """
     Sinh file HTML Video Tương Tác E-Learning hoàn chỉnh dựa trên Master Template đã qua kiểm định QA.
     """
-    clean_checkpoints = validate_checkpoints(checkpoints)
+    clean_checkpoints = validate_checkpoints(checkpoints, video_duration=video_duration)
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     skill_dir = os.path.dirname(script_dir)
@@ -154,34 +156,50 @@ def build_interactive_video_html(
     with open(template_path, "r", encoding="utf-8") as f:
         html = f.read()
 
-    full_title = f"{lesson_title} - {subject_grade}"
-    html = re.sub(r'<title>.*?</title>', f'<title>Video Tương Tác: {full_title}</title>', html)
-    html = re.sub(r'<h1>📚.*?</h1>', f'<h1>📚 {lesson_title.upper()} - {subject_grade.upper()}</h1>', html)
+    full_title = f"{lesson_title} ({subject_grade})"
+    safe_js_title = full_title.replace("\\", "\\\\").replace("'", "\\'")
+    html = re.sub(r'<title>.*?</title>', f'<title>Video Tương Tác: {lesson_title} - {subject_grade}</title>', html)
+    html = re.sub(r'<h1>📚.*?</h1>', f'<h1>📚 {subject_grade.upper()} - {lesson_title.upper()}</h1>', html)
     html = re.sub(r'<p>SGK Kết Nối Tri Thức.*?• GV:.*?</p>', f'<p>Chương trình GDPT 2018 • GV: {teacher_name}</p>', html)
+    html = re.sub(
+        r'<strong id="registerLessonTitle">.*?</strong>',
+        f'<strong id="registerLessonTitle">{subject_grade} - {lesson_title}</strong>',
+        html
+    )
 
     html = re.sub(
+        r"const LESSON_TITLE = '.*?';",
+        lambda _: f"const LESSON_TITLE = '{safe_js_title}';",
+        html
+    )
+    html = re.sub(
         r"const SCRIPT_WEB_APP_URL = '.*?';",
-        f"const SCRIPT_WEB_APP_URL = '{apps_script_url}';",
+        lambda _: f"const SCRIPT_WEB_APP_URL = '{apps_script_url}';",
         html
     )
     html = re.sub(
         r"const YOUTUBE_VIDEO_ID = '.*?';",
-        f"const YOUTUBE_VIDEO_ID = '{youtube_id}';",
+        lambda _: f"const YOUTUBE_VIDEO_ID = '{youtube_id}';",
         html
     )
     html = re.sub(
         r"const LOCAL_VIDEO_PATH = '.*?';",
-        f"const LOCAL_VIDEO_PATH = '{local_video_path}';",
+        lambda _: f"const LOCAL_VIDEO_PATH = '{local_video_path}';",
         html
     )
     html = re.sub(
         r"const TEACHER_PASSWORD = '.*?';",
-        f"const TEACHER_PASSWORD = '{teacher_password}';",
+        lambda _: f"const TEACHER_PASSWORD = '{teacher_password}';",
         html
     )
     html = re.sub(
         r"const PASSING_THRESHOLD_PCT = \d+;",
-        f"const PASSING_THRESHOLD_PCT = {passing_threshold_pct};",
+        f"const PASSING_THRESHOLD_PCT = {int(passing_threshold_pct)};",
+        html
+    )
+    html = re.sub(
+        r"let videoDuration = \d+;",
+        f"let videoDuration = {int(video_duration)};",
         html
     )
 

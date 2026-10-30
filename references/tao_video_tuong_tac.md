@@ -765,12 +765,16 @@ html = build_interactive_video_html(
 
 > Ghi lại để tránh tái phát khi tạo video mới. **Master Template đã được vá toàn bộ**.
 
-| # | Dạng câu hỏi | Triệu chứng | Nguyên nhân gốc | Trạng thái |
+| # | Dạng câu hỏi / Tính năng | Triệu chứng | Nguyên nhân gốc | Trạng thái |
 |---|---|---|---|---|
-| 1 | **Điền số (Fill)** | Chữ học sinh gõ biến mất ngay khi nhập | `startMonitoring()` chạy 250ms gọi `pauseAndOpenQuiz()` → re-render `cArea.innerHTML` xóa text đang gõ | ✅ Đã vá: thêm guard `if (activeCheckpoint \|\| overlay.active) return;` ở đầu monitoring loop |
-| 2 | **Đúng/Sai (TF)** | Sau khi chọn đáp án đúng: phát âm thanh nhưng video kẹt cứng, không hiện nút Tiếp tục | ID button bị lệch: HTML tạo `id="tf-true"/"tf-false"` nhưng JS tìm `id="tf-btn-true"/"tf-btn-false"` → `null` → JS crash → `startAutoResumeCountdown()` không được gọi | ✅ Đã vá: đổi HTML id thành `tf-btn-true` / `tf-btn-false` cho khớp JS handler |
-| 3 | **Nút đổi tên/lớp** | Bấm nút không có phản ứng gì | Hàm `openChangeStudentModal()` tồn tại trong HTML button nhưng thiếu trong JS | ✅ Đã vá: bổ sung đầy đủ JS function |
-| 4 | **Google Sheets** | Nhiều hàng trùng tên học sinh | Race condition: nhiều POST song song cùng tạo hàng mới trước khi tìm thấy hàng cũ | ✅ Đã vá: thêm `LockService.getScriptLock().waitLock(10000)` trong Apps Script |
+| 1 | **Điền số (`fill`)** | Chữ học sinh gõ biến mất ngay khi nhập | `startMonitoring()` chạy 250ms gọi `pauseAndOpenQuiz()` → re-render `cArea.innerHTML` xóa text đang gõ | ✅ Đã vá: thêm guard `isQuizCurrentlyOpen()` ở đầu monitoring loop + tự động nhận diện `inputmode` (`numeric`/`decimal`/`text`) hỗ trợ số âm `-5` và thập phân `3,5 = 3.5` |
+| 2 | **Đúng/Sai (`tf`)** | Sau khi chọn đáp án: phát âm thanh nhưng video kẹt cứng, không hiện nút Tiếp tục | (1) ID button bị lệch: HTML tạo `id="tf-true"/"tf-false"` nhưng JS tìm `id="tf-btn-true"/"tf-btn-false"` → `null` → JS crash ngay sau âm thanh; (2) Chấm 1-chạm dứt điểm cho câu 2 lựa chọn để luôn hiện nút `Tiếp tục bài học ▶️` ngay lập tức (dù chọn Đúng hay Sai) | ✅ Đã vá: đồng bộ `tf-btn-true` / `tf-btn-false` + `tf-badge-*`, chấm 1-chạm luôn hiện nút Tiếp tục & tự phát tiếp |
+| 3 | **Trắc nghiệm (`mcq`)** | Chạm đúp trên điện thoại làm mất oan lượt 2; bất đẳng thức `<a` làm vỡ HTML | Nút chọn sai lần 1 chưa bị khóa `disabled`; chuỗi phương án chưa escape `<` `>` trước khi gán `innerHTML` | ✅ Đã vá: khóa nút vừa chọn sai lần 1 + `escapeHtml()` + tự động render công thức Toán KaTeX |
+| 4 | **Chạm / Ghép thẻ (`drag`)** | Video mới dùng dạng `drag` bị treo khung câu hỏi | `validate_checkpoints()` cho phép `drag` nhưng HTML template thiếu nhánh render & `handleInstantDrag()` | ✅ Đã vá: tích hợp đầy đủ UI chạm/ghép thẻ trên điện thoại & máy tính + chấm 2 lượt + tự phát tiếp |
+| 5 | **Đổi tên/lớp & Auto-Resume** | Bấm "Lưu thông tin mới" không đóng modal; tự lưu tiến độ lỗi ngầm | `saveStudentProgressLocally()` gọi `PlayerEngine.getCurrentTime()` (chỉ có `getTime()`) gây `TypeError` | ✅ Đã vá: bổ sung alias `getCurrentTime()`, bọc `safeStorage*` chống lỗi Safari ẩn danh/Zalo WebView, tách key lưu tiến độ riêng theo từng `YOUTUBE_VIDEO_ID` |
+| 6 | **YouTube chạy ngầm & Di động** | YouTube tự chạy ngầm sau khi mở câu hỏi; nút Tiếp tục bị che bởi thanh điều hướng di động | `ytPlayer.seekTo()` sau `pauseVideo()` kích hoạt buffer & auto-play; CSS mobile dùng sai tên class cũ và thiếu `100dvh` | ✅ Đã vá: chặn tuyệt đối phát ngầm trong `onStateChange` khi quiz đang mở; chuẩn hóa CSS `100dvh`/`92dvh` ghim cố định nút Tiếp tục |
+| 7 | **Học lại khi < 80%** | Học sinh chưa đạt 80% bấm Học lại nhưng không hiện lại câu hỏi để nâng điểm | `restartLesson()` cũ chỉ `seekTo(0)` mà không xóa `attempts` các câu sai | ✅ Đã vá: thêm nút **🎯 Ôn & làm lại câu chưa đạt (Nâng điểm)** (`retryFailedQuestions()`) xóa riêng các câu `< 1đ` và nhảy tới trước câu sai 25s, kèm nút **🔄 Học lại toàn bộ từ đầu** |
+| 8 | **Google Sheets** | Nhiều hàng trùng tên học sinh; tổng số câu bị cố định `/7` cho bài khác | Race condition khi POST song song; hằng số `/7` & tên bài bị hardcode | ✅ Đã vá: thêm `LockService` trong Apps Script V4 + tự động hóa 100% theo `checkpoints.length` và `LESSON_TITLE` |
 
 ### ⚠️ Quy tắc bắt buộc khi tạo HTML câu hỏi Đúng/Sai:
 

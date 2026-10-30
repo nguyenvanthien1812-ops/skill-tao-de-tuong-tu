@@ -1,11 +1,17 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.3.0",
-  "release_date": "2026-10-29",
+  "version": "6.3.2",
+  "release_date": "2026-10-30",
   "description": "Siêu Skill Toàn Năng GDPT 2018 (7-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Tạo đề Tiếng Anh & xuất file nghe MP3 chuẩn khảo thí + Soạn giáo án tích hợp NLS & AI + Soạn Slide PowerPoint 16:9 + Video khởi động Veo 3 + Video Tương Tác E-Learning (chống tua nhanh, tự phân lớp Google Sheets, chuẩn đạt 80%).",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "6.3.2": [
+      "KHẮC PHỤC TRIỆT ĐỂ LỖI KẸT VIDEO Ở CÂU ĐÚNG/SAI & CHUẨN HÓA TOÀN BỘ 4 DẠNG CÂU HỎI VIDEO TƯƠNG TÁC (templates/video_tuong_tac_template.html & scripts/interactive_video_builder.py): Sửa lỗi lệch ID nút Đúng/Sai (tf-true -> tf-btn-true) gây dừng JS ngay sau khi phát âm thanh; thiết kế chấm 1-chạm dứt điểm cho câu Đúng/Sai để nút 'Tiếp tục bài học' luôn xuất hiện ngay lập tức dù chọn Đúng hay Sai.",
+      "HOÀN THIỆN TRỌN VẸN 4 DẠNG CÂU HỎI TƯƠNG TÁC CHO MỌI VIDEO TƯƠNG LAI: (1) MCQ trắc nghiệm khóa nút sai lần 1 chống chạm đúp mất lượt trên di động + escapeHtml chống vỡ thẻ khi có dấu bất đẳng thức < > + render KaTeX; (2) Đúng/Sai phản hồi 1-chạm kèm huy hiệu trạng thái; (3) Điền đáp án chống mất chữ, chống bấm đúp Kiểm tra/Enter, tự nhận diện bàn phím số nguyên/số âm/thập phân dấu phẩy (3,5 = 3.5); (4) Chạm/Ghép thẻ (drag/tap-to-place) mượt trên cả điện thoại và máy tính.",
+      "SỬA LỖI LƯU TIẾN ĐỘ & ĐỔI TÊN/LỚP (PlayerEngine.getCurrentTime -> getTime + safeStorage): Modal Đổi tên & lớp đóng mượt, đồng bộ tức thì lên Google Sheets, tách riêng tiến độ localStorage theo từng YOUTUBE_VIDEO_ID.",
+      "CHẶN YOUTUBE CHẠY NGẦM & NÂNG CẤP HỌC LẠI THÔNG MINH KHI CHƯA ĐẠT 80%: Khóa tuyệt đối phát ngầm trong onStateChange khi bảng câu hỏi đang mở; ghim thanh nút Tiếp tục bằng 100dvh trên di động; bổ sung nút 'Ôn & làm lại câu chưa đạt (Nâng điểm)' nhảy trực tiếp về trước câu sai đầu tiên 25 giây."
+    ],
     "5.8.0": [
       "BỔ SUNG TIÊU CHÍ E03 & E04 VÀO BỘ THẨM ĐỊNH ĐỀ THI (44 TIÊU CHÍ CHUẨN GDPT 2018): E03 kiểm tra đồng bộ cỡ chữ công thức MathType OLE (chuẩn 13pt-14pt, phát hiện lệch cỡ do copy từ nhiều nguồn); E04 kiểm tra chuẩn hiển thị phân số và biểu thức tầng (phát hiện phân số bị co nhỏ kiểu inline \\frac). Tích hợp cơ chế Auto-fix tự động đồng bộ cỡ chữ và phân số khi giáo viên duyệt Đồng ý.",
       "TÍCH HỢP BỘ CHUẨN HÓA ĐỒNG BỘ CỠ CHỮ MATHTYPE OLE VÀ PHÓNG TO PHÂN SỐ (1-CLICK TRONG WORD): Giải quyết triệt để hiện tượng công thức to nhỏ không đều và phân số bị thu nhỏ tí hon so với văn bản.",

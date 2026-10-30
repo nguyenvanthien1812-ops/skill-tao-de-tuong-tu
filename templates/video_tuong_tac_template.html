@@ -9,6 +9,7 @@
   <!-- KaTeX for math formulas -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
   <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   
@@ -384,6 +385,7 @@
 
     /* Prominent Feedback Banner for Clear Signals */
     .quiz-feedback-banner {
+      flex-shrink: 0;
       display: none;
       padding: 8px 14px;
       border-radius: 8px;
@@ -589,8 +591,97 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
-    .btn-check-fill:hover {
+    .btn-check-fill:hover:not(:disabled) {
       background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    }
+    .btn-check-fill:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    /* Tap-to-place / Drag-and-drop Tiles (4th Question Type) */
+    .drag-drop-zone {
+      min-height: 54px;
+      padding: 10px 14px;
+      background: #0f172a;
+      border: 2px dashed #60a5fa;
+      border-radius: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+    .drag-drop-zone.correct-ans {
+      border-style: solid;
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.15) !important;
+    }
+    .drag-drop-zone.wrong-ans {
+      border-style: solid;
+      border-color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.15) !important;
+    }
+    .drag-slot-placeholder {
+      color: #64748b;
+      font-size: 0.92rem;
+      font-style: italic;
+    }
+    .drag-tiles-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .drag-tile {
+      background: #334155;
+      border: 2px solid #475569;
+      color: #f8fafc;
+      padding: 9px 16px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .drag-tile:hover:not(:disabled) {
+      background: #475569;
+      border-color: #60a5fa;
+      transform: translateY(-2px);
+    }
+    .drag-tile.selected-tile {
+      background: rgba(59, 130, 246, 0.3);
+      border-color: #3b82f6;
+      color: #93c5fd;
+    }
+    .drag-tile.in-zone {
+      background: #2563eb;
+      border-color: #60a5fa;
+      color: #fff;
+    }
+    .drag-tile:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .drag-actions-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .btn-clear-drag {
+      background: #475569;
+      color: #e2e8f0;
+      border: none;
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .btn-clear-drag:hover:not(:disabled) {
+      background: #64748b;
     }
 
     /* Explanation Box */
@@ -963,13 +1054,14 @@
         display: none; /* Hide cloud status on mobile to save precious screen width */
       }
 
-      /* CRUCIAL FIX FOR MOBILE: Quiz Overlay takes over viewport instead of 200px box */
+      /* CRUCIAL FIX FOR MOBILE: Quiz Overlay takes over dynamic viewport so Continue button is never hidden behind browser bar */
       .quiz-overlay {
         position: fixed !important;
         top: 0 !important;
         left: 0 !important;
         width: 100vw !important;
         height: 100vh !important;
+        height: 100dvh !important;
         z-index: 9999 !important;
         padding: 8px !important;
         backdrop-filter: blur(12px) !important;
@@ -977,29 +1069,47 @@
       }
       .quiz-box {
         max-width: 100% !important;
-        max-height: 94vh !important;
+        max-height: 92vh !important;
+        max-height: 92dvh !important;
         padding: 12px 14px !important;
         border-radius: 12px !important;
+      }
+      .quiz-scroll-body {
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch;
       }
-      .question-text {
-        font-size: 0.98rem !important;
-        margin-bottom: 12px !important;
+      .quiz-question {
+        font-size: 1rem !important;
+        margin-bottom: 10px !important;
         line-height: 1.45 !important;
       }
-      .option-item {
+      .option-btn, .tf-btn {
         min-height: 48px !important; /* Touch target recommended by Apple/Google */
         padding: 12px 14px !important;
-        font-size: 0.92rem !important;
+        font-size: 0.95rem !important;
       }
-      .quiz-footer {
+      .input-group {
         flex-direction: column !important;
         gap: 8px !important;
       }
-      .quiz-footer button {
+      .btn-check-fill {
         width: 100% !important;
-        min-height: 44px !important;
+        min-height: 46px !important;
+      }
+      .quiz-actions {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+      }
+      .quiz-actions-btns {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+      }
+      .quiz-actions button {
+        width: 100% !important;
+        min-height: 46px !important;
       }
 
       /* Prevent iOS Safari from zooming into inputs */
@@ -1121,11 +1231,11 @@
             <div class="quiz-instruction" id="quizInstruction">
               👆 Bấm trực tiếp vào đáp án em chọn để kiểm tra ngay!
             </div>
-            <div style="display:flex; gap:10px;">
-              <button class="btn-review" id="btnReview30s" onclick="reviewPrevious30s()">
+            <div class="quiz-actions-btns" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+              <button type="button" class="btn-review" id="btnReview30s" onclick="reviewPrevious30s()">
                 ⏪ Xem lại 30s bài giảng
               </button>
-              <button class="btn-continue" id="btnContinue" onclick="continueLesson()">
+              <button type="button" class="btn-continue" id="btnContinue" onclick="continueLesson()">
                 Tiếp tục bài học ▶️
               </button>
             </div>
@@ -1152,9 +1262,12 @@
             ⏳ Đang lưu kết quả cuối cùng vào Sổ điểm Google Sheets của Thầy Cô...
           </div>
 
-          <div style="margin-top:18px; display:flex; gap:10px; justify-content:center;">
-            <button class="btn-continue" style="display:inline-block;" onclick="restartLesson()">
-              🔄 Xem lại bài giảng
+          <div id="completionButtonsBox" style="margin-top:18px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+            <button type="button" class="btn-continue" id="btnRetryWrong" style="display:none; background:linear-gradient(135deg, #f59e0b, #d97706);" onclick="retryFailedQuestions()">
+              🎯 Ôn & làm lại câu chưa đạt
+            </button>
+            <button type="button" class="btn-continue" style="display:inline-block;" onclick="restartFullLesson()">
+              🔄 Học lại toàn bộ từ đầu
             </button>
           </div>
         </div>
@@ -1165,7 +1278,7 @@
     <!-- LESSON INFO FOOTER -->
     <div class="lesson-info">
       <div class="lesson-info-left">
-        <h3>Tiến độ các điểm dừng tương tác (7 trạm thử thách):</h3>
+        <h3 id="lessonProgressTitle">Tiến độ các điểm dừng tương tác (7 trạm thử thách):</h3>
         <p>Học sinh phải hoàn thành từng câu hỏi mới mở khóa đoạn video tiếp theo.</p>
       </div>
       <div class="checklist-pills" id="checklistPills">
@@ -1178,7 +1291,7 @@
     <div class="register-box">
       <h2>👋 CHÀO MỪNG EM ĐẾN VỚI BÀI HỌC!</h2>
       <p>
-        <strong>Toán 6 - Bài 6: Lũy thừa với số mũ tự nhiên</strong><br>
+        <strong id="registerLessonTitle">Toán 6 - Bài 6: Lũy thừa với số mũ tự nhiên</strong><br>
         Video có tích hợp các câu hỏi tương tác chống tua nhanh. Hãy điền thông tin để lưu kết quả vào sổ điểm của Thầy Cô nhé!
       </p>
 
@@ -1200,60 +1313,71 @@
     </div>
   </div>
 
-  <!-- AUDIO SYNTHESIS FOR SOUND EFFECTS -->
+  <!-- AUDIO SYNTHESIS FOR SOUND EFFECTS (CRASH-PROOF) -->
   <script>
     const AudioFX = {
       ctx: null,
       init() {
-        if (!this.ctx) {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (AudioContext) this.ctx = new AudioContext();
-        }
+        try {
+          if (!this.ctx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) this.ctx = new AudioContext();
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume().catch(() => {});
+          }
+        } catch (e) {}
       },
       playSuccess() {
-        this.init();
-        if (!this.ctx) return;
-        const now = this.ctx.currentTime;
-        const osc1 = this.ctx.createOscillator();
-        const osc2 = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc1.frequency.setValueAtTime(523.25, now);
-        osc1.frequency.exponentialRampToValueAtTime(659.25, now + 0.12);
-        osc2.frequency.setValueAtTime(659.25, now + 0.12);
-        osc2.frequency.exponentialRampToValueAtTime(783.99, now + 0.28);
-        gain.gain.setValueAtTime(0.3, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-        osc1.connect(gain); osc2.connect(gain); gain.connect(this.ctx.destination);
-        osc1.start(now); osc1.stop(now + 0.15);
-        osc2.start(now + 0.12); osc2.stop(now + 0.5);
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc1 = this.ctx.createOscillator();
+          const osc2 = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc1.frequency.setValueAtTime(523.25, now);
+          osc1.frequency.exponentialRampToValueAtTime(659.25, now + 0.12);
+          osc2.frequency.setValueAtTime(659.25, now + 0.12);
+          osc2.frequency.exponentialRampToValueAtTime(783.99, now + 0.28);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+          osc1.connect(gain); osc2.connect(gain); gain.connect(this.ctx.destination);
+          osc1.start(now); osc1.stop(now + 0.15);
+          osc2.start(now + 0.12); osc2.stop(now + 0.5);
+        } catch (e) {}
       },
       playWrong() {
-        this.init();
-        if (!this.ctx) return;
-        const now = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(220, now);
-        osc.frequency.linearRampToValueAtTime(140, now + 0.35);
-        gain.gain.setValueAtTime(0.28, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-        osc.connect(gain); gain.connect(this.ctx.destination);
-        osc.start(now); osc.stop(now + 0.4);
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.linearRampToValueAtTime(140, now + 0.35);
+          gain.gain.setValueAtTime(0.28, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.start(now); osc.stop(now + 0.4);
+        } catch (e) {}
       },
       playWarning() {
-        this.init();
-        if (!this.ctx) return;
-        const now = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(350, now);
-        osc.frequency.setValueAtTime(280, now + 0.1);
-        gain.gain.setValueAtTime(0.18, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-        osc.connect(gain); gain.connect(this.ctx.destination);
-        osc.start(now); osc.stop(now + 0.25);
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(350, now);
+          osc.frequency.setValueAtTime(280, now + 0.1);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+          osc.connect(gain); gain.connect(this.ctx.destination);
+          osc.start(now); osc.stop(now + 0.25);
+        } catch (e) {}
       }
     };
   </script>
@@ -1263,19 +1387,35 @@
     // --- 1. CONFIGURATION ---
     const SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwIeeyHcAPgvFMgGGDQtxNguRg0iOFWGKNvB88pxQ3UW4r8uhJmUQG0lX5TBJGQ-RwV/exec';
     const YOUTUBE_VIDEO_ID = 'EaYtq5u1Wzw';
-    
+    const LESSON_TITLE = 'Bài 6: Lũy thừa với số mũ tự nhiên (Toán 6)';
     const PASSING_THRESHOLD_PCT = 80; // Học sinh phải đạt ít nhất 80% số câu hỏi mới tính hoàn thành
     const LOCAL_VIDEO_PATH = './c1_b6_luy_thua_vs_mu.f2c2 (2)_CoLoiBinh_DaLongTieng_Video.mp4';
 
+    // Safe Storage Wrapper (chống crash trên Safari ẩn danh / Zalo WebView)
+    function safeStorageGet(key) {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function safeStorageSet(key, val) {
+      try { localStorage.setItem(key, val); } catch (e) {}
+    }
+    function safeStorageRemove(key) {
+      try { localStorage.removeItem(key); } catch (e) {}
+    }
+
+    // Per-video progress key để khi học nhiều video bài khác nhau không bị lẫn tiến độ
+    const PROGRESS_STORAGE_KEY = 'nls_saved_progress_' + (YOUTUBE_VIDEO_ID || 'local_lesson');
+    const LEGACY_PROGRESS_KEY = 'nls_toan6_saved_progress';
+
     let studentData = {
-      name: localStorage.getItem('nls_toan6_name') || '',
-      class: localStorage.getItem('nls_toan6_class') || '',
+      name: safeStorageGet('nls_student_name') || safeStorageGet('nls_toan6_name') || '',
+      class: safeStorageGet('nls_student_class') || safeStorageGet('nls_toan6_class') || '',
       startTime: new Date().toISOString(),
       score: 0,
-      attempts: {}
+      attempts: {},
+      questionStats: {}
     };
 
-    // --- 2. 7 PEDAGOGICAL CHECKPOINTS ---
+    // --- 2. PEDAGOGICAL CHECKPOINTS ---
     const checkpoints = [
       {
         id: 1,
@@ -1353,7 +1493,39 @@
       }
     ];
 
-    // --- 3. DUAL-ENGINE VIDEO CONTROLLER ---
+    // --- 3. SAFE HTML & KATEX MATH HELPERS ---
+    function escapeHtml(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function renderMathInContainer(el) {
+      if (!el) return;
+      try {
+        if (typeof renderMathInElement === 'function') {
+          renderMathInElement(el, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false },
+              { left: '\\(', right: '\\)', display: false },
+              { left: '\\[', right: '\\]', display: true }
+            ],
+            throwOnError: false
+          });
+        }
+      } catch (e) {}
+    }
+
+    function isQuizCurrentlyOpen() {
+      const overlay = document.getElementById('quizOverlay');
+      return Boolean(activeCheckpoint || (overlay && overlay.classList.contains('active')));
+    }
+
+    // --- 4. DUAL-ENGINE VIDEO CONTROLLER ---
     let maxWatchedTime = 0;
     let activeCheckpoint = null;
     let activeCheckpointSolved = false;
@@ -1361,6 +1533,7 @@
     let autoResumeTimer = null;
     let autoResumeSeconds = 4;
     let videoDuration = 860;
+    let currentDragSelectedIndices = [];
 
     const PlayerEngine = {
       isLocal: (window.location.protocol === 'file:'),
@@ -1382,14 +1555,18 @@
         document.getElementById('localVideo').style.display = 'block';
         document.getElementById('ytContainer').style.display = 'none';
         document.getElementById('sourceBadge').innerHTML = '📁 Nguồn: Video máy tính (1080p)';
-        
+
         this.localEl.src = LOCAL_VIDEO_PATH;
         this.localEl.onloadedmetadata = () => {
-          videoDuration = this.localEl.duration || 860;
+          videoDuration = this.localEl.duration || videoDuration;
           renderCheckpoints();
           updateTimelineUI(0);
         };
         this.localEl.onplay = () => {
+          if (isQuizCurrentlyOpen()) {
+            this.localEl.pause();
+            return;
+          }
           document.getElementById('playBtn').innerHTML = '⏸️';
           startMonitoring();
         };
@@ -1417,38 +1594,56 @@
       },
 
       getTime() {
-        if (this.mode === 'local') return this.localEl.currentTime || 0;
-        return (this.ytPlayer && typeof this.ytPlayer.getCurrentTime === 'function') ? this.ytPlayer.getCurrentTime() : 0;
+        if (this.mode === 'local') return (this.localEl && this.localEl.currentTime) ? this.localEl.currentTime : 0;
+        return (this.ytPlayer && typeof this.ytPlayer.getCurrentTime === 'function') ? (this.ytPlayer.getCurrentTime() || 0) : 0;
+      },
+
+      // Alias tương thích ngược để không bao giờ phát sinh TypeError
+      getCurrentTime() {
+        return this.getTime();
       },
 
       getDuration() {
-        if (this.mode === 'local') return this.localEl.duration || videoDuration;
-        return (this.ytPlayer && typeof this.ytPlayer.getDuration === 'function') ? this.ytPlayer.getDuration() : videoDuration;
+        if (this.mode === 'local') return (this.localEl && this.localEl.duration) ? this.localEl.duration : videoDuration;
+        return (this.ytPlayer && typeof this.ytPlayer.getDuration === 'function') ? (this.ytPlayer.getDuration() || videoDuration) : videoDuration;
       },
 
       play() {
-        if (this.mode === 'local') this.localEl.play();
-        else if (this.ytPlayer && typeof this.ytPlayer.playVideo === 'function') this.ytPlayer.playVideo();
+        if (isQuizCurrentlyOpen()) return;
+        if (this.mode === 'local') {
+          const p = this.localEl.play();
+          if (p && typeof p.catch === 'function') p.catch(() => {});
+        } else if (this.ytPlayer && typeof this.ytPlayer.playVideo === 'function') {
+          this.ytPlayer.playVideo();
+        }
       },
 
       pause() {
-        if (this.mode === 'local') this.localEl.pause();
-        else if (this.ytPlayer && typeof this.ytPlayer.pauseVideo === 'function') this.ytPlayer.pauseVideo();
+        if (this.mode === 'local') {
+          if (this.localEl) this.localEl.pause();
+        } else if (this.ytPlayer && typeof this.ytPlayer.pauseVideo === 'function') {
+          this.ytPlayer.pauseVideo();
+        }
       },
 
       seekTo(t) {
-        if (this.mode === 'local') this.localEl.currentTime = t;
-        else if (this.ytPlayer && typeof this.ytPlayer.seekTo === 'function') this.ytPlayer.seekTo(t, true);
+        const target = Math.max(0, Number(t) || 0);
+        if (this.mode === 'local') {
+          if (this.localEl) this.localEl.currentTime = target;
+        } else if (this.ytPlayer && typeof this.ytPlayer.seekTo === 'function') {
+          this.ytPlayer.seekTo(target, true);
+        }
       },
 
       togglePlay() {
+        if (isQuizCurrentlyOpen()) return;
         if (this.mode === 'local') {
           if (this.localEl.paused) this.play();
           else this.pause();
         } else {
           if (!this.ytPlayer || typeof this.ytPlayer.getPlayerState !== 'function') return;
           const state = this.ytPlayer.getPlayerState();
-          if (state === YT.PlayerState.PLAYING) this.pause();
+          if (typeof YT !== 'undefined' && state === YT.PlayerState.PLAYING) this.pause();
           else this.play();
         }
       },
@@ -1471,6 +1666,7 @@
       },
 
       rewind10s() {
+        if (isQuizCurrentlyOpen()) return;
         const cur = this.getTime();
         this.seekTo(Math.max(0, cur - 10));
       }
@@ -1487,30 +1683,36 @@
           modestbranding: 1,
           rel: 0,
           showinfo: 0,
-          iv_load_policy: 3
+          iv_load_policy: 3,
+          playsinline: 1
         },
         events: {
           'onReady': () => {
-            videoDuration = PlayerEngine.getDuration();
+            videoDuration = PlayerEngine.getDuration() || videoDuration;
             renderCheckpoints();
             updateTimelineUI(0);
           },
           'onStateChange': (e) => {
-            if (e.data === YT.PlayerState.PLAYING) {
+            if (typeof YT !== 'undefined' && e.data === YT.PlayerState.PLAYING) {
+              // Ngăn tuyệt đối YouTube tự chạy ngầm phía sau khi bảng câu hỏi đang mở
+              if (isQuizCurrentlyOpen()) {
+                PlayerEngine.pause();
+                return;
+              }
               document.getElementById('playBtn').innerHTML = '⏸️';
               startMonitoring();
             } else {
               document.getElementById('playBtn').innerHTML = '▶️';
-              if (e.data === YT.PlayerState.ENDED) showCompletionScreen();
+              if (typeof YT !== 'undefined' && e.data === YT.PlayerState.ENDED) {
+                showCompletionScreen();
+              }
             }
           }
         }
       });
     }
 
-    // --- 4. STRICT ANTI-SKIP LOOP ---
-    
-    // === PHASE 1: TEACHER MODE & SMART AUTO-RESUME LOGIC ===
+    // --- 5. TEACHER MODE & SMART AUTO-RESUME LOGIC ---
     let isTeacherMode = false;
     const TEACHER_PASSWORD = '123456';
     let pendingResumeState = null;
@@ -1585,11 +1787,13 @@
     function populateTeacherJumpButtons() {
       const container = document.getElementById('teacherJumpButtons');
       container.innerHTML = '';
+      const typeLabels = { mcq: 'TRẮC NGHIỆM', tf: 'ĐÚNG / SAI', fill: 'ĐIỀN ĐÁP ÁN', drag: 'GHÉP THẺ' };
       checkpoints.forEach((cp, idx) => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'teacher-jump-btn';
-        btn.innerHTML = `<strong>Trạm ${idx+1}</strong> (${formatTime(cp.time)})<br><span style="font-size:0.75rem; opacity:0.8;">${cp.type.toUpperCase()}</span>`;
+        const label = typeLabels[cp.type] || cp.type.toUpperCase();
+        btn.innerHTML = `<strong>Trạm ${idx + 1}</strong> (${formatTime(cp.time)})<br><span style="font-size:0.75rem; opacity:0.8;">${label}</span>`;
         btn.onclick = () => jumpToTeacherCp(cp);
         container.appendChild(btn);
       });
@@ -1597,8 +1801,16 @@
 
     function jumpToTeacherCp(cp) {
       closeTeacherModal();
+      if (autoResumeTimer) {
+        clearInterval(autoResumeTimer);
+        autoResumeTimer = null;
+      }
+      activeCheckpoint = null;
+      activeCheckpointSolved = false;
+      document.getElementById('quizOverlay').classList.remove('active');
       maxWatchedTime = Math.max(maxWatchedTime, cp.time);
-      PlayerEngine.seekTo(Math.max(0, cp.time - 0.5));
+      PlayerEngine.seekTo(cp.time);
+      PlayerEngine.pause();
       pauseAndOpenQuiz(cp);
     }
 
@@ -1606,38 +1818,52 @@
     function saveStudentProgressLocally() {
       if (!studentData.name || isTeacherMode) return;
       const progressObj = {
+        videoId: YOUTUBE_VIDEO_ID,
         name: studentData.name,
         class: studentData.class,
         score: studentData.score,
-        attempts: studentData.attempts,
+        attempts: studentData.attempts || {},
+        questionStats: studentData.questionStats || {},
         maxWatchedTime: maxWatchedTime,
-        lastTime: PlayerEngine.getCurrentTime() || 0,
+        lastTime: PlayerEngine.getTime() || 0,
         savedAt: new Date().toISOString()
       };
-      localStorage.setItem('nls_toan6_saved_progress', JSON.stringify(progressObj));
+      safeStorageSet(PROGRESS_STORAGE_KEY, JSON.stringify(progressObj));
+    }
+
+    function clearSavedProgressLocally() {
+      safeStorageRemove(PROGRESS_STORAGE_KEY);
+      if (YOUTUBE_VIDEO_ID === 'EaYtq5u1Wzw') {
+        safeStorageRemove(LEGACY_PROGRESS_KEY);
+      }
     }
 
     function checkSavedProgressOnStartup() {
       try {
-        const raw = localStorage.getItem('nls_toan6_saved_progress');
+        let raw = safeStorageGet(PROGRESS_STORAGE_KEY);
+        if (!raw && YOUTUBE_VIDEO_ID === 'EaYtq5u1Wzw') {
+          raw = safeStorageGet(LEGACY_PROGRESS_KEY);
+        }
         if (!raw) return false;
         const saved = JSON.parse(raw);
+        if (saved && saved.videoId && saved.videoId !== YOUTUBE_VIDEO_ID) return false;
         if (saved && saved.name && (saved.maxWatchedTime > 15 || Object.keys(saved.attempts || {}).length > 0)) {
           pendingResumeState = saved;
           return true;
         }
-      } catch(e) {}
+      } catch (e) {}
       return false;
     }
 
     function showResumeModal() {
       if (!pendingResumeState) return;
+      const totalQ = checkpoints.length;
       const details = document.getElementById('resumeDetails');
       const cpCount = Object.keys(pendingResumeState.attempts || {}).length;
       details.innerHTML = `
-        👤 Học sinh: <strong>${pendingResumeState.name} (${pendingResumeState.class})</strong><br>
-        ⭐ Điểm số đã đạt: <strong>${pendingResumeState.score}/7</strong><br>
-        🎯 Trạm đã giải: <strong>${cpCount}/7 trạm</strong><br>
+        👤 Học sinh: <strong>${escapeHtml(pendingResumeState.name)} (${escapeHtml(pendingResumeState.class)})</strong><br>
+        ⭐ Điểm số đã đạt: <strong>${pendingResumeState.score}/${totalQ}</strong><br>
+        🎯 Trạm đã giải: <strong>${cpCount}/${totalQ} trạm</strong><br>
         ⏱️ Vị trí bài giảng: <strong>${formatTime(pendingResumeState.lastTime || pendingResumeState.maxWatchedTime)}</strong>
       `;
       document.getElementById('registerModal').style.display = 'none';
@@ -1646,10 +1872,12 @@
 
     function confirmResumeProgress() {
       if (!pendingResumeState) return;
+      const totalQ = checkpoints.length;
       studentData.name = pendingResumeState.name;
       studentData.class = pendingResumeState.class;
-      studentData.score = pendingResumeState.score || 0;
       studentData.attempts = pendingResumeState.attempts || {};
+      studentData.questionStats = pendingResumeState.questionStats || {};
+      recalculateScore();
       maxWatchedTime = pendingResumeState.maxWatchedTime || 0;
 
       document.getElementById('resumeModal').style.display = 'none';
@@ -1657,18 +1885,22 @@
       updateScoreBadge();
       renderCheckpoints();
 
-      const seekTarget = pendingResumeState.lastTime || pendingResumeState.maxWatchedTime || 0;
+      const seekTarget = Math.min(
+        pendingResumeState.lastTime || pendingResumeState.maxWatchedTime || 0,
+        maxWatchedTime
+      );
       PlayerEngine.seekTo(seekTarget);
       PlayerEngine.play();
-      syncProgressToGoogleSheets(`🟡 Tiếp tục học (Trạm ${Object.keys(studentData.attempts).length}/7)`);
+      syncProgressToGoogleSheets(`🟡 Tiếp tục học (Trạm ${Object.keys(studentData.attempts).length}/${totalQ})`);
       pendingResumeState = null;
     }
 
     function confirmRestartProgress() {
-      localStorage.removeItem('nls_toan6_saved_progress');
+      clearSavedProgressLocally();
       pendingResumeState = null;
       document.getElementById('resumeModal').style.display = 'none';
       studentData.attempts = {};
+      studentData.questionStats = {};
       studentData.score = 0;
       maxWatchedTime = 0;
       updateScoreBadge();
@@ -1677,11 +1909,12 @@
       PlayerEngine.play();
     }
 
+    // --- 6. STRICT ANTI-SKIP MONITORING LOOP ---
     function startMonitoring() {
       if (monitorInterval) clearInterval(monitorInterval);
       monitorInterval = setInterval(() => {
-        // Nếu câu hỏi đang mở hiển thị, KHÔNG quét hoặc kích hoạt lại để chống xóa chữ đang gõ!
-        if (activeCheckpoint || (document.getElementById('quizOverlay') && document.getElementById('quizOverlay').classList.contains('active'))) {
+        // Nếu câu hỏi đang mở hiển thị, KHÔNG quét hoặc render lại để bảo vệ tuyệt đối dữ liệu học sinh đang nhập!
+        if (isQuizCurrentlyOpen()) {
           return;
         }
 
@@ -1697,11 +1930,15 @@
           }
         }
 
-        const pendingCp = checkpoints.find(cp => 
-          !studentData.attempts[cp.id] && 
-          currentTime >= (cp.time - 0.5) && 
-          currentTime <= (cp.time + 1.5)
-        );
+        // Ở chế độ Học sinh: bắt mọi trạm chưa trả lời có cp.time <= currentTime + 0.3 (không giới hạn trần để chống hụt câu hỏi khi máy lag)
+        // Ở chế độ Thầy Cô: chỉ bắt trong cửa sổ nhỏ quanh mốc trạm để Thầy Cô tua kiểm duyệt tự do
+        const pendingCp = checkpoints.find(cp => {
+          if (studentData.attempts[cp.id]) return false;
+          if (isTeacherMode) {
+            return currentTime >= (cp.time - 0.5) && currentTime <= (cp.time + 1.5);
+          }
+          return currentTime >= (cp.time - 0.3);
+        });
 
         if (pendingCp) {
           pauseAndOpenQuiz(pendingCp);
@@ -1730,6 +1967,7 @@
     }
 
     function handleTimelineClick(e) {
+      if (isQuizCurrentlyOpen()) return;
       const rect = e.currentTarget.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const targetTime = (clickX / rect.width) * videoDuration;
@@ -1747,9 +1985,11 @@
     function toggleFullscreen() {
       const container = document.getElementById('playerContainer');
       if (!document.fullscreenElement) {
-        container.requestFullscreen().catch(err => alert(err.message));
+        if (container.requestFullscreen) {
+          container.requestFullscreen().catch(() => {});
+        }
       } else {
-        document.exitFullscreen();
+        if (document.exitFullscreen) document.exitFullscreen();
       }
     }
 
@@ -1762,52 +2002,114 @@
 
     function updateTimelineUI(currentTime) {
       if (!videoDuration) return;
-      const curPercent = (currentTime / videoDuration) * 100;
-      const maxPercent = (maxWatchedTime / videoDuration) * 100;
+      const curPercent = Math.min(100, Math.max(0, (currentTime / videoDuration) * 100));
+      const maxPercent = Math.min(100, Math.max(0, (maxWatchedTime / videoDuration) * 100));
 
       document.getElementById('timelineProgress').style.width = `${curPercent}%`;
       document.getElementById('timelineUnlocked').style.width = `${maxPercent}%`;
-      document.getElementById('timelineLockedZone').style.width = `${100 - maxPercent}%`;
+      document.getElementById('timelineLockedZone').style.width = `${Math.max(0, 100 - maxPercent)}%`;
 
-      document.getElementById('timeDisplay').innerText = 
+      document.getElementById('timeDisplay').innerText =
         `${formatTime(currentTime)} / ${formatTime(videoDuration)}`;
     }
 
     function renderCheckpoints() {
+      const totalQ = checkpoints.length;
+      const progressTitle = document.getElementById('lessonProgressTitle');
+      if (progressTitle) {
+        progressTitle.innerText = `Tiến độ các điểm dừng tương tác (${totalQ} trạm thử thách):`;
+      }
+
       const container = document.getElementById('checkpointMarkersContainer');
       const pillsContainer = document.getElementById('checklistPills');
       container.innerHTML = '';
       pillsContainer.innerHTML = '';
 
       checkpoints.forEach((cp, idx) => {
+        const attempt = studentData.attempts[cp.id];
+        const isSolved = Boolean(attempt);
+        const isPerfect = attempt && attempt.points > 0;
+
         const dot = document.createElement('div');
-        dot.className = 'checkpoint-marker' + (studentData.attempts[cp.id] ? ' passed' : '');
+        dot.className = 'checkpoint-marker' + (isSolved ? ' passed' : '');
         dot.id = `cp-dot-${cp.id}`;
-        dot.style.left = `${(cp.time / videoDuration) * 100}%`;
-        dot.title = `Trạm ${idx+1} (${formatTime(cp.time)}): ${cp.question}`;
+        dot.style.left = `${Math.min(99, Math.max(1, (cp.time / (videoDuration || 860)) * 100))}%`;
+        dot.title = `Trạm ${idx + 1} (${formatTime(cp.time)}): ${cp.question}`;
         container.appendChild(dot);
 
         const pill = document.createElement('div');
-        pill.className = 'check-pill' + (studentData.attempts[cp.id] ? ' done' : '');
+        pill.className = 'check-pill' + (isSolved ? ' done' : '');
         pill.id = `cp-pill-${cp.id}`;
-        pill.innerHTML = `<span>Trạm ${idx+1} (${formatTime(cp.time)})</span> ${studentData.attempts[cp.id] ? '✅' : '🔒'}`;
+        const icon = !isSolved ? '🔒' : (isPerfect ? `✅ (+${attempt.points}đ)` : '⚠️ (0đ)');
+        pill.innerHTML = `<span>Trạm ${idx + 1} (${formatTime(cp.time)})</span> ${icon}`;
         pillsContainer.appendChild(pill);
       });
     }
 
-    // --- 5. INSTANT 1-CLICK QUIZ EVALUATION (NO EXTRA BUTTON NEEDED) ---
+    // --- 7. ALL 4 QUESTION TYPES: MCQ, TRUE/FALSE, FILL, DRAG/TAP-TO-PLACE ---
+    function getCheckpointOrderNumber(cp) {
+      const idx = checkpoints.findIndex(item => item.id === cp.id);
+      return idx >= 0 ? (idx + 1) : cp.id;
+    }
+
+    function detectFillInputMode(correctStr) {
+      const s = String(correctStr || '').trim();
+      if (/^\d+$/.test(s)) return 'numeric';
+      if (/^-?\d+([.,]\d+)?$/.test(s)) return 'decimal';
+      return 'text';
+    }
+
+    function normalizeAnswerToken(str) {
+      return String(str == null ? '' : str)
+        .trim()
+        .replace(/[\u2212\u2013\u2014]/g, '-')
+        .replace(/\s+/g, ' ')
+        .toLowerCase();
+    }
+
+    function isFillAnswerMatch(userInput, correctSpec) {
+      const userNorm = normalizeAnswerToken(userInput);
+      if (!userNorm) return false;
+
+      // Hỗ trợ nhiều đáp án tương đương phân tách bởi dấu | (ví dụ: "3,5|3.5|7/2")
+      const acceptedList = String(correctSpec == null ? '' : correctSpec).split('|');
+      for (const rawExpected of acceptedList) {
+        const expNorm = normalizeAnswerToken(rawExpected);
+        if (!expNorm) continue;
+        if (userNorm === expNorm) return true;
+
+        // So sánh số học thông minh: "3,5" === "3.5", "07" === "7"
+        const userNumStr = userNorm.replace(',', '.');
+        const expNumStr = expNorm.replace(',', '.');
+        if (/^-?\d+(\.\d+)?$/.test(userNumStr) && /^-?\d+(\.\d+)?$/.test(expNumStr)) {
+          if (Math.abs(Number(userNumStr) - Number(expNumStr)) < 1e-9) return true;
+        }
+      }
+      return false;
+    }
+
     function pauseAndOpenQuiz(cp) {
-      if (activeCheckpoint && activeCheckpoint.id === cp.id && document.getElementById('quizOverlay') && document.getElementById('quizOverlay').classList.contains('active')) {
-        return; // Đang mở câu hỏi này rồi, không render đè làm mất chữ học sinh đang gõ!
+      const overlay = document.getElementById('quizOverlay');
+      if (activeCheckpoint && activeCheckpoint.id === cp.id && overlay && overlay.classList.contains('active')) {
+        return; // Đang mở câu hỏi này rồi, tuyệt đối không render đè!
       }
       activeCheckpoint = cp;
       activeCheckpointSolved = false;
-      if (autoResumeTimer) clearInterval(autoResumeTimer);
+      currentDragSelectedIndices = [];
+      if (autoResumeTimer) {
+        clearInterval(autoResumeTimer);
+        autoResumeTimer = null;
+      }
 
+      // Tạm dừng video ngay; chỉ seek lại nếu lệch quá 2 giây để tránh YouTube tự buffer & play lại
       PlayerEngine.pause();
-      PlayerEngine.seekTo(cp.time);
+      if (Math.abs(PlayerEngine.getTime() - cp.time) > 2.0) {
+        PlayerEngine.seekTo(cp.time);
+        PlayerEngine.pause();
+      }
 
-      const overlay = document.getElementById('quizOverlay');
+      const totalQ = checkpoints.length;
+      const cpNum = getCheckpointOrderNumber(cp);
       const qBadge = document.getElementById('quizBadge');
       const qTime = document.getElementById('quizTime');
       const qText = document.getElementById('quizQuestion');
@@ -1824,70 +2126,121 @@
       btnCont.style.display = 'none';
       btnRev.style.display = 'none';
 
-      qBadge.innerText = `CÂU HỎI TƯƠNG TÁC ${cp.id}/7`;
+      qBadge.innerText = `CÂU HỎI TƯƠNG TÁC ${cpNum}/${totalQ}`;
       qTime.innerText = `⏱️ Dừng tại: ${formatTime(cp.time)}`;
-      qText.innerText = cp.question;
+      qText.innerHTML = escapeHtml(cp.question);
 
       if (cp.type === 'mcq') {
         inst.innerHTML = '👆 <strong>Bấm trực tiếp vào đáp án</strong> để kiểm tra kết quả ngay!';
         let html = '<div class="options-grid">';
-        cp.options.forEach((opt, oIdx) => {
+        (cp.options || []).forEach((opt, oIdx) => {
           html += `
-            <button class="option-btn" id="opt-btn-${oIdx}" onclick="handleInstantMCQ(${oIdx})">
-              <span>${opt}</span>
+            <button type="button" class="option-btn" id="opt-btn-${oIdx}" onclick="handleInstantMCQ(${oIdx})">
+              <span class="opt-label-text">${escapeHtml(opt)}</span>
               <span class="opt-status-badge" id="opt-badge-${oIdx}"></span>
             </button>
           `;
         });
         html += '</div>';
         cArea.innerHTML = html;
+
       } else if (cp.type === 'tf') {
-        inst.innerHTML = '👆 <strong>Bấm vào ĐÚNG hoặc SAI</strong> để kiểm tra kết quả ngay!';
+        inst.innerHTML = '👆 <strong>Bấm chọn ĐÚNG hoặc SAI</strong> để kiểm tra kết quả ngay!';
         cArea.innerHTML = `
           <div class="tf-grid">
-            <button class="tf-btn" id="tf-btn-true" onclick="handleInstantTF(true)">
+            <button type="button" class="tf-btn" id="tf-btn-true" onclick="handleInstantTF(true)">
               <span>✅ ĐÚNG</span>
               <span class="opt-status-badge" id="tf-badge-true"></span>
             </button>
-            <button class="tf-btn" id="tf-btn-false" onclick="handleInstantTF(false)">
+            <button type="button" class="tf-btn" id="tf-btn-false" onclick="handleInstantTF(false)">
               <span>❌ SAI</span>
               <span class="opt-status-badge" id="tf-badge-false"></span>
             </button>
           </div>
         `;
+
       } else if (cp.type === 'fill') {
-        inst.innerHTML = '⌨️ Nhập số kết quả rồi bấm <strong>Kiểm tra</strong> (hoặc nhấn phím Enter):';
+        const inpMode = detectFillInputMode(cp.correct);
+        const placeholderText = (inpMode === 'text') ? 'Nhập đáp án của em tại đây...' : 'Nhập số kết quả tại đây...';
+        inst.innerHTML = '⌨️ Nhập đáp án rồi bấm <strong>Kiểm tra kết quả</strong> (hoặc nhấn Enter):';
         cArea.innerHTML = `
           <div class="input-group">
-            <input type="text" class="fill-input" id="fillInput" autocomplete="off" spellcheck="false" inputmode="numeric" pattern="[0-9]*" placeholder="Nhập số kết quả tại đây..." onkeydown="handleFillKeyDown(event)" autofocus>
-            <button class="btn-check-fill" onclick="handleInstantFill()">Kiểm tra kết quả ✔️</button>
+            <input type="text" class="fill-input" id="fillInput" autocomplete="off" spellcheck="false" inputmode="${inpMode}" placeholder="${placeholderText}" onkeydown="handleFillKeyDown(event)">
+            <button type="button" class="btn-check-fill" id="btnCheckFill" onclick="handleInstantFill()">Kiểm tra kết quả ✔️</button>
           </div>
         `;
         setTimeout(() => {
           const inp = document.getElementById('fillInput');
-          if (inp) inp.focus();
-        }, 300);
+          if (inp && !activeCheckpointSolved) inp.focus();
+        }, 250);
+
+      } else if (cp.type === 'drag') {
+        inst.innerHTML = '👆 <strong>Chạm vào thẻ bên dưới</strong> để đưa vào ô trả lời, sau đó bấm <strong>Kiểm tra</strong>:';
+        let tilesHtml = '';
+        (cp.tiles || []).forEach((tile, tIdx) => {
+          tilesHtml += `<button type="button" class="drag-tile" id="drag-tile-${tIdx}" onclick="toggleDragTile(${tIdx})">${escapeHtml(tile)}</button>`;
+        });
+        cArea.innerHTML = `
+          <div class="drag-drop-zone" id="dragDropZone">
+            <span class="drag-slot-placeholder" id="dragPlaceholder">Chạm vào thẻ đáp án bên dưới để đặt vào đây...</span>
+          </div>
+          <div class="drag-tiles-bank" id="dragTilesBank">
+            ${tilesHtml}
+          </div>
+          <div class="drag-actions-row">
+            <button type="button" class="btn-check-fill" id="btnCheckDrag" onclick="handleInstantDrag()">Kiểm tra kết quả ✔️</button>
+            <button type="button" class="btn-clear-drag" id="btnClearDrag" onclick="clearDragSelection()">↺ Chọn lại</button>
+          </div>
+        `;
       }
 
+      renderMathInContainer(qText);
+      renderMathInContainer(cArea);
       overlay.classList.add('active');
     }
 
-    // 1-Click MCQ Handler
+    function ensureQuestionStat(cpId) {
+      if (!studentData.questionStats) studentData.questionStats = {};
+      if (!studentData.questionStats[cpId]) {
+        studentData.questionStats[cpId] = { wrongCount: 0, points: 0, passed: false, lastWrongVal: null };
+      }
+      return studentData.questionStats[cpId];
+    }
+
+    function finalizeCheckpointAttempt(cp, isCorrect, earnedPts, wrongCount, countdownSec) {
+      const totalQ = checkpoints.length;
+      const cpNum = getCheckpointOrderNumber(cp);
+      studentData.attempts[cp.id] = {
+        correct: isCorrect,
+        points: earnedPts,
+        wrongCount: wrongCount,
+        timestamp: new Date().toISOString()
+      };
+      recalculateScore();
+      maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
+      updateScoreBadge();
+      renderCheckpoints();
+      saveStudentProgressLocally();
+      const sheetStatusMsg = isCorrect
+        ? `🟡 Đang học (Đã qua Trạm ${cpNum}/${totalQ} - ${studentData.score}đ)`
+        : `🟡 Đang học (Trạm ${cpNum}/${totalQ} chưa đạt: 0đ - Tổng ${studentData.score}đ)`;
+      syncProgressToGoogleSheets(sheetStatusMsg);
+      startAutoResumeCountdown(countdownSec);
+    }
+
+    // 7.1. MCQ Handler (Trắc nghiệm nhiều lựa chọn - 2 lượt thử, khóa nút sai lần 1 chống chạm đúp)
     function handleInstantMCQ(selectedIdx) {
-      if (activeCheckpointSolved) return;
+      if (activeCheckpointSolved || !activeCheckpoint) return;
 
       const cp = activeCheckpoint;
+      const totalQ = checkpoints.length;
+      const cpNum = getCheckpointOrderNumber(cp);
       const isCorrect = (selectedIdx === cp.correct);
       const clickedBtn = document.getElementById(`opt-btn-${selectedIdx}`);
       const clickedBadge = document.getElementById(`opt-badge-${selectedIdx}`);
+      if (!clickedBtn || clickedBtn.disabled) return;
 
-      // Initialize attempt stats for this checkpoint
-      if (!studentData.questionStats) studentData.questionStats = {};
-      if (!studentData.questionStats[cp.id]) {
-        studentData.questionStats[cp.id] = { wrongCount: 0, points: 0, passed: false };
-      }
-      const qStat = studentData.questionStats[cp.id];
-
+      const qStat = ensureQuestionStat(cp.id);
       document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('shake'));
 
       if (isCorrect) {
@@ -1895,40 +2248,31 @@
         AudioFX.playSuccess();
         triggerConfettiMini();
 
-        let earnedPts = 1;
-        if (qStat.wrongCount === 0) {
-          earnedPts = 1;
-          showFeedbackBanner(true, '🎉 CHÍNH XÁC! Em làm đúng ngay lần đầu (+1.0 điểm)!');
-        } else {
-          earnedPts = 0.5;
-          showFeedbackBanner(true, '👍 TỐT LẮM! Em đã tự sửa đúng sau lần thử đầu (+0.5 điểm)!');
-        }
-
+        const earnedPts = (qStat.wrongCount === 0) ? 1 : 0.5;
         qStat.points = earnedPts;
         qStat.passed = true;
 
+        if (qStat.wrongCount === 0) {
+          showFeedbackBanner(true, '🎉 CHÍNH XÁC! Em làm đúng ngay lần đầu (+1.0 điểm)!');
+        } else {
+          showFeedbackBanner(true, '👍 TỐT LẮM! Em đã tự sửa đúng ở lượt thứ hai (+0.5 điểm)!');
+        }
+
         clickedBtn.classList.remove('wrong-ans');
         clickedBtn.classList.add('correct-ans');
-        clickedBadge.className = 'opt-status-badge badge-correct';
-        clickedBadge.innerHTML = `✅ ĐÚNG (+${earnedPts}đ)`;
+        if (clickedBadge) {
+          clickedBadge.className = 'opt-status-badge badge-correct';
+          clickedBadge.innerHTML = `✅ ĐÚNG (+${earnedPts}đ)`;
+        }
 
         document.querySelectorAll('.option-btn').forEach((b, i) => {
-          if (i !== selectedIdx) {
-            b.style.opacity = '0.4';
-            b.style.pointerEvents = 'none';
-          }
+          b.disabled = true;
+          b.style.pointerEvents = 'none';
+          if (i !== selectedIdx) b.style.opacity = '0.4';
         });
 
         showExplanation(cp.explanation);
-
-        studentData.attempts[cp.id] = { correct: true, points: earnedPts, wrongCount: qStat.wrongCount, timestamp: new Date().toISOString() };
-        recalculateScore();
-        maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
-
-        updateScoreBadge();
-        renderCheckpoints();
-        syncProgressToGoogleSheets(`🟡 Đang học (Đã qua Trạm ${cp.id}/7 - ${studentData.score}đ)`);
-        startAutoResumeCountdown();
+        finalizeCheckpointAttempt(cp, true, earnedPts, qStat.wrongCount, 4);
 
       } else {
         qStat.wrongCount++;
@@ -1936,21 +2280,27 @@
         clickedBtn.classList.remove('correct-ans');
         void clickedBtn.offsetWidth;
         clickedBtn.classList.add('wrong-ans', 'shake');
-        clickedBadge.className = 'opt-status-badge badge-wrong';
-        clickedBadge.innerHTML = '❌ SAI';
+        // Khóa phương án vừa chọn sai để học sinh không bấm đúp nhầm mất lượt thứ 2
+        clickedBtn.disabled = true;
+        clickedBtn.style.pointerEvents = 'none';
+        if (clickedBadge) {
+          clickedBadge.className = 'opt-status-badge badge-wrong';
+          clickedBadge.innerHTML = '❌ SAI';
+        }
 
         if (qStat.wrongCount >= 2) {
-          // 2nd wrong: reveal answer and allow continuing with 0 points
           activeCheckpointSolved = true;
           qStat.points = 0;
           qStat.passed = true;
 
-          showFeedbackBanner(false, `❌ Em đã chọn chưa đúng 2 lần. Đáp án đúng là: ${cp.options[cp.correct]} (0 điểm)`);
+          const correctLabel = (cp.options && cp.options[cp.correct]) ? cp.options[cp.correct] : '';
+          showFeedbackBanner(false, `❌ Em đã chọn chưa đúng 2 lần. Đáp án đúng là: ${escapeHtml(correctLabel)} (0 điểm)`);
           showExplanation(cp.explanation);
 
           const correctBtn = document.getElementById(`opt-btn-${cp.correct}`);
           if (correctBtn) {
             correctBtn.classList.add('correct-ans');
+            correctBtn.style.opacity = '1';
             const corBadge = document.getElementById(`opt-badge-${cp.correct}`);
             if (corBadge) {
               corBadge.className = 'opt-status-badge badge-correct';
@@ -1959,123 +2309,134 @@
           }
 
           document.querySelectorAll('.option-btn').forEach((b, i) => {
-            if (i !== cp.correct && i !== selectedIdx) {
-              b.style.opacity = '0.4';
-            }
+            b.disabled = true;
+            b.style.pointerEvents = 'none';
+            if (i !== cp.correct && i !== selectedIdx) b.style.opacity = '0.4';
           });
 
-          studentData.attempts[cp.id] = { correct: false, points: 0, wrongCount: qStat.wrongCount, timestamp: new Date().toISOString() };
-          recalculateScore();
-          maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
-
-          updateScoreBadge();
-          renderCheckpoints();
-          syncProgressToGoogleSheets(`🟡 Đang học (Trạm ${cp.id}/7 chưa đạt: 0đ)`);
-          startAutoResumeCountdown();
-
+          document.getElementById('btnReview30s').style.display = 'inline-block';
+          finalizeCheckpointAttempt(cp, false, 0, qStat.wrongCount, 7);
         } else {
-          showFeedbackBanner(false, '❌ Chưa chính xác! Em còn 1 cơ hội thử lại hoặc đọc gợi ý bên dưới để chọn lại.');
+          showFeedbackBanner(false, '❌ Chưa chính xác! Em hãy đọc gợi ý bên dưới (hoặc xem lại 30s video) rồi chọn đáp án đúng nhé (còn 1 lượt).');
           showExplanation(cp.explanation);
-          document.getElementById('btnReview30s').style.display = 'block';
-          syncProgressToGoogleSheets(`🟡 Đang học (Thử lại Trạm ${cp.id}/7)`);
+          document.getElementById('btnReview30s').style.display = 'inline-block';
+          saveStudentProgressLocally();
+          syncProgressToGoogleSheets(`🟡 Đang học (Thử lại Trạm ${cpNum}/${totalQ})`);
         }
       }
     }
 
+    // 7.2. True/False Handler (Đúng/Sai - chấm dứt điểm 1 chạm, luôn hiện nút Tiếp tục ngay lập tức, không bao giờ kẹt!)
     function handleInstantTF(val) {
-      if (activeCheckpointSolved) return;
+      if (activeCheckpointSolved || !activeCheckpoint) return;
 
       const cp = activeCheckpoint;
-      const isCorrect = (val === cp.correct);
+      const totalQ = checkpoints.length;
+      const cpNum = getCheckpointOrderNumber(cp);
+      const isCorrect = (Boolean(val) === Boolean(cp.correct));
+
       const clickedBtn = document.getElementById(val ? 'tf-btn-true' : 'tf-btn-false');
       const otherBtn = document.getElementById(val ? 'tf-btn-false' : 'tf-btn-true');
+      const clickedBadge = document.getElementById(val ? 'tf-badge-true' : 'tf-badge-false');
+      const otherBadge = document.getElementById(val ? 'tf-badge-false' : 'tf-badge-true');
 
-      if (!studentData.questionStats) studentData.questionStats = {};
-      if (!studentData.questionStats[cp.id]) {
-        studentData.questionStats[cp.id] = { wrongCount: 0, points: 0, passed: false };
+      const qStat = ensureQuestionStat(cp.id);
+      activeCheckpointSolved = true;
+
+      if (clickedBtn) {
+        clickedBtn.disabled = true;
+        clickedBtn.style.pointerEvents = 'none';
       }
-      const qStat = studentData.questionStats[cp.id];
-
-      document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('shake'));
+      if (otherBtn) {
+        otherBtn.disabled = true;
+        otherBtn.style.pointerEvents = 'none';
+      }
 
       if (isCorrect) {
-        activeCheckpointSolved = true;
         AudioFX.playSuccess();
         triggerConfettiMini();
 
-        let earnedPts = (qStat.wrongCount === 0) ? 1 : 0.5;
+        const earnedPts = 1;
         qStat.points = earnedPts;
         qStat.passed = true;
 
-        clickedBtn.classList.remove('wrong-ans');
-        clickedBtn.classList.add('correct-ans');
-        otherBtn.style.opacity = '0.35';
-        otherBtn.style.pointerEvents = 'none';
+        if (clickedBtn) {
+          clickedBtn.classList.remove('wrong-ans');
+          clickedBtn.classList.add('correct-ans');
+        }
+        if (clickedBadge) {
+          clickedBadge.className = 'opt-status-badge badge-correct';
+          clickedBadge.innerHTML = '✅ ĐÚNG (+1đ)';
+        }
+        if (otherBtn) {
+          otherBtn.style.opacity = '0.35';
+        }
 
-        showFeedbackBanner(true, `🎉 CHÍNH XÁC! Nhận định của em hoàn toàn đúng (+${earnedPts}đ)!`);
+        showFeedbackBanner(true, '🎉 CHÍNH XÁC! Nhận định của em hoàn toàn đúng (+1.0 điểm)!');
         showExplanation(cp.explanation);
 
-        studentData.attempts[cp.id] = { correct: true, points: earnedPts, wrongCount: qStat.wrongCount, timestamp: new Date().toISOString() };
-        recalculateScore();
-        maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
-
-        updateScoreBadge();
-        renderCheckpoints();
-        syncProgressToGoogleSheets(`🟡 Đang học (Đã qua Trạm ${cp.id}/7 - ${studentData.score}đ)`);
-        startAutoResumeCountdown();
-
+        finalizeCheckpointAttempt(cp, true, earnedPts, 0, 4);
       } else {
-        qStat.wrongCount++;
+        qStat.wrongCount = 1;
+        qStat.points = 0;
+        qStat.passed = true;
         AudioFX.playWrong();
-        clickedBtn.classList.remove('correct-ans');
-        void clickedBtn.offsetWidth;
-        clickedBtn.classList.add('wrong-ans', 'shake');
 
-        if (qStat.wrongCount >= 2) {
-          activeCheckpointSolved = true;
-          qStat.points = 0;
-          qStat.passed = true;
-
-          showFeedbackBanner(false, `❌ Đáp án đúng là: ${cp.correct ? 'ĐÚNG' : 'SAI'} (0 điểm)`);
-          showExplanation(cp.explanation);
-          otherBtn.classList.add('correct-ans');
-
-          studentData.attempts[cp.id] = { correct: false, points: 0, wrongCount: qStat.wrongCount, timestamp: new Date().toISOString() };
-          recalculateScore();
-          maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
-
-          updateScoreBadge();
-          renderCheckpoints();
-          syncProgressToGoogleSheets(`🟡 Đang học (Trạm ${cp.id}/7 chưa đạt: 0đ)`);
-          startAutoResumeCountdown();
-        } else {
-          showFeedbackBanner(false, '❌ Chưa chính xác! Hãy đọc kỹ giải thích bên dưới và chọn lại.');
-          showExplanation(cp.explanation);
-          document.getElementById('btnReview30s').style.display = 'block';
-          syncProgressToGoogleSheets(`🟡 Đang học (Thử lại Trạm ${cp.id}/7)`);
+        if (clickedBtn) {
+          clickedBtn.classList.remove('correct-ans');
+          void clickedBtn.offsetWidth;
+          clickedBtn.classList.add('wrong-ans', 'shake');
         }
+        if (clickedBadge) {
+          clickedBadge.className = 'opt-status-badge badge-wrong';
+          clickedBadge.innerHTML = '❌ CHƯA ĐÚNG';
+        }
+        if (otherBtn) {
+          otherBtn.classList.add('correct-ans');
+        }
+        if (otherBadge) {
+          otherBadge.className = 'opt-status-badge badge-correct';
+          otherBadge.innerHTML = '✅ ĐÁP ÁN ĐÚNG';
+        }
+
+        showFeedbackBanner(false, `❌ Chưa chính xác! Đáp án đúng là: ${cp.correct ? 'ĐÚNG' : 'SAI'} (0 điểm). Em xem kỹ giải thích rồi bấm Tiếp tục nhé!`);
+        showExplanation(cp.explanation);
+        document.getElementById('btnReview30s').style.display = 'inline-block';
+
+        finalizeCheckpointAttempt(cp, false, 0, qStat.wrongCount, 7);
       }
     }
 
+    // 7.3. Fill-in-the-blank Handler (Điền số / Điền từ - chống mất chữ, chống bấm đúp mất lượt, hỗ trợ số âm & thập phân dấu phẩy/chấm)
     function handleInstantFill() {
-      if (activeCheckpointSolved) return;
+      if (activeCheckpointSolved || !activeCheckpoint) return;
 
       const cp = activeCheckpoint;
+      const totalQ = checkpoints.length;
+      const cpNum = getCheckpointOrderNumber(cp);
       const inp = document.getElementById('fillInput');
-      const val = inp.value.trim();
+      const btnCheck = document.getElementById('btnCheckFill');
+      if (!inp) return;
 
+      const val = inp.value.trim();
       if (!val) {
         inp.focus();
+        showFeedbackBanner(false, '⚠️ Em hãy nhập câu trả lời vào ô trống trước khi bấm Kiểm tra nhé!');
         return;
       }
 
-      if (!studentData.questionStats) studentData.questionStats = {};
-      if (!studentData.questionStats[cp.id]) {
-        studentData.questionStats[cp.id] = { wrongCount: 0, points: 0, passed: false };
-      }
-      const qStat = studentData.questionStats[cp.id];
+      const qStat = ensureQuestionStat(cp.id);
+      const normVal = normalizeAnswerToken(val);
 
-      const isCorrect = (val.toLowerCase() === cp.correct.toLowerCase());
+      // Chống lỗi bấm đúp nút Kiểm tra / nhấn Enter 2 lần liên tiếp làm mất oan lượt thử thứ 2
+      if (qStat.wrongCount === 1 && qStat.lastWrongVal === normVal) {
+        inp.focus();
+        if (typeof inp.select === 'function') inp.select();
+        showFeedbackBanner(false, `⚠️ Kết quả "${escapeHtml(val)}" chưa đúng. Em hãy nhập một đáp án khác rồi bấm Kiểm tra nhé (còn 1 lượt)!`);
+        return;
+      }
+
+      const isCorrect = isFillAnswerMatch(val, cp.correct);
       inp.classList.remove('shake');
 
       if (isCorrect) {
@@ -2083,28 +2444,23 @@
         AudioFX.playSuccess();
         triggerConfettiMini();
 
-        let earnedPts = (qStat.wrongCount === 0) ? 1 : 0.5;
+        const earnedPts = (qStat.wrongCount === 0) ? 1 : 0.5;
         qStat.points = earnedPts;
         qStat.passed = true;
 
         inp.classList.remove('wrong-ans');
         inp.classList.add('correct-ans');
         inp.disabled = true;
+        if (btnCheck) btnCheck.disabled = true;
 
-        showFeedbackBanner(true, `🎉 CHÍNH XÁC! Số điền hoàn toàn đúng (+${earnedPts}đ)!`);
+        showFeedbackBanner(true, `🎉 CHÍNH XÁC! Đáp án hoàn toàn đúng (+${earnedPts} điểm)!`);
         showExplanation(cp.explanation);
 
-        studentData.attempts[cp.id] = { correct: true, points: earnedPts, wrongCount: qStat.wrongCount, timestamp: new Date().toISOString() };
-        recalculateScore();
-        maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
-
-        updateScoreBadge();
-        renderCheckpoints();
-        syncProgressToGoogleSheets(`🟡 Đang học (Đã qua Trạm ${cp.id}/7 - ${studentData.score}đ)`);
-        startAutoResumeCountdown();
+        finalizeCheckpointAttempt(cp, true, earnedPts, qStat.wrongCount, 4);
 
       } else {
         qStat.wrongCount++;
+        qStat.lastWrongVal = normVal;
         AudioFX.playWrong();
         void inp.offsetWidth;
         inp.classList.add('wrong-ans', 'shake');
@@ -2114,23 +2470,165 @@
           qStat.points = 0;
           qStat.passed = true;
           inp.disabled = true;
+          if (btnCheck) btnCheck.disabled = true;
 
-          showFeedbackBanner(false, `❌ Đáp án chính xác là số: ${cp.correct} (0 điểm)`);
+          const primaryAns = String(cp.correct).split('|')[0];
+          showFeedbackBanner(false, `❌ Em đã nhập chưa đúng 2 lần. Đáp án chính xác là: ${escapeHtml(primaryAns)} (0 điểm)`);
           showExplanation(cp.explanation);
+          document.getElementById('btnReview30s').style.display = 'inline-block';
 
-          studentData.attempts[cp.id] = { correct: false, points: 0, wrongCount: qStat.wrongCount, timestamp: new Date().toISOString() };
-          recalculateScore();
-          maxWatchedTime = Math.max(maxWatchedTime, cp.time + 1);
-
-          updateScoreBadge();
-          renderCheckpoints();
-          syncProgressToGoogleSheets(`🟡 Đang học (Trạm ${cp.id}/7 chưa đạt: 0đ)`);
-          startAutoResumeCountdown();
+          finalizeCheckpointAttempt(cp, false, 0, qStat.wrongCount, 7);
         } else {
-          showFeedbackBanner(false, `❌ Số "${val}" chưa chính xác! Em còn 1 cơ hội nhập lại sau khi xem gợi ý.`);
+          showFeedbackBanner(false, `❌ Kết quả "${escapeHtml(val)}" chưa chính xác! Em hãy xem gợi ý bên dưới và sửa lại đáp án nhé (còn 1 cơ hội).`);
           showExplanation(cp.explanation);
-          document.getElementById('btnReview30s').style.display = 'block';
-          syncProgressToGoogleSheets(`🟡 Đang học (Thử lại Trạm ${cp.id}/7)`);
+          document.getElementById('btnReview30s').style.display = 'inline-block';
+          setTimeout(() => {
+            if (!activeCheckpointSolved && inp) {
+              inp.focus();
+              if (typeof inp.select === 'function') inp.select();
+            }
+          }, 150);
+          saveStudentProgressLocally();
+          syncProgressToGoogleSheets(`🟡 Đang học (Thử lại Trạm ${cpNum}/${totalQ})`);
+        }
+      }
+    }
+
+    // 7.4. Tap-to-Place / Drag Tiles Handler (Dạng câu hỏi thứ 4: Chạm/Ghép thẻ đáp án trên Điện thoại & Máy tính)
+    function toggleDragTile(tileIdx) {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      const cp = activeCheckpoint;
+      const tiles = cp.tiles || [];
+      if (tileIdx < 0 || tileIdx >= tiles.length) return;
+
+      const isMulti = Boolean(cp.multiSelect);
+      const existingPos = currentDragSelectedIndices.indexOf(tileIdx);
+      if (existingPos >= 0) {
+        currentDragSelectedIndices.splice(existingPos, 1);
+      } else {
+        if (!isMulti) {
+          currentDragSelectedIndices = [tileIdx];
+        } else {
+          currentDragSelectedIndices.push(tileIdx);
+        }
+      }
+      renderDragZoneUI();
+    }
+
+    function clearDragSelection() {
+      if (activeCheckpointSolved) return;
+      currentDragSelectedIndices = [];
+      renderDragZoneUI();
+    }
+
+    function renderDragZoneUI() {
+      const cp = activeCheckpoint;
+      if (!cp) return;
+      const zone = document.getElementById('dragDropZone');
+      if (!zone) return;
+      zone.classList.remove('wrong-ans', 'shake');
+
+      const tiles = cp.tiles || [];
+      if (currentDragSelectedIndices.length === 0) {
+        zone.innerHTML = '<span class="drag-slot-placeholder" id="dragPlaceholder">Chạm vào thẻ đáp án bên dưới để đặt vào đây...</span>';
+      } else {
+        zone.innerHTML = currentDragSelectedIndices.map(idx =>
+          `<button type="button" class="drag-tile in-zone" onclick="toggleDragTile(${idx})" title="Chạm để bỏ thẻ này ra">${escapeHtml(tiles[idx])} ✕</button>`
+        ).join('');
+        renderMathInContainer(zone);
+      }
+
+      tiles.forEach((_, idx) => {
+        const btn = document.getElementById(`drag-tile-${idx}`);
+        if (btn) {
+          if (currentDragSelectedIndices.includes(idx)) btn.classList.add('selected-tile');
+          else btn.classList.remove('selected-tile');
+        }
+      });
+    }
+
+    function handleInstantDrag() {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      const cp = activeCheckpoint;
+      const totalQ = checkpoints.length;
+      const cpNum = getCheckpointOrderNumber(cp);
+      const zone = document.getElementById('dragDropZone');
+      const btnCheck = document.getElementById('btnCheckDrag');
+      const btnClear = document.getElementById('btnClearDrag');
+
+      if (currentDragSelectedIndices.length === 0) {
+        showFeedbackBanner(false, '⚠️ Em hãy chạm chọn ít nhất một thẻ đáp án đưa vào ô trống trước khi bấm Kiểm tra nhé!');
+        return;
+      }
+
+      const chosenAnswer = currentDragSelectedIndices.map(i => (cp.tiles || [])[i]).join(' ').trim();
+      const normChosen = normalizeAnswerToken(chosenAnswer);
+      const qStat = ensureQuestionStat(cp.id);
+
+      if (qStat.wrongCount === 1 && qStat.lastWrongVal === normChosen) {
+        showFeedbackBanner(false, '⚠️ Lựa chọn thẻ này chưa đúng. Em hãy chọn thẻ khác rồi bấm Kiểm tra nhé (còn 1 cơ hội)!');
+        return;
+      }
+
+      const isCorrect = isFillAnswerMatch(chosenAnswer, cp.correct);
+
+      if (isCorrect) {
+        activeCheckpointSolved = true;
+        AudioFX.playSuccess();
+        triggerConfettiMini();
+
+        const earnedPts = (qStat.wrongCount === 0) ? 1 : 0.5;
+        qStat.points = earnedPts;
+        qStat.passed = true;
+
+        if (zone) {
+          zone.classList.remove('wrong-ans');
+          zone.classList.add('correct-ans');
+        }
+        document.querySelectorAll('.drag-tile').forEach(b => { b.disabled = true; });
+        if (btnCheck) btnCheck.disabled = true;
+        if (btnClear) btnClear.disabled = true;
+
+        showFeedbackBanner(true, `🎉 CHÍNH XÁC! Em ghép thẻ hoàn toàn đúng (+${earnedPts} điểm)!`);
+        showExplanation(cp.explanation);
+
+        finalizeCheckpointAttempt(cp, true, earnedPts, qStat.wrongCount, 4);
+      } else {
+        qStat.wrongCount++;
+        qStat.lastWrongVal = normChosen;
+        AudioFX.playWrong();
+        if (zone) {
+          void zone.offsetWidth;
+          zone.classList.add('wrong-ans', 'shake');
+        }
+
+        if (qStat.wrongCount >= 2) {
+          activeCheckpointSolved = true;
+          qStat.points = 0;
+          qStat.passed = true;
+
+          const primaryAns = String(cp.correct).split('|')[0];
+          if (zone) {
+            zone.classList.remove('wrong-ans');
+            zone.classList.add('correct-ans');
+            zone.innerHTML = `<span style="color:#6ee7b7; font-weight:700;">✅ Đáp án đúng: ${escapeHtml(primaryAns)}</span>`;
+            renderMathInContainer(zone);
+          }
+          document.querySelectorAll('.drag-tile').forEach(b => { b.disabled = true; });
+          if (btnCheck) btnCheck.disabled = true;
+          if (btnClear) btnClear.disabled = true;
+
+          showFeedbackBanner(false, `❌ Đáp án đúng là: ${escapeHtml(primaryAns)} (0 điểm)`);
+          showExplanation(cp.explanation);
+          document.getElementById('btnReview30s').style.display = 'inline-block';
+
+          finalizeCheckpointAttempt(cp, false, 0, qStat.wrongCount, 7);
+        } else {
+          showFeedbackBanner(false, '❌ Thẻ đã chọn chưa chính xác! Em hãy xem gợi ý bên dưới rồi chọn lại thẻ khác nhé (còn 1 cơ hội).');
+          showExplanation(cp.explanation);
+          document.getElementById('btnReview30s').style.display = 'inline-block';
+          saveStudentProgressLocally();
+          syncProgressToGoogleSheets(`🟡 Đang học (Thử lại Trạm ${cpNum}/${totalQ})`);
         }
       }
     }
@@ -2154,25 +2652,31 @@
       const banner = document.getElementById('quizFeedbackBanner');
       const icon = document.getElementById('feedbackIcon');
       const text = document.getElementById('feedbackText');
-      
+
       icon.innerHTML = isCorrect ? '🎉' : '❌';
       text.innerHTML = message;
       banner.className = 'quiz-feedback-banner ' + (isCorrect ? 'show-correct' : 'show-wrong');
       banner.style.display = 'flex';
+      renderMathInContainer(text);
     }
 
     function showExplanation(text) {
       const box = document.getElementById('explanationBox');
       const expText = document.getElementById('explanationText');
-      expText.innerHTML = text;
+      expText.innerHTML = escapeHtml(text);
+      renderMathInContainer(expText);
       box.classList.add('show');
     }
 
-    function startAutoResumeCountdown() {
+    function startAutoResumeCountdown(seconds = 4) {
       const btnCont = document.getElementById('btnContinue');
+      const inst = document.getElementById('quizInstruction');
+      autoResumeSeconds = Number(seconds) || 4;
       btnCont.style.display = 'inline-block';
-      autoResumeSeconds = 4;
       btnCont.innerHTML = `Tiếp tục bài học ▶️ (${autoResumeSeconds}s)`;
+      if (inst) {
+        inst.innerHTML = '✅ Bấm <strong>Tiếp tục bài học</strong> để xem tiếp ngay (hoặc tự động phát tiếp)...';
+      }
 
       if (autoResumeTimer) clearInterval(autoResumeTimer);
       autoResumeTimer = setInterval(() => {
@@ -2181,24 +2685,35 @@
           btnCont.innerHTML = `Tiếp tục bài học ▶️ (${autoResumeSeconds}s)`;
         } else {
           clearInterval(autoResumeTimer);
+          autoResumeTimer = null;
           continueLesson();
         }
       }, 1000);
     }
 
     function continueLesson() {
-      if (autoResumeTimer) clearInterval(autoResumeTimer);
+      if (autoResumeTimer) {
+        clearInterval(autoResumeTimer);
+        autoResumeTimer = null;
+      }
+      const solvedCp = activeCheckpoint;
       document.getElementById('quizOverlay').classList.remove('active');
       activeCheckpoint = null;
       activeCheckpointSolved = false;
+      if (solvedCp) {
+        maxWatchedTime = Math.max(maxWatchedTime, solvedCp.time + 1, PlayerEngine.getTime());
+      }
       PlayerEngine.play();
     }
 
     function reviewPrevious30s() {
       if (!activeCheckpoint) return;
-      if (autoResumeTimer) clearInterval(autoResumeTimer);
-      document.getElementById('quizOverlay').classList.remove('active');
+      if (autoResumeTimer) {
+        clearInterval(autoResumeTimer);
+        autoResumeTimer = null;
+      }
       const reviewTime = Math.max(0, activeCheckpoint.time - 35);
+      document.getElementById('quizOverlay').classList.remove('active');
       activeCheckpoint = null;
       activeCheckpointSolved = false;
       PlayerEngine.seekTo(reviewTime);
@@ -2206,14 +2721,18 @@
     }
 
     function triggerConfettiMini() {
-      confetti({
-        particleCount: 50,
-        spread: 60,
-        origin: { y: 0.6 }
-      });
+      try {
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 50,
+            spread: 60,
+            origin: { y: 0.6 }
+          });
+        }
+      } catch (e) {}
     }
 
-    // --- 6. REAL-TIME GOOGLE SHEETS PROGRESS SYNC ---
+    // --- 8. REAL-TIME GOOGLE SHEETS PROGRESS SYNC ---
     function syncProgressToGoogleSheets(statusText) {
       if (!SCRIPT_WEB_APP_URL || !studentData.name) return;
 
@@ -2222,29 +2741,26 @@
         studentName: studentData.name,
         studentClass: studentData.class,
         score: studentData.score,
-        totalQuestions: 7,
+        totalQuestions: checkpoints.length,
         status: statusText || '🟡 Đang học',
-        lesson: 'Bài 6: Lũy thừa với số mũ tự nhiên (Toán 6)',
+        lesson: LESSON_TITLE,
         details: JSON.stringify(studentData.attempts)
       };
 
-      fetch(SCRIPT_WEB_APP_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).catch(err => console.warn('Sync error:', err));
+      try {
+        fetch(SCRIPT_WEB_APP_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(err => console.warn('Sync error:', err));
+      } catch (e) {}
     }
 
-    // --- 7. REGISTRATION & COMPLETION ---
-    
-    // === CHANGE STUDENT NAME & CLASS LOGIC (MOBILE & PC) ===
+    // --- 9. REGISTRATION, CHANGE STUDENT & COMPLETION ---
     function openChangeStudentModal() {
       const modal = document.getElementById('changeStudentModal');
-      if (!modal) {
-        console.error('changeStudentModal not found!');
-        return;
-      }
+      if (!modal) return;
       document.getElementById('editStudentName').value = studentData.name || '';
       document.getElementById('editStudentClass').value = studentData.class || '';
       modal.style.display = 'flex';
@@ -2259,6 +2775,15 @@
       if (modal) modal.style.display = 'none';
     }
 
+    function persistStudentIdentity(name, cls) {
+      studentData.name = name;
+      studentData.class = cls;
+      safeStorageSet('nls_student_name', name);
+      safeStorageSet('nls_student_class', cls);
+      safeStorageSet('nls_toan6_name', name);
+      safeStorageSet('nls_toan6_class', cls);
+    }
+
     function handleUpdateStudentInfo(e) {
       if (e) e.preventDefault();
       const newName = document.getElementById('editStudentName').value.trim();
@@ -2271,20 +2796,13 @@
       const oldName = studentData.name;
       const oldClass = studentData.class;
 
-      studentData.name = newName;
-      studentData.class = newClass;
-      localStorage.setItem('nls_toan6_name', newName);
-      localStorage.setItem('nls_toan6_class', newClass);
-
-      // Save locally
+      persistStudentIdentity(newName, newClass);
       saveStudentProgressLocally();
       updateStudentHeader();
       closeChangeStudentModal();
 
       AudioFX.playSuccess();
       showToastBanner(`✅ Đã đổi thông tin thành công: ${newName} (${newClass})`);
-
-      // Sync updated name and class to Google Sheets (moves to correct class tab!)
       syncProgressToGoogleSheets(`🟡 Cập nhật tên/lớp (trước: ${oldName} - ${oldClass})`);
     }
 
@@ -2296,20 +2814,25 @@
         return;
       }
 
-      if (!confirm(`Xác nhận bắt đầu lượt học mới cho bạn ${newName} (${newClass})?\nTiến độ bài học sẽ tính từ đầu.`)) {
+      if (!confirm(`Xác nhận bắt đầu lượt học mới cho bạn ${newName} (${newClass})?\nTiến độ bài học sẽ tính lại từ đầu.`)) {
         return;
       }
 
-      // Reset state for new student
-      studentData.name = newName;
-      studentData.class = newClass;
+      if (autoResumeTimer) {
+        clearInterval(autoResumeTimer);
+        autoResumeTimer = null;
+      }
+      activeCheckpoint = null;
+      activeCheckpointSolved = false;
+      document.getElementById('quizOverlay').classList.remove('active');
+      document.getElementById('completionScreen').classList.remove('show');
+
+      persistStudentIdentity(newName, newClass);
       studentData.score = 0;
       studentData.attempts = {};
       studentData.questionStats = {};
       maxWatchedTime = 0;
-      localStorage.setItem('nls_toan6_name', newName);
-      localStorage.setItem('nls_toan6_class', newClass);
-      localStorage.removeItem('nls_toan6_saved_progress');
+      clearSavedProgressLocally();
 
       updateStudentHeader();
       updateScoreBadge();
@@ -2351,35 +2874,29 @@
       const cls = document.getElementById('regClass').value.trim();
       if (!name || !cls) return;
 
-      studentData.name = name;
-      studentData.class = cls;
-      localStorage.setItem('nls_toan6_name', name);
-      localStorage.setItem('nls_toan6_class', cls);
-
+      persistStudentIdentity(name, cls);
       document.getElementById('registerModal').style.display = 'none';
       updateStudentHeader();
-
-      // Immediately log student into Google Sheet upon entrance!
       syncProgressToGoogleSheets('🟡 Đang học (Vừa vào lớp)');
-
       PlayerEngine.play();
     }
 
     function updateStudentHeader() {
-      document.getElementById('studentBadge').innerHTML = 
-        `👤 <strong>${studentData.name} (${studentData.class})</strong> <span class="btn-edit-hint">✏️ Đổi</span>`;
+      document.getElementById('studentBadge').innerHTML =
+        `👤 <strong>${escapeHtml(studentData.name)} (${escapeHtml(studentData.class)})</strong> <span class="btn-edit-hint">✏️ Đổi</span>`;
     }
 
     function updateScoreBadge() {
-      document.getElementById('scoreBadge').innerHTML = 
-        `⭐ Điểm: ${studentData.score}/7`;
+      document.getElementById('scoreBadge').innerHTML =
+        `⭐ Điểm: ${studentData.score}/${checkpoints.length}`;
     }
 
     function showCompletionScreen() {
       recalculateScore();
       const totalQ = checkpoints.length;
-      const pct = Math.round((studentData.score / totalQ) * 100);
+      const pct = totalQ > 0 ? Math.round((studentData.score / totalQ) * 100) : 100;
       const isPassed = (pct >= PASSING_THRESHOLD_PCT);
+      const minRequiredScore = Math.round(((PASSING_THRESHOLD_PCT / 100) * totalQ) * 10) / 10;
 
       const screen = document.getElementById('completionScreen');
       const titleEl = document.getElementById('completionTitle');
@@ -2388,25 +2905,41 @@
       const scorePct = document.getElementById('finalScorePct');
       const details = document.getElementById('summaryDetails');
       const box = document.getElementById('syncStatusBox');
+      const btnRetryWrong = document.getElementById('btnRetryWrong');
+
+      const imperfectCps = checkpoints.filter(cp => {
+        const att = studentData.attempts[cp.id];
+        return !att || Number(att.points || 0) < 1;
+      });
+      if (btnRetryWrong) {
+        btnRetryWrong.style.display = (imperfectCps.length > 0) ? 'inline-block' : 'none';
+        btnRetryWrong.innerHTML = isPassed
+          ? `🎯 Làm lại ${imperfectCps.length} câu chưa tối đa`
+          : `🎯 Ôn & làm lại ${imperfectCps.length} câu chưa đạt (Nâng điểm)`;
+      }
 
       document.getElementById('summaryStudentName').innerText = studentData.name || 'Em học sinh';
-      document.getElementById('summaryStudentClass').innerText = studentData.class || 'Toán 6';
+      document.getElementById('summaryStudentClass').innerText = studentData.class || 'Lớp học';
       scoreText.innerText = `${studentData.score}/${totalQ}`;
       if (scorePct) scorePct.innerText = `${pct}%`;
 
       let statusMsg = '';
       if (isPassed) {
-        confetti({ particleCount: 130, spread: 85, origin: { y: 0.6 } });
+        try {
+          if (typeof confetti === 'function') {
+            confetti({ particleCount: 130, spread: 85, origin: { y: 0.6 } });
+          }
+        } catch (e) {}
         AudioFX.playSuccess();
         titleEl.style.color = '#10b981';
         titleEl.innerHTML = '🎉 CHÚC MỪNG EM ĐÃ HOÀN THÀNH BÀI HỌC!';
         if (scoreCircle) scoreCircle.style.borderColor = '#10b981';
 
         details.innerHTML = `
-          <div style="color:#6ee7b7; font-weight:600; margin-bottom:6px;">🎯 XẾP LOẠI: ĐẠT YÊU CẦU HOÀN THÀNH (≥ 80%)</div>
+          <div style="color:#6ee7b7; font-weight:600; margin-bottom:6px;">🎯 XẾP LOẠI: ĐẠT YÊU CẦU HOÀN THÀNH (≥ ${PASSING_THRESHOLD_PCT}%)</div>
           <div>✅ <strong>Điểm số:</strong> ${studentData.score}/${totalQ} điểm (${pct}%).</div>
           <div>⏱️ <strong>Thời gian:</strong> ${new Date().toLocaleTimeString('vi-VN')} ngày ${new Date().toLocaleDateString('vi-VN')}.</div>
-          <div>🏆 <strong>Đánh giá:</strong> Em đã nắm vững kiến thức trọng tâm Bài 6 (Lũy thừa với số mũ tự nhiên).</div>
+          <div>🏆 <strong>Đánh giá:</strong> Em đã nắm vững kiến thức trọng tâm <strong>${escapeHtml(LESSON_TITLE)}</strong>.</div>
         `;
         statusMsg = `🟢 ĐÃ HOÀN THÀNH (ĐẠT: ${studentData.score}/${totalQ} - ${pct}%)`;
       } else {
@@ -2418,8 +2951,8 @@
         details.innerHTML = `
           <div style="color:#fca5a5; font-weight:600; margin-bottom:6px;">⚠️ XẾP LOẠI: CHƯA ĐẠT (CẦN ÔN TẬP LẠI)</div>
           <div>❌ <strong>Điểm số:</strong> ${studentData.score}/${totalQ} điểm (${pct}%).</div>
-          <div>📌 <strong>Quy định:</strong> Bài học yêu cầu đạt tối thiểu <strong>80% (từ 5.6 ~ 6/7 câu đúng trở lên)</strong> mới được tính hoàn thành.</div>
-          <div style="margin-top:6px; color:#cbd5e1;">💡 <em>Em hãy bấm nút <strong>"Học lại bài giảng"</strong> bên dưới để xem kỹ lại các phần chưa vững và nâng cao điểm số nhé!</em></div>
+          <div>📌 <strong>Quy định:</strong> Bài học yêu cầu đạt tối thiểu <strong>${PASSING_THRESHOLD_PCT}% (từ ${minRequiredScore}/${totalQ} điểm trở lên)</strong> mới được tính hoàn thành.</div>
+          <div style="margin-top:6px; color:#cbd5e1;">💡 <em>Em hãy bấm nút <strong>"Ôn & làm lại câu chưa đạt"</strong> màu vàng bên dưới để xem lại đoạn kiến thức đó và trả lời lại nâng điểm nhé!</em></div>
         `;
         statusMsg = `🔴 CHƯA ĐẠT (Cần học lại: ${studentData.score}/${totalQ} - ${pct}%)`;
       }
@@ -2435,37 +2968,86 @@
         score: studentData.score,
         totalQuestions: totalQ,
         status: statusMsg,
-        lesson: 'Bài 6: Lũy thừa với số mũ tự nhiên (Toán 6)',
+        lesson: LESSON_TITLE,
         details: JSON.stringify(studentData.attempts)
       };
 
-      fetch(SCRIPT_WEB_APP_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(() => {
-        box.className = 'sync-status-box success';
-        box.innerHTML = isPassed 
-          ? '✅ Đã lưu kết quả ĐẠT vào Sổ điểm Thầy Cô thành công!'
-          : '⚠️ Đã ghi nhận kết quả vào Sổ điểm. Em hãy học lại để cải thiện nhé!';
-      })
-      .catch(err => {
-        box.className = 'sync-status-box error';
-        box.innerHTML = '⚠️ Lỗi kết nối Google Sheets: ' + err.message;
-      });
+      try {
+        fetch(SCRIPT_WEB_APP_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        .then(() => {
+          box.className = 'sync-status-box success';
+          box.innerHTML = isPassed
+            ? '✅ Đã lưu kết quả ĐẠT vào Sổ điểm Thầy Cô thành công!'
+            : '⚠️ Đã ghi nhận kết quả vào Sổ điểm. Em hãy ôn & làm lại câu sai để đạt chuẩn hoàn thành nhé!';
+        })
+        .catch(err => {
+          box.className = 'sync-status-box error';
+          box.innerHTML = '⚠️ Lỗi kết nối Google Sheets: ' + err.message;
+        });
+      } catch (e) {}
     }
 
-    function restartLesson() {
+    // Chỉ xóa các câu chưa đạt tối đa (< 1đ) và nhảy tới trước câu sai đầu tiên 25 giây để học sinh ôn và gỡ điểm!
+    function retryFailedQuestions() {
+      const failedCps = checkpoints.filter(cp => {
+        const att = studentData.attempts[cp.id];
+        return !att || Number(att.points || 0) < 1;
+      });
+      if (failedCps.length === 0) {
+        restartFullLesson();
+        return;
+      }
+
+      failedCps.forEach(cp => {
+        delete studentData.attempts[cp.id];
+        if (studentData.questionStats) delete studentData.questionStats[cp.id];
+      });
+
+      recalculateScore();
+      updateScoreBadge();
+      renderCheckpoints();
+      saveStudentProgressLocally();
+
       document.getElementById('completionScreen').classList.remove('show');
+      const jumpTime = Math.max(0, failedCps[0].time - 25);
+      PlayerEngine.seekTo(jumpTime);
+      PlayerEngine.play();
+      syncProgressToGoogleSheets(`🟡 Đang ôn & làm lại ${failedCps.length} câu chưa đạt`);
+    }
+
+    // Học lại toàn bộ bài từ đầu (reset toàn bộ câu hỏi để làm mới 100%)
+    function restartFullLesson() {
+      document.getElementById('completionScreen').classList.remove('show');
+      studentData.attempts = {};
+      studentData.questionStats = {};
+      studentData.score = 0;
+      maxWatchedTime = 0;
+      clearSavedProgressLocally();
+      updateScoreBadge();
+      renderCheckpoints();
       PlayerEngine.seekTo(0);
       PlayerEngine.play();
+      syncProgressToGoogleSheets('🟡 Học lại toàn bộ bài từ đầu');
     }
 
-    // --- 8. INITIALIZATION ON LOAD ---
+    // Giữ tên hàm cũ restartLesson() tương thích ngược
+    function restartLesson() {
+      retryFailedQuestions();
+    }
+
+    // --- 10. INITIALIZATION ON LOAD ---
     window.addEventListener('DOMContentLoaded', () => {
+      const regTitleEl = document.getElementById('registerLessonTitle');
+      if (regTitleEl) regTitleEl.innerText = LESSON_TITLE;
+
       PlayerEngine.init();
+      renderCheckpoints();
+      updateScoreBadge();
 
       const hasResume = checkSavedProgressOnStartup();
       if (hasResume) {
@@ -2474,7 +3056,6 @@
         document.getElementById('registerModal').style.display = 'none';
         updateStudentHeader();
       }
-      updateScoreBadge();
     });
   </script>
 
