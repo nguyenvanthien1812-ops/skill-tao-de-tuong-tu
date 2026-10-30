@@ -49,9 +49,24 @@ Khi giáo viên nói một trong các nhóm câu sau, agent kích hoạt ngay t�
 
 ---
 
-## 📋 TRỌN BỘ 5 CÂU LỆNH MẪU CHI TIẾT CHO GIÁO VIÊN (COPY-PASTE NGAY)
+## 📋 BẢNG MENU 10 DẠNG CÂU HỎI & TRỌN BỘ 5 CÂU LỆNH MẪU CHI TIẾT CHO GIÁO VIÊN (COPY-PASTE NGAY)
 
 ```text
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 BẢNG MENU 10 DẠNG CÂU HỎI TƯƠNG TÁC CHUẨN GDPT 2018 (THẦY/CÔ TÙY CHỌN)
+(Chỉ cần gọi tên tiếng Việt hoặc để AI tự phối hợp đa dạng — không cần nhớ mã kỹ thuật)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 1. Trắc nghiệm 1 lựa chọn (A, B, C, D)        [mcq]      - Chạm 1 lần chấm ngay, khóa nút sai chống chạm đúp.
+ 2. Đúng / Sai đơn (1 nhận định)               [tf]       - Chọn ĐÚNG hoặc SAI (sai khóa 3s suy ngẫm chống bấm bừa).
+ 3. Đúng / Sai đa mệnh đề (4 ý a, b, c, d)     [tf_group] - Chuẩn Phần II Bộ GD&ĐT; sai chỉ báo tổng số ý đúng (vd 2/4), không lộ ý sai.
+ 4. Trắc nghiệm nhiều đáp án đúng (Checkbox ☐) [multi]    - Tích chọn tất cả các khẳng định đúng (từ 2 đáp án đúng trở lên).
+ 5. Điền đáp án ngắn / Điền số                 [fill]     - Gõ số nguyên, số âm, thập phân (3,5 = 3.5) hoặc từ khóa ngắn.
+ 6. Điền khuyết nhiều chỗ trống (1), (2), (3)  [cloze]    - Chạm từ gợi ý trong ngân hàng từ HOẶC gõ trực tiếp vào ô trống.
+ 7. Chạm / Ghép thẻ vào 1 ô kết quả            [drag]     - Chạm chọn 1 thẻ hoặc ghép chuỗi nhiều thẻ từ ngân hàng bên dưới.
+ 8. Nối cặp tương ứng 2 cột (Cột A <-> Cột B)  [match]    - Chạm 1 ô Cột A + chạm 1 ô Cột B gắn nhãn màu (Cặp 1, Cặp 2...).
+ 9. Sắp xếp thứ tự quy trình / dãy số          [order]    - Dùng nút ▲ / ▼ hoặc chạm 2 thẻ để đổi chỗ theo đúng trình tự.
+10. Phân loại thẻ vào 2–4 nhóm kiến thức       [classify] - Chạm thẻ dữ kiện rồi chạm vào Rổ/Nhóm tương ứng để phân loại.
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📌 BỘ 5 CÂU LỆNH MẪU TẠO & QUẢN TRỊ VIDEO TƯƠNG TÁC E-LEARNING
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -65,7 +80,8 @@ Khi giáo viên nói một trong các nhóm câu sau, agent kích hoạt ngay t�
     - Thời lượng video: [Ví dụ: 14 phút 20 giây]
     - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi 'Hướng dẫn tôi tạo Sổ điểm Google Sheets']
     - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: Thien2026 - để trống mặc định là 123456]
-    - Yêu cầu: Tự thiết kế [5 - 8] câu hỏi tương tác đa dạng từ bộ 10 dạng chuẩn GDPT 2018 (Trắc nghiệm MCQ, Đúng/Sai đơn, Đúng/Sai 4 ý a-b-c-d, Chọn nhiều đáp án, Điền số, Điền khuyết đoạn văn, Ghép thẻ, Nối cặp 2 cột A-B, Sắp xếp thứ tự, Phân loại nhóm) rải đều theo mạch bài giảng; chống tua nhanh 100%; trả lời ĐÚNG mới hiện giải thích; đóng gói thư mục chuẩn ra ngoài Desktop để kéo thả lên Netlify."
+    - Các dạng câu hỏi muốn dùng: [Ghi 'Tự phối hợp đa dạng trong 10 dạng' HOẶC ghi tên các dạng muốn có: ví dụ Trắc nghiệm, Đúng/Sai 4 ý a-b-c-d, Nối cặp A-B, Điền khuyết, Sắp xếp thứ tự, Phân loại nhóm...]
+    - Yêu cầu: Tự thiết kế [5 - 8] câu hỏi tương tác đa dạng từ bộ 10 dạng chuẩn GDPT 2018 rải đều theo mạch bài giảng; chống tua nhanh 100%; trả lời ĐÚNG mới hiện giải thích; đóng gói thư mục chuẩn ra ngoài Desktop để kéo thả lên Netlify."
 
 🔵 MẪU 2 — ĐÃ CÓ VIDEO YOUTUBE + ĐÍNH KÈM FILE GIÁO ÁN WORD (.DOCX) HOẶC SÁCH GIÁO KHOA (PDF/ẢNH):
    "Dựa vào file Giáo án Word / Sách giáo khoa tại: '[Kéo thả file HOẶC dán đường dẫn Copy as path]' và video YouTube dưới đây, em hãy tạo trang Web Video Tương Tác E-Learning:
@@ -74,6 +90,7 @@ Khi giáo viên nói một trong các nhóm câu sau, agent kích hoạt ngay t�
     - Link video YouTube bài giảng: [https://youtu.be/VIDEO_ID] (Thời lượng: [15 phút 30 giây])
     - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi 'Hướng dẫn tôi tạo Sổ điểm Google Sheets']
     - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: KHTN7@2026]
+    - Các dạng câu hỏi muốn dùng: [Ghi 'Tự phối hợp đa dạng trong 10 dạng' HOẶC ghi tên các dạng muốn có]
     - Yêu cầu: Đọc kỹ file Giáo án / SGK đính kèm để thiết kế [5 - 7] trạm câu hỏi bám sát 100% định nghĩa, ký hiệu, ví dụ và Yêu cầu cần đạt của tiết dạy trên lớp; đóng gói thư mục chuẩn ra Desktop."
 
 🟣 MẪU 3 — CHƯA CÓ VIDEO: LÀM TRỌN GÓI TỪ FILE GIÁO ÁN WORD (.DOCX) HOẶC FILE/ẢNH SÁCH GIÁO KHOA:
@@ -84,18 +101,25 @@ Khi giáo viên nói một trong các nhóm câu sau, agent kích hoạt ngay t�
     - Hình thức sử dụng: [Online qua YouTube + Netlify / hoặc Offline dạy trực tiếp trên TV lớp học]
     - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi 'Hướng dẫn tôi tạo Sổ điểm Google Sheets']
     - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: Thien2026]
+    - Các dạng câu hỏi muốn dùng: [Ghi 'Tự phối hợp đa dạng trong 10 dạng' HOẶC ghi tên các dạng muốn có]
     - Yêu cầu: (1) Bóc tách nội dung & hình ảnh gốc từ Giáo án/SGK, lập bảng kịch bản Slide + danh sách câu hỏi gửi tôi duyệt; (2) Tạo Slide PowerPoint 16:9 chuẩn sư phạm, viết lời giảng vào Notes, lồng tiếng AI và kết xuất Video MP4 Full HD 1080p; (3) Căn đúng mốc giây từng phần trong video vừa xuất để đóng gói Trang Web Video Tương Tác ra ngoài Desktop."
 
-🟠 MẪU 4 — ĐÃ CÓ VIDEO YOUTUBE + GIÁO VIÊN ĐÃ TỰ SOẠN SẴN DANH SÁCH CÂU HỎI & MỐC PHÚT DỪNG:
+🟠 MẪU 4 — ĐÃ CÓ VIDEO YOUTUBE + GIÁO VIÊN ĐÃ TỰ SOẠN SẴN CÂU HỎI (DÙNG DẠNG NÀO GIỮ DÒNG ĐÓ, XÓA DÒNG KHÔNG DÙNG):
    "Em hãy tạo video tương tác cho video YouTube [https://youtu.be/VIDEO_ID] (thời lượng [14:20]):
     - Môn & Lớp: [...] - Tên bài: [...] - Giáo viên & Trường: [...]
     - Link Web App Google Sheets: [Dán link .../exec]
     - Mật khẩu Chế độ Thầy Cô: [Mật khẩu riêng, ví dụ: 246810]
-    - Các trạm câu hỏi như sau:
-      + Trạm 1 (phút 03:10 - Trắc nghiệm): [Câu hỏi | A, B, C, D | Đáp án đúng | Giải thích]
-      + Trạm 2 (phút 05:00 - Đúng/Sai): [Mệnh đề | Đúng/Sai | Giải thích]
-      + Trạm 3 (phút 07:25 - Điền số): [Câu hỏi | Đáp án = 7 | Giải thích]
-      + Trạm 4 (phút 10:15 - Ghép thẻ): [Câu hỏi | Các thẻ | Thẻ đúng | Giải thích]"
+    - Danh sách các trạm câu hỏi (giữ lại các dạng muốn dùng):
+      + Trạm 1 (phút 02:30 - Trắc nghiệm 1 đáp án): [Câu hỏi | A... B... C... D... | Đáp án đúng | Giải thích]
+      + Trạm 2 (phút 04:00 - Đúng/Sai đơn): [Nhận định | Đáp án: Đúng hoặc Sai | Giải thích]
+      + Trạm 3 (phút 05:30 - Đúng/Sai 4 ý a,b,c,d): [Đề dẫn | a) ... (Đúng/Sai); b) ... (Đúng/Sai); c) ... (Đúng/Sai); d) ... (Đúng/Sai) | Giải thích]
+      + Trạm 4 (phút 07:00 - Chọn nhiều đáp án đúng): [Câu hỏi | Các phương án | Các đáp án đúng | Giải thích]
+      + Trạm 5 (phút 08:20 - Điền đáp án ngắn/số): [Câu hỏi | Đáp án đúng | Giải thích]
+      + Trạm 6 (phút 09:40 - Điền khuyết nhiều chỗ trống): [Đoạn văn có (1), (2), (3) | Đáp án (1), (2), (3) | Các từ gợi ý (nếu có) | Giải thích]
+      + Trạm 7 (phút 11:00 - Ghép thẻ): [Câu hỏi | Các thẻ lựa chọn | Thẻ đúng | Giải thích]
+      + Trạm 8 (phút 12:10 - Nối cặp 2 cột A-B): [Câu hỏi | Cặp 1: A1 - B1; Cặp 2: A2 - B2; Cặp 3: A3 - B3 | Giải thích]
+      + Trạm 9 (phút 13:15 - Sắp xếp thứ tự): [Câu hỏi | Thứ tự đúng: Bước 1 -> Bước 2 -> Bước 3 | Giải thích]
+      + Trạm 10 (phút 14:00 - Phân loại nhóm): [Câu hỏi | Nhóm 1: (các thẻ...); Nhóm 2: (các thẻ...) | Giải thích]"
 
 🔑 MẪU 5 — ĐỔI MẬT KHẨU CHẾ ĐỘ THẦY CÔ CHO BÀI GIẢNG ĐÃ TẠO SẴN:
    "Em hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng tại đường dẫn: '[Đường dẫn thư mục Web_Video_Tuong_Tac_... hoặc file index.html]' thành mật khẩu mới là: '[Mật khẩu mới, ví dụ: Toan6@2026]' giúp thầy/cô."
@@ -1014,11 +1038,12 @@ html = build_interactive_video_html(
 Để bảo đảm **100% các video bài giảng tạo mới trong tương lai** đều chạy mượt mà, học sinh trả lời trôi chảy, không bao giờ gặp lỗi kẹt video hay lỗi biến mất chữ, hệ thống tích hợp sẵn cổng kiểm định chất lượng tự động:
 
 1. **Tự động sắp xếp tuyến tính:** Tự động sắp xếp lại các trạm theo thứ tự thời gian tăng dần, đánh số `Trạm 1, Trạm 2, Trạm 3...` chuẩn xác kể cả khi người dùng nhập lộn xộn.
-2. **Kiểm tra tính hợp lệ của từng dạng câu hỏi:**
-   - **MCQ:** Bắt buộc số phương án $\ge 2$, chỉ số `correct` phải nằm trong khoảng hợp lệ ($0 \le 	ext{correct} < 	ext{len}(	ext{options})$).
-   - **Đúng / Sai:** Tự động chuyển đổi các giá trị linh hoạt (`true`, `đúng`, `1`) thành Boolean chuẩn.
-   - **Điền số:** Bắt buộc có chuỗi đáp án chuẩn, tự động bật `autocomplete="off"` và tạm dừng vòng lặp quét 250ms để học sinh gõ số thoải mái không bao giờ bị mất chữ.
-   - **Kéo thả / Chạm thẻ số:** Kiểm tra danh sách thẻ `tiles` và vị trí rơi hợp lệ.
+2. **Kiểm tra tính hợp lệ của trọn bộ 10 dạng câu hỏi (`validate_checkpoints()`):**
+   - **MCQ (`mcq`):** Bắt buộc số phương án $\ge 2$, chỉ số `correct` hợp lệ.
+   - **Đúng / Sai đơn (`tf`) & Đa mệnh đề a-b-c-d (`tf_group`):** Tự động chuẩn hóa nhãn `a), b), c), d)` và giá trị Boolean chuẩn (`true`/`false`).
+   - **Chọn nhiều đáp án (`multi`):** Kiểm tra mảng chỉ số đáp án đúng `correct` (tự động sắp xếp & khử trùng).
+   - **Điền số (`fill`) & Điền khuyết nhiều chỗ trống (`cloze`):** Hỗ trợ cả ngân hàng từ gợi ý `wordBank` lẫn gõ trực tiếp; tự động hàn biên công thức KaTeX `$...$` quanh các ô trống `{{1}}`, `{{2}}`.
+   - **Ghép thẻ (`drag`), Nối cặp 2 cột (`match`), Sắp xếp thứ tự (`order`), Phân loại nhóm (`classify`):** Kiểm tra đầy đủ số cặp, thứ tự chuẩn (tự động xáo trộn khi hiển thị) và chỉ số nhóm hợp lệ.
 3. **Cảnh báo nhịp độ sư phạm (Pacing Check):** Cảnh báo nếu 2 câu hỏi quá sát nhau ($< 45	ext{s}$) gây ức chế ngắt quãng, hoặc quá thưa ($> 300	ext{s}$) khiến học sinh xem thụ động.
 4. **Kế thừa Master Template:** Mọi bài giảng mới đều được sinh từ [`templates/video_tuong_tac_template.html`](../templates/video_tuong_tac_template.html) đã được kiểm thử thực tế và tích hợp trọn vẹn toàn bộ các bản vá lỗi (chống tua, tự nhớ tiến độ, đổi tên học sinh, chuẩn đạt 80%, di động tràn màn hình).
 
