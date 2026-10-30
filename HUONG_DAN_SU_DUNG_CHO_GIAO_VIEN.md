@@ -210,7 +210,7 @@ Em hãy tạo giúp tôi 1 trang Web Video Tương Tác E-Learning hoàn chỉnh
 - Tài liệu bám sát (nếu có): [Kéo thả file Giáo án Word .docx hoặc PDF/ảnh SGK vào chat, hoặc bỏ qua]
 - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi "Hướng dẫn tôi tạo Sổ điểm Google Sheets"]
 - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: Thien2026 - để trống mặc định là 123456]
-- Yêu cầu: Tự thiết kế [5 - 7] câu hỏi tương tác (Trắc nghiệm, Đúng/Sai, Điền số, Ghép thẻ) rải đều theo bài giảng; chống tua nhanh 100%; trả lời ĐÚNG mới hiện giải thích; đóng gói thư mục chuẩn ra ngoài Desktop để kéo thả lên Netlify.
+- Yêu cầu: Tự thiết kế [5 - 7] câu hỏi tương tác (tối ưu từ 10 dạng chuẩn GDPT 2018: Trắc nghiệm MCQ, Đúng/Sai đơn, Đúng/Sai 4 ý a-b-c-d, Chọn nhiều đáp án, Điền số, Điền khuyết, Ghép thẻ, Nối cặp 2 cột A-B, Sắp xếp thứ tự, Phân loại nhóm) rải đều theo bài giảng; chống tua nhanh 100%; trả lời ĐÚNG mới hiện giải thích; đóng gói thư mục chuẩn ra ngoài Desktop để kéo thả lên Netlify.
 ```
 
 * **🟣 Mẫu B — CHƯA CÓ VIDEO: Làm mới trọn gói từ File Giáo án Word (`.docx`) hoặc Sách giáo khoa (`.pdf` / ảnh chụp):**

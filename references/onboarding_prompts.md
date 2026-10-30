@@ -623,7 +623,7 @@ Agent xuất ngay phản hồi ân cần, chi tiết theo 3 trường hợp th�
 #### 1️⃣7️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn tạo video tương tác" HOẶC "làm video từ giáo án word" HOẶC "làm video từ sách giáo khoa" (hoặc "hướng dẫn tạo video tương tác", "làm video có câu hỏi tương tác", "video chống tua nhanh", "tạo video e-learning", "tạo video tương tác từ giáo án", "tạo video tương tác từ sgk"...)
 
 Agent xuất ngay phản hồi **"Cầm tay chỉ việc chi tiết từ đầu (A → Z)"** để giáo viên chưa từng làm bao giờ cũng thực hiện trơn tru 100%:
-> "Dạ chào Thầy/Cô! Tính năng **Tạo Video Tương Tác E-Learning (Chống Tua Nhanh + 4 Dạng Câu Hỏi Nhúng + Tự Phân Tab Lớp Trên Google Sheets + Chuẩn Đạt $\ge$ 80%)** giúp Thầy/Cô tạo trang học tập trực tuyến chuẩn sư phạm: học sinh **không thể tua nhanh**, trả lời **SAI không bị lộ lời giải thích** (chỉ khi tự làm **ĐÚNG** mới mở giải thích và cộng trọn `+1 điểm`), kết quả tự động tách riêng từng lớp (`6A`, `6B`...) trên Google Sheets.
+> "Dạ chào Thầy/Cô! Tính năng **Tạo Video Tương Tác E-Learning (Chống Tua Nhanh + 10 Dạng Câu Hỏi Nhúng Chuẩn GDPT 2018 + Tự Phân Tab Lớp Trên Google Sheets + Chuẩn Đạt $\ge$ 80%)** giúp Thầy/Cô tạo trang học tập trực tuyến chuẩn sư phạm: học sinh **không thể tua nhanh**, trả lời **SAI không bị lộ lời giải thích** (chỉ khi tự làm **ĐÚNG** mới mở giải thích và cộng trọn `+1 điểm`), kết quả tự động tách riêng từng lớp (`6A`, `6B`...) trên Google Sheets.
 >
 > Em xin hướng dẫn Thầy/Cô **từng bước từ đầu (A → Z)** cực kỳ đơn giản như sau ạ:
 >
@@ -656,7 +656,7 @@ Agent xuất ngay phản hồi **"Cầm tay chỉ việc chi tiết từ đầu 
 > - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi "Hướng dẫn tôi tạo Sổ điểm Google Sheets"]
 > - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng của Thầy/Cô, ví dụ: Thien2026 - để trống mặc định là 123456]
 > - Yêu cầu sư phạm:
->   1. Tự thiết kế [5 - 7] trạm câu hỏi tương tác đa dạng (Trắc nghiệm 4 lựa chọn, Đúng/Sai, Điền đáp án số, Ghép thẻ) rải đều theo mạch bài giảng.
+>   1. Tự thiết kế [5 - 7] trạm câu hỏi tương tác đa dạng (tối ưu từ bộ 10 dạng chuẩn GDPT 2018: Trắc nghiệm 4 lựa chọn, Đúng/Sai đơn, Đúng/Sai 4 ý a-b-c-d, Chọn nhiều đáp án, Điền đáp án, Điền khuyết, Ghép thẻ, Nối cặp A-B, Sắp xếp thứ tự, Phân loại nhóm) rải đều theo mạch bài giảng.
 >   2. Khóa chống tua nhanh 100%; học sinh trả lời SAI không được hiện lời giải thích, chỉ khi tự làm ĐÚNG mới hiện giải thích và cộng +1 điểm để đạt chuẩn Hoàn thành >= 80%.
 >   3. Đóng gói sẵn thư mục chuẩn index.html ra ngoài Desktop để tôi kéo thả lên Netlify.
 > ```

@@ -65,7 +65,7 @@ Khi giáo viên nói một trong các nhóm câu sau, agent kích hoạt ngay t�
     - Thời lượng video: [Ví dụ: 14 phút 20 giây]
     - Link Web App Google Sheets: [Dán link .../exec HOẶC ghi 'Hướng dẫn tôi tạo Sổ điểm Google Sheets']
     - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: Thien2026 - để trống mặc định là 123456]
-    - Yêu cầu: Tự thiết kế [5 - 7] câu hỏi tương tác đa dạng (Trắc nghiệm, Đúng/Sai, Điền đáp án, Ghép thẻ) rải đều theo mạch bài giảng; chống tua nhanh 100%; trả lời ĐÚNG mới hiện giải thích; đóng gói thư mục chuẩn ra ngoài Desktop để kéo thả lên Netlify."
+    - Yêu cầu: Tự thiết kế [5 - 8] câu hỏi tương tác đa dạng từ bộ 10 dạng chuẩn GDPT 2018 (Trắc nghiệm MCQ, Đúng/Sai đơn, Đúng/Sai 4 ý a-b-c-d, Chọn nhiều đáp án, Điền số, Điền khuyết đoạn văn, Ghép thẻ, Nối cặp 2 cột A-B, Sắp xếp thứ tự, Phân loại nhóm) rải đều theo mạch bài giảng; chống tua nhanh 100%; trả lời ĐÚNG mới hiện giải thích; đóng gói thư mục chuẩn ra ngoài Desktop để kéo thả lên Netlify."
 
 🔵 MẪU 2 — ĐÃ CÓ VIDEO YOUTUBE + ĐÍNH KÈM FILE GIÁO ÁN WORD (.DOCX) HOẶC SÁCH GIÁO KHOA (PDF/ẢNH):
    "Dựa vào file Giáo án Word / Sách giáo khoa tại: '[Kéo thả file HOẶC dán đường dẫn Copy as path]' và video YouTube dưới đây, em hãy tạo trang Web Video Tương Tác E-Learning:
@@ -561,17 +561,137 @@ Hỗ trợ cả chạm chọn 1 thẻ (`multiSelect: false`) hoặc ghép chuỗ
 
 ```javascript
 {
-  id: 3,
+  id: 4,
   time: 445,
-  type: 'drag',        // Dạng kéo thả
-  question: 'Kéo thẻ số vào ô trống: 2³ × 2⁴ = 2[__]',
-  tiles: ['5', '6', '7', '8', '12'],  // Các thẻ số hiện ra
+  type: 'drag',
+  question: 'Chạm chọn thẻ đúng để điền vào chỗ trống: $2^3 \\cdot 2^4 = 2^x$, giá trị của $x$ là:',
+  tiles: ['5', '6', '7', '8', '12'],
   correct: '7',
-  explanation: 'Giải thích...'
+  multiSelect: false,
+  explanation: 'Áp dụng quy tắc nhân hai lũy thừa cùng cơ số: $2^3 \\cdot 2^4 = 2^{3+4} = 2^7$, suy ra $x = 7$.'
 }
 ```
 
-*Khi implement: Dùng HTML5 Drag & Drop API + touch events cho mobile (touchstart/touchmove/touchend), highlight vùng drop khi kéo qua, âm thanh snap khi thả đúng.*
+### Dạng 5: Đúng / Sai Đa Mệnh Đề 4 Ý `a)`, `b)`, `c)`, `d)` Chuẩn Phần II Bộ GD&ĐT (`tf_group`)
+
+Đặc biệt phù hợp với cấu trúc đề thi mới GDPT 2018 (mỗi câu gồm 1 đề dẫn chung và `2–4` mệnh đề `a)`, `b)`, `c)`, `d)` để xét tính Đúng/Sai sâu sắc). Khi học sinh làm sai một số ý, hệ thống **chỉ báo tổng số ý đã đúng (ví dụ: Đúng 2/4 mệnh đề)** chứ tuyệt đối không tô lộ từng ý sai để chống học sinh bấm đảo ngược mò đáp án:
+
+```javascript
+{
+  id: 5,
+  time: 510,
+  type: 'tf_group',
+  question: 'Cho lũy thừa $a^n$ với $a, n \\in \\mathbb{N}^*$. Xét tính Đúng hoặc Sai của từng mệnh đề dưới đây:',
+  statements: [
+    { label: 'a)', text: 'Giá trị của lũy thừa $2^3$ bằng $8$.', correct: true },
+    { label: 'b)', text: 'Với mọi số tự nhiên $a \\neq 0$, ta có $a^0 = 0$.', correct: false },
+    { label: 'c)', text: 'Khi nhân hai lũy thừa cùng cơ số: $a^m \\cdot a^n = a^{m+n}$.', correct: true },
+    { label: 'd)', text: 'So sánh hai lũy thừa ta có $3^2 > 2^3$.', correct: true }
+  ],
+  explanation: 'a) Đúng vì $2^3 = 8$; b) Sai vì quy ước $a^0 = 1$ ($a \\neq 0$); c) Đúng theo quy tắc nhân hai lũy thừa cùng cơ số; d) Đúng vì $3^2 = 9 > 2^3 = 8$.'
+}
+```
+
+### Dạng 6: Trắc Nghiệm Nhiều Đáp Án Đúng — Checkbox `☐` (`multi`)
+
+Hiển thị `3–6` phương án có ô tích vuông `☐`, học sinh phải tích chọn **đầy đủ tất cả các phương án đúng** (không thiếu, không thừa):
+
+```javascript
+{
+  id: 6,
+  time: 580,
+  type: 'multi',
+  question: 'Chọn TẤT CẢ các số là số chính phương (bình phương của một số tự nhiên) trong danh sách dưới đây:',
+  options: [
+    'Số 9',
+    'Số 12',
+    'Số 16',
+    'Số 20',
+    'Số 25'
+  ],
+  correct: [0, 2, 4], // Chỉ số các đáp án đúng (0-based)
+  explanation: 'Các số chính phương trong danh sách là: $9 = 3^2$, $16 = 4^2$ và $25 = 5^2$.'
+}
+```
+
+### Dạng 7: Nối Cặp Tương Ứng 2 Cột A $\leftrightarrow$ B (`match` — Cơ chế Chạm-Để-Nối Tap-to-Match)
+
+Cực kỳ trực quan trên cả điện thoại và máy tính: Học sinh chạm 1 ô ở **Cột A** rồi chạm 1 ô ở **Cột B** (hoặc ngược lại), hai ô tự động gắn chung màu sắc và nhãn **`Cặp 1`**, **`Cặp 2`**... Hỗ trợ thêm phương án nhiễu (`distractors`) ở Cột B và tự động xáo trộn vị trí Cột B:
+
+```javascript
+{
+  id: 7,
+  time: 650,
+  type: 'match',
+  question: 'Em hãy chạm nối mỗi phép tính ở Cột A với kết quả rút gọn tương ứng ở Cột B:',
+  pairs: [
+    { left: '$2^3 \\cdot 2^2$', right: '$2^5$' },
+    { left: '$2^6 : 2^2$', right: '$2^4$' },
+    { left: '$7^0$', right: '$1$' }
+  ],
+  distractors: ['$2^6$'], // Phương án nhiễu thêm vào Cột B (tùy chọn)
+  explanation: 'Ta có: $2^3 \\cdot 2^2 = 2^{3+2} = 2^5$; $2^6 : 2^2 = 2^{6-2} = 2^4$; và $7^0 = 1$.'
+}
+```
+
+### Dạng 8: Sắp Xếp Thứ Tự Quy Trình / Dãy Số (`order`)
+
+Mảng `items` trong cấu hình lưu **thứ tự chuẩn đúng từ trên xuống dưới**. Khi mở câu hỏi trên video, hệ thống tự động xáo trộn vị trí; học sinh bấm nút **`▲` / `▼`** (hoặc chạm 2 thẻ để đổi chỗ nhanh trên điện thoại):
+
+```javascript
+{
+  id: 8,
+  time: 720,
+  type: 'order',
+  question: 'Em hãy sắp xếp thứ tự thực hiện các phép tính trong biểu thức KHÔNG có dấu ngoặc theo đúng quy tắc từ trước đến sau:',
+  items: [
+    'Nâng lên lũy thừa',
+    'Nhân và chia',
+    'Cộng và trừ'
+  ],
+  explanation: 'Thứ tự thực hiện phép tính đối với biểu thức không có dấu ngoặc là: Lũy thừa $\\rightarrow$ Nhân và chia $\\rightarrow$ Cộng và trừ.'
+}
+```
+
+### Dạng 9: Điền Khuyết Nhiều Chỗ Trống Trong Đoạn Định Lý / Phương Trình (`cloze`)
+
+Sử dụng ký hiệu `{{1}}`, `{{2}}`, `{{3}}` (hoặc `___`) ngay trong chuỗi `template`. Hỗ trợ tự động **2 chế độ**:
+- **Chế độ A (Có `wordBank`):** Hiển thị ngân hàng thẻ từ gợi ý bên dưới để học sinh chạm điền vào từng ô trống `(1)`, `(2)` (không lo gõ sai dấu tiếng Việt trên điện thoại).
+- **Chế độ B (Không truyền `wordBank` hoặc để `wordBank: []`):** Hiển thị các ô nhập trực tiếp ngay trong dòng (rất hợp khi điền nhiều hệ số cân bằng phương trình Hóa học hoặc điền nhiều số):
+
+```javascript
+{
+  id: 9,
+  time: 790,
+  type: 'cloze',
+  question: 'Hoàn thành phát biểu quy tắc nhân hai lũy thừa cùng cơ số:',
+  template: 'Khi nhân hai lũy thừa cùng cơ số, ta giữ nguyên {{1}} và {{2}} các số mũ: $a^m \\cdot a^n =$ {{3}}.',
+  blanks: ['cơ số', 'cộng', '$a^{m+n}$|a^{m+n}'],
+  wordBank: ['cơ số', 'số mũ', 'cộng', 'nhân', '$a^{m+n}$', '$a^{m \\cdot n}$'],
+  explanation: 'Quy tắc chuẩn SGK: Khi nhân hai lũy thừa cùng cơ số, ta giữ nguyên cơ số và cộng các số mũ: $a^m \\cdot a^n = a^{m+n}$.'
+}
+```
+
+### Dạng 10: Phân Loại Thẻ Dữ Kiện Vào 2–4 Nhóm Kiến Thức (`classify`)
+
+Phía trên là ngân hàng các thẻ dữ kiện (tự động chọn sẵn thẻ đầu tiên); học sinh chỉ cần **chạm 1 lần vào Rổ/Nhóm kiến thức** bên dưới để thả thẻ vào nhóm đó (chạm vào thẻ trong nhóm nếu muốn bỏ ra):
+
+```javascript
+{
+  id: 10,
+  time: 850,
+  type: 'classify',
+  question: 'Em hãy phân loại các số tự nhiên sau vào đúng nhóm Số nguyên tố hoặc Hợp số:',
+  categories: ['Số nguyên tố', 'Hợp số'],
+  items: [
+    { text: 'Số 7', category: 0 },
+    { text: 'Số 9', category: 1 },
+    { text: 'Số 11', category: 0 },
+    { text: 'Số 15', category: 1 }
+  ],
+  explanation: 'Số 7 và 11 chỉ có hai ước là 1 và chính nó nên là Số nguyên tố; số 9 (chia hết cho 3) và số 15 (chia hết cho 3, 5) là Hợp số.'
+}
+```
 
 ---
 
@@ -687,7 +807,7 @@ const AudioFX = {
 
 ### D. Phản hồi Tức Thì & Cơ Chế Vượt Trạm Đến Khi Đúng (Mastery Gate)
 
-**Luồng chung cho cả 4 dạng (`mcq`, `tf`, `fill`, `drag`):**
+**Luồng chung cho trọn bộ 10 dạng (`mcq`, `tf`, `fill`, `drag`, `tf_group`, `multi`, `match`, `order`, `cloze`, `classify`):**
 1. Học sinh chọn hoặc nhập đáp án → hệ thống chấm tức thì.
 2. **Nếu SAI:**
    - Đổi màu đỏ (`#ef4444`) + hiệu ứng rung `shake` + âm báo sai.
@@ -930,7 +1050,7 @@ html = build_interactive_video_html(
 
 - [ ] Câu MCQ / Điền số / Ghép thẻ: Chọn hoặc nhập **SAI** → rung + banner đỏ (không lặp `❌ ❌`) + **KHÔNG hiện hộp Giải thích** + hiện nút `⏪ Xem lại 30s bài giảng`
 - [ ] Câu Đúng/Sai: Chọn **SAI** → **KHÔNG hiện Giải thích** + đếm ngược 3s suy ngẫm trên nút còn lại + hiện nút `⏪ Xem lại 30s bài giảng`
-- [ ] Tất cả 4 dạng: Khi trả lời **ĐÚNG** → màu xanh + âm thanh + **LÚC NÀY MỚI HIỆN hộp `💡 Giải thích`** + cộng trọn `+1đ` + hiện nút `Tiếp tục bài học ▶️ (6s)`
+- [ ] Tất cả 10 dạng: Khi trả lời **ĐÚNG 100%** → màu xanh + âm thanh + **LÚC NÀY MỚI HIỆN hộp `💡 Giải thích`** + cộng trọn `+1đ` + hiện nút `Tiếp tục bài học ▶️ (6s)`
 - [ ] Câu Điền số: Gõ số → chữ **KHÔNG biến mất** khi đang gõ
 - [ ] Hộp thoại `⚙️ Thầy Cô` và `✏️ Đổi tên/lớp`: Hiện nổi chính giữa màn hình (`position: fixed`), lưu và đóng mượt mà
 - [ ] Hoàn thành bài học: Vượt qua các trạm và xem hết video → đạt `100% (≥ 80%)` Hoàn thành bài, ghi nhận cả số câu đúng ngay lần đầu lên màn hình tổng kết & Google Sheets

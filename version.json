@@ -1,11 +1,16 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.3.8",
+  "version": "6.4.0",
   "release_date": "2026-10-30",
   "description": "Siêu Skill Toàn Năng GDPT 2018 (7-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Tạo đề Tiếng Anh & xuất file nghe MP3 chuẩn khảo thí + Soạn giáo án tích hợp NLS & AI + Soạn Slide PowerPoint 16:9 + Video khởi động Veo 3 + Video Tương Tác E-Learning (chống tua nhanh, tự phân lớp Google Sheets, chuẩn đạt 80%).",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "6.4.0": [
+      "MỞ RỘNG LÊN TRỌN BỘ 10 DẠNG CÂU HỎI VIDEO TƯƠNG TÁC E-LEARNING CHUẨN GDPT 2018 (templates/video_tuong_tac_template.html & scripts/interactive_video_builder.py): Bổ sung 6 dạng câu hỏi tương tác mới bên cạnh 4 dạng cũ (mcq, tf, fill, drag): (5) Đúng/Sai đa mệnh đề a, b, c, d chuẩn Phần II Bộ GD&ĐT (tf_group); (6) Trắc nghiệm nhiều đáp án đúng Checkbox (multi); (7) Nối cặp tương ứng 2 cột A <-> B chạm-để-nối (match); (8) Sắp xếp thứ tự quy trình / dãy số (order); (9) Điền khuyết nhiều chỗ trống {{1}}, {{2}} có ngân hàng từ gợi ý hoặc gõ trực tiếp (cloze); (10) Phân loại thẻ vào 2-4 nhóm kiến thức (classify).",
+      "THỐNG NHẤT QUY TẮC SƯ PHẠM MASTERY GATE & CHỐNG ĐOÁN MÒ TRÊN CẢ 10 DẠNG: Khi học sinh trả lời SAI ở bất kỳ dạng nào, hệ thống tuyệt đối KHÔNG hiện hộp Giải thích và KHÔNG chỉ điểm từng ý/cặp sai (chỉ báo số lượng ý đã đúng như 'Đúng 2/4 mệnh đề', 'Đúng 2/3 cặp' kèm nút Xem lại 30s bài giảng); chỉ khi tự làm ĐÚNG 100% mới mở khóa hộp Giải thích chi tiết + cộng trọn +1 điểm hoàn thành trạm.",
+      "NÂNG CẤP BỘ KIỂM ĐỊNH QA TỰ ĐỘNG validate_checkpoints() CHO 10 DẠNG CÂU HỎI: Tự động chuẩn hóa dữ liệu, tự hàn biên công thức KaTeX $...$ quanh ô trống {{1}} và bảo toàn tuyệt đối ký tự LaTeX khi đóng gói HTML."
+    ],
     "6.3.8": [
       "HOÀN THIỆN 100% THƯ VIỆN & BỘ CÔNG CỤ 1-CLICK SLIDE -> LỜI BÌNH -> VIDEO MP4 -> VIDEO TƯƠNG TÁC (cai_dat_tu_dong.bat, requirements.txt, LONG_TIENG_AI.bat, XUAT_VIDEO_TU_PPTX.bat, DOI_MAT_KHAU_THAY_CO.bat): Bổ sung đủ mutagen, pypdf, docx2txt, numpy, certifi giúp giáo viên cài 1 lần chạy trơn tru mọi tính năng.",
       "KHẮC PHỤC TRIỆT ĐỂ LỖI ĐƯỜNG DẪN TIẾNG VIỆT CÓ DẤU & ĐO CHUẨN GIÂY ÂM THANH MP3 (scripts/long_tieng_pptx.py, scripts/xuat_video_pptx.py, scripts/tao_slide_chuan.py, scripts/boc_tach_tai_lieu.py, scripts/them_loi_binh_pptx.py): Ghi kịch bản PowerShell chuẩn UTF-8 BOM (utf-8-sig), sửa lỗi ghi Speaker Notes cho slide mới tạo, giữ tỷ lệ ảnh không méo hình SGK và chụp trang PDF 200 DPI dự phòng."

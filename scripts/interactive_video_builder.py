@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 =============================================================================
-MODULE: interactive_video_builder.py (v6.3.6 - Mastery Gate, Secure Password & Mandatory Netlify Handoff)
+MODULE: interactive_video_builder.py (v6.4.0 / v2.1.0 - Complete 10-Type GDPT 2018 Suite)
 HỆ THỐNG TỰ ĐỘNG TẠO VIDEO TƯƠNG TÁC E-LEARNING (CHUẨN GDPT 2018)
-- Bộ kiểm định chất lượng sư phạm tự động (Checkpoint QA Validator cho cả 4 dạng: mcq, tf, fill, drag)
+- Bộ kiểm định chất lượng sư phạm tự động (Checkpoint QA Validator cho trọn bộ 10 dạng câu hỏi:
+  mcq, tf, fill, drag, tf_group, multi, match, order, cloze, classify)
 - Khóa chống tua nhanh 100% (Anti-Skip System) & Chặn YouTube phát ngầm khi mở câu hỏi
 - Khung câu hỏi tràn màn hình di động (100dvh), chống mất chữ khi điền số
-- Cơ chế Vượt trạm đến khi Đúng (Mastery Gate): Sai KHÔNG hiện giải thích (kèm nút Xem lại 30s & 3s suy ngẫm ở Đúng/Sai); ĐÚNG mới hiện Giải thích + cộng trọn +1 điểm + nút Tiếp tục (6s)
+- Cơ chế Vượt trạm đến khi Đúng (Mastery Gate): Sai KHÔNG hiện giải thích, KHÔNG lộ đáp án từng ý nhỏ
+  (kèm nút Xem lại 30s & 3s suy ngẫm ở Đúng/Sai); ĐÚNG 100% mới hiện Giải thích + cộng trọn +1 điểm + nút Tiếp tục (6s)
 - Tiêu chuẩn hoàn thành bài học công bằng (Mastery Threshold >= 80% số câu hoàn thành + thống kê số câu đúng ngay lần đầu)
 - Tự động bảo lưu tiến độ khi rớt mạng (Smart Auto-Resume)
 - Đổi tên & lớp học sinh 1-chạm
@@ -20,19 +22,114 @@ import sys
 import json
 import re
 
+
+def _parse_strict_bool(val, context_msg: str) -> bool:
+    if isinstance(val, bool):
+        return val
+    if val is None:
+        raise ValueError(f"{context_msg}: Thiếu giá trị Đúng/Sai (correct)!")
+    s = str(val).strip().lower()
+    if s in ("true", "đúng", "dung", "1", "t", "yes"):
+        return True
+    if s in ("false", "sai", "0", "f", "no"):
+        return False
+    raise ValueError(f"{context_msg}: Giá trị Đúng/Sai '{val}' không hợp lệ (chỉ nhận true/false)!")
+
+
+def _normalize_token_for_match(val: str) -> str:
+    s = str(val or "").strip()
+    s = re.sub(r"[\u2212\u2013\u2014]", "-", s)
+    s = re.sub(r"\s+", " ", s).lower()
+    s = s.strip("$").strip()
+    return s
+
+
+def _heal_cloze_math_boundaries(template: str) -> str:
+    """
+    Nếu người soạn vô tình đặt placeholder {{1}} bên trong cặp dấu $...$ của KaTeX
+    (ví dụ: "$a^m \\cdot a^n = {{1}}$"), tự động tách công thức thành các đoạn $...$ riêng
+    nằm hai bên ô trống (ví dụ: "$a^m \\cdot a^n =$ {{1}}") để KaTeX luôn render chuẩn, không vỡ công thức.
+    Bỏ qua \\$ (dấu $ thường) và $$ (công thức display).
+    """
+    if not re.search(r"\{\{\d+\}\}", template):
+        return template
+
+    # Tokenize: '$' đơn, placeholder, hoặc văn bản thường
+    tokens = []
+    pattern = re.compile(r"(\\\$|\$\$|\$|\{\{\d+\}\})")
+    pos = 0
+    for m in pattern.finditer(template):
+        if m.start() > pos:
+            tokens.append(("TXT", template[pos:m.start()]))
+        tok = m.group(0)
+        if tok == "$":
+            tokens.append(("DOLLAR", tok))
+        elif tok.startswith("{{"):
+            tokens.append(("PH", tok))
+        else:
+            tokens.append(("TXT", tok))  # \$ hoặc $$ giữ nguyên như văn bản
+        pos = m.end()
+    if pos < len(template):
+        tokens.append(("TXT", template[pos:]))
+
+    def _wrap_math(chunk: str) -> str:
+        if not chunk.strip():
+            return chunk
+        lead = chunk[:len(chunk) - len(chunk.lstrip())]
+        trail = chunk[len(chunk.rstrip()):]
+        return f"{lead}${chunk.strip()}${trail}"
+
+    out = []
+    i = 0
+    n = len(tokens)
+    while i < n:
+        kind, val = tokens[i]
+        if kind != "DOLLAR":
+            out.append(val)
+            i += 1
+            continue
+        # Tìm dấu $ đóng tương ứng
+        j = i + 1
+        while j < n and tokens[j][0] != "DOLLAR":
+            j += 1
+        if j >= n:
+            # Không có $ đóng -> giữ nguyên phần còn lại
+            out.extend(t[1] for t in tokens[i:])
+            break
+        inner = tokens[i + 1:j]
+        if not any(t[0] == "PH" for t in inner):
+            out.append("$" + "".join(t[1] for t in inner) + "$")
+        else:
+            buf = ""
+            for t_kind, t_val in inner:
+                if t_kind == "PH":
+                    out.append(_wrap_math(buf))
+                    buf = ""
+                    if out and out[-1] and not out[-1][-1:].isspace():
+                        out.append(" ")
+                    out.append(t_val)
+                else:
+                    buf += t_val
+            out.append((" " + _wrap_math(buf.strip())) if buf.strip() else "")
+        i = j + 1
+
+    healed = "".join(out)
+    healed = re.sub(r"[ \t]{2,}", " ", healed)
+    return healed
+
+
 def validate_checkpoints(checkpoints: list, video_duration: int = 900) -> list:
     """
-    BỘ KIỂM ĐỊNH CHẤT LƯỢNG SƯ PHẠM (QA GATE):
-    Đảm bảo 100% câu hỏi của các video tương lai đều chạy trơn tru, không lỗi:
+    BỘ KIỂM ĐỊNH CHẤT LƯỢNG SƯ PHẠM (QA GATE - HỖ TRỢ TRỌN BỘ 10 DẠNG CÂU HỎI GDPT 2018):
     1. Chuẩn hóa ID tăng dần (1, 2, 3...)
     2. Sắp xếp mốc thời gian tăng dần tuyến tính
-    3. Kiểm tra tính hợp lệ của từng loại câu hỏi (MCQ, Đúng/Sai, Điền số, Kéo thả)
+    3. Kiểm tra chặt chẽ cấu trúc dữ liệu của cả 10 dạng:
+       mcq, tf, fill, drag, tf_group, multi, match, order, cloze, classify
     4. Cảnh báo nhịp độ sư phạm (Pacing: 2.5 - 3.5 phút/câu)
     """
     if not checkpoints or not isinstance(checkpoints, list):
         raise ValueError("Danh sách checkpoints không được để trống!")
 
-    # 1. Tự động sắp xếp theo thời gian (giây)
     sorted_cp = sorted(checkpoints, key=lambda x: x.get("time", 0))
 
     validated = []
@@ -52,7 +149,7 @@ def validate_checkpoints(checkpoints: list, video_duration: int = 900) -> list:
         if not cp_exp:
             cp_exp = "Hãy ôn lại lý thuyết trong video để nắm vững kiến thức nhé."
 
-        # Kiểm tra theo từng loại câu hỏi
+        # 1. MCQ: Trắc nghiệm 1 lựa chọn đúng (GIỮ NGUYÊN 100% logic gốc v6.3.x)
         if cp_type == "mcq":
             opts = cp.get("options", [])
             if not isinstance(opts, list) or len(opts) < 2:
@@ -70,7 +167,8 @@ def validate_checkpoints(checkpoints: list, video_duration: int = 900) -> list:
                 "explanation": cp_exp
             }
 
-        elif cp_type in ["tf", "true_false"]:
+        # 2. TF: Đúng / Sai đơn (GIỮ NGUYÊN 100% logic gốc v6.3.x)
+        elif cp_type in ("tf", "true_false"):
             correct_val = cp.get("correct")
             if not isinstance(correct_val, bool):
                 if str(correct_val).lower() in ["true", "đúng", "1"]:
@@ -86,7 +184,8 @@ def validate_checkpoints(checkpoints: list, video_duration: int = 900) -> list:
                 "explanation": cp_exp
             }
 
-        elif cp_type in ["fill", "numeric_fill"]:
+        # 3. FILL: Điền đáp án ngắn / Điền số (GIỮ NGUYÊN 100% logic gốc v6.3.x)
+        elif cp_type in ("fill", "numeric_fill"):
             correct_val = str(cp.get("correct", "")).strip()
             if not correct_val:
                 raise ValueError(f"Trạm {cp_id} (Điền số): Phải có đáp án chính xác (correct)!")
@@ -99,7 +198,8 @@ def validate_checkpoints(checkpoints: list, video_duration: int = 900) -> list:
                 "explanation": cp_exp
             }
 
-        elif cp_type in ["drag", "tap_to_place"]:
+        # 4. DRAG: Chạm / Ghép thẻ vào 1 ô kết quả (GIỮ NGUYÊN 100% logic gốc v6.3.x)
+        elif cp_type in ("drag", "tap_to_place"):
             tiles = cp.get("tiles", [])
             correct_val = str(cp.get("correct", "")).strip()
             if not tiles or not correct_val:
@@ -114,8 +214,211 @@ def validate_checkpoints(checkpoints: list, video_duration: int = 900) -> list:
                 "multiSelect": bool(cp.get("multiSelect", False)),
                 "explanation": cp_exp
             }
+
+        # 5. TF_GROUP: Đúng / Sai Đa Mệnh Đề (a, b, c, d chuẩn Phần II Bộ GD&ĐT)
+        elif cp_type in ("tf_group", "true_false_group", "tf4", "tf_multi"):
+            raw_stmts = cp.get("statements") if cp.get("statements") is not None else cp.get("items", [])
+            if not isinstance(raw_stmts, list) or not (2 <= len(raw_stmts) <= 6):
+                raise ValueError(f"Trạm {cp_id} (Đúng/Sai đa mệnh đề): Danh sách statements phải có từ 2 đến 6 mệnh đề!")
+            clean_stmts = []
+            for s_idx, st in enumerate(raw_stmts):
+                if not isinstance(st, dict):
+                    raise ValueError(f"Trạm {cp_id} (tf_group): Mệnh đề thứ {s_idx + 1} phải là object {{label, text, correct}}!")
+                st_text = str(st.get("text") if st.get("text") is not None else st.get("statement", "")).strip()
+                if not st_text:
+                    raise ValueError(f"Trạm {cp_id} (tf_group): Nội dung mệnh đề thứ {s_idx + 1} không được để trống!")
+                st_label = str(st.get("label", "")).strip() or f"{chr(ord('a') + s_idx)})"
+                st_corr = _parse_strict_bool(st.get("correct"), f"Trạm {cp_id} (tf_group - ý {st_label})")
+                clean_stmts.append({
+                    "label": st_label,
+                    "text": st_text,
+                    "correct": st_corr
+                })
+            valid_item = {
+                "id": cp_id,
+                "time": cp_time,
+                "type": "tf_group",
+                "question": cp_q,
+                "statements": clean_stmts,
+                "explanation": cp_exp
+            }
+
+        # 6. MULTI: Trắc nghiệm Nhiều Đáp Án Đúng (Checkbox)
+        elif cp_type in ("multi", "mcq_multi", "checkbox", "multiple_response"):
+            opts = [str(o).strip() for o in (cp.get("options") or []) if str(o).strip()]
+            if len(opts) < 3:
+                raise ValueError(f"Trạm {cp_id} (Chọn nhiều đáp án): Phải có ít nhất 3 phương án (options)!")
+            raw_corr = cp.get("correct")
+            if not isinstance(raw_corr, (list, tuple)) or len(raw_corr) == 0:
+                raise ValueError(f"Trạm {cp_id} (Chọn nhiều đáp án): Trường 'correct' phải là danh sách chỉ số đáp án đúng (ví dụ [0, 2])!")
+            clean_corr = sorted({int(i) for i in raw_corr})
+            for c_idx in clean_corr:
+                if c_idx < 0 or c_idx >= len(opts):
+                    raise ValueError(f"Trạm {cp_id} (multi): Chỉ số đáp án đúng ({c_idx}) nằm ngoài phạm vi options (0..{len(opts)-1})!")
+            valid_item = {
+                "id": cp_id,
+                "time": cp_time,
+                "type": "multi",
+                "question": cp_q,
+                "options": opts,
+                "correct": clean_corr,
+                "explanation": cp_exp
+            }
+
+        # 7. MATCH: Nối Cặp Tương Ứng 2 Cột (Cột A <-> Cột B)
+        elif cp_type in ("match", "matching", "pair_match"):
+            raw_pairs = cp.get("pairs", [])
+            if not isinstance(raw_pairs, list) or not (2 <= len(raw_pairs) <= 6):
+                raise ValueError(f"Trạm {cp_id} (Nối cặp): Danh sách 'pairs' phải có từ 2 đến 6 cặp!")
+            clean_pairs = []
+            for p_idx, pair in enumerate(raw_pairs):
+                if not isinstance(pair, dict):
+                    raise ValueError(f"Trạm {cp_id} (match): Cặp thứ {p_idx + 1} phải là object {{left, right}}!")
+                left_s = str(pair.get("left", "")).strip()
+                right_s = str(pair.get("right", "")).strip()
+                if not left_s or not right_s:
+                    raise ValueError(f"Trạm {cp_id} (match): Cặp thứ {p_idx + 1} thiếu nội dung 'left' hoặc 'right'!")
+                clean_pairs.append({"left": left_s, "right": right_s})
+            distractors = [str(d).strip() for d in (cp.get("distractors") or []) if str(d).strip()]
+            if len(distractors) > 4:
+                distractors = distractors[:4]
+            valid_item = {
+                "id": cp_id,
+                "time": cp_time,
+                "type": "match",
+                "question": cp_q,
+                "pairs": clean_pairs,
+                "distractors": distractors,
+                "explanation": cp_exp
+            }
+
+        # 8. ORDER: Sắp Xếp Thứ Tự Quy Trình / Dãy Số
+        elif cp_type in ("order", "sequence", "sort", "ordering"):
+            raw_items = [str(it).strip() for it in (cp.get("items") or []) if str(it).strip()]
+            if not (2 <= len(raw_items) <= 8):
+                raise ValueError(f"Trạm {cp_id} (Sắp xếp thứ tự): Danh sách 'items' phải có từ 2 đến 8 bước/phần tử!")
+            if isinstance(cp.get("correct"), (list, tuple)) and len(cp["correct"]) == len(raw_items):
+                perm = [int(i) for i in cp["correct"]]
+                if sorted(perm) != list(range(len(raw_items))):
+                    raise ValueError(f"Trạm {cp_id} (order): Thứ tự 'correct' không phải là hoán vị hợp lệ của 0..{len(raw_items)-1}!")
+                raw_items = [raw_items[i] for i in perm]
+            valid_item = {
+                "id": cp_id,
+                "time": cp_time,
+                "type": "order",
+                "question": cp_q,
+                "items": raw_items,
+                "explanation": cp_exp
+            }
+
+        # 9. CLOZE: Điền Khuyết Nhiều Chỗ Trống {{1}}, {{2}}
+        elif cp_type in ("cloze", "fill_blanks", "multi_fill"):
+            raw_tpl = str(cp.get("template") or cp.get("passage") or cp.get("text") or "").strip()
+            raw_blanks = cp.get("blanks") if cp.get("blanks") is not None else cp.get("answers")
+            if raw_blanks is None and isinstance(cp.get("correct"), list):
+                raw_blanks = cp.get("correct")
+            if not raw_tpl:
+                raise ValueError(f"Trạm {cp_id} (Điền khuyết): Thiếu đoạn văn mẫu 'template' chứa các vị trí {{{{1}}}}, {{{{2}}}}!")
+            if not isinstance(raw_blanks, list) or not (1 <= len(raw_blanks) <= 6):
+                raise ValueError(f"Trạm {cp_id} (Điền khuyết): Danh sách 'blanks' phải có từ 1 đến 6 đáp án!")
+            clean_blanks = [str(b).strip() for b in raw_blanks if str(b).strip()]
+            if len(clean_blanks) != len(raw_blanks):
+                raise ValueError(f"Trạm {cp_id} (Điền khuyết): Đáp án trong 'blanks' không được để trống!")
+
+            # Nếu người soạn dùng ___ (3+ gạch dưới) thay vì {{1}}, {{2}} -> tự động đánh số {{1}}, {{2}}...
+            if "{{1}}" not in raw_tpl and re.search(r"_{3,}", raw_tpl):
+                counter = [0]
+                def _repl_underscore(_m):
+                    counter[0] += 1
+                    return f"{{{{{counter[0]}}}}}"
+                raw_tpl = re.sub(r"_{3,}", _repl_underscore, raw_tpl)
+
+            for b_i in range(1, len(clean_blanks) + 1):
+                token = f"{{{{{b_i}}}}}"
+                if token not in raw_tpl:
+                    raise ValueError(
+                        f"Trạm {cp_id} (Điền khuyết): Có {len(clean_blanks)} đáp án trong 'blanks' nhưng không tìm thấy vị trí '{token}' trong 'template'!"
+                    )
+
+            extra_nums = sorted({int(x) for x in re.findall(r"\{\{(\d+)\}\}", raw_tpl) if int(x) < 1 or int(x) > len(clean_blanks)})
+            if extra_nums:
+                raise ValueError(
+                    f"Trạm {cp_id} (Điền khuyết): 'template' có vị trí {extra_nums} vượt quá số đáp án trong 'blanks' ({len(clean_blanks)})!"
+                )
+
+            healed_tpl = _heal_cloze_math_boundaries(raw_tpl)
+
+            raw_bank = cp.get("wordBank") if cp.get("wordBank") is not None else (cp.get("word_bank") or cp.get("tiles") or [])
+            clean_bank = [str(w).strip() for w in raw_bank if str(w).strip()] if isinstance(raw_bank, list) else []
+            if clean_bank:
+                # Đảm bảo 100% mỗi ô trống đều có đáp án khớp trong wordBank để học sinh luôn giải được
+                bank_norms = [_normalize_token_for_match(w) for w in clean_bank]
+                for b_spec in clean_blanks:
+                    accepted_norms = [_normalize_token_for_match(x) for x in b_spec.split("|") if x.strip()]
+                    if not any(an in bank_norms for an in accepted_norms):
+                        primary_ans = b_spec.split("|")[0].strip()
+                        clean_bank.append(primary_ans)
+                        bank_norms.append(_normalize_token_for_match(primary_ans))
+
+            valid_item = {
+                "id": cp_id,
+                "time": cp_time,
+                "type": "cloze",
+                "question": cp_q,
+                "template": healed_tpl,
+                "blanks": clean_blanks,
+                "wordBank": clean_bank,
+                "explanation": cp_exp
+            }
+
+        # 10. CLASSIFY: Phân Loại Thẻ Vào 2-4 Nhóm Kiến Thức
+        elif cp_type in ("classify", "categorize", "group_sort", "classification"):
+            raw_cats = cp.get("categories") if cp.get("categories") is not None else cp.get("groups", [])
+            clean_cats = [str(c).strip() for c in (raw_cats or []) if str(c).strip()]
+            if not (2 <= len(clean_cats) <= 4):
+                raise ValueError(f"Trạm {cp_id} (Phân loại nhóm): Danh sách 'categories' phải có từ 2 đến 4 nhóm!")
+            cat_lookup = {c.lower(): i for i, c in enumerate(clean_cats)}
+
+            raw_items = cp.get("items", [])
+            if not isinstance(raw_items, list) or not (2 <= len(raw_items) <= 12):
+                raise ValueError(f"Trạm {cp_id} (Phân loại nhóm): Danh sách 'items' phải có từ 2 đến 12 thẻ dữ kiện!")
+            clean_items = []
+            for it_idx, it in enumerate(raw_items):
+                if not isinstance(it, dict):
+                    raise ValueError(f"Trạm {cp_id} (classify): Thẻ thứ {it_idx + 1} phải là object {{text, category}}!")
+                it_text = str(it.get("text", "")).strip()
+                if not it_text:
+                    raise ValueError(f"Trạm {cp_id} (classify): Thẻ thứ {it_idx + 1} không được để trống 'text'!")
+                raw_cat = it.get("category") if it.get("category") is not None else it.get("group")
+                if isinstance(raw_cat, int) or (isinstance(raw_cat, str) and raw_cat.strip().isdigit()):
+                    cat_idx = int(raw_cat)
+                elif isinstance(raw_cat, str) and raw_cat.strip().lower() in cat_lookup:
+                    cat_idx = cat_lookup[raw_cat.strip().lower()]
+                else:
+                    raise ValueError(
+                        f"Trạm {cp_id} (classify): Nhóm '{raw_cat}' của thẻ '{it_text}' không hợp lệ (chỉ nhận chỉ số 0..{len(clean_cats)-1} hoặc tên nhóm)!"
+                    )
+                if cat_idx < 0 or cat_idx >= len(clean_cats):
+                    raise ValueError(
+                        f"Trạm {cp_id} (classify): Chỉ số nhóm ({cat_idx}) của thẻ '{it_text}' vượt quá số nhóm ({len(clean_cats)})!"
+                    )
+                clean_items.append({"text": it_text, "category": cat_idx})
+
+            valid_item = {
+                "id": cp_id,
+                "time": cp_time,
+                "type": "classify",
+                "question": cp_q,
+                "categories": clean_cats,
+                "items": clean_items,
+                "explanation": cp_exp
+            }
+
         else:
-            raise ValueError(f"Trạm {cp_id}: Định dạng câu hỏi '{cp_type}' không được hỗ trợ (chỉ nhận mcq, tf, fill, drag)!")
+            raise ValueError(
+                f"Trạm {cp_id}: Định dạng câu hỏi '{cp_type}' không được hỗ trợ "
+                f"(hỗ trợ 10 dạng: mcq, tf, fill, drag, tf_group, multi, match, order, cloze, classify)!"
+            )
 
         validated.append(valid_item)
 
@@ -142,7 +445,7 @@ def build_interactive_video_html(
     output_html_path: str = None
 ) -> str:
     """
-    Sinh file HTML Video Tương Tác E-Learning hoàn chỉnh dựa trên Master Template đã qua kiểm định QA.
+    Sinh file HTML Video Tương Tác E-Learning hoàn chỉnh dựa trên Master Template đã qua kiểm định QA (10 dạng câu hỏi).
     """
     clean_checkpoints = validate_checkpoints(checkpoints, video_duration=video_duration)
 
@@ -158,12 +461,12 @@ def build_interactive_video_html(
 
     full_title = f"{lesson_title} ({subject_grade})"
     safe_js_title = full_title.replace("\\", "\\\\").replace("'", "\\'")
-    html = re.sub(r'<title>.*?</title>', f'<title>Video Tương Tác: {lesson_title} - {subject_grade}</title>', html)
-    html = re.sub(r'<h1>📚.*?</h1>', f'<h1>📚 {subject_grade.upper()} - {lesson_title.upper()}</h1>', html)
-    html = re.sub(r'<p>SGK Kết Nối Tri Thức.*?• GV:.*?</p>', f'<p>Chương trình GDPT 2018 • GV: {teacher_name}</p>', html)
+    html = re.sub(r'<title>.*?</title>', lambda _: f'<title>Video Tương Tác: {lesson_title} - {subject_grade}</title>', html)
+    html = re.sub(r'<h1>📚.*?</h1>', lambda _: f'<h1>📚 {subject_grade.upper()} - {lesson_title.upper()}</h1>', html)
+    html = re.sub(r'<p>SGK Kết Nối Tri Thức.*?• GV:.*?</p>', lambda _: f'<p>Chương trình GDPT 2018 • GV: {teacher_name}</p>', html)
     html = re.sub(
         r'<strong id="registerLessonTitle">.*?</strong>',
-        f'<strong id="registerLessonTitle">{subject_grade} - {lesson_title}</strong>',
+        lambda _: f'<strong id="registerLessonTitle">{subject_grade} - {lesson_title}</strong>',
         html
     )
 
@@ -216,7 +519,8 @@ def build_interactive_video_html(
     cp_json = json.dumps(clean_checkpoints, ensure_ascii=False, indent=6)
     pattern_cp = r"const checkpoints = \[.*?\];"
     replacement_cp = f"const checkpoints = {cp_json};"
-    html = re.sub(pattern_cp, replacement_cp, html, flags=re.DOTALL)
+    # Dùng lambda để re.sub KHÔNG thông dịch các chuỗi LaTeX như \cdot, \frac, \mathbb trong cp_json!
+    html = re.sub(pattern_cp, lambda _: replacement_cp, html, flags=re.DOTALL)
 
     if output_html_path:
         os.makedirs(os.path.dirname(os.path.abspath(output_html_path)), exist_ok=True)
@@ -317,7 +621,7 @@ if __name__ == "__main__":
     except Exception:
         pass
 
-    parser = argparse.ArgumentParser(description="Công cụ tạo & quản trị Video Tương Tác E-Learning")
+    parser = argparse.ArgumentParser(description="Công cụ tạo & quản trị Video Tương Tác E-Learning (10 dạng câu hỏi GDPT 2018)")
     parser.add_argument(
         "--set-password",
         nargs=2,
@@ -329,4 +633,4 @@ if __name__ == "__main__":
         new_pwd, target = args.set_password
         update_teacher_password(target, new_pwd)
     else:
-        print("Module interactive_video_builder (v6.3.6) with QA Gate, Teacher Password Manager & Netlify Handoff ready.")
+        print("Module interactive_video_builder (v6.4.0 / v2.1.0) with 10-Type QA Gate, Teacher Password Manager & Netlify Handoff ready.")

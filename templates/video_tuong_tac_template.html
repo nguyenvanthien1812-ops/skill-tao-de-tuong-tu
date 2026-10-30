@@ -685,6 +685,534 @@
       background: #64748b;
     }
 
+    /* === 6 NEW INTERACTIVE QUESTION TYPES (GDPT 2018 SUITE: TYPES 5-10) === */
+    /* 5. tf_group: Đúng / Sai Đa Mệnh Đề (a, b, c, d) */
+    .tf-group-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 12px;
+      padding: 4px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .tf-group-list.wrong-ans {
+      border-color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.08) !important;
+    }
+    .tf-group-list.correct-ans {
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.08) !important;
+    }
+    .tf-group-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: #0f172a;
+      border: 1.5px solid #334155;
+      border-radius: 10px;
+      padding: 10px 14px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .tf-group-row.answered-row {
+      border-color: #475569;
+    }
+    .tf-group-row.correct-ans {
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.14) !important;
+    }
+    .tf-stmt-content {
+      flex: 1;
+      font-size: 0.98rem;
+      line-height: 1.45;
+      color: #f1f5f9;
+    }
+    .tf-stmt-label {
+      display: inline-block;
+      font-weight: 800;
+      color: #60a5fa;
+      margin-right: 6px;
+    }
+    .tf-pill-pair {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .tf-pill-btn {
+      min-width: 66px;
+      min-height: 38px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 2px solid #475569;
+      background: #1e293b;
+      color: #cbd5e1;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.16s;
+    }
+    .tf-pill-btn:hover:not(:disabled) {
+      border-color: #60a5fa;
+      color: #fff;
+    }
+    .tf-pill-btn.active-true {
+      background: rgba(37, 99, 235, 0.32);
+      border-color: #3b82f6;
+      color: #93c5fd;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.28);
+    }
+    .tf-pill-btn.active-false {
+      background: rgba(245, 158, 11, 0.26);
+      border-color: #f59e0b;
+      color: #fde68a;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
+    }
+    .tf-pill-btn.correct-ans {
+      background: rgba(16, 185, 129, 0.32) !important;
+      border-color: #10b981 !important;
+      color: #6ee7b7 !important;
+    }
+    .tf-pill-btn:disabled {
+      cursor: not-allowed;
+    }
+
+    /* 6. multi: Trắc nghiệm Nhiều Đáp Án Đúng (Checkbox) */
+    .multi-options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 12px;
+      padding: 4px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .multi-options-grid.wrong-ans {
+      border-color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.08) !important;
+    }
+    .multi-opt-btn {
+      width: 100%;
+      text-align: left;
+      padding: 11px 15px;
+      border-radius: 10px;
+      border: 2px solid #475569;
+      background: #334155;
+      color: #f8fafc;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.18s;
+    }
+    .multi-opt-btn:hover:not(:disabled) {
+      background: #3f4f66;
+      border-color: #60a5fa;
+    }
+    .multi-opt-btn.selected {
+      background: rgba(37, 99, 235, 0.28);
+      border-color: #3b82f6;
+      color: #fff;
+    }
+    .multi-opt-btn.correct-ans {
+      background: rgba(16, 185, 129, 0.28) !important;
+      border-color: #10b981 !important;
+      color: #6ee7b7 !important;
+    }
+    .multi-checkbox-box {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 2px solid #94a3b8;
+      background: #0f172a;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.92rem;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+      transition: all 0.16s;
+    }
+    .multi-opt-btn.selected .multi-checkbox-box {
+      background: #2563eb;
+      border-color: #60a5fa;
+    }
+    .multi-opt-btn.correct-ans .multi-checkbox-box {
+      background: #10b981;
+      border-color: #34d399;
+    }
+
+    /* 7. match: Nối Cặp Tương Ứng 2 Cột (Tap-to-Match) */
+    .match-columns-wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 6px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .match-columns-wrap.wrong-ans {
+      border-color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.08) !important;
+    }
+    .match-columns-wrap.correct-ans {
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.08) !important;
+    }
+    .match-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .match-col-header {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #93c5fd;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 6px 10px;
+      text-align: center;
+    }
+    .match-item-btn {
+      width: 100%;
+      min-height: 48px;
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 2px solid #475569;
+      background: #0f172a;
+      color: #f8fafc;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      word-break: break-word;
+      transition: all 0.16s;
+    }
+    .match-item-btn:hover:not(:disabled) {
+      border-color: #60a5fa;
+      background: #1e293b;
+    }
+    .match-item-btn.active-pick {
+      border-color: #fbbf24 !important;
+      background: rgba(245, 158, 11, 0.2) !important;
+      box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.35);
+    }
+    .match-pair-tag {
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .pair-color-0 { border-color: #3b82f6 !important; background: rgba(59, 130, 246, 0.2) !important; }
+    .pair-color-0 .match-pair-tag { background: #2563eb; color: #fff; }
+    .pair-color-1 { border-color: #a855f7 !important; background: rgba(168, 85, 247, 0.2) !important; }
+    .pair-color-1 .match-pair-tag { background: #9333ea; color: #fff; }
+    .pair-color-2 { border-color: #f59e0b !important; background: rgba(245, 158, 11, 0.2) !important; }
+    .pair-color-2 .match-pair-tag { background: #d97706; color: #fff; }
+    .pair-color-3 { border-color: #ec4899 !important; background: rgba(236, 72, 153, 0.2) !important; }
+    .pair-color-3 .match-pair-tag { background: #db2777; color: #fff; }
+    .pair-color-4 { border-color: #06b6d4 !important; background: rgba(6, 182, 212, 0.2) !important; }
+    .pair-color-4 .match-pair-tag { background: #0891b2; color: #fff; }
+    .pair-color-5 { border-color: #84cc16 !important; background: rgba(132, 204, 22, 0.2) !important; }
+    .pair-color-5 .match-pair-tag { background: #65a30d; color: #fff; }
+    .match-item-btn.correct-ans {
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.25) !important;
+    }
+
+    /* 8. order: Sắp Xếp Thứ Tự Quy Trình / Dãy Số */
+    .order-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 4px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .order-list.wrong-ans {
+      border-color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.08) !important;
+    }
+    .order-list.correct-ans {
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.08) !important;
+    }
+    .order-item-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #0f172a;
+      border: 2px solid #475569;
+      border-radius: 10px;
+      padding: 8px 10px;
+      transition: all 0.16s;
+    }
+    .order-item-row.selected-swap {
+      border-color: #fbbf24;
+      background: rgba(245, 158, 11, 0.18);
+    }
+    .order-item-row.correct-ans {
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.2) !important;
+    }
+    .order-pos-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #2563eb;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .order-item-row.correct-ans .order-pos-badge {
+      background: #10b981;
+    }
+    .order-item-body {
+      flex: 1;
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: #f8fafc;
+      font-size: 0.98rem;
+      line-height: 1.4;
+      cursor: pointer;
+      padding: 4px 2px;
+    }
+    .order-move-controls {
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .order-move-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1.5px solid #475569;
+      background: #334155;
+      color: #f8fafc;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .order-move-btn:hover:not(:disabled) {
+      background: #3b82f6;
+      border-color: #60a5fa;
+    }
+    .order-move-btn:disabled {
+      opacity: 0.32;
+      cursor: not-allowed;
+    }
+
+    /* 9. cloze: Điền Khuyết Nhiều Chỗ Trống {{1}}, {{2}} */
+    .cloze-passage-box {
+      background: #0f172a;
+      border: 2px solid #475569;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      font-size: 1.02rem;
+      line-height: 2.05;
+      color: #f1f5f9;
+      transition: all 0.2s;
+    }
+    .cloze-passage-box.wrong-ans {
+      border-color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.1) !important;
+    }
+    .cloze-passage-box.correct-ans {
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.12) !important;
+    }
+    .cloze-slot-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 86px;
+      min-height: 36px;
+      padding: 3px 11px;
+      margin: 2px 4px;
+      border-radius: 8px;
+      border: 2px dashed #60a5fa;
+      background: rgba(37, 99, 235, 0.14);
+      color: #93c5fd;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      vertical-align: middle;
+      transition: all 0.16s;
+    }
+    .cloze-slot-btn.active-slot {
+      border-style: solid;
+      border-color: #fbbf24;
+      background: rgba(245, 158, 11, 0.22);
+      color: #fde68a;
+      box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.3);
+    }
+    .cloze-slot-btn.filled-slot {
+      border-style: solid;
+      border-color: #3b82f6;
+      background: #2563eb;
+      color: #fff;
+    }
+    .cloze-slot-btn.correct-ans {
+      border-style: solid;
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.32) !important;
+      color: #6ee7b7 !important;
+    }
+    .cloze-slot-num {
+      font-size: 0.78rem;
+      font-weight: 800;
+      opacity: 0.85;
+    }
+    .cloze-input-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin: 2px 4px;
+      vertical-align: middle;
+    }
+    .cloze-inline-input {
+      width: 96px;
+      padding: 5px 9px;
+      border-radius: 8px;
+      border: 2px solid #60a5fa;
+      background: #1e293b;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.96rem;
+      text-align: center;
+      outline: none;
+    }
+    .cloze-inline-input:focus {
+      border-color: #fbbf24;
+      box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.25);
+    }
+    .cloze-inline-input.correct-ans {
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.25) !important;
+      color: #6ee7b7 !important;
+    }
+
+    /* 10. classify: Phân Loại Thẻ Vào 2-4 Nhóm Kiến Thức */
+    .classify-bank-box {
+      background: #0f172a;
+      border: 1.5px solid #334155;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .classify-bank-hint {
+      font-size: 0.82rem;
+      color: #93c5fd;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .drag-tile.active-classify-tile {
+      border-color: #fbbf24 !important;
+      background: rgba(245, 158, 11, 0.25) !important;
+      color: #fde68a !important;
+      box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.32);
+    }
+    .classify-buckets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+      padding: 4px;
+      border-radius: 12px;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .classify-buckets-grid.wrong-ans {
+      border-color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.08) !important;
+    }
+    .classify-bucket-card {
+      background: #0f172a;
+      border: 2px dashed #60a5fa;
+      border-radius: 11px;
+      padding: 10px;
+      min-height: 104px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.16s;
+    }
+    .classify-bucket-card:hover {
+      border-color: #fbbf24;
+      background: rgba(30, 41, 59, 0.9);
+    }
+    .classify-bucket-card.correct-ans {
+      border-style: solid;
+      border-color: #10b981 !important;
+      background: rgba(16, 185, 129, 0.14) !important;
+      cursor: default;
+    }
+    .classify-bucket-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #bfdbfe;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 7px;
+      padding: 6px 10px;
+      text-align: center;
+    }
+    .classify-bucket-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 40px;
+      align-items: center;
+    }
+    .classify-chip {
+      background: #2563eb;
+      border: 1.5px solid #60a5fa;
+      color: #fff;
+      padding: 6px 11px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .classify-chip:hover:not(:disabled) {
+      background: #dc2626;
+      border-color: #f87171;
+    }
+    .classify-chip.correct-ans {
+      background: #059669 !important;
+      border-color: #34d399 !important;
+      cursor: default;
+    }
+
     /* Explanation Box */
     .explanation-box {
       display: none;
@@ -1160,6 +1688,36 @@
         min-height: 46px !important;
       }
 
+      /* Mobile layout refinements for types 5-10 */
+      .tf-group-row {
+        flex-wrap: wrap !important;
+        padding: 9px 11px !important;
+        gap: 8px !important;
+      }
+      .tf-pill-pair {
+        margin-left: auto;
+      }
+      .tf-pill-btn {
+        min-height: 40px !important;
+        min-width: 64px !important;
+      }
+      .multi-opt-btn {
+        min-height: 46px !important;
+        padding: 10px 12px !important;
+        font-size: 0.95rem !important;
+      }
+      .match-columns-wrap {
+        gap: 8px !important;
+      }
+      .match-item-btn {
+        padding: 9px 9px !important;
+        font-size: 0.88rem !important;
+        min-height: 46px !important;
+      }
+      .classify-buckets-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+      }
+
       /* Prevent iOS Safari from zooming into inputs */
       input[type="text"], input[type="password"], input[type="number"] {
         font-size: 16px !important;
@@ -1583,6 +2141,12 @@
     let autoResumeSeconds = 6;
     let videoDuration = 860;
     let currentDragSelectedIndices = [];
+    let currentTFGroupAnswers = {};
+    let currentMultiSelected = [];
+    let currentMatchState = { activeLeft: null, activeRight: null, rightOrder: [], pairs: {} };
+    let currentOrderState = { order: [], selectedPos: null };
+    let currentClozeState = { values: [], bankIndices: [], activeBlank: 0, shuffledBankOrder: [] };
+    let currentClassifyState = { itemOrder: [], activeItem: null, assignments: {} };
 
     function clearQuizTimers() {
       if (autoResumeTimer) {
@@ -1847,7 +2411,18 @@
     function populateTeacherJumpButtons() {
       const container = document.getElementById('teacherJumpButtons');
       container.innerHTML = '';
-      const typeLabels = { mcq: 'TRẮC NGHIỆM', tf: 'ĐÚNG / SAI', fill: 'ĐIỀN ĐÁP ÁN', drag: 'GHÉP THẺ' };
+      const typeLabels = {
+        mcq: 'TRẮC NGHIỆM',
+        tf: 'ĐÚNG / SAI',
+        fill: 'ĐIỀN ĐÁP ÁN',
+        drag: 'GHÉP THẺ',
+        tf_group: 'ĐÚNG/SAI (a-d)',
+        multi: 'CHỌN NHIỀU',
+        match: 'NỐI CẶP A-B',
+        order: 'SẮP XẾP THỨ TỰ',
+        cloze: 'ĐIỀN KHUYẾT',
+        classify: 'PHÂN LOẠI NHÓM'
+      };
       checkpoints.forEach((cp, idx) => {
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -2103,7 +2678,7 @@
       });
     }
 
-    // --- 7. ALL 4 QUESTION TYPES: MCQ, TRUE/FALSE, FILL, DRAG/TAP-TO-PLACE ---
+    // --- 7. ALL 10 GDPT 2018 QUESTION TYPES: MCQ, TF, FILL, DRAG, TF_GROUP, MULTI, MATCH, ORDER, CLOZE, CLASSIFY ---
     function getCheckpointOrderNumber(cp) {
       const idx = checkpoints.findIndex(item => item.id === cp.id);
       return idx >= 0 ? (idx + 1) : cp.id;
@@ -2134,6 +2709,9 @@
         const expNorm = normalizeAnswerToken(rawExpected);
         if (!expNorm) continue;
         if (userNorm === expNorm) return true;
+        const userMathClean = userNorm.replace(/^\$+|\$+$/g, '').trim();
+        const expMathClean = expNorm.replace(/^\$+|\$+$/g, '').trim();
+        if (userMathClean && userMathClean === expMathClean) return true;
 
         // So sánh số học thông minh: "3,5" === "3.5", "07" === "7"
         const userNumStr = userNorm.replace(',', '.');
@@ -2153,6 +2731,12 @@
       activeCheckpoint = cp;
       activeCheckpointSolved = false;
       currentDragSelectedIndices = [];
+      currentTFGroupAnswers = {};
+      currentMultiSelected = [];
+      currentMatchState = { activeLeft: null, activeRight: null, rightOrder: [], pairs: {} };
+      currentOrderState = { order: [], selectedPos: null };
+      currentClozeState = { values: [], bankIndices: [], activeBlank: 0, shuffledBankOrder: [] };
+      currentClassifyState = { itemOrder: [], activeItem: null, assignments: {} };
       clearQuizTimers();
 
       // Tạm dừng video ngay; chỉ seek lại nếu lệch quá 2 giây để tránh YouTube tự buffer & play lại
@@ -2248,6 +2832,56 @@
             <button type="button" class="btn-clear-drag" id="btnClearDrag" onclick="clearDragSelection()">↺ Chọn lại</button>
           </div>
         `;
+      } else if (cp.type === 'tf_group') {
+        inst.innerHTML = '👆 Chọn <strong>Đúng</strong> hoặc <strong>Sai</strong> cho từng mệnh đề, sau đó bấm <strong>Kiểm tra kết quả</strong>:';
+        renderTFGroupUI(cArea);
+
+      } else if (cp.type === 'multi') {
+        inst.innerHTML = '☑️ <strong>Tích chọn TẤT CẢ các phương án đúng</strong> rồi bấm <strong>Kiểm tra kết quả</strong>:';
+        renderMultiUI(cArea);
+
+      } else if (cp.type === 'match') {
+        const rightPoolCount = (cp.pairs || []).length + ((cp.distractors || []).length);
+        currentMatchState.rightOrder = buildDerangedOrder(rightPoolCount);
+        inst.innerHTML = '🔗 <strong>Chạm 1 ô Cột A</strong> rồi <strong>chạm 1 ô Cột B</strong> để nối cặp (chạm lại cặp đã nối nếu muốn đổi):';
+        renderMatchUI(cArea);
+
+      } else if (cp.type === 'order') {
+        currentOrderState.order = buildDerangedOrder((cp.items || []).length);
+        currentOrderState.selectedPos = null;
+        inst.innerHTML = '🔃 Dùng nút <strong>▲ / ▼</strong> (hoặc chạm 2 thẻ để đổi chỗ) sắp xếp đúng thứ tự từ trên xuống dưới:';
+        renderOrderUI(cArea);
+
+      } else if (cp.type === 'cloze') {
+        const blanks = cp.blanks || [];
+        const hasBank = Array.isArray(cp.wordBank) && cp.wordBank.length > 0;
+        currentClozeState = {
+          values: new Array(blanks.length).fill(''),
+          bankIndices: new Array(blanks.length).fill(null),
+          activeBlank: 0,
+          shuffledBankOrder: hasBank ? shuffleIndices(cp.wordBank.length) : []
+        };
+        inst.innerHTML = hasBank
+          ? '🧩 <strong>Chạm vào thẻ từ bên dưới</strong> để điền vào chỗ trống đang sáng (chạm vào chỗ trống đã điền nếu muốn xóa):'
+          : '⌨️ <strong>Điền đáp án vào tất cả các ô trống</strong> trong đoạn bên dưới rồi bấm <strong>Kiểm tra kết quả</strong>:';
+        renderClozeUI(cArea);
+        if (!hasBank) {
+          setTimeout(() => {
+            const firstInp = document.getElementById('cloze-inp-0');
+            if (firstInp && !activeCheckpointSolved) firstInp.focus();
+          }, 220);
+        }
+
+      } else if (cp.type === 'classify') {
+        const itemCount = (cp.items || []).length;
+        const order = shuffleIndices(itemCount);
+        currentClassifyState = {
+          itemOrder: order,
+          activeItem: order.length > 0 ? order[0] : null,
+          assignments: {}
+        };
+        inst.innerHTML = '🗂️ <strong>Chạm chọn thẻ</strong> ở ngân hàng phía trên rồi <strong>chạm vào Nhóm</strong> bên dưới để phân loại:';
+        renderClassifyUI(cArea);
       }
 
       renderMathInContainer(qText);
@@ -2653,6 +3287,915 @@
         document.getElementById('btnReview30s').style.display = 'inline-block';
         saveStudentProgressLocally();
         syncProgressToGoogleSheets(`🟡 Đang học (Đang ghép lại Trạm ${cpNum}/${totalQ} - sai lần ${qStat.wrongCount})`);
+      }
+    }
+
+
+    // --- 7.5 TO 7.10: HANDLERS FOR 6 NEW GDPT 2018 INTERACTIVE QUESTION TYPES ---
+    function shuffleIndices(n) {
+      const arr = Array.from({ length: n }, (_, i) => i);
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+      }
+      return arr;
+    }
+
+    function buildDerangedOrder(n) {
+      if (n <= 1) return Array.from({ length: n }, (_, i) => i);
+      const arr = shuffleIndices(n);
+      const isIdentity = arr.every((v, idx) => v === idx);
+      if (isIdentity) {
+        arr.push(arr.shift());
+      }
+      return arr;
+    }
+
+    // 7.5. tf_group: Đúng / Sai Đa Mệnh Đề (a, b, c, d chuẩn Bộ GD&ĐT)
+    function renderTFGroupUI(container) {
+      const cp = activeCheckpoint;
+      const cArea = container || document.getElementById('quizContentArea');
+      if (!cp || !cArea) return;
+      const stmts = cp.statements || [];
+      let rowsHtml = '';
+      stmts.forEach((st, sIdx) => {
+        const lbl = st.label || (String.fromCharCode(97 + sIdx) + ')');
+        const ans = currentTFGroupAnswers[sIdx];
+        const hasAns = (typeof ans === 'boolean');
+        const trueCls = (ans === true) ? 'active-true' : '';
+        const falseCls = (ans === false) ? 'active-false' : '';
+        const rowCls = activeCheckpointSolved ? 'correct-ans' : (hasAns ? 'answered-row' : '');
+        const btnSolvedTrue = (activeCheckpointSolved && ans === true) ? 'correct-ans' : '';
+        const btnSolvedFalse = (activeCheckpointSolved && ans === false) ? 'correct-ans' : '';
+        rowsHtml += `
+          <div class="tf-group-row ${rowCls}" id="tfg-row-${sIdx}">
+            <div class="tf-stmt-content">
+              <span class="tf-stmt-label">${escapeHtml(lbl)}</span>
+              <span class="tf-stmt-text">${escapeHtml(st.text)}</span>
+            </div>
+            <div class="tf-pill-pair">
+              <button type="button" class="tf-pill-btn ${trueCls} ${btnSolvedTrue}" id="tfg-btn-${sIdx}-true" ${activeCheckpointSolved ? 'disabled' : ''} onclick="handleTFGroupSelect(${sIdx}, true)">Đúng</button>
+              <button type="button" class="tf-pill-btn ${falseCls} ${btnSolvedFalse}" id="tfg-btn-${sIdx}-false" ${activeCheckpointSolved ? 'disabled' : ''} onclick="handleTFGroupSelect(${sIdx}, false)">Sai</button>
+            </div>
+          </div>
+        `;
+      });
+      cArea.innerHTML = `
+        <div class="tf-group-list ${activeCheckpointSolved ? 'correct-ans' : ''}" id="tfGroupList">
+          ${rowsHtml}
+        </div>
+        <div class="drag-actions-row">
+          <button type="button" class="btn-check-fill" id="btnCheckTFGroup" ${activeCheckpointSolved ? 'disabled' : ''} onclick="handleInstantTFGroup()">Kiểm tra kết quả ✔️</button>
+          <button type="button" class="btn-clear-drag" id="btnClearTFGroup" ${activeCheckpointSolved ? 'disabled' : ''} onclick="clearTFGroupSelection()">↺ Chọn lại</button>
+        </div>
+      `;
+      renderMathInContainer(cArea);
+    }
+
+    function handleTFGroupSelect(stmtIdx, boolVal) {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      currentTFGroupAnswers[stmtIdx] = Boolean(boolVal);
+      const listEl = document.getElementById('tfGroupList');
+      if (listEl) listEl.classList.remove('wrong-ans', 'shake');
+      const rowEl = document.getElementById(`tfg-row-${stmtIdx}`);
+      const btnT = document.getElementById(`tfg-btn-${stmtIdx}-true`);
+      const btnF = document.getElementById(`tfg-btn-${stmtIdx}-false`);
+      if (rowEl) rowEl.classList.add('answered-row');
+      if (btnT) {
+        if (boolVal === true) btnT.classList.add('active-true');
+        else btnT.classList.remove('active-true');
+      }
+      if (btnF) {
+        if (boolVal === false) btnF.classList.add('active-false');
+        else btnF.classList.remove('active-false');
+      }
+    }
+
+    function clearTFGroupSelection() {
+      if (activeCheckpointSolved) return;
+      currentTFGroupAnswers = {};
+      renderTFGroupUI();
+    }
+
+    function handleInstantTFGroup() {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      const cp = activeCheckpoint;
+      const stmts = cp.statements || [];
+      const totalQ = checkpoints.length;
+      const cpNum = getCheckpointOrderNumber(cp);
+
+      const missingLabels = [];
+      stmts.forEach((st, idx) => {
+        if (typeof currentTFGroupAnswers[idx] !== 'boolean') {
+          missingLabels.push(st.label || (String.fromCharCode(97 + idx) + ')'));
+        }
+      });
+
+      if (missingLabels.length > 0) {
+        hideExplanation();
+        showFeedbackBanner(false, `Em hãy chọn Đúng hoặc Sai cho đầy đủ tất cả ${stmts.length} mệnh đề (còn thiếu ý <strong>${escapeHtml(missingLabels.join(', '))}</strong>) trước khi bấm Kiểm tra nhé!`);
+        return;
+      }
+
+      let correctCount = 0;
+      stmts.forEach((st, idx) => {
+        if (Boolean(currentTFGroupAnswers[idx]) === Boolean(st.correct)) {
+          correctCount++;
+        }
+      });
+
+      const qStat = ensureQuestionStat(cp.id);
+      const listEl = document.getElementById('tfGroupList');
+      if (listEl) listEl.classList.remove('shake');
+
+      if (correctCount === stmts.length) {
+        activeCheckpointSolved = true;
+        AudioFX.playSuccess();
+        triggerConfettiMini();
+        qStat.points = 1;
+        qStat.passed = true;
+
+        renderTFGroupUI();
+        showFeedbackBanner(true, `CHÍNH XÁC TUYỆT ĐỐI! Em đã xác định đúng cả ${stmts.length}/${stmts.length} mệnh đề (+1 điểm)!`);
+        showExplanation(cp.explanation);
+        finalizeCheckpointMastery(cp, qStat.wrongCount, 6);
+      } else {
+        hideExplanation();
+        const sig = stmts.map((_, i) => currentTFGroupAnswers[i] ? 'T' : 'F').join('');
+        if (qStat.lastWrongVal !== sig) {
+          qStat.wrongCount++;
+          qStat.lastWrongVal = sig;
+        }
+        AudioFX.playWrong();
+        if (listEl) {
+          void listEl.offsetWidth;
+          listEl.classList.add('wrong-ans', 'shake');
+        }
+        showFeedbackBanner(false, `Chưa hoàn toàn chính xác! Em mới xác định đúng <strong>${correctCount}/${stmts.length}</strong> mệnh đề. Hãy đọc kỹ lại từng ý hoặc bấm "⏪ Xem lại 30s bài giảng" để kiểm tra lại nhé!`);
+        document.getElementById('btnReview30s').style.display = 'inline-block';
+        saveStudentProgressLocally();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đang xét lại Trạm ${cpNum}/${totalQ} - đúng ${correctCount}/${stmts.length} ý, sai lần ${qStat.wrongCount})`);
+      }
+    }
+
+    // 7.6. multi: Trắc nghiệm Nhiều Đáp Án Đúng (Checkbox)
+    function renderMultiUI(container) {
+      const cp = activeCheckpoint;
+      const cArea = container || document.getElementById('quizContentArea');
+      if (!cp || !cArea) return;
+      const opts = cp.options || [];
+      let optsHtml = '';
+      opts.forEach((opt, oIdx) => {
+        const isSel = currentMultiSelected.includes(oIdx);
+        const solvedCls = activeCheckpointSolved ? (isSel ? 'correct-ans' : '') : (isSel ? 'selected' : '');
+        const dimStyle = (activeCheckpointSolved && !isSel) ? 'style="opacity:0.42;"' : '';
+        optsHtml += `
+          <button type="button" class="multi-opt-btn ${solvedCls}" id="multi-opt-${oIdx}" ${activeCheckpointSolved ? 'disabled' : ''} ${dimStyle} onclick="toggleMultiOption(${oIdx})">
+            <span class="multi-checkbox-box" id="multi-chk-${oIdx}">${isSel ? '✓' : ''}</span>
+            <span class="opt-label-text">${escapeHtml(opt)}</span>
+          </button>
+        `;
+      });
+      cArea.innerHTML = `
+        <div class="multi-options-grid" id="multiOptionsGrid">
+          ${optsHtml}
+        </div>
+        <div class="drag-actions-row">
+          <button type="button" class="btn-check-fill" id="btnCheckMulti" ${activeCheckpointSolved ? 'disabled' : ''} onclick="handleInstantMulti()">Kiểm tra kết quả ✔️</button>
+          <button type="button" class="btn-clear-drag" id="btnClearMulti" ${activeCheckpointSolved ? 'disabled' : ''} onclick="clearMultiSelection()">↺ Bỏ chọn</button>
+        </div>
+      `;
+      renderMathInContainer(cArea);
+    }
+
+    function toggleMultiOption(optIdx) {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      const grid = document.getElementById('multiOptionsGrid');
+      if (grid) grid.classList.remove('wrong-ans', 'shake');
+      const pos = currentMultiSelected.indexOf(optIdx);
+      if (pos >= 0) currentMultiSelected.splice(pos, 1);
+      else currentMultiSelected.push(optIdx);
+
+      const btn = document.getElementById(`multi-opt-${optIdx}`);
+      const chk = document.getElementById(`multi-chk-${optIdx}`);
+      const isSel = currentMultiSelected.includes(optIdx);
+      if (btn) {
+        if (isSel) btn.classList.add('selected');
+        else btn.classList.remove('selected');
+      }
+      if (chk) chk.innerHTML = isSel ? '✓' : '';
+    }
+
+    function clearMultiSelection() {
+      if (activeCheckpointSolved) return;
+      currentMultiSelected = [];
+      renderMultiUI();
+    }
+
+    function handleInstantMulti() {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      const cp = activeCheckpoint;
+      const totalQ = checkpoints.length;
+      const cpNum = getCheckpointOrderNumber(cp);
+
+      if (currentMultiSelected.length === 0) {
+        hideExplanation();
+        showFeedbackBanner(false, 'Em hãy tích chọn ít nhất một phương án đúng trước khi bấm Kiểm tra nhé!');
+        return;
+      }
+
+      const expected = (cp.correct || []).map(Number).sort((a, b) => a - b);
+      const chosen = [...currentMultiSelected].map(Number).sort((a, b) => a - b);
+      const isExact = (chosen.length === expected.length && chosen.every((v, idx) => v === expected[idx]));
+
+      const qStat = ensureQuestionStat(cp.id);
+      const grid = document.getElementById('multiOptionsGrid');
+      if (grid) grid.classList.remove('shake');
+
+      if (isExact) {
+        activeCheckpointSolved = true;
+        AudioFX.playSuccess();
+        triggerConfettiMini();
+        qStat.points = 1;
+        qStat.passed = true;
+
+        renderMultiUI();
+        showFeedbackBanner(true, `CHÍNH XÁC! Em đã chọn đúng đầy đủ ${expected.length} đáp án của câu hỏi (+1 điểm)!`);
+        showExplanation(cp.explanation);
+        finalizeCheckpointMastery(cp, qStat.wrongCount, 6);
+      } else {
+        hideExplanation();
+        const sig = chosen.join(',');
+        if (qStat.lastWrongVal !== sig) {
+          qStat.wrongCount++;
+          qStat.lastWrongVal = sig;
+        }
+        AudioFX.playWrong();
+        if (grid) {
+          void grid.offsetWidth;
+          grid.classList.add('wrong-ans', 'shake');
+        }
+
+        const hitCorrect = chosen.filter(i => expected.includes(i)).length;
+        const wrongPicked = chosen.length - hitCorrect;
+        let hintMsg = '';
+        if (wrongPicked === 0 && hitCorrect < expected.length) {
+          hintMsg = `Em đã chọn đúng ${hitCorrect} phương án nhưng <strong>vẫn còn thiếu đáp án đúng khác</strong>! Hãy kiểm tra thêm các phương án còn lại nhé.`;
+        } else if (wrongPicked > 0 && hitCorrect === expected.length) {
+          hintMsg = 'Trong các ô em tích <strong>đang có dư phương án chưa đúng</strong>! Hãy rà soát và bỏ tích phương án sai nhé.';
+        } else {
+          hintMsg = 'Tập hợp phương án em chọn chưa chính xác! Hãy đọc kỹ lại từng khẳng định hoặc bấm "⏪ Xem lại 30s bài giảng" để kiểm tra lại nhé.';
+        }
+        showFeedbackBanner(false, hintMsg);
+        document.getElementById('btnReview30s').style.display = 'inline-block';
+        saveStudentProgressLocally();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đang chọn lại Trạm ${cpNum}/${totalQ} - sai lần ${qStat.wrongCount})`);
+      }
+    }
+
+    // 7.7. match: Nối Cặp Tương Ứng 2 Cột (Cột A <-> Cột B, Tap-to-Match)
+    function getMatchRightPool(cp) {
+      const pairs = cp.pairs || [];
+      const distractors = cp.distractors || [];
+      return pairs.map(p => p.right).concat(distractors);
+    }
+
+    function renderMatchUI(container) {
+      const cp = activeCheckpoint;
+      const cArea = container || document.getElementById('quizContentArea');
+      if (!cp || !cArea) return;
+
+      const pairsList = cp.pairs || [];
+      const rightPool = getMatchRightPool(cp);
+      const rightToLeft = {};
+      Object.keys(currentMatchState.pairs).forEach(lKey => {
+        const rIdx = currentMatchState.pairs[lKey];
+        rightToLeft[rIdx] = Number(lKey);
+      });
+
+      let leftHtml = '<div class="match-col-header">Cột A</div>';
+      pairsList.forEach((p, lIdx) => {
+        const isPaired = (currentMatchState.pairs[lIdx] !== undefined);
+        const isActive = (currentMatchState.activeLeft === lIdx);
+        const colorCls = isPaired ? `pair-color-${lIdx % 6}` : '';
+        const solvedCls = activeCheckpointSolved ? 'correct-ans' : '';
+        const activeCls = isActive ? 'active-pick' : '';
+        const tagHtml = isPaired ? `<span class="match-pair-tag">Cặp ${lIdx + 1}</span>` : '';
+        leftHtml += `
+          <button type="button" class="match-item-btn ${colorCls} ${activeCls} ${solvedCls}" id="match-left-${lIdx}" ${activeCheckpointSolved ? 'disabled' : ''} onclick="handleMatchTapLeft(${lIdx})">
+            <span>${escapeHtml(p.left)}</span>
+            ${tagHtml}
+          </button>
+        `;
+      });
+
+      let rightHtml = '<div class="match-col-header">Cột B</div>';
+      currentMatchState.rightOrder.forEach(rIdx => {
+        const pairedLeftIdx = rightToLeft[rIdx];
+        const isPaired = (pairedLeftIdx !== undefined);
+        const isActive = (currentMatchState.activeRight === rIdx);
+        const colorCls = isPaired ? `pair-color-${pairedLeftIdx % 6}` : '';
+        const solvedCls = (activeCheckpointSolved && isPaired) ? 'correct-ans' : '';
+        const activeCls = isActive ? 'active-pick' : '';
+        const tagHtml = isPaired ? `<span class="match-pair-tag">Cặp ${pairedLeftIdx + 1}</span>` : '';
+        rightHtml += `
+          <button type="button" class="match-item-btn ${colorCls} ${activeCls} ${solvedCls}" id="match-right-${rIdx}" ${activeCheckpointSolved ? 'disabled' : ''} onclick="handleMatchTapRight(${rIdx})">
+            <span>${escapeHtml(rightPool[rIdx])}</span>
+            ${tagHtml}
+          </button>
+        `;
+      });
+
+      cArea.innerHTML = `
+        <div class="match-columns-wrap ${activeCheckpointSolved ? 'correct-ans' : ''}" id="matchColumnsWrap">
+          <div class="match-col">${leftHtml}</div>
+          <div class="match-col">${rightHtml}</div>
+        </div>
+        <div class="drag-actions-row">
+          <button type="button" class="btn-check-fill" id="btnCheckMatch" ${activeCheckpointSolved ? 'disabled' : ''} onclick="handleInstantMatch()">Kiểm tra kết quả ✔️</button>
+          <button type="button" class="btn-clear-drag" id="btnClearMatch" ${activeCheckpointSolved ? 'disabled' : ''} onclick="clearMatchAll()">↺ Nối lại từ đầu</button>
+        </div>
+      `;
+      renderMathInContainer(cArea);
+    }
+
+    function handleMatchTapLeft(lIdx) {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      if (currentMatchState.activeRight !== null) {
+        const rIdx = currentMatchState.activeRight;
+        Object.keys(currentMatchState.pairs).forEach(k => {
+          if (currentMatchState.pairs[k] === rIdx) delete currentMatchState.pairs[k];
+        });
+        currentMatchState.pairs[lIdx] = rIdx;
+        currentMatchState.activeLeft = null;
+        currentMatchState.activeRight = null;
+      } else if (currentMatchState.activeLeft === lIdx) {
+        currentMatchState.activeLeft = null;
+      } else {
+        if (currentMatchState.pairs[lIdx] !== undefined) {
+          delete currentMatchState.pairs[lIdx];
+        }
+        currentMatchState.activeLeft = lIdx;
+      }
+      renderMatchUI();
+    }
+
+    function handleMatchTapRight(rIdx) {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      if (currentMatchState.activeLeft !== null) {
+        const lIdx = currentMatchState.activeLeft;
+        Object.keys(currentMatchState.pairs).forEach(k => {
+          if (currentMatchState.pairs[k] === rIdx) delete currentMatchState.pairs[k];
+        });
+        currentMatchState.pairs[lIdx] = rIdx;
+        currentMatchState.activeLeft = null;
+        currentMatchState.activeRight = null;
+      } else if (currentMatchState.activeRight === rIdx) {
+        currentMatchState.activeRight = null;
+      } else {
+        Object.keys(currentMatchState.pairs).forEach(k => {
+          if (currentMatchState.pairs[k] === rIdx) delete currentMatchState.pairs[k];
+        });
+        currentMatchState.activeRight = rIdx;
+      }
+      renderMatchUI();
+    }
+
+    function clearMatchAll() {
+      if (activeCheckpointSolved) return;
+      currentMatchState.activeLeft = null;
+      currentMatchState.activeRight = null;
+      currentMatchState.pairs = {};
+      renderMatchUI();
+    }
+
+    function handleInstantMatch() {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      const cp = activeCheckpoint;
+      const pairsList = cp.pairs || [];
+      const rightPool = getMatchRightPool(cp);
+      const totalQ = checkpoints.length;
+      const cpNum = getCheckpointOrderNumber(cp);
+
+      const pairedCount = Object.keys(currentMatchState.pairs).length;
+      if (pairedCount < pairsList.length) {
+        hideExplanation();
+        showFeedbackBanner(false, `Em mới nối <strong>${pairedCount}/${pairsList.length}</strong> cặp. Hãy nối đầy đủ tất cả các mục ở Cột A sang Cột B trước khi bấm Kiểm tra nhé!`);
+        return;
+      }
+
+      let correctPairs = 0;
+      pairsList.forEach((p, lIdx) => {
+        const chosenRightIdx = currentMatchState.pairs[lIdx];
+        if (chosenRightIdx !== undefined && isFillAnswerMatch(rightPool[chosenRightIdx], p.right)) {
+          correctPairs++;
+        }
+      });
+
+      const qStat = ensureQuestionStat(cp.id);
+      const wrap = document.getElementById('matchColumnsWrap');
+      if (wrap) wrap.classList.remove('shake');
+
+      if (correctPairs === pairsList.length) {
+        activeCheckpointSolved = true;
+        AudioFX.playSuccess();
+        triggerConfettiMini();
+        qStat.points = 1;
+        qStat.passed = true;
+
+        renderMatchUI();
+        showFeedbackBanner(true, `CHÍNH XÁC! Em đã nối đúng toàn bộ ${pairsList.length}/${pairsList.length} cặp kiến thức (+1 điểm)!`);
+        showExplanation(cp.explanation);
+        finalizeCheckpointMastery(cp, qStat.wrongCount, 6);
+      } else {
+        hideExplanation();
+        const sig = pairsList.map((_, i) => `${i}:${currentMatchState.pairs[i]}`).join('|');
+        if (qStat.lastWrongVal !== sig) {
+          qStat.wrongCount++;
+          qStat.lastWrongVal = sig;
+        }
+        AudioFX.playWrong();
+        if (wrap) {
+          void wrap.offsetWidth;
+          wrap.classList.add('wrong-ans', 'shake');
+        }
+        showFeedbackBanner(false, `Chưa hoàn toàn chính xác! Em đã nối đúng <strong>${correctPairs}/${pairsList.length}</strong> cặp. Hãy chạm vào cặp cần đổi để nối lại hoặc bấm "⏪ Xem lại 30s bài giảng" nhé!`);
+        document.getElementById('btnReview30s').style.display = 'inline-block';
+        saveStudentProgressLocally();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đang nối lại Trạm ${cpNum}/${totalQ} - đúng ${correctPairs}/${pairsList.length} cặp, sai lần ${qStat.wrongCount})`);
+      }
+    }
+
+    // 7.8. order: Sắp Xếp Thứ Tự Quy Trình / Dãy Số
+    function renderOrderUI(container) {
+      const cp = activeCheckpoint;
+      const cArea = container || document.getElementById('quizContentArea');
+      if (!cp || !cArea) return;
+      const items = cp.items || [];
+      const order = currentOrderState.order;
+
+      let rowsHtml = '';
+      order.forEach((itemIdx, pos) => {
+        const isSwapSel = (currentOrderState.selectedPos === pos);
+        const rowCls = activeCheckpointSolved ? 'correct-ans' : (isSwapSel ? 'selected-swap' : '');
+        rowsHtml += `
+          <div class="order-item-row ${rowCls}">
+            <span class="order-pos-badge">${pos + 1}</span>
+            <button type="button" class="order-item-body" ${activeCheckpointSolved ? 'disabled' : ''} onclick="tapOrderSwap(${pos})" title="Chạm 2 thẻ để đổi chỗ nhanh">
+              ${escapeHtml(items[itemIdx])}
+            </button>
+            <div class="order-move-controls">
+              <button type="button" class="order-move-btn" ${activeCheckpointSolved || pos === 0 ? 'disabled' : ''} onclick="moveOrderItem(${pos}, -1)" title="Chuyển lên">▲</button>
+              <button type="button" class="order-move-btn" ${activeCheckpointSolved || pos === order.length - 1 ? 'disabled' : ''} onclick="moveOrderItem(${pos}, 1)" title="Chuyển xuống">▼</button>
+            </div>
+          </div>
+        `;
+      });
+
+      cArea.innerHTML = `
+        <div class="order-list ${activeCheckpointSolved ? 'correct-ans' : ''}" id="orderListWrap">
+          ${rowsHtml}
+        </div>
+        <div class="drag-actions-row">
+          <button type="button" class="btn-check-fill" id="btnCheckOrder" ${activeCheckpointSolved ? 'disabled' : ''} onclick="handleInstantOrder()">Kiểm tra thứ tự ✔️</button>
+          <button type="button" class="btn-clear-drag" id="btnResetOrder" ${activeCheckpointSolved ? 'disabled' : ''} onclick="resetOrderShuffle()">🔀 Xáo lại</button>
+        </div>
+      `;
+      renderMathInContainer(cArea);
+    }
+
+    function moveOrderItem(pos, delta) {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      const targetPos = pos + delta;
+      const arr = currentOrderState.order;
+      if (targetPos < 0 || targetPos >= arr.length) return;
+      const tmp = arr[pos];
+      arr[pos] = arr[targetPos];
+      arr[targetPos] = tmp;
+      currentOrderState.selectedPos = null;
+      renderOrderUI();
+    }
+
+    function tapOrderSwap(pos) {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      if (currentOrderState.selectedPos === null) {
+        currentOrderState.selectedPos = pos;
+      } else if (currentOrderState.selectedPos === pos) {
+        currentOrderState.selectedPos = null;
+      } else {
+        const first = currentOrderState.selectedPos;
+        const arr = currentOrderState.order;
+        const tmp = arr[first];
+        arr[first] = arr[pos];
+        arr[pos] = tmp;
+        currentOrderState.selectedPos = null;
+      }
+      renderOrderUI();
+    }
+
+    function resetOrderShuffle() {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      currentOrderState.order = buildDerangedOrder((activeCheckpoint.items || []).length);
+      currentOrderState.selectedPos = null;
+      renderOrderUI();
+    }
+
+    function handleInstantOrder() {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      const cp = activeCheckpoint;
+      const items = cp.items || [];
+      const order = currentOrderState.order;
+      const totalQ = checkpoints.length;
+      const cpNum = getCheckpointOrderNumber(cp);
+
+      let inPlaceCount = 0;
+      order.forEach((itemIdx, pos) => {
+        if (normalizeAnswerToken(items[itemIdx]) === normalizeAnswerToken(items[pos])) {
+          inPlaceCount++;
+        }
+      });
+
+      const qStat = ensureQuestionStat(cp.id);
+      const wrap = document.getElementById('orderListWrap');
+      if (wrap) wrap.classList.remove('shake');
+
+      if (inPlaceCount === items.length) {
+        activeCheckpointSolved = true;
+        currentOrderState.selectedPos = null;
+        AudioFX.playSuccess();
+        triggerConfettiMini();
+        qStat.points = 1;
+        qStat.passed = true;
+
+        renderOrderUI();
+        showFeedbackBanner(true, `CHÍNH XÁC! Em đã sắp xếp đúng hoàn toàn thứ tự ${items.length} bước (+1 điểm)!`);
+        showExplanation(cp.explanation);
+        finalizeCheckpointMastery(cp, qStat.wrongCount, 6);
+      } else {
+        hideExplanation();
+        const sig = order.join(',');
+        if (qStat.lastWrongVal !== sig) {
+          qStat.wrongCount++;
+          qStat.lastWrongVal = sig;
+        }
+        AudioFX.playWrong();
+        if (wrap) {
+          void wrap.offsetWidth;
+          wrap.classList.add('wrong-ans', 'shake');
+        }
+        showFeedbackBanner(false, `Thứ tự chưa chính xác! Hiện có <strong>${inPlaceCount}/${items.length}</strong> vị trí đã đứng đúng chỗ. Em hãy điều chỉnh lại bằng nút ▲ / ▼ hoặc bấm "⏪ Xem lại 30s bài giảng" nhé!`);
+        document.getElementById('btnReview30s').style.display = 'inline-block';
+        saveStudentProgressLocally();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đang sắp xếp lại Trạm ${cpNum}/${totalQ} - đúng ${inPlaceCount}/${items.length} vị trí, sai lần ${qStat.wrongCount})`);
+      }
+    }
+
+    // 7.9. cloze: Điền Khuyết Nhiều Chỗ Trống {{1}}, {{2}} (Word Bank hoặc Gõ trực tiếp)
+    function renderClozeUI(container) {
+      const cp = activeCheckpoint;
+      const cArea = container || document.getElementById('quizContentArea');
+      if (!cp || !cArea) return;
+      const blanks = cp.blanks || [];
+      const hasBank = Array.isArray(cp.wordBank) && cp.wordBank.length > 0;
+      const tpl = String(cp.template || '');
+
+      const parts = tpl.split(/\{\{(\d+)\}\}/g);
+      let passageHtml = '';
+      for (let i = 0; i < parts.length; i++) {
+        if (i % 2 === 0) {
+          passageHtml += escapeHtml(parts[i]).replace(/\n/g, '<br>');
+        } else {
+          const bIdx = parseInt(parts[i], 10) - 1;
+          if (bIdx >= 0 && bIdx < blanks.length) {
+            const val = currentClozeState.values[bIdx] || '';
+            if (hasBank) {
+              const isAct = (!activeCheckpointSolved && currentClozeState.activeBlank === bIdx);
+              const cls = activeCheckpointSolved
+                ? 'correct-ans'
+                : `${val ? 'filled-slot' : ''} ${isAct ? 'active-slot' : ''}`;
+              const inner = val
+                ? `<span class="cloze-slot-num">(${bIdx + 1})</span> <span>${escapeHtml(val)}</span>`
+                : `<span class="cloze-slot-num">(${bIdx + 1})</span> <span>___</span>`;
+              passageHtml += `<button type="button" class="cloze-slot-btn ${cls}" id="cloze-slot-${bIdx}" ${activeCheckpointSolved ? 'disabled' : ''} onclick="handleClozeSlotTap(${bIdx})">${inner}</button>`;
+            } else {
+              const inpMode = detectFillInputMode(blanks[bIdx]);
+              const solvedCls = activeCheckpointSolved ? 'correct-ans' : '';
+              passageHtml += `<span class="cloze-input-wrap"><span class="cloze-slot-num">(${bIdx + 1})</span><input type="text" class="cloze-inline-input ${solvedCls}" id="cloze-inp-${bIdx}" value="${escapeHtml(val)}" inputmode="${inpMode}" autocomplete="off" spellcheck="false" placeholder="..." ${activeCheckpointSolved ? 'disabled' : ''} oninput="handleClozeInput(${bIdx}, this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();handleInstantCloze();}"></span>`;
+            }
+          }
+        }
+      }
+
+      let bankHtml = '';
+      if (hasBank) {
+        const usedBankIndices = currentClozeState.bankIndices.filter(v => v !== null);
+        const tilesHtml = currentClozeState.shuffledBankOrder.map(wIdx => {
+          const isUsed = usedBankIndices.includes(wIdx);
+          return `<button type="button" class="drag-tile ${isUsed ? 'selected-tile' : ''}" id="cloze-word-${wIdx}" ${activeCheckpointSolved || isUsed ? 'disabled' : ''} onclick="handleClozeWordTap(${wIdx})">${escapeHtml(cp.wordBank[wIdx])}</button>`;
+        }).join('');
+        bankHtml = `<div class="drag-tiles-bank" id="clozeWordBank">${tilesHtml}</div>`;
+      }
+
+      cArea.innerHTML = `
+        <div class="cloze-passage-box ${activeCheckpointSolved ? 'correct-ans' : ''}" id="clozePassageBox">
+          ${passageHtml}
+        </div>
+        ${bankHtml}
+        <div class="drag-actions-row">
+          <button type="button" class="btn-check-fill" id="btnCheckCloze" ${activeCheckpointSolved ? 'disabled' : ''} onclick="handleInstantCloze()">Kiểm tra kết quả ✔️</button>
+          <button type="button" class="btn-clear-drag" id="btnClearCloze" ${activeCheckpointSolved ? 'disabled' : ''} onclick="clearClozeAll()">↺ Điền lại</button>
+        </div>
+      `;
+      renderMathInContainer(cArea);
+    }
+
+    function handleClozeSlotTap(bIdx) {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      if (currentClozeState.values[bIdx]) {
+        currentClozeState.values[bIdx] = '';
+        currentClozeState.bankIndices[bIdx] = null;
+      }
+      currentClozeState.activeBlank = bIdx;
+      renderClozeUI();
+    }
+
+    function handleClozeWordTap(wIdx) {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      const cp = activeCheckpoint;
+      const blanks = cp.blanks || [];
+      if (!cp.wordBank || wIdx < 0 || wIdx >= cp.wordBank.length) return;
+      if (currentClozeState.bankIndices.includes(wIdx)) return;
+
+      let targetSlot = currentClozeState.activeBlank;
+      if (targetSlot < 0 || targetSlot >= blanks.length) targetSlot = 0;
+
+      currentClozeState.values[targetSlot] = cp.wordBank[wIdx];
+      currentClozeState.bankIndices[targetSlot] = wIdx;
+
+      // Chuyển con trỏ sang ô trống tiếp theo chưa điền
+      let nextEmpty = -1;
+      for (let step = 1; step <= blanks.length; step++) {
+        const cand = (targetSlot + step) % blanks.length;
+        if (!currentClozeState.values[cand]) {
+          nextEmpty = cand;
+          break;
+        }
+      }
+      if (nextEmpty >= 0) currentClozeState.activeBlank = nextEmpty;
+      renderClozeUI();
+    }
+
+    function handleClozeInput(bIdx, val) {
+      if (activeCheckpointSolved) return;
+      currentClozeState.values[bIdx] = String(val == null ? '' : val);
+      const box = document.getElementById('clozePassageBox');
+      if (box) box.classList.remove('wrong-ans', 'shake');
+    }
+
+    function clearClozeAll() {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      const blanks = activeCheckpoint.blanks || [];
+      currentClozeState.values = new Array(blanks.length).fill('');
+      currentClozeState.bankIndices = new Array(blanks.length).fill(null);
+      currentClozeState.activeBlank = 0;
+      renderClozeUI();
+    }
+
+    function handleInstantCloze() {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      const cp = activeCheckpoint;
+      const blanks = cp.blanks || [];
+      const hasBank = Array.isArray(cp.wordBank) && cp.wordBank.length > 0;
+      const totalQ = checkpoints.length;
+      const cpNum = getCheckpointOrderNumber(cp);
+
+      if (!hasBank) {
+        blanks.forEach((_, idx) => {
+          const inp = document.getElementById(`cloze-inp-${idx}`);
+          if (inp) currentClozeState.values[idx] = inp.value;
+        });
+      }
+
+      const emptyNums = [];
+      blanks.forEach((_, idx) => {
+        if (!String(currentClozeState.values[idx] || '').trim()) {
+          emptyNums.push(`(${idx + 1})`);
+        }
+      });
+
+      if (emptyNums.length > 0) {
+        hideExplanation();
+        showFeedbackBanner(false, `Em hãy điền đầy đủ tất cả ${blanks.length} chỗ trống (còn trống vị trí <strong>${emptyNums.join(', ')}</strong>) trước khi bấm Kiểm tra nhé!`);
+        const firstEmptyIdx = blanks.findIndex((_, idx) => !String(currentClozeState.values[idx] || '').trim());
+        if (firstEmptyIdx >= 0) {
+          if (hasBank) {
+            currentClozeState.activeBlank = firstEmptyIdx;
+            renderClozeUI();
+          } else {
+            const inp = document.getElementById(`cloze-inp-${firstEmptyIdx}`);
+            if (inp) inp.focus();
+          }
+        }
+        return;
+      }
+
+      let correctBlanks = 0;
+      blanks.forEach((spec, idx) => {
+        if (isFillAnswerMatch(currentClozeState.values[idx], spec)) {
+          correctBlanks++;
+        }
+      });
+
+      const qStat = ensureQuestionStat(cp.id);
+      const box = document.getElementById('clozePassageBox');
+      if (box) box.classList.remove('shake');
+
+      if (correctBlanks === blanks.length) {
+        activeCheckpointSolved = true;
+        AudioFX.playSuccess();
+        triggerConfettiMini();
+        qStat.points = 1;
+        qStat.passed = true;
+
+        renderClozeUI();
+        showFeedbackBanner(true, `CHÍNH XÁC! Em đã hoàn thành đúng cả ${blanks.length}/${blanks.length} vị trí điền khuyết (+1 điểm)!`);
+        showExplanation(cp.explanation);
+        finalizeCheckpointMastery(cp, qStat.wrongCount, 6);
+      } else {
+        hideExplanation();
+        const sig = currentClozeState.values.map(v => normalizeAnswerToken(v)).join('||');
+        if (qStat.lastWrongVal !== sig) {
+          qStat.wrongCount++;
+          qStat.lastWrongVal = sig;
+        }
+        AudioFX.playWrong();
+        if (box) {
+          void box.offsetWidth;
+          box.classList.add('wrong-ans', 'shake');
+        }
+        showFeedbackBanner(false, `Chưa hoàn toàn chính xác! Em đã điền đúng <strong>${correctBlanks}/${blanks.length}</strong> chỗ trống. Hãy kiểm tra lại các vị trí hoặc bấm "⏪ Xem lại 30s bài giảng" nhé!`);
+        document.getElementById('btnReview30s').style.display = 'inline-block';
+        saveStudentProgressLocally();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đang điền lại Trạm ${cpNum}/${totalQ} - đúng ${correctBlanks}/${blanks.length} chỗ trống, sai lần ${qStat.wrongCount})`);
+      }
+    }
+
+    // 7.10. classify: Phân Loại Thẻ Vào 2-4 Nhóm Kiến Thức
+    function pickNextUnassignedClassifyItem() {
+      const order = currentClassifyState.itemOrder || [];
+      for (const idx of order) {
+        if (currentClassifyState.assignments[idx] === undefined) return idx;
+      }
+      return null;
+    }
+
+    function renderClassifyUI(container) {
+      const cp = activeCheckpoint;
+      const cArea = container || document.getElementById('quizContentArea');
+      if (!cp || !cArea) return;
+      const cats = cp.categories || [];
+      const items = cp.items || [];
+      const unassigned = currentClassifyState.itemOrder.filter(idx => currentClassifyState.assignments[idx] === undefined);
+
+      if (currentClassifyState.activeItem !== null && currentClassifyState.assignments[currentClassifyState.activeItem] !== undefined) {
+        currentClassifyState.activeItem = pickNextUnassignedClassifyItem();
+      }
+      if (currentClassifyState.activeItem === null && unassigned.length > 0) {
+        currentClassifyState.activeItem = unassigned[0];
+      }
+
+      let bankHtml = '';
+      if (!activeCheckpointSolved) {
+        const tilesHtml = unassigned.length > 0
+          ? unassigned.map(idx => {
+              const isAct = (currentClassifyState.activeItem === idx);
+              return `<button type="button" class="drag-tile ${isAct ? 'active-classify-tile' : ''}" id="classify-bank-${idx}" onclick="selectClassifyBankItem(${idx})">${escapeHtml(items[idx].text)}</button>`;
+            }).join('')
+          : '<span class="drag-slot-placeholder">✅ Đã xếp hết thẻ vào các nhóm! Em hãy kiểm tra lại rồi bấm "Kiểm tra kết quả" nhé.</span>';
+        const hintText = (currentClassifyState.activeItem !== null)
+          ? '👇 Thẻ đang sáng màu vàng — chạm vào Nhóm bên dưới để thả thẻ vào đó:'
+          : '💡 Chạm vào thẻ bất kỳ trong các nhóm bên dưới nếu em muốn đưa thẻ trở lại ngân hàng:';
+        bankHtml = `
+          <div class="classify-bank-box">
+            <div class="classify-bank-hint">${hintText}</div>
+            <div class="drag-tiles-bank" style="margin-bottom:0;">${tilesHtml}</div>
+          </div>
+        `;
+      }
+
+      let bucketsHtml = '';
+      cats.forEach((catName, cIdx) => {
+        const assignedIndices = currentClassifyState.itemOrder.filter(idx => currentClassifyState.assignments[idx] === cIdx);
+        const chipsHtml = assignedIndices.length > 0
+          ? assignedIndices.map(idx => {
+              const chipCls = activeCheckpointSolved ? 'correct-ans' : '';
+              const xMark = activeCheckpointSolved ? '' : ' ✕';
+              return `<button type="button" class="classify-chip ${chipCls}" ${activeCheckpointSolved ? 'disabled' : ''} onclick="event.stopPropagation(); unassignClassifyItem(${idx})" title="Chạm để bỏ thẻ này ra">${escapeHtml(items[idx].text)}${xMark}</button>`;
+            }).join('')
+          : '<span class="drag-slot-placeholder">Chạm vào đây để xếp thẻ...</span>';
+        bucketsHtml += `
+          <div class="classify-bucket-card ${activeCheckpointSolved ? 'correct-ans' : ''}" id="classify-bucket-${cIdx}" onclick="assignClassifyBucket(${cIdx})">
+            <div class="classify-bucket-title">${escapeHtml(catName)}</div>
+            <div class="classify-bucket-items">${chipsHtml}</div>
+          </div>
+        `;
+      });
+
+      cArea.innerHTML = `
+        ${bankHtml}
+        <div class="classify-buckets-grid" id="classifyBucketsGrid">
+          ${bucketsHtml}
+        </div>
+        <div class="drag-actions-row">
+          <button type="button" class="btn-check-fill" id="btnCheckClassify" ${activeCheckpointSolved ? 'disabled' : ''} onclick="handleInstantClassify()">Kiểm tra kết quả ✔️</button>
+          <button type="button" class="btn-clear-drag" id="btnClearClassify" ${activeCheckpointSolved ? 'disabled' : ''} onclick="clearClassifyAll()">↺ Phân loại lại</button>
+        </div>
+      `;
+      renderMathInContainer(cArea);
+    }
+
+    function selectClassifyBankItem(itemIdx) {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      currentClassifyState.activeItem = itemIdx;
+      renderClassifyUI();
+    }
+
+    function assignClassifyBucket(catIdx) {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      if (currentClassifyState.activeItem === null) return;
+      currentClassifyState.assignments[currentClassifyState.activeItem] = catIdx;
+      currentClassifyState.activeItem = pickNextUnassignedClassifyItem();
+      renderClassifyUI();
+    }
+
+    function unassignClassifyItem(itemIdx) {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      delete currentClassifyState.assignments[itemIdx];
+      currentClassifyState.activeItem = itemIdx;
+      renderClassifyUI();
+    }
+
+    function clearClassifyAll() {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      currentClassifyState.assignments = {};
+      currentClassifyState.activeItem = currentClassifyState.itemOrder.length > 0 ? currentClassifyState.itemOrder[0] : null;
+      renderClassifyUI();
+    }
+
+    function handleInstantClassify() {
+      if (activeCheckpointSolved || !activeCheckpoint) return;
+      const cp = activeCheckpoint;
+      const items = cp.items || [];
+      const totalQ = checkpoints.length;
+      const cpNum = getCheckpointOrderNumber(cp);
+
+      const assignedCount = Object.keys(currentClassifyState.assignments).length;
+      if (assignedCount < items.length) {
+        hideExplanation();
+        showFeedbackBanner(false, `Em mới xếp <strong>${assignedCount}/${items.length}</strong> thẻ. Hãy phân loại hết các thẻ ở ngân hàng phía trên vào các nhóm trước khi bấm Kiểm tra nhé!`);
+        return;
+      }
+
+      let correctItems = 0;
+      items.forEach((it, idx) => {
+        if (Number(currentClassifyState.assignments[idx]) === Number(it.category)) {
+          correctItems++;
+        }
+      });
+
+      const qStat = ensureQuestionStat(cp.id);
+      const grid = document.getElementById('classifyBucketsGrid');
+      if (grid) grid.classList.remove('shake');
+
+      if (correctItems === items.length) {
+        activeCheckpointSolved = true;
+        AudioFX.playSuccess();
+        triggerConfettiMini();
+        qStat.points = 1;
+        qStat.passed = true;
+
+        renderClassifyUI();
+        showFeedbackBanner(true, `CHÍNH XÁC! Em đã phân loại đúng toàn bộ ${items.length}/${items.length} thẻ kiến thức (+1 điểm)!`);
+        showExplanation(cp.explanation);
+        finalizeCheckpointMastery(cp, qStat.wrongCount, 6);
+      } else {
+        hideExplanation();
+        const sig = items.map((_, i) => `${i}:${currentClassifyState.assignments[i]}`).join('|');
+        if (qStat.lastWrongVal !== sig) {
+          qStat.wrongCount++;
+          qStat.lastWrongVal = sig;
+        }
+        AudioFX.playWrong();
+        if (grid) {
+          void grid.offsetWidth;
+          grid.classList.add('wrong-ans', 'shake');
+        }
+        showFeedbackBanner(false, `Chưa hoàn toàn chính xác! Hiện có <strong>${correctItems}/${items.length}</strong> thẻ đã xếp đúng nhóm. Em hãy chạm vào thẻ cần đổi để đưa ra rồi xếp lại, hoặc bấm "⏪ Xem lại 30s bài giảng" nhé!`);
+        document.getElementById('btnReview30s').style.display = 'inline-block';
+        saveStudentProgressLocally();
+        syncProgressToGoogleSheets(`🟡 Đang học (Đang phân loại lại Trạm ${cpNum}/${totalQ} - đúng ${correctItems}/${items.length} thẻ, sai lần ${qStat.wrongCount})`);
       }
     }
 
