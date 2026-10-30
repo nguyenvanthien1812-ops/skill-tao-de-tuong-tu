@@ -10,6 +10,9 @@
 > 2. **QUY TẮC SƯ PHẠM MASTERY GATE (VƯỢT TRẠM ĐẾN KHI ĐÚNG):**
 >    - **Khi học sinh trả lời SAI:** **TUYỆT ĐỐI KHÔNG hiện hộp `💡 Hướng dẫn & Giải thích`** (`hideExplanation()`), không lộ đáp án đúng, hiện nút **`⏪ Xem lại 30s bài giảng`** để học sinh tự suy nghĩ làm lại đến khi đúng (câu Đúng/Sai khóa nút còn lại 3 giây suy ngẫm chống bấm bừa 2 nút liên tiếp).
 >    - **CHỈ khi học sinh trả lời ĐÚNG:** Mới hiện hộp **`💡 Hướng dẫn & Giải thích`**, cộng trọn **`+1 điểm` (1 câu hoàn thành)** và mở nút **`Tiếp tục bài học ▶️ (6s)`** để mọi học sinh kiên trì học hết video đều đạt chuẩn Hoàn thành $\ge 80\%$ (kèm thống kê số câu đúng ngay lần đầu cho Thầy Cô).
+> 3. **QUY TẮC BẢO MẬT & ĐỔI MẬT KHẨU CHẾ ĐỘ THẦY CÔ (`TEACHER_PASSWORD`):**
+>    - Cho phép giáo viên đặt mật khẩu riêng qua tham số `teacher_password="..."` trong `build_interactive_video_html()` (mặc định là `'123456'` nếu giáo viên không chỉ định), hoặc đổi mật khẩu trong 1 giây cho bài giảng/thư mục Netlify đã tạo sẵn bằng `update_teacher_password(target_path, new_password)` (CLI: `python scripts/interactive_video_builder.py --set-password "<MAT_KHAU_MOI>" "<DUONG_DAN_FILE_HOAC_THU_MUC>"`).
+>    - **BẢO MẬT TUYỆT ĐỐI:** Trên giao diện HTML (`#teacherPwd`), **TUYỆT ĐỐI KHÔNG bao giờ ghi `placeholder="Mặc định: 123456"`** hay gợi ý mật khẩu trên màn hình để học sinh bấm vào không thể nhìn thấy mật mã mở khóa tua nhanh!
 
 **Video Tương Tác E-Learning** là một file HTML độc lập (single-file, không cần server riêng) cho phép giáo viên:
 
@@ -51,11 +54,13 @@ Khi giáo viên nói một trong các câu sau, agent hiểu cần thực hiện
    "Em hãy tạo video tương tác e-learning cho Bài [tên bài], [môn] lớp [X].
     Link YouTube: [https://youtu.be/VIDEO_ID]
     Link Google Sheets: [https://docs.google.com/spreadsheets/d/SHEET_ID/edit]
+    Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: Thien2026 - nếu để trống mặc định là 123456]
     Bài có [N] câu hỏi tương tác, học sinh không tua nhanh được.
     Kết quả học sinh tự động ghi vào Google Sheets của thầy/cô."
 
 🟢 CÂU LỆNH 2 — Tạo với danh sách câu hỏi cụ thể:
    "Em hãy tạo video tương tác cho video YouTube [VIDEO_ID].
+    Mật khẩu Chế độ Thầy Cô: [Mật khẩu riêng của thầy/cô, ví dụ: 246810]
     Các câu hỏi như sau (thầy/cô sẽ ghi rõ từng câu):
     - Câu 1 (tại phút 3:10): [nội dung câu hỏi trắc nghiệm A/B/C/D]
     - Câu 2 (tại phút 5:00): [câu hỏi đúng/sai]
@@ -66,6 +71,9 @@ Khi giáo viên nói một trong các câu sau, agent hiểu cần thực hiện
    "Em hãy thêm 2 câu hỏi mới vào video tương tác [tên bài] đã làm:
     - Câu mới 1 (tại phút 8:00): Câu trắc nghiệm — [nội dung]
     - Câu mới 2 (tại phút 9:30): Câu điền số — đáp án = [N]"
+
+🟢 CÂU LỆNH 4 — Đổi mật khẩu Chế độ Thầy Cô cho bài giảng đã tạo sẵn:
+   "Em hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng [tên bài hoặc đường dẫn thư mục Web_Video_Tuong_Tac_...] thành [Mật khẩu mới, ví dụ: Toan6@2026] giúp thầy/cô."
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
@@ -86,6 +94,7 @@ Agent hỏi GV (nếu chưa có) những thông tin sau:
 | Link Google Sheets | `https://docs.google.com/spreadsheets/d/1ZYZ.../edit` → SHEET_ID = `1ZYZ...` |
 | Số câu hỏi & thời điểm | 7 câu, tại các phút: 3:10, 4:15, 7:25, 8:50, 10:00, 11:35, 13:15 |
 | Nội dung từng câu hỏi | GV cung cấp, hoặc agent đề xuất dựa trên nội dung bài |
+| Mật khẩu Chế độ Thầy Cô *(tùy chọn)* | Mặc định `123456` — khuyên GV đặt mật khẩu riêng (ví dụ `Thien2026`, `246810`) |
 
 ---
 
@@ -475,6 +484,28 @@ Hỗ trợ cả chạm chọn 1 thẻ (`multiSelect: false`) hoặc ghép chuỗ
   - Thanh tiến độ mở khóa hoàn toàn: Thầy Cô có thể click hoặc kéo tua đến bất kỳ giây nào.
   - Xuất hiện danh sách các nút **[Trạm 1: 03:10] [Trạm 2: 04:15]...** để bấm vào là video nhảy ngay đến đúng trạm và bật câu hỏi kiểm tra lập tức!
   - Bấm nút **"🔒 Tắt Chế độ Thầy Cô"** để khóa lại như học sinh.
+
+#### 🔑 3 Cách Thay Đổi Mật Khẩu Chế Độ Thầy Cô (Dành Cho Giáo Viên)
+
+> **Lưu ý bảo mật:** Ô nhập mật mã trên giao diện học sinh (`#teacherPwd`) đã được ẩn hoàn toàn mọi gợi ý mật khẩu mặc định để học sinh bấm vào nút `⚙️ Thầy Cô: TẮT` cũng không thể nhìn thấy hay đoán được mật khẩu.
+
+1. **Cách 1 — Đặt mật khẩu riêng ngay từ đầu khi tạo video bằng AI *(Khuyên dùng)*:**
+   - Trong câu lệnh gửi AI khi tạo bài giảng mới, Thầy/Cô chỉ cần thêm 1 dòng:
+     `- Mật khẩu Chế độ Thầy Cô: [Mật khẩu riêng, ví dụ: Thien2026]`
+   - Agent truyền trực tiếp vào tham số `teacher_password="Thien2026"` của hàm `build_interactive_video_html()`.
+2. **Cách 2 — Nhờ AI đổi mật khẩu cho bài giảng đã tạo sẵn *(Chỉ mất 3 giây)*:**
+   - Giáo viên gõ câu lệnh ngắn vào khung chat Antigravity:
+     ```text
+     Hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng tại thư mục "[Đường dẫn thư mục Web_Video_Tuong_Tac_...]" thành "[Mật khẩu mới]" giúp tôi.
+     ```
+   - Agent gọi hàm `update_teacher_password(target_path, new_password)` (hoặc chạy lệnh `python scripts/interactive_video_builder.py --set-password "<MẬT_KHẨU_MỚI>" "<ĐƯỜNG_DẪN_THƯ_MỤC_HOẶC_FILE_HTML>"`) để cập nhật ngay file `index.html`.
+   - Sau đó Thầy/Cô chỉ cần **kéo thả lại thư mục đó vào mục Deploys trên Netlify** (3 giây) là trang web cập nhật mật khẩu mới ngay mà **vẫn giữ nguyên đường link cũ** đã gửi cho học sinh!
+3. **Cách 3 — Giáo viên tự đổi thủ công trên máy tính *(10 giây, không cần mở AI)*:**
+   - **Bước 1:** Mở thư mục bài giảng trên máy tính (ví dụ `Web_Video_Tuong_Tac_Toan6` ngoài Desktop), nhấp **chuột phải** vào file `index.html` $\to$ chọn **Open with (Mở bằng) $\to$ Notepad**.
+   - **Bước 2:** Nhấn tổ hợp phím **`Ctrl + F`**, gõ `TEACHER_PASSWORD` rồi nhấn **Enter** để nhảy tới dòng:
+     `const TEACHER_PASSWORD = '123456';`
+   - **Bước 3:** Sửa số `123456` bên trong cặp dấu nháy đơn `'...'` thành mật khẩu mới của Thầy/Cô (ví dụ: `const TEACHER_PASSWORD = '246810';`).
+   - **Bước 4:** Nhấn **`Ctrl + S`** lưu lại $\to$ Kéo thả lại thư mục bài giảng vào mục **Deploys** trên Netlify để cập nhật lên web!
 
 ### G. Tự Động Bảo Lưu Tiến Độ (Smart Auto-Resume)
 

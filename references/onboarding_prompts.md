@@ -579,7 +579,7 @@ Agent tự động thực thi tiến trình cập nhật từ GitHub:
    python scripts/sync_skill.py
    ```
 2. Xuất thông báo hoàn tất:
-   > "🎉 **ĐÃ CẬP NHẬT LÊN PHIÊN BẢN v6.2.0 THÀNH CÔNG!**  
+   > "🎉 **ĐÃ CẬP NHẬT LÊN PHIÊN BẢN v6.3.4 THÀNH CÔNG!**  
    > - Đã tải toàn bộ tính năng mới nhất từ GitHub về máy tính.  
    > - Đã cập nhật tính năng Tạo file nghe MP3 Tiếng Anh chuẩn phòng thi (khớp 100% câu hỏi), Soạn giáo án chuẩn Phụ lục III / PPCT và các công cụ bổ trợ.  
    > 
@@ -616,6 +616,48 @@ Agent xuất ngay phản hồi ân cần, chi tiết theo 3 trường hợp th�
 > Em hãy chuyển toàn bộ phần Tapescript trong file "[Dán đường dẫn file]" thành file nghe MP3 chuẩn phòng thi cho học sinh [Lớp ...].
 > Yêu cầu: Giữ nguyên 100% câu chữ trong Tapescript, phân vai giọng đọc Nam/Nữ bản xứ tự nhiên, thêm nhạc hiệu (chime), khoảng nghỉ đọc đề và phát lặp lại 2 lần.
 > ```"
+
+
+---
+
+#### 1️⃣7️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn tạo video tương tác" HOẶC "đổi mật khẩu chế độ thầy cô" (hoặc "làm video có câu hỏi tương tác", "video chống tua nhanh", "tạo video e-learning", "video ghi điểm vào google sheet"...)
+
+Agent xuất ngay phản hồi "cầm tay chỉ việc" rõ ràng từ A–Z:
+> "Dạ chào Thầy/Cô! Tính năng **Tạo Video Tương Tác E-Learning (Chống Tua Nhanh + 4 Dạng Câu Hỏi Nhúng + Tự Phân Tab Lớp Trên Google Sheets + Chuẩn Đạt $\ge$ 80%)** giúp Thầy/Cô biến video bài giảng YouTube thành trang học tập trực tuyến chuyên nghiệp: học sinh **không thể tua nhanh**, trả lời **SAI không bị lộ lời giải thích** (chỉ khi tự làm **ĐÚNG** mới mở lời giải thích và cộng trọn `+1 điểm`), kết quả tự động tách riêng từng lớp (`6A`, `6B`...) trên Google Sheets.
+>
+> Thầy/Cô chọn mẫu câu lệnh phù hợp bên dưới, điền thông tin và gửi cho em nhé:
+> ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+> 🟢 **MẪU 1 — CHỈ CẦN LINK YOUTUBE, AI TỰ SOẠN CÂU HỎI TƯƠNG TÁC (Nhanh nhất):**
+> ```text
+> Em hãy tạo cho tôi 1 trang Web Video Tương Tác E-Learning với thông tin sau:
+> - Môn & Lớp: [Ví dụ: Toán 6 - SGK Kết nối tri thức]
+> - Tên bài học: [Ví dụ: Bài 6 - Lũy thừa với số mũ tự nhiên]
+> - Giáo viên & Trường: [Ví dụ: GV Nguyễn Thiện - THCS Ứng Hòe]
+> - Link video YouTube bài giảng: [Dán link YouTube vào đây]
+> - Độ dài video: [Ví dụ: 14 phút 20 giây]
+> - Link Web App Google Sheets (nếu đã tạo, nếu chưa có hãy ghi "Hướng dẫn tôi tạo"): [Dán link /exec hoặc ghi "Hướng dẫn tôi tạo"]
+> - Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu bí mật riêng của Thầy/Cô, ví dụ: Thien2026 - nếu để trống mặc định là 123456]
+> - Yêu cầu: Tự thiết kế [5 - 7] câu hỏi tương tác (kết hợp Trắc nghiệm, Đúng/Sai, Điền đáp án, Ghép thẻ) rải đều theo mạch bài giảng; đóng gói thư mục chuẩn sẵn ngoài Desktop để tôi kéo thả lên Netlify.
+> ```
+>
+> 🔵 **MẪU 2 — GIÁO VIÊN ĐÃ CÓ SẴN CÂU HỎI & MỐC PHÚT DỪNG VIDEO:**
+> ```text
+> Em hãy tạo trang Web Video Tương Tác E-Learning với danh sách câu hỏi tôi soạn sẵn:
+> - Môn & Lớp: [...] - Tên bài học: [...]
+> - Giáo viên & Trường: [...]
+> - Link video YouTube: [Dán link YouTube]
+> - Link Web App Google Sheets: [Dán link /exec hoặc ghi "Hướng dẫn tôi tạo"]
+> - Mật khẩu Chế độ Thầy Cô: [Mật khẩu riêng của Thầy/Cô, ví dụ: 246810]
+> - Danh sách các trạm câu hỏi:
+>   + Trạm 1 (phút 03:10 - Trắc nghiệm): [Nội dung câu hỏi + A, B, C, D + Đáp án + Giải thích]
+>   + Trạm 2 (phút 05:20 - Đúng/Sai): [Nội dung mệnh đề + Đáp án Đúng/Sai + Giải thích]
+>   + Trạm 3 (phút 08:00 - Điền đáp án): [Nội dung câu hỏi + Đáp án số + Giải thích]
+> ```
+>
+> 🔑 **MẪU 3 — ĐỔI MẬT KHẨU CHẾ ĐỘ THẦY CÔ CHO BÀI GIẢNG ĐÃ TẠO SẴN:**
+> - **Cách A (Nhờ AI đổi trong 3 giây):** Gửi câu lệnh:
+>   `Em hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng tại thư mục "[Đường dẫn thư mục bài giảng trên Desktop]" thành "[Mật khẩu mới]" giúp tôi.`
+> - **Cách B (Thầy/Cô tự đổi trong 10 giây bằng Notepad):** Mở thư mục bài giảng $\to$ chuột phải vào file `index.html` $\to$ **Open with $\to$ Notepad** $\to$ nhấn `Ctrl + F` tìm `TEACHER_PASSWORD` $\to$ sửa `'123456'` thành mật khẩu mới trong dấu nháy đơn $\to$ nhấn `Ctrl + S` lưu lại $\to$ kéo thả lại thư mục vào Netlify!"
 
 
 ### 🗣️ Luồng Hội Thoại Thông Minh — AI Hỏi Đúng Thứ Gì Còn Thiếu

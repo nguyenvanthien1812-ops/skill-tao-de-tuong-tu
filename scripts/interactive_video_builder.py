@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 =============================================================================
-MODULE: interactive_video_builder.py (v6.3.3 - Mastery Gate & Future-Proof QA Gate)
+MODULE: interactive_video_builder.py (v6.3.4 - Mastery Gate, Secure Teacher Password & QA Gate)
 HỆ THỐNG TỰ ĐỘNG TẠO VIDEO TƯƠNG TÁC E-LEARNING (CHUẨN GDPT 2018)
 - Bộ kiểm định chất lượng sư phạm tự động (Checkpoint QA Validator cho cả 4 dạng: mcq, tf, fill, drag)
 - Khóa chống tua nhanh 100% (Anti-Skip System) & Chặn YouTube phát ngầm khi mở câu hỏi
@@ -10,7 +10,7 @@ HỆ THỐNG TỰ ĐỘNG TẠO VIDEO TƯƠNG TÁC E-LEARNING (CHUẨN GDPT 2018
 - Tiêu chuẩn hoàn thành bài học công bằng (Mastery Threshold >= 80% số câu hoàn thành + thống kê số câu đúng ngay lần đầu)
 - Tự động bảo lưu tiến độ khi rớt mạng (Smart Auto-Resume)
 - Đổi tên & lớp học sinh 1-chạm
-- Chế độ Thầy Cô kiểm duyệt (Teacher Preview Mode - Mật mã 123456)
+- Chế độ Thầy Cô kiểm duyệt (Teacher Preview Mode - cho phép đặt/đổi mật khẩu riêng, ẩn hoàn toàn gợi ý mật khẩu khỏi màn hình học sinh)
 - Đồng bộ Google Sheets tự động tách tab từng lớp (Apps Script V4)
 =============================================================================
 """
@@ -187,9 +187,19 @@ def build_interactive_video_html(
         lambda _: f"const LOCAL_VIDEO_PATH = '{local_video_path}';",
         html
     )
+    safe_js_pwd = str(teacher_password if teacher_password is not None else "123456").strip()
+    if not safe_js_pwd:
+        safe_js_pwd = "123456"
+    safe_js_pwd_escaped = safe_js_pwd.replace("\\", "\\\\").replace("'", "\\'")
     html = re.sub(
         r"const TEACHER_PASSWORD = '.*?';",
-        lambda _: f"const TEACHER_PASSWORD = '{teacher_password}';",
+        lambda _: f"const TEACHER_PASSWORD = '{safe_js_pwd_escaped}';",
+        html
+    )
+    # Bảo mật: Không bao giờ để lộ mật khẩu mặc định trong placeholder mà học sinh nhìn thấy
+    html = re.sub(
+        r'(<input[^>]*id="teacherPwd"[^>]*?)placeholder="Mặc định:[^"]*"',
+        r'\1placeholder="Nhập mật mã bảo mật dành riêng cho Thầy Cô..."',
         html
     )
     html = re.sub(
@@ -229,5 +239,66 @@ def package_netlify_folder(html_content: str, folder_path: str):
     return folder_path
 
 
+def update_teacher_password(target_path: str, new_password: str) -> str:
+    """
+    Đổi nhanh mật khẩu Chế độ Thầy Cô (TEACHER_PASSWORD) cho file HTML hoặc thư mục Netlify (chứa index.html) đã tạo sẵn,
+    đồng thời xóa bỏ mọi placeholder lộ mật khẩu mặc định trên giao diện học sinh.
+    """
+    clean_pwd = str(new_password if new_password is not None else "").strip()
+    if not clean_pwd:
+        raise ValueError("Mật khẩu mới không được để trống!")
+
+    resolved_path = os.path.abspath(target_path)
+    if os.path.isdir(resolved_path):
+        html_file = os.path.join(resolved_path, "index.html")
+    else:
+        html_file = resolved_path
+
+    if not os.path.exists(html_file):
+        raise FileNotFoundError(f"Không tìm thấy file bài giảng HTML tại: {html_file}")
+
+    with open(html_file, "r", encoding="utf-8") as f:
+        html = f.read()
+
+    if "const TEACHER_PASSWORD" not in html:
+        raise ValueError(f"File {html_file} không chứa cấu hình TEACHER_PASSWORD của Video Tương Tác!")
+
+    safe_js_pwd_escaped = clean_pwd.replace("\\", "\\\\").replace("'", "\\'")
+    html = re.sub(
+        r"const TEACHER_PASSWORD = '.*?';",
+        lambda _: f"const TEACHER_PASSWORD = '{safe_js_pwd_escaped}';",
+        html
+    )
+    html = re.sub(
+        r'(<input[^>]*id="teacherPwd"[^>]*?)placeholder="Mặc định:[^"]*"',
+        r'\1placeholder="Nhập mật mã bảo mật dành riêng cho Thầy Cô..."',
+        html
+    )
+
+    with open(html_file, "w", encoding="utf-8") as f:
+        f.write(html)
+
+    print(f"🔑 Đã cập nhật mật khẩu Chế độ Thầy Cô thành công tại: {html_file}")
+    return html_file
+
+
 if __name__ == "__main__":
-    print("Module interactive_video_builder with QA Gate ready.")
+    import argparse
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
+    parser = argparse.ArgumentParser(description="Công cụ tạo & quản trị Video Tương Tác E-Learning")
+    parser.add_argument(
+        "--set-password",
+        nargs=2,
+        metavar=("NEW_PASSWORD", "TARGET_HTML_OR_FOLDER"),
+        help="Đổi mật khẩu Chế độ Thầy Cô cho file HTML hoặc thư mục Netlify có sẵn"
+    )
+    args = parser.parse_args()
+    if args.set_password:
+        new_pwd, target = args.set_password
+        update_teacher_password(target, new_pwd)
+    else:
+        print("Module interactive_video_builder (v6.3.4) with QA Gate & Teacher Password Manager ready.")

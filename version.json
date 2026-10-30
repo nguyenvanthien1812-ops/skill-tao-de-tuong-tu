@@ -1,11 +1,16 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.3.3",
+  "version": "6.3.4",
   "release_date": "2026-10-30",
   "description": "Siêu Skill Toàn Năng GDPT 2018 (7-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Tạo đề Tiếng Anh & xuất file nghe MP3 chuẩn khảo thí + Soạn giáo án tích hợp NLS & AI + Soạn Slide PowerPoint 16:9 + Video khởi động Veo 3 + Video Tương Tác E-Learning (chống tua nhanh, tự phân lớp Google Sheets, chuẩn đạt 80%).",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "6.3.4": [
+      "BẢO MẬT & TÙY CHỈNH MẬT KHẨU CHẾ ĐỘ THẦY CÔ (v6.3.4 - templates/video_tuong_tac_template.html & scripts/interactive_video_builder.py): Xóa bỏ gợi ý placeholder 'Mặc định: 123456' trong ô nhập mật mã #teacherPwd để học sinh bấm vào nút Thầy Cô không bao giờ nhìn thấy mật khẩu mở khóa tua nhanh.",
+      "BỔ SUNG CÔNG CỤ ĐỔI MẬT KHẨU 1-CLICK (update_teacher_password & CLI --set-password): Cho phép đổi nhanh mật khẩu Chế độ Thầy Cô cho mọi file HTML hoặc thư mục Netlify đã tạo sẵn chỉ trong 1 giây mà không cần sinh lại câu hỏi.",
+      "CẬP NHẬT ĐỒNG BỘ 4 TÀI LIỆU HƯỚNG DẪN SKILL (SKILL.md, references/tao_video_tuong_tac.md, references/onboarding_prompts.md mục 17, HUONG_DAN_SU_DUNG_CHO_GIAO_VIEN.md Nhóm 7): Bổ sung dòng tùy chọn Mật khẩu Chế độ Thầy Cô vào toàn bộ mẫu câu lệnh (Prompt) và hướng dẫn chi tiết 3 cách đặt/đổi mật khẩu dành cho giáo viên."
+    ],
     "6.3.3": [
       "CƠ CHẾ VƯỢT TRẠM ĐẾN KHI ĐÚNG & CHỈ HIỆN GIẢI THÍCH KHI TRẢ LỜI ĐÚNG (MASTERY GATE v6.3.3 - templates/video_tuong_tac_template.html): Khi học sinh chọn/nhập SAI ở bất kỳ dạng câu hỏi nào (MCQ, Đúng/Sai, Điền số, Ghép thẻ), hệ thống TUYỆT ĐỐI KHÔNG hiện hộp Hướng dẫn & Giải thích (chống lộ đáp án), chỉ báo chưa chính xác và hiện nổi bật nút Xem lại 30s bài giảng (riêng câu Đúng/Sai khóa nút còn lại 3 giây suy ngẫm chống bấm bừa 2 nút liên tiếp).",
       "CHUẨN HOÀN THÀNH BÀI HỌC >= 80% CÔNG BẰNG & HỢP LÝ 100%: Học sinh bắt buộc tự trả lời ĐÚNG mới mở khóa hộp Giải thích + nút Tiếp tục bài học (6s) và được cộng trọn +1 điểm (1 câu hoàn thành). Mọi học sinh kiên trì học hết video và vượt qua đủ các trạm đều chắc chắn đạt chuẩn Hoàn thành bài học (100% >= 80%), đồng thời hệ thống vẫn thống kê riêng số câu trả lời đúng ngay lần đầu tiên trên màn hình tổng kết và Sổ điểm Google Sheets.",

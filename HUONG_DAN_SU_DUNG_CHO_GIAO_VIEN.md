@@ -192,6 +192,7 @@ Biến các hình vẽ tĩnh, sơ đồ thí nghiệm trong SGK thành phòng th
 "Em hãy tạo video tương tác e-learning cho Bài [X] môn [Toán/Lý/Hóa] lớp [Y].
 Link YouTube: [Link YouTube]
 Link Google Sheets: [Link Google Sheets]
+Mật khẩu Chế độ Thầy Cô: [Nhập mật khẩu riêng, ví dụ: Thien2026 - để trống mặc định là 123456]
 Yêu cầu học sinh không tua nhanh được, đạt từ 80% trở lên mới tính hoàn thành."
 ```
 
@@ -201,10 +202,21 @@ Yêu cầu học sinh không tua nhanh được, đạt từ 80% trở lên mớ
 * 🛡️ **Giấu giải thích khi sai — Chỉ mở giải thích khi ĐÚNG:** Khi trả lời sai, hệ thống **tuyệt đối không lộ đáp án hay lời giải thích**, chỉ nhắc suy nghĩ lại kèm nút `⏪ Xem lại 30s bài giảng` (câu Đúng/Sai có 3 giây suy ngẫm chống bấm bừa 2 nút liên tiếp). Chỉ khi trả lời **ĐÚNG** mới mở hộp `💡 Hướng dẫn & Giải thích` để khắc sâu kiến thức.
 * 📱 **Tối ưu di động tràn màn hình:** Bảng câu hỏi tự động phóng to toàn màn hình điện thoại, nút bấm $\ge 48\text{px}$ chuẩn ngón tay chạm, chống co giật màn hình trên iPhone.
 * 👤 **Đổi tên & lớp trực tiếp:** Nút `👤 Tên (Lớp) ✏️ Đổi` trên thanh tiêu đề cho phép sửa nhanh lỗi gõ sai tên/lớp hoặc cho bạn khác mượn máy học (reset lượt làm bài độc lập).
-* ⚙️ **Chế độ Thầy Cô (Mật khẩu: `123456`):** Mở khóa tua tự do và các nút nhảy nhanh tới từng trạm câu hỏi để giáo viên duyệt bài trước khi giao cho học sinh.
+
 * 🔄 **Tự động nhớ tiến độ:** Rớt mạng, reload F5 hoặc hết pin mở lại sẽ hỏi tiếp tục học từ giây đang xem dở, không mất điểm.
 * 📊 **Google Sheets tự động tách tab:** Mỗi lớp 1 tab riêng (`6A`, `6B`...), tự sinh tab mới khi có lớp mới vào, mỗi học sinh đúng 1 dòng duy nhất, kèm bảng thống kê thời gian thực (Sĩ số, Hoàn thành, Điểm TB).
+* ⚙️ **Chế độ Thầy Cô (Bảo mật mật khẩu riêng — mặc định `123456`):** Mở khóa tua tự do và các nút nhảy nhanh tới từng trạm câu hỏi để giáo viên duyệt bài trước khi giao cho học sinh (ô nhập mật mã trên màn hình học sinh ẩn hoàn toàn gợi ý mật khẩu để học sinh không thể đoán được).
 * 🌐 **Đóng gói Netlify Drop 3 giây:** Tự động tạo thư mục chứa `index.html`, chỉ cần kéo thả vào [app.netlify.com](https://app.netlify.com) là có link web online bảo mật HTTPS miễn phí vĩnh viễn!
+
+#### 🔑 Hướng dẫn Thầy/Cô thay đổi mật khẩu Chế độ Thầy Cô (3 cách cực nhanh):
+1. **Cách 1 — Đặt ngay từ đầu khi tạo video mới *(Khuyên dùng)*:** Ghi thêm dòng `Mật khẩu Chế độ Thầy Cô: [Mật khẩu riêng, ví dụ: 246810]` vào câu lệnh gửi cho AI.
+2. **Cách 2 — Nhờ AI đổi mật khẩu cho bài giảng đã tạo sẵn *(3 giây)*:** Gõ vào khung chat:
+   > *"Em hãy đổi mật khẩu Chế độ Thầy Cô của bài giảng tại thư mục `C:\Users\admin\Desktop\Web_Video_Tuong_Tac_...` thành `Toan6@2026` giúp tôi."*  
+   Sau đó kéo thả lại thư mục đó vào mục **Deploys** trên Netlify là cập nhật ngay (vẫn giữ nguyên link cũ đã gửi học sinh).
+3. **Cách 3 — Tự đổi thủ công bằng Notepad *(10 giây, không cần mở AI)*:**
+   - Mở thư mục bài giảng ngoài Desktop $\to$ Chuột phải vào file **`index.html`** $\to$ chọn **Open with $\to$ Notepad**.
+   - Nhấn **`Ctrl + F`**, gõ `TEACHER_PASSWORD` $\to$ sửa `'123456'` thành mật khẩu mới bên trong cặp dấu nháy đơn (ví dụ: `const TEACHER_PASSWORD = '246810';`).
+   - Nhấn **`Ctrl + S`** để lưu lại $\to$ Kéo thả lại thư mục vào Netlify để cập nhật lên web!
 
 ---
 
