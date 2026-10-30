@@ -1,11 +1,15 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.3.7",
+  "version": "6.3.8",
   "release_date": "2026-10-30",
   "description": "Siêu Skill Toàn Năng GDPT 2018 (7-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Tạo đề Tiếng Anh & xuất file nghe MP3 chuẩn khảo thí + Soạn giáo án tích hợp NLS & AI + Soạn Slide PowerPoint 16:9 + Video khởi động Veo 3 + Video Tương Tác E-Learning (chống tua nhanh, tự phân lớp Google Sheets, chuẩn đạt 80%).",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "6.3.8": [
+      "HOÀN THIỆN 100% THƯ VIỆN & BỘ CÔNG CỤ 1-CLICK SLIDE -> LỜI BÌNH -> VIDEO MP4 -> VIDEO TƯƠNG TÁC (cai_dat_tu_dong.bat, requirements.txt, LONG_TIENG_AI.bat, XUAT_VIDEO_TU_PPTX.bat, DOI_MAT_KHAU_THAY_CO.bat): Bổ sung đủ mutagen, pypdf, docx2txt, numpy, certifi giúp giáo viên cài 1 lần chạy trơn tru mọi tính năng.",
+      "KHẮC PHỤC TRIỆT ĐỂ LỖI ĐƯỜNG DẪN TIẾNG VIỆT CÓ DẤU & ĐO CHUẨN GIÂY ÂM THANH MP3 (scripts/long_tieng_pptx.py, scripts/xuat_video_pptx.py, scripts/tao_slide_chuan.py, scripts/boc_tach_tai_lieu.py, scripts/them_loi_binh_pptx.py): Ghi kịch bản PowerShell chuẩn UTF-8 BOM (utf-8-sig), sửa lỗi ghi Speaker Notes cho slide mới tạo, giữ tỷ lệ ảnh không méo hình SGK và chụp trang PDF 200 DPI dự phòng."
+    ],
     "6.3.7": [
       "ĐỒNG BỘ TRỌN VẸN CHUỖI SLIDE PPTX -> LỜI BÌNH -> VIDEO MP4 -> VIDEO TƯƠNG TÁC TRONG CẢ SKILL CHÍNH & BỘ SKILL ĐỘC LẬP 3-TRONG-1 (tao-slide-va-video-khoi-dong v2.0.0): Bổ sung scripts/patch_fonts.py vào skill chính để hoàn thiện 100% chuỗi công cụ PowerPoint 16:9 chuẩn Times New Roman.",
       "NÂNG CẤP CÔNG CỤ KIỂM ĐỊNH & ĐỒNG BỘ TỰ ĐỘNG (scripts/sync_skill.py): Tự động kiểm định biên dịch Python + cấu trúc Markdown và đồng bộ song song cả Siêu Skill chính (tao-de-toan-tuong-tu) lẫn Bộ Skill độc lập 3-trong-1 (tao-slide-va-video-khoi-dong v2.0.0) sang toàn bộ thư mục Global của Google Antigravity."

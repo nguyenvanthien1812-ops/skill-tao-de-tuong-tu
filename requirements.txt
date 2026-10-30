@@ -1,0 +1,18 @@
+# Danh sách đầy đủ thư viện chuẩn cho Bộ Tiện Ích Sư Phạm 3-Trong-1 (v2.0.1)
+# Slide PowerPoint 16:9 + Toán OMML + Đồ thị 300 DPI + Lồng tiếng AI + Video MP4 + Video Tương Tác
+python-pptx>=0.6.23
+edge-tts>=6.1.9
+mutagen>=1.47.0
+Pillow>=10.0.0
+lxml>=4.9.3
+latex2mathml>=3.77.0
+matplotlib>=3.7.0
+numpy>=1.24.0
+python-docx>=1.1.0
+docx2txt>=0.8
+PyMuPDF>=1.23.0
+pypdf>=4.0.0
+openpyxl>=3.1.2
+requests>=2.31.0
+certifi>=2023.7.22
+cryptography>=41.0.0

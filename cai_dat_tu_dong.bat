@@ -118,7 +118,7 @@ echo     (matplotlib, scipy, python-docx, lxml, latex2mathml, requests, pillow, 
 echo.
 
 %PYTHON_EXE% -m pip install --upgrade pip --quiet --no-warn-script-location
-%PYTHON_EXE% -m pip install matplotlib scipy python-docx lxml latex2mathml requests pillow openpyxl python-pptx edge-tts cryptography pymupdf --no-warn-script-location
+%PYTHON_EXE% -m pip install matplotlib numpy scipy python-docx docx2txt lxml latex2mathml requests certifi pillow openpyxl python-pptx edge-tts mutagen cryptography pymupdf pypdf --no-warn-script-location
 
 echo.
 echo [OK] Tat ca thu vien da duoc cai dat thanh cong 100%!
