@@ -1,11 +1,15 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.3.6",
+  "version": "6.3.7",
   "release_date": "2026-10-30",
   "description": "Siêu Skill Toàn Năng GDPT 2018 (7-in-1): Tạo đề thi & thẩm định đề 44 tiêu chí + Tạo đề Tiếng Anh & xuất file nghe MP3 chuẩn khảo thí + Soạn giáo án tích hợp NLS & AI + Soạn Slide PowerPoint 16:9 + Video khởi động Veo 3 + Video Tương Tác E-Learning (chống tua nhanh, tự phân lớp Google Sheets, chuẩn đạt 80%).",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "6.3.7": [
+      "ĐỒNG BỘ TRỌN VẸN CHUỖI SLIDE PPTX -> LỜI BÌNH -> VIDEO MP4 -> VIDEO TƯƠNG TÁC TRONG CẢ SKILL CHÍNH & BỘ SKILL ĐỘC LẬP 3-TRONG-1 (tao-slide-va-video-khoi-dong v2.0.0): Bổ sung scripts/patch_fonts.py vào skill chính để hoàn thiện 100% chuỗi công cụ PowerPoint 16:9 chuẩn Times New Roman.",
+      "NÂNG CẤP CÔNG CỤ KIỂM ĐỊNH & ĐỒNG BỘ TỰ ĐỘNG (scripts/sync_skill.py): Tự động kiểm định biên dịch Python + cấu trúc Markdown và đồng bộ song song cả Siêu Skill chính (tao-de-toan-tuong-tu) lẫn Bộ Skill độc lập 3-trong-1 (tao-slide-va-video-khoi-dong v2.0.0) sang toàn bộ thư mục Global của Google Antigravity."
+    ],
     "6.3.6": [
       "CHỈ THỊ BẮT BUỘC HIỂN THỊ BƯỚC TIẾP THEO ĐƯA LÊN NETLIFY SAU MỌI LỆNH VIDEO & ĐỔI MẬT KHẨU (references/ux_chu_dong.md Mục 6.1b, SKILL.md, references/tao_video_tuong_tac.md Quy tắc #4, references/onboarding_prompts.md, scripts/interactive_video_builder.py): Ngay sau khi tạo mới Video Tương Tác, làm video từ Giáo án/SGK, sửa câu hỏi hoặc đổi mật khẩu Chế độ Thầy Cô, cả script Python lẫn AI Agent đều bắt buộc hiển thị hướng dẫn cầm tay chỉ việc đưa lên Netlify.",
       "PHÂN TÁCH RÕ 2 QUY TRÌNH NETLIFY CHUẨN GIAO DIỆN MỚI NHẤT (Projects / Sites): (1) Đưa bài mới lần đầu (Projects -> Add new project -> Deploy manually -> kéo CẢ THƯ MỤC chống lỗi 404 -> Project configuration -> Change project name đặt tên link đẹp -> bật Chế độ Thầy Cô duyệt bài); (2) Cập nhật bài đã có sau khi đổi mật khẩu / sửa câu hỏi (bấm vào tên bài cũ -> tab Deploys -> kéo đè CẢ THƯ MỤC -> Ctrl+F5 giữ nguyên 100% link Zalo đã gửi học sinh)."

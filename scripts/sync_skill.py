@@ -217,6 +217,26 @@ def run_all() -> int:
                     sync_directory(vid_src, vid_dst)
                     print(f"  [✓] Đã đồng bộ skill video: {vid_dst}")
 
+        # Kiểm định & Đồng bộ bộ skill độc lập 3-trong-1 tao-slide-va-video-khoi-dong (v2.0.0)
+        slide_vid_src = WORKSPACE_SKILLS_ROOT / "tao-slide-va-video-khoi-dong"
+        if slide_vid_src.exists():
+            sub_errs = []
+            sub_errs.extend(verify_scripts_compile(slide_vid_src))
+            sub_errs.extend(verify_markdown_docs(slide_vid_src))
+            if sub_errs:
+                print("  [✗] PHÁT HIỆN LỖI Ở SKILL ĐỘC LẬP tao-slide-va-video-khoi-dong:")
+                for e in sub_errs:
+                    print(f"      - {e}")
+                return 1
+            for sv_dst in [
+                GLOBAL_SKILLS_ROOT / "tao-slide-va-video-khoi-dong",
+                Path.home() / ".gemini" / "antigravity" / "skills" / "tao-slide-va-video-khoi-dong",
+                Path(r"D:\skill-Nguyen-Thien\tao-slide-va-video-khoi-dong"),
+            ]:
+                if sv_dst.parent.exists() and sv_dst.resolve() != slide_vid_src.resolve():
+                    sync_directory(slide_vid_src, sv_dst, preserve_files={"github_config.json", "license.key"})
+                    print(f"  [✓] Đã đồng bộ skill 3-trong-1 (Slide + Video Tương Tác): {sv_dst}")
+
     print("=" * 72)
     return 0
 
