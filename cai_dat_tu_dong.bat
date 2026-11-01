@@ -118,10 +118,32 @@ echo     (matplotlib, scipy, python-docx, lxml, latex2mathml, requests, pillow, 
 echo.
 
 %PYTHON_EXE% -m pip install --upgrade pip --quiet --no-warn-script-location
-%PYTHON_EXE% -m pip install matplotlib numpy scipy python-docx docx2txt lxml latex2mathml requests certifi pillow openpyxl python-pptx edge-tts mutagen cryptography pymupdf pypdf --no-warn-script-location
+%PYTHON_EXE% -m pip install matplotlib numpy scipy python-docx docx2txt lxml latex2mathml requests certifi pillow openpyxl python-pptx edge-tts mutagen cryptography pymupdf pypdf olefile pywin32 --no-warn-script-location
 
 echo.
 echo [OK] Tat ca thu vien da duoc cai dat thanh cong 100%!
+echo.
+
+:: ─── BƯỚC 2.5: KIỂM TRA ENGINE XỬ LÝ CỤC BỘ (LOCAL ENGINE 100% OFFLINE) ───
+echo [*] Kiem tra Engine xu ly cuc bo MathType OLE (100%% Offline)...
+set "LO_EXE="
+if exist "C:\Program Files\LibreOffice\program\soffice.exe" set "LO_EXE=C:\Program Files\LibreOffice\program\soffice.exe"
+if exist "C:\Program Files (x86)\LibreOffice\program\soffice.exe" set "LO_EXE=C:\Program Files (x86)\LibreOffice\program\soffice.exe"
+if "%LO_EXE%"=="" (
+    for /f "tokens=*" %%i in ('where soffice 2^>nul') do set "LO_EXE=%%i"
+)
+
+if not "%LO_EXE%"=="" (
+    echo [OK] Da tim thay LibreOffice tai: %LO_EXE%
+    echo      -^> LOCAL ENGINE DA SAN SANG: Xuat Word MathType OLE 100%% Offline!
+    if exist "%~dp0scripts\local_engine\verify_local_engine.py" (
+        %PYTHON_EXE% "%~dp0scripts\local_engine\verify_local_engine.py"
+    )
+) else (
+    echo [i] May chua co LibreOffice (dung cho MathType OLE Offline).
+    echo     He thong van hoat dong tot qua may chu Cloud Backend du phong.
+    echo     De kich hoat che do Offline 100%%, quy thay co hay chay: CAI_DAT_LOCAL_ENGINE.bat
+)
 echo.
 
 :: ─── BƯỚC 4: TÌM ĐƯỜNG DẪN SCRIPT LICENSE_MANAGER.PY ─────────────────

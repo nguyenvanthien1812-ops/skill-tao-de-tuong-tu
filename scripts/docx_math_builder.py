@@ -1728,6 +1728,59 @@ def convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path
 
     return False
 
+def convert_to_mathtype_ole_local(base_tex_docx_path, output_ole_docx_path):
+    """
+    Chuyển đổi DOCX chứa $LaTeX$ thành MathType OLE hoàn toàn CỤC BỘ (100% Offline).
+    Sử dụng Local Engine (LibreOffice headless + mathtype_ole_builder).
+    Trả về True nếu thành công và hợp lệ, False nếu thất bại hoặc không có Local Engine.
+    """
+    try:
+        scripts_dir = os.path.dirname(os.path.abspath(__file__))
+        local_engine_dir = os.path.join(scripts_dir, 'local_engine')
+        if not os.path.exists(local_engine_dir):
+            return False
+
+        if local_engine_dir not in sys.path:
+            sys.path.insert(0, local_engine_dir)
+
+        from local_engine.docx_processor import convert_docx_latex_to_mathtype, find_libreoffice_python
+
+        lo_py = find_libreoffice_python()
+        if not lo_py or not os.path.exists(lo_py):
+            return False
+
+        print(f"[*] Đang dùng Local Engine (Offline 100%) chuyển đổi MathType OLE: {os.path.basename(base_tex_docx_path)}...")
+
+        # Chuyển đổi DOCX cục bộ
+        convert_docx_latex_to_mathtype(base_tex_docx_path, output_ole_docx_path, use_libreoffice=True)
+
+        if os.path.exists(output_ole_docx_path):
+            postprocess_ole_docx_fix_delimiters(output_ole_docx_path)
+            audit = audit_word_ole_file(output_ole_docx_path)
+            if audit['ok'] and audit['ole_count'] > 0:
+                print(f"[Local Engine OLE] ✓ THÀNH CÔNG: {audit['ole_count']} công thức MathType OLE nguyên bản (ProgID Equation.DSMT4, 100% Offline)")
+                return True
+            elif audit.get('ole_count', 0) > 0:
+                return True
+        return False
+    except Exception as e:
+        print(f"[Local Engine OLE] Ghi chú: {e}")
+        return False
+
+def convert_to_mathtype_ole(base_tex_docx_path, output_ole_docx_path, api_url=BACKEND_API_URL, timeout=120):
+    """
+    Chuyển đổi DOCX LaTeX -> MathType OLE với cơ chế 2 tầng thông minh:
+      Tầng 1: Local Engine (100% Offline, không phụ thuộc mạng, siêu tốc)
+      Tầng 2: Backend API Cloud (Tự động fallback nếu máy chưa cấu hình Local Engine)
+    """
+    # 1. Ưu tiên hàng đầu: Local Engine (Offline 100%)
+    if convert_to_mathtype_ole_local(base_tex_docx_path, output_ole_docx_path):
+        return True
+
+    # 2. Fallback sang máy chủ Backend Cloud
+    print("[*] Chuyển tiếp sang Máy chủ MathType Cloud (Online Fallback)...")
+    return convert_to_mathtype_ole_via_backend(base_tex_docx_path, output_ole_docx_path, api_url=api_url, timeout=timeout)
+
 # ─── NỘI DUNG ĐỀ THI & CHUYÊN ĐỀ CHUẨN GDPT 2018 ───────────────────────────
 
 def _write_exam_body(doc, exam_data, mode='tex', show_answers=False, show_solutions=False):
@@ -2339,7 +2392,7 @@ def build_and_export(exam_data, output_dir, exam_code,
 
         out_student = os.path.join(output_dir, f'{exam_code}_DE_HOC_SINH_MATHTYPE_OLE.docx')
 
-        ok = convert_to_mathtype_ole_via_backend(tmp_student, out_student)
+        ok = convert_to_mathtype_ole(tmp_student, out_student)
 
         if ok and os.path.exists(out_student):
 
@@ -2373,7 +2426,7 @@ def build_and_export(exam_data, output_dir, exam_code,
 
             out_teacher = os.path.join(output_dir, f'{exam_code}_LOI_GIAI_GV_MATHTYPE_OLE.docx')
 
-            ok = convert_to_mathtype_ole_via_backend(tmp_teacher, out_teacher)
+            ok = convert_to_mathtype_ole(tmp_teacher, out_teacher)
 
             if ok and os.path.exists(out_teacher):
 

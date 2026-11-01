@@ -34,7 +34,7 @@ try:
         BACKEND_API_URL, latex_to_omml, add_math_content,
         _remove_table_borders, set_cell_margins, add_side_by_side_question,
         _get_license_token, _get_machine_id_safe,
-        convert_to_mathtype_ole_via_backend, audit_word_ole_file
+        convert_to_mathtype_ole, convert_to_mathtype_ole_via_backend, audit_word_ole_file
     )
 except ImportError:
     try:
@@ -42,7 +42,7 @@ except ImportError:
             BACKEND_API_URL, latex_to_omml, add_math_content,
             _remove_table_borders, set_cell_margins, add_side_by_side_question,
             _get_license_token, _get_machine_id_safe,
-            convert_to_mathtype_ole_via_backend, audit_word_ole_file
+            convert_to_mathtype_ole, convert_to_mathtype_ole_via_backend, audit_word_ole_file
         )
     except ImportError:
         # Nếu chạy standalone script
@@ -135,14 +135,16 @@ def extract_pages_at_300dpi(pdf_path, output_dir):
 
 def convert_to_mathtype_ole(in_path, out_path, api_url=BACKEND_API_URL, timeout=120):
     """
-    Chuyển đổi file DOCX nền chứa $LaTeX$ sang Word MathType OLE nguyên bản.
+    Chuyển đổi file DOCX nền chứa $LaTeX$ sang Word MathType OLE nguyên bản (Ưu tiên Local Engine 100% Offline).
     [Lớp A] Yêu cầu license hợp lệ.
-    [Lớp E] Gửi kèm license_key + machine_id lên backend để xác thực.
     Tự động kiểm định tính toàn vẹn (Integrity Audit) sau khi xuất.
     """
     _require_license()
-    print(f"[*] Đang gửi {os.path.basename(in_path)} tới Backend MathType Server...")
-    return convert_to_mathtype_ole_via_backend(in_path, out_path, api_url=api_url, timeout=timeout)
+    try:
+        from docx_math_builder import convert_to_mathtype_ole as _convert
+        return _convert(in_path, out_path, api_url=api_url, timeout=timeout)
+    except Exception:
+        return convert_to_mathtype_ole_via_backend(in_path, out_path, api_url=api_url, timeout=timeout)
 
 
 

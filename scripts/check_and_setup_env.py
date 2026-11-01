@@ -23,6 +23,7 @@ REQUIRED_PACKAGES = [
     ("openpyxl", "openpyxl"),
     ("cryptography", "cryptography"),
     ("fitz", "pymupdf"),
+    ("olefile", "olefile"),
 ]
 
 OFFICE_XSL_PATHS = [
@@ -94,6 +95,37 @@ def check_microsoft_office():
     else:
         print("  [THÔNG TIN] Chưa phát hiện MathType cài tại thư mục chuẩn. Khi mở file Word,")
         print("              ảnh công thức vector WMF vẫn hiển thị chuẩn nét 100%.")
+
+def check_libreoffice_local_engine():
+    print("\n[2.5/5] Kiểm tra Engine xử lý cục bộ (Local Engine 100% Offline):")
+    lo_candidates = [
+        r"C:\Program Files\LibreOffice\program\python.exe",
+        r"C:\Program Files (x86)\LibreOffice\program\python.exe",
+        os.path.expandvars(r"%ProgramFiles%\LibreOffice\program\python.exe"),
+        os.path.expandvars(r"%ProgramFiles(x86)%\LibreOffice\program\python.exe"),
+    ]
+    lo_found = None
+    for cand in lo_candidates:
+        if cand and os.path.exists(cand):
+            lo_found = cand
+            break
+
+    if lo_found:
+        print(f"  [OK] Tìm thấy LibreOffice Engine: {lo_found}")
+        print("       -> ĐÃ KÍCH HOẠT CHẾ ĐỘ OFFLINE 100%: Xuất Word MathType OLE trực tiếp")
+        print("          không cần gửi qua máy chủ Backend Internet!")
+        # Thử nghiệm verify nếu có script
+        try:
+            from local_engine.verify_local_engine import run_verification
+            print("       -> Đang chạy kiểm tra sức khỏe Local Engine...")
+            run_verification()
+        except Exception:
+            pass
+    else:
+        print("  [THÔNG TIN] Chưa phát hiện LibreOffice trên máy tính.")
+        print("       -> Hệ thống sẽ tự động dùng Máy chủ MathType Cloud dự phòng.")
+        print("       -> Để kích hoạt chế độ CỤC BỘ 100% OFFLINE, Quý Thầy/Cô chỉ cần:")
+        print("          Chạy file 'CAI_DAT_LOCAL_ENGINE.bat' trong thư mục skill.")
 
 def check_latex_compiler():
     print("\n[3/4] Kiểm tra trình biên dịch LaTeX & TikZ Engine:")
