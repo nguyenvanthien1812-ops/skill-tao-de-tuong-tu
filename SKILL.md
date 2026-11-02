@@ -87,6 +87,13 @@ Skill này tự động hóa toàn bộ quy trình biên soạn đề kiểm tra
 > 3. **BẢO ĐẢM 100% MATHTYPE OLE NGUYÊN BẢN (Equation.DSMT4):**
 >    - Toàn bộ công thức toán học phải là OLE nhúng thực thụ (`ProgID Equation.DSMT4`, font Times New Roman 13-14pt, WMF Aldus placeable header, MTEF v5 nhị phân).
 >    - Tuyệt đối không dùng Word Equation (`Cambria Math`, `m:oMath`) làm bản chính. Khi nhấp đúp chuột trong Word, bắt buộc phải mở trực tiếp phần mềm MathType 6/7.
+> 
+> 4. **🎯 4 LỜI KHUYÊN VÀNG KHI SOẠN THẢO CÔNG THỨC TOÁN, LÝ, HÓA (AGENT & GIÁO VIÊN):**
+>    - **Lời khuyên 1 — Bao ngoặc nhọn `{ }` đầy đủ:** Luôn bao số mũ, chỉ số dưới và biểu thức con trong `{ }` (VD: `x_{12}`, `a^{2n+1}`, `C_n^k`, `v_0`, `^{238}_{\;92}\mathrm{U}`). Tuyệt đối không gõ `x_12` hay `a^2n+1`.
+>    - **Lời khuyên 2 — Tiếng Việt & chú thích chữ BẮT BUỘC nằm trong `\text{...}`:** Không gõ tiếng Việt trần trụi vào giữa math mode (VD: Đúng: `$S_{\text{tam giác}} = \frac{1}{2}ah$`, `$\vec{F}_{\text{hl}} = m \vec{a}$`, `$\Delta_r H_{298}^\circ = \sum E_b(\text{cđ}) - \sum E_b(\text{sp})$`, `$C\% = \frac{m_{\text{ct}}}{m_{\text{dd}}} \times 100\%$`).
+>    - **Lời khuyên 3 — Hệ phương trình & hệ điều kiện dùng `\begin{cases}`:** Phân tách dòng bằng `\\` (VD: `\begin{cases} ax + by = c \\ dx + ey = f \end{cases}`). Local Engine tự động sinh ngoặc nhọn lớn co dãn ôm sát các dòng.
+>    - **Lời khuyên 4 — Ký hiệu hình học & vectơ chuẩn mực:** Dùng `\widehat{ABC}` (góc), `\wideparen{AB}` (cung tròn), `\vec{a}` / `\vec{AB}` (vectơ). Module `arc_symbol_builder.py` sẽ dựng OLE Frown Overstrike chuẩn MathType 100%, không bị đè chữ hay lỗi ô vuông.
+>    *(Chi tiết quy chuẩn công thức Toán, Lý, Hóa 6-12: xem [`references/quy_chuan_cong_thuc_toan_ly_hoa.md`](./references/quy_chuan_cong_thuc_toan_ly_hoa.md)).*
 
 ---
 
@@ -103,6 +110,8 @@ Skill này tự động hóa toàn bộ quy trình biên soạn đề kiểm tra
 | Việc đang làm | Đọc trước (bắt buộc) |
 
 |:--|:--|
+
+| Quy chuẩn soạn công thức Toán, Vật lý, Hóa học (Toán 6-12, Vật lý hạt nhân/dao động/nhiệt, Hóa học IUPAC/phản ứng/enthalpy) | [`references/quy_chuan_cong_thuc_toan_ly_hoa.md`](./references/quy_chuan_cong_thuc_toan_ly_hoa.md) |
 
 | Lập Ma trận / Bản đặc tả / ra đề theo ma trận | [`references/ma_tran_dac_ta.md`](./references/ma_tran_dac_ta.md) |
 
