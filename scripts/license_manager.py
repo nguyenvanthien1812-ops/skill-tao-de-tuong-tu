@@ -428,21 +428,48 @@ def check_current_license() -> tuple[bool, dict, str]:
                 content = p.read_text(encoding="utf-8").strip()
                 if content:
                     is_valid, payload, err = verify_license_key(content)
+                    lid = payload.get("license_id", "")
+
+                    # 1. Thu hồi tức thì nếu key nằm trong danh sách đen cứng hoặc online
+                    is_revoked = (lid in HARDCODED_REVOKED_IDS) or (bool(lid) and check_revocation(lid)) or ("thu hồi" in (err or "").lower())
+                    if is_revoked:
+                        for p_del in get_all_license_paths():
+                            try:
+                                if hasattr(p_del, "unlink"):
+                                    p_del.unlink(missing_ok=True)
+                                elif os.path.exists(str(p_del)):
+                                    os.remove(str(p_del))
+                            except Exception:
+                                pass
+                        return False, payload, "License key này đã bị Tác giả thu hồi vĩnh viễn! Vui lòng liên hệ Tác giả để được cấp bản quyền mới."
+
+                    # 2. Thu hồi tự động nếu thời hạn > 400 ngày trên máy không phải Tác giả (key VIP rò rỉ)
+                    issued_s = payload.get("issued", "")
+                    expiry_s = payload.get("expiry", "")
+                    if issued_s and expiry_s:
+                        try:
+                            from datetime import datetime as _dt, timezone as _tz
+                            _di = _dt.strptime(issued_s, "%Y-%m-%d").replace(tzinfo=_tz.utc)
+                            _de = _dt.strptime(expiry_s, "%Y-%m-%d").replace(tzinfo=_tz.utc)
+                            if (_de - _di).days > 400 and get_machine_id() != "4f0d356462e1ea6c9cb3de5b7d1e38ca":
+                                for p_del in get_all_license_paths():
+                                    try:
+                                        if hasattr(p_del, "unlink"):
+                                            p_del.unlink(missing_ok=True)
+                                        elif os.path.exists(str(p_del)):
+                                            os.remove(str(p_del))
+                                    except Exception:
+                                        pass
+                                return False, payload, "Thời hạn bản quyền không hợp lệ (vượt quá 365 ngày). Bản quyền đã tự động bị thu hồi. Vui lòng liên hệ Tác giả."
+                        except Exception:
+                            pass
+
                     if is_valid:
-                        # Kiểm tra thu hồi online
-                        lid = payload.get("license_id", "")
-                        if lid and check_revocation(lid):
-                            for p_del in get_all_license_paths():
-                                try:
-                                    if p_del.exists():
-                                        p_del.unlink(missing_ok=True)
-                                except Exception:
-                                    pass
-                            return False, payload, "License key đã bị tác giả thu hồi. Vui lòng liên hệ tác giả để được hỗ trợ."
                         found_key = content
                         found_payload = payload
                         found_path = p
                         break
+
             except Exception:
                 continue
 
