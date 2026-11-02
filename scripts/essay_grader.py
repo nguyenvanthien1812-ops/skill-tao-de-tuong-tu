@@ -271,7 +271,7 @@ class AIGrader:
             from license_manager import require_valid_license
             require_valid_license("grade_essay")
         except ImportError:
-            pass
+            raise PermissionError("LỖI BẢN QUYỀN: Không tìm thấy license_manager.py. Vui lòng kích hoạt bản quyền trước khi chấm bài.")
         self.api_key = api_key or os.environ.get('GEMINI_API_KEY')
         self.is_mock = not bool(self.api_key)
         self.api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={self.api_key}"

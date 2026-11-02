@@ -18,6 +18,25 @@ import json
 from dataclasses import dataclass, field
 from typing import Optional
 
+
+def _require_license():
+    """Kiểm tra bản quyền truoc khi su dung chuc nang nay."""
+    try:
+        import os as _os, sys as _sys
+        _scripts_dir = _os.path.dirname(_os.path.abspath(__file__))
+        if _scripts_dir not in _sys.path:
+            _sys.path.insert(0, _scripts_dir)
+        import license_manager
+        return license_manager.require_valid_license()
+    except ImportError:
+        raise PermissionError(
+            "LOI BAN QUYEN: Khong tim thay he thong xac minh ban quyen (license_manager.py).\n"
+            "Vui long kich hoat ban quyen truoc khi su dung. Lien he tac gia de duoc ho tro."
+        )
+
+
+_require_license()
+
 try:
     sys.stdout.reconfigure(encoding='utf-8')
 except Exception:

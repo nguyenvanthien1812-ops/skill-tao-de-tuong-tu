@@ -23,6 +23,20 @@ import json
 import re
 
 
+
+# ─── BẢO MẬT BẢN QUYỀN ────────────────────────────────────────────────────────
+def _require_license():
+    try:
+        scripts_dir = os.path.dirname(os.path.abspath(__file__))
+        if scripts_dir not in sys.path:
+            sys.path.insert(0, scripts_dir)
+        import license_manager
+        return license_manager.require_valid_license()
+    except ImportError:
+        raise PermissionError("LỖI BẢN QUYỀN: Không tìm thấy hệ thống xác minh bản quyền (license_manager.py).")
+
+_require_license()
+
 def _parse_strict_bool(val, context_msg: str) -> bool:
     if isinstance(val, bool):
         return val

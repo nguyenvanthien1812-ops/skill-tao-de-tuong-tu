@@ -7,6 +7,8 @@ Load/save theme màu sắc và thông tin trường cho ExamPDFExporter.
 
 Sử dụng:
     from scripts.exam_style_manager import ExamStyleManager
+
+
     style = ExamStyleManager.load_theme('teal')
     ExamStyleManager.save_teacher_profile('co_lan', style)
     style2 = ExamStyleManager.load_teacher_profile('co_lan')
@@ -17,6 +19,25 @@ import json
 import re
 from pathlib import Path
 from typing import Optional
+
+
+def _require_license():
+    """Kiem tra ban quyen - BAT BUOC truoc khi su dung."""
+    try:
+        import os as _os, sys as _sys
+        _scripts_dir = _os.path.dirname(_os.path.abspath(__file__))
+        if _scripts_dir not in _sys.path:
+            _sys.path.insert(0, _scripts_dir)
+        import license_manager
+        return license_manager.require_valid_license()
+    except ImportError:
+        raise PermissionError(
+            "LOI BAN QUYEN: Khong tim thay license_manager.py.\n"
+            "Vui long kich hoat ban quyen truoc khi su dung."
+        )
+
+
+_require_license()
 
 # Thư mục lưu profile cá nhân giáo viên (trong thư mục skill)
 _SKILL_ROOT = Path(__file__).parent.parent

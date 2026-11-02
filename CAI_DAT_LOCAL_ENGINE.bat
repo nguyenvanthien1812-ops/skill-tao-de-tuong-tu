@@ -40,6 +40,24 @@ exit /b 1
 echo [OK] Python: "%PYTHON_EXE%"
 echo.
 
+:: ---------------- BUOC 1.5: KIEM TRA BAN QUYEN ----------------
+echo [*] Kiem tra ban quyen hop le...
+"%PYTHON_EXE%" "%~dp0scripts\license_manager.py" --silent-check >nul 2>nul
+if errorlevel 1 (
+    echo.
+    echo ====================================================================
+    echo   [!] MAY TINH CHUA KICH HOAT BAN QUYEN HOAC LICENSE DANG DUNG CHO MAY KHAC!
+    echo ====================================================================
+    echo   Quy Thay/Co vui long chay file LAY_MA_MAY.bat de lay ma may gui cho Tac gia,
+    echo   sau do chay KICH_HOAT_BAN_QUYEN.bat de dan ma kich hoat.
+    echo ====================================================================
+    echo.
+    pause
+    exit /b 1
+)
+echo [OK] Ban quyen hop le!
+echo.
+
 :: ---------------- BUOC 2: THU VIEN PYTHON ----------------
 echo [*] Buoc 2/4: Cai thu vien cho Local Engine (lxml, olefile, latex2mathml, python-docx, pywin32)...
 "%PYTHON_EXE%" -m pip install --upgrade pip --quiet --no-warn-script-location

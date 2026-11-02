@@ -154,7 +154,7 @@ class ExamGenerator:
             from license_manager import require_valid_license
             require_valid_license("matrix_exam")
         except ImportError:
-            pass
+            raise PermissionError("LỖI BẢN QUYỀN: Không tìm thấy license_manager.py. Vui lòng kích hoạt bản quyền trước khi tạo đề từ ma trận.")
         self.subject = subject
         self.grade = grade
         self.api_key = api_key or os.environ.get("GEMINI_API_KEY")

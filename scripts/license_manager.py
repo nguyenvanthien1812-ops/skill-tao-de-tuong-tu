@@ -269,8 +269,13 @@ def verify_license_key(license_key: str) -> tuple[bool, dict, str]:
             hashes.SHA256()
         )
 
+        # Kiểm tra license_id bị thu hồi vĩnh viễn
+        lid = payload.get("license_id", "")
+        if lid in HARDCODED_REVOKED_IDS:
+            return False, payload, "License key này đã bị Tác giả thu hồi vĩnh viễn!"
+
         # Kiểm tra skill đúng
-        if payload.get("skill") != SKILL_NAME:
+        if payload.get("skill") not in (SKILL_NAME, "ALL", "tao-de-toan-tuong-tu"):
             return False, payload, "License key không dành cho skill này"
 
         # Kiểm tra machine_id
@@ -300,8 +305,15 @@ def verify_license_key(license_key: str) -> tuple[bool, dict, str]:
         return False, {}, f"Lỗi xác minh: {e}"
 
 
+# Danh sách các License ID bị Tác giả thu hồi vĩnh viễn (chặn 100% cả offline lẫn online)
+HARDCODED_REVOKED_IDS = {
+    "master-author-vip-key",  # Thu hồi key thử nghiệm 2036 bị lọt cho giáo viên
+}
+
 def check_revocation(license_id: str) -> bool:
     """Kiểm tra online xem license có bị thu hồi không. Bỏ qua nếu offline hoặc mạng chậm."""
+    if license_id in HARDCODED_REVOKED_IDS:
+        return True
     try:
         import urllib.request
         import time
@@ -520,8 +532,15 @@ def main():
     g.add_argument("--machine-id", action="store_true", help="Lấy Machine ID của máy này")
     g.add_argument("--activate",   nargs="?", const="PROMPT", metavar="LICENSE_KEY", help="Kích hoạt license key")
     g.add_argument("--check",      action="store_true",   help="Kiểm tra trạng thái license")
+    g.add_argument("--silent-check", action="store_true", help="Kiểm tra license âm thầm (exit 0/1)")
     p.add_argument("--feature",    metavar="FEATURE_CODE", help="Kiểm tra quyền sử dụng một tiện ích cụ thể (vd: pdf_to_word, clone_exam...)")
     args = p.parse_args()
+
+    if args.silent_check:
+        is_valid, payload, error = check_current_license()
+        if is_valid and args.feature:
+            is_valid = has_feature_permission(payload, args.feature)
+        sys.exit(0 if is_valid else 1)
 
     # Mặc định nếu không truyền tham số: kiểm tra license
     if not (args.machine_id or args.activate or args.check):

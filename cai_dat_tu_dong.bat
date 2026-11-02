@@ -160,6 +160,7 @@ if "%LM_SCRIPT%"=="" (
     exit /b 0
 )
 
+:CHECK_LICENSE
 :: ─── BƯỚC 5: KIỂM TRA BẢN QUYỀN / LICENSE ────────────────────────────
 echo [*] Buoc 3/3: Kiem tra ban quyen su dung...
 echo.
@@ -205,13 +206,17 @@ exit /b 0
 
 :DEPLOY_ANTIGRAVITY
 echo.
-echo [*] Dang tu dong nap va dong bo skill vao Google Antigravity...
+echo [*] Dang tu dong nap va dong bo skill vao Google Antigravity (ho tro 100% Unicode tieng Viet)...
 set "AG_TARGET=%USERPROFILE%\.gemini\config\skills\tao-de-toan-tuong-tu"
 if not exist "%AG_TARGET%" mkdir "%AG_TARGET%"
-xcopy "%~dp0*" "%AG_TARGET%\" /E /I /Y /Q >nul 2>nul
-if exist "%~dp0license.key" copy /Y "%~dp0license.key" "%AG_TARGET%\license.key" >nul 2>nul
-if exist "%~dp0license.key" copy /Y "%~dp0license.key" "%USERPROFILE%\.gemini\license.key" >nul 2>nul
-if exist "%AG_TARGET%\license.key" copy /Y "%AG_TARGET%\license.key" "%USERPROFILE%\.gemini\license.key" >nul 2>nul
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$src = (Get-Item -LiteralPath '%~dp0').FullName; $dst = '%AG_TARGET%'; if (!(Test-Path $dst)) { New-Item -ItemType Directory -Path $dst -Force | Out-Null }; $items = Get-ChildItem -LiteralPath $src | Where-Object { $_.Name -notin @('__pycache__', '.git') } | Select-Object -ExpandProperty FullName; Copy-Item -LiteralPath $items -Destination $dst -Recurse -Force" >nul 2>&1
+if %errorlevel% neq 0 (
+    python -c "import sys, shutil; from pathlib import Path; src = Path(r'%~dp0'); dst = Path(r'%AG_TARGET%'); dst.mkdir(parents=True, exist_ok=True); [shutil.copytree(p, dst / p.name, dirs_exist_ok=True) if p.is_dir() else shutil.copy2(p, dst / p.name) for p in src.iterdir() if p.name not in ('__pycache__', '.git')]" >nul 2>&1
+    if %errorlevel% neq 0 (
+        xcopy "%~dp0*" "%AG_TARGET%" /E /I /Y /Q >nul 2>&1
+    )
+)
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$srcLic = Join-Path '%~dp0' 'license.key'; $dstLic = Join-Path '%AG_TARGET%' 'license.key'; $usrLic = Join-Path $env:USERPROFILE '.gemini\license.key'; if (Test-Path -LiteralPath $srcLic) { Copy-Item -LiteralPath $srcLic -Destination $dstLic -Force -ErrorAction SilentlyContinue; Copy-Item -LiteralPath $srcLic -Destination $usrLic -Force -ErrorAction SilentlyContinue } elseif (Test-Path -LiteralPath $dstLic) { Copy-Item -LiteralPath $dstLic -Destination $srcLic -Force -ErrorAction SilentlyContinue; Copy-Item -LiteralPath $dstLic -Destination $usrLic -Force -ErrorAction SilentlyContinue } elseif (Test-Path -LiteralPath $usrLic) { Copy-Item -LiteralPath $usrLic -Destination $srcLic -Force -ErrorAction SilentlyContinue; Copy-Item -LiteralPath $usrLic -Destination $dstLic -Force -ErrorAction SilentlyContinue }" >nul 2>&1
 
 echo.
 echo ====================================================================

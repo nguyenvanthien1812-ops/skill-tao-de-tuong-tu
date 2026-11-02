@@ -7,6 +7,24 @@ Xuất kết quả chấm từ AIGrader sang Word / PDF / Excel / Chat summary.
 """
 
 import os
+import sys
+
+def _require_license():
+    """Kiểm tra bản quyền - BẮT BUỘC trước khi sử dụng."""
+    try:
+        _scripts_dir = os.path.dirname(os.path.abspath(__file__))
+        if _scripts_dir not in sys.path:
+            sys.path.insert(0, _scripts_dir)
+        import license_manager
+        return license_manager.require_valid_license()
+    except ImportError:
+        raise PermissionError(
+            "LỖI BẢN QUYỀN: Không tìm thấy hệ thống xác minh bản quyền (license_manager.py).\n"
+            "Vui lòng kích hoạt bản quyền trước khi sử dụng. Liên hệ tác giả để được hỗ trợ."
+        )
+
+_require_license()
+
 try:
     import openpyxl
     from openpyxl.styles import PatternFill, Font, Alignment

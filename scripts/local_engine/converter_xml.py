@@ -11,6 +11,24 @@ from docx.enum.table import WD_TABLE_ALIGNMENT, WD_ALIGN_VERTICAL
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
+def _require_local_engine_license():
+    """Kiem tra ban quyen bat buoc truoc khi thuc thi Local Engine MathType."""
+    try:
+        import os as _os, sys as _sys
+        _cur_dir = _os.path.dirname(_os.path.abspath(__file__))
+        _scripts_dir = _os.path.dirname(_cur_dir)
+        if _scripts_dir not in _sys.path:
+            _sys.path.insert(0, _scripts_dir)
+        import license_manager
+        ok, payload, err = license_manager.check_current_license()
+        if not ok:
+            raise PermissionError(f"Local Engine MathType chua kich hoat ban quyen hop le: {err}")
+        return payload
+    except ImportError:
+        raise PermissionError("LOI BAN QUYEN: Khong tim thay module xac minh license_manager.py. Khong duoc tach le Local Engine.")
+
+_require_local_engine_license()
+
 
 # Load XSLT stylesheet for MathML to OMML conversion
 # We try to load from the resources folder, which is packaged with the app
@@ -768,4 +786,3 @@ def validate_latex_in_file(file_path, delimiters_config, log_callback=None, outp
                 pass
                     
     return stats
-

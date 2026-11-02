@@ -362,7 +362,7 @@ def render_tikz(
                 "╚══════════════════════════════════════════════════════════╝"
             )
     except ImportError:
-        pass  # Môi trường dev của tác giả, không chặn
+        raise PermissionError("LỖI BẢN QUYỀN: Không tìm thấy license_manager.py. Vui lòng kích hoạt bản quyền trước khi vẽ hình TikZ.")
     # ────────────────────────────────────────────────────────────────────────
     full_tex = wrap_tikz_document(tikz_code, custom_preamble, mode=mode)
 

@@ -304,7 +304,10 @@ def convert_pdf_to_word(
         from license_manager import require_valid_license
         require_valid_license("pdf_to_word")
     except ImportError:
-        pass
+        raise PermissionError(
+            "LỖI BẢN QUYỀN: Không tìm thấy license_manager.py. "
+            "Vui lòng kích hoạt bản quyền trước khi sử dụng chức năng chuyển PDF sang Word."
+        )
 
     pdf_p = pathlib.Path(pdf_path)
     if not pdf_p.exists():

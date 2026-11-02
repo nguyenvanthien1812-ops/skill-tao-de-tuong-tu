@@ -197,6 +197,22 @@ def _ensure_content_type(ct_root: etree._Element, part_name: str, content_type: 
 # ── Main conversion pipeline ──────────────────────────────────────────────────
 
 
+def _require_converter_license():
+    """Kiểm tra bản quyền trước khi chuyển đổi OMML sang MathType OLE."""
+    import sys, os
+    try:
+        cur_dir = os.path.dirname(os.path.abspath(__file__))
+        scripts_dir = os.path.dirname(os.path.dirname(cur_dir))
+        if scripts_dir not in sys.path:
+            sys.path.insert(0, scripts_dir)
+        import license_manager
+        ok, payload, err = license_manager.check_current_license()
+        if not ok:
+            raise PermissionError(f"MathType Converter chua kich hoat ban quyen hop le: {err}")
+    except ImportError:
+        raise PermissionError("LỖI BẢN QUYỀN: Không tìm thấy license_manager.py. Không được tách lẻ công cụ chuyển đổi OMML.")
+
+
 def convert(input_path: str, output_path: str) -> ConversionSummary:
     """Convert every OMML equation in ``input_path`` and write ``output_path``.
 
@@ -205,6 +221,7 @@ def convert(input_path: str, output_path: str) -> ConversionSummary:
     is always written, even when some equations fail to convert (failed
     equations are left as their original OMML).
     """
+    _require_converter_license()  # BẮT BUỘC — kiểm tra bản quyền trước khi chuyển đổi
     with zipfile.ZipFile(input_path, "r") as zin:
         names = set(zin.namelist())
         zdata = {n: zin.read(n) for n in names}

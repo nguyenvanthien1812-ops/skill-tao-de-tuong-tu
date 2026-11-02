@@ -2244,8 +2244,31 @@ def _make_text_run(text_value: str):
     return wr
 
 
+def _require_local_engine_license():
+    """Kiểm tra bản quyền bắt buộc trước khi thực thi Local Engine MathType."""
+    try:
+        cur_dir = os.path.dirname(os.path.abspath(__file__))
+        scripts_dir = os.path.dirname(cur_dir)
+        if scripts_dir not in sys.path:
+            sys.path.insert(0, scripts_dir)
+        import license_manager
+        ok, payload, err = license_manager.check_current_license()
+        if not ok:
+            print("\n" + "=" * 65)
+            print("  ⛔  LỖI BẢN QUYỀN - LOCAL ENGINE MATHTYPE")
+            print("=" * 65)
+            print(f"  Lý do: {err}")
+            print("  Vui lòng liên hệ Tác giả hoặc chạy LAY_MA_MAY.bat để nhận bản quyền.")
+            print("=" * 65 + "\n")
+            raise PermissionError(f"Local Engine MathType chưa kích hoạt bản quyền hợp lệ: {err}")
+        return payload
+    except ImportError:
+        raise PermissionError("LỖI BẢN QUYỀN: Không tìm thấy module xác minh license_manager.py. Không được tách lẻ Local Engine.")
+
+
 def convert_docx_latex_to_mathtype(input_path: str, output_path: str, template_path: str = None, use_libreoffice: bool = True, progress_callback=None) -> dict:
     """Process a docx file, convert LaTeX math formulas to MathType OLE and save a new file."""
+    _require_local_engine_license()
     # Find XSLT converter (needed for MathML->OMML fallback parsing if ever used, but we default to direct OLE)
     xslt_file = find_mml2omml_xslt()
     xslt_tree = etree.parse(xslt_file)
@@ -3527,6 +3550,7 @@ if __name__ == "__main__":
     import sys
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
+    _require_local_engine_license()
 
     if len(sys.argv) < 3:
         print("Sử dụng: python docx_processor.py <src.docx> <out.docx>")

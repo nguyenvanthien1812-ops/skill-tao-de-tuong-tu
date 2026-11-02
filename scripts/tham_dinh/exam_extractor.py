@@ -21,6 +21,28 @@ from typing import Optional
 import docx
 from docx import Document
 
+
+def _require_license():
+    """Kiem tra ban quyen truoc khi su dung chuc nang tham dinh."""
+    try:
+        import os as _os, sys as _sys
+        # tham_dinh/ nam trong scripts/, nen di len 1 cap de tim license_manager.py
+        _cur = _os.path.dirname(_os.path.abspath(__file__))
+        _scripts_dir = _os.path.dirname(_cur)
+        for _d in [_cur, _scripts_dir]:
+            if _d not in _sys.path:
+                _sys.path.insert(0, _d)
+        import license_manager
+        return license_manager.require_valid_license()
+    except ImportError:
+        raise PermissionError(
+            "LOI BAN QUYEN: Khong tim thay license_manager.py. "
+            "Vui long kich hoat ban quyen truoc khi su dung chuc nang tham dinh de thi."
+        )
+
+
+_require_license()
+
 # ──────────────────────────────────────────────────────────────────────────────
 # DATA MODELS
 # ──────────────────────────────────────────────────────────────────────────────

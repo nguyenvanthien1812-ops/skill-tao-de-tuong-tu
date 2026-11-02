@@ -201,7 +201,7 @@ def export_matrix_dict_to_docx(m, output_path=None, matrix_key="matrix"):
         from license_manager import require_valid_license
         require_valid_license("matrix_exam")
     except ImportError:
-        pass
+        raise PermissionError("LỖI BẢN QUYỀN: Không tìm thấy license_manager.py. Vui lòng kích hoạt bản quyền trước khi xuất ma trận ra Word.")
 
     subj = str(m.get("subject", "Môn học")).capitalize()
     grade = m.get("grade", 12)

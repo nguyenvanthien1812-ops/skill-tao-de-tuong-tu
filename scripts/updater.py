@@ -23,6 +23,25 @@ import tempfile
 import zipfile
 import argparse
 
+
+def _require_license():
+    """Kiểm tra bản quyền truoc khi su dung chuc nang nay."""
+    try:
+        import os as _os, sys as _sys
+        _scripts_dir = _os.path.dirname(_os.path.abspath(__file__))
+        if _scripts_dir not in _sys.path:
+            _sys.path.insert(0, _scripts_dir)
+        import license_manager
+        return license_manager.require_valid_license()
+    except ImportError:
+        raise PermissionError(
+            "LOI BAN QUYEN: Khong tim thay he thong xac minh ban quyen (license_manager.py).\n"
+            "Vui long kich hoat ban quyen truoc khi su dung. Lien he tac gia de duoc ho tro."
+        )
+
+
+_require_license()
+
 try:
     sys.stdout.reconfigure(encoding='utf-8')
 except Exception:
@@ -243,6 +262,58 @@ def main():
     # Thực hiện cập nhật
     updated_files, skipped_files = download_zip_and_update(zip_url, SKILL_DIR)
     print(f"\n[✓] Đã cập nhật thành công {len(updated_files)} tệp mã nguồn và tài liệu.")
+    # ─── KIEM TRA THU HOI BAN QUYEN TU DONG SAU KHI CAP NHAT ────────────────
+    # Sau khi cap nhat, license_manager.py moi da co HARDCODED_REVOKED_IDS.
+    # Reload de kiem tra: neu ban quyen bi thu hoi HOAC thoi han > 400 ngay
+    # tinh tu ngay cap (dau hieu key VIP ro ri) → tu dong xoa & bao loi.
+    try:
+        import importlib as _importlib
+        _lm_name = "license_manager"
+        if _lm_name in sys.modules:
+            _importlib.reload(sys.modules[_lm_name])
+        import license_manager as _lm_mod
+        _ok_lm, _pay_lm, _err_lm = _lm_mod.check_current_license()
+        _revoke_reason = None
+        if not _ok_lm and _err_lm:
+            _revoke_reason = _err_lm
+        elif _ok_lm:
+            _issued_s = _pay_lm.get("issued", "")
+            _expiry_s = _pay_lm.get("expiry", "")
+            if _issued_s and _expiry_s:
+                from datetime import datetime, timezone as _tz
+                _d_i = datetime.strptime(_issued_s, "%Y-%m-%d").replace(tzinfo=_tz.utc)
+                _d_e = datetime.strptime(_expiry_s, "%Y-%m-%d").replace(tzinfo=_tz.utc)
+                _days_dur = (_d_e - _d_i).days
+                if _days_dur > 400:
+                    _revoke_reason = (
+                        f"Thoi han ban quyen ({_days_dur} ngay) vuot qua gioi han "
+                        f"toi da (365 ngay). Ban quyen nay khong hop le."
+                    )
+        if _revoke_reason:
+            print("\n" + "=" * 66)
+            print("  *** BAN QUYEN KHONG CON HOP LE ***")
+            print("=" * 66)
+            print(f"  {_revoke_reason}")
+            print("  He thong da tu dong xoa ban quyen.")
+            print("  Vui long lien he Tac gia de duoc cap ban quyen chinh thuc.")
+            print("=" * 66)
+            for _lp in _lm_mod.get_all_license_paths():
+                try:
+                    _ps = str(_lp)
+                    if hasattr(_lp, "unlink"):
+                        if _lp.exists():
+                            _lp.unlink(missing_ok=True)
+                    elif os.path.exists(_ps):
+                        os.remove(_ps)
+                except Exception:
+                    pass
+            sys.exit(1)
+    except SystemExit:
+        raise
+    except Exception:
+        pass  # Khong de loi phu lam hong qua trinh cap nhat chinh
+    # ─────────────────────────────────────────────────────────────────────────
+
     # Tự động triển khai bộ 3 file cấu hình MathType ra Desktop của giáo viên
     try:
         pref_src = os.path.join(SKILL_DIR, "references", "CAU_HINH_MATHTYPE_CHUAN")

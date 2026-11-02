@@ -10,6 +10,23 @@ from pathlib import Path
 
 from .converter import convert
 
+def _require_converter_license():
+    """Kiểm tra bản quyền trước khi chạy CLI chuyển đổi."""
+    import sys, os
+    try:
+        cur_dir = os.path.dirname(os.path.abspath(__file__))
+        scripts_dir = os.path.dirname(os.path.dirname(cur_dir))
+        if scripts_dir not in sys.path:
+            sys.path.insert(0, scripts_dir)
+        import license_manager
+        ok, payload, err = license_manager.check_current_license()
+        if not ok:
+            raise PermissionError(f"MathType Converter chưa kích hoạt bản quyền hợp lệ: {err}")
+    except ImportError:
+        raise PermissionError("LỖI BẢN QUYỀN: Không tìm thấy license_manager.py.")
+
+_require_converter_license()
+
 
 def _package_version() -> str:
     try:

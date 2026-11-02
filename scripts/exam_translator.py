@@ -363,7 +363,7 @@ def translate_academic_text(vietnamese_text: str, subject: str = "math") -> str:
         from license_manager import require_valid_license
         require_valid_license("translate_exam")
     except ImportError:
-        pass
+        raise PermissionError("LỖI BẢN QUYỀN: Không tìm thấy license_manager.py. Vui lòng kích hoạt bản quyền trước khi dịch đề.")
     # 1. Tách các khối toán $...$ ra để không bị dịch nhầm
     parts = re.split(r'(\$[^\$]+\$)', vietnamese_text)
     translated_parts = []

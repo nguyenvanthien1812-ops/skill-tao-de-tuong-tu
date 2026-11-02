@@ -31,6 +31,22 @@ def run_verification():
     print("=" * 68)
     print()
 
+    # 0. Kiểm tra bản quyền bắt buộc
+    try:
+        import license_manager
+        ok, payload, err = license_manager.check_current_license()
+        if not ok:
+            print(" [X] LỖI BẢN QUYỀN: Máy tính chưa kích hoạt bản quyền hợp lệ!")
+            print(f"     Chi tiết: {err}")
+            print("     Vui lòng chạy file LAY_MA_MAY.bat để lấy mã máy gửi cho Tác giả.")
+            print("=" * 68)
+            return False
+        print(f" [0/4] Kiểm tra bản quyền: [OK] ({payload.get('name', 'Hợp lệ')})")
+    except ImportError:
+        print(" [X] LỖI BẢN QUYỀN: Không tìm thấy module license_manager.py.")
+        print("=" * 68)
+        return False
+
     # 1. Kiểm tra Python
     py_ver = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
     print(f" [1/4] Kiểm tra Python: Python {py_ver} ({sys.executable})")

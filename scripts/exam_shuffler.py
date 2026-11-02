@@ -78,7 +78,10 @@ def generate_exam_variant(base_exam, variant_code, base_seed=42):
         from license_manager import require_valid_license
         require_valid_license("shuffle_exam")
     except ImportError:
-        pass
+        raise PermissionError(
+            "LỖI BẢN QUYỀN: Không tìm thấy license_manager.py. "
+            "Vui lòng kích hoạt bản quyền trước khi sử dụng chức năng trộn đề."
+        )
     seed = base_seed + sum(ord(c) for c in str(variant_code))
     variant = {'code': variant_code}
 

@@ -31,11 +31,30 @@ Cover 100% cấu trúc OMML:
 import struct
 from lxml import etree
 from mtef_encoder import (
+
     _DOC3_PREFIX, TF_TEXT, TF_VAR, TF_MTEXTRA,
     _line_start, _char, _chars, _end,
     EMBELL_VEC, EMBELL_HAT, EMBELL_TILDE, EMBELL_DOT, EMBELL_DDOT, EMBELL_BAR
 )
 from mathtype_ole_builder import make_mathtype_ole
+
+def _require_local_engine_license():
+    """Kiem tra ban quyen bat buoc truoc khi thuc thi Local Engine MathType."""
+    try:
+        import os as _os, sys as _sys
+        _cur_dir = _os.path.dirname(_os.path.abspath(__file__))
+        _scripts_dir = _os.path.dirname(_cur_dir)
+        if _scripts_dir not in _sys.path:
+            _sys.path.insert(0, _scripts_dir)
+        import license_manager
+        ok, payload, err = license_manager.check_current_license()
+        if not ok:
+            raise PermissionError(f"Local Engine MathType chua kich hoat ban quyen hop le: {err}")
+        return payload
+    except ImportError:
+        raise PermissionError("LOI BAN QUYEN: Khong tim thay module xac minh license_manager.py. Khong duoc tach le Local Engine.")
+
+_require_local_engine_license()
 
 # OMML XML Namespace
 OMML_NS = "{http://schemas.openxmlformats.org/officeDocument/2006/math}"

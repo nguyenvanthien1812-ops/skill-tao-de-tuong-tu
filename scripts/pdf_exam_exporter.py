@@ -22,6 +22,20 @@ try:
 except Exception:
     pass
 
+# ─── BẢO MẬT BẢN QUYỀN ────────────────────────────────────────────────────────
+def _require_license():
+    try:
+        scripts_dir = os.path.dirname(os.path.abspath(__file__))
+        if scripts_dir not in sys.path:
+            sys.path.insert(0, scripts_dir)
+        import license_manager
+        return license_manager.require_valid_license()
+    except ImportError:
+        raise PermissionError("LỖI BẢN QUYỀN: Không tìm thấy hệ thống xác minh bản quyền (license_manager.py).")
+
+_require_license()
+
+
 # ─────────────────────────────────────────────────────────────
 # 6 THEME
 # ─────────────────────────────────────────────────────────────

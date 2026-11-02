@@ -36,6 +36,24 @@ import re
 import struct
 from typing import Optional
 
+def _require_local_engine_license():
+    """Kiem tra ban quyen bat buoc truoc khi thuc thi Local Engine MathType."""
+    try:
+        import os as _os, sys as _sys
+        _cur_dir = _os.path.dirname(_os.path.abspath(__file__))
+        _scripts_dir = _os.path.dirname(_cur_dir)
+        if _scripts_dir not in _sys.path:
+            _sys.path.insert(0, _scripts_dir)
+        import license_manager
+        ok, payload, err = license_manager.check_current_license()
+        if not ok:
+            raise PermissionError(f"Local Engine MathType chua kich hoat ban quyen hop le: {err}")
+        return payload
+    except ImportError:
+        raise PermissionError("LOI BAN QUYEN: Khong tim thay module xac minh license_manager.py. Khong duoc tach le Local Engine.")
+
+_require_local_engine_license()
+
 # ---------------------------------------------------------------------------
 # CHAR record cho ký hiệu cung tròn: tag(02) + opts(00) + typeface(96) +
 # charcode LE (22 23 = U+2322 FROWN) + embell(00).

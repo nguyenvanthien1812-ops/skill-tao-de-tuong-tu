@@ -425,7 +425,18 @@ async def build_listening_exam_mp3(
     }
 
 
+def _check_lic():
+    try:
+        scripts_dir = Path(__file__).resolve().parent
+        if str(scripts_dir) not in sys.path:
+            sys.path.insert(0, str(scripts_dir))
+        from license_manager import require_valid_license
+        require_valid_license()
+    except ImportError:
+        raise PermissionError("LỖI BẢN QUYỀN: Không tìm thấy module license_manager.py.")
+
 def main() -> int:
+    _check_lic()
     parser = argparse.ArgumentParser(
         description="Công cụ tạo file nghe MP3 môn Tiếng Anh chuẩn khảo thí (khớp 100% câu hỏi)."
     )
