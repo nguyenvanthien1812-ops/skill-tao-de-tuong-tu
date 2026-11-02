@@ -127,23 +127,22 @@ echo.
 :: ─── BƯỚC 2.5: KIỂM TRA ENGINE XỬ LÝ CỤC BỘ (LOCAL ENGINE 100% OFFLINE) ───
 echo [*] Kiem tra Engine xu ly cuc bo MathType OLE (100%% Offline)...
 set "LO_EXE="
-if exist "C:\Program Files\LibreOffice\program\soffice.exe" set "LO_EXE=C:\Program Files\LibreOffice\program\soffice.exe"
-if exist "C:\Program Files (x86)\LibreOffice\program\soffice.exe" set "LO_EXE=C:\Program Files (x86)\LibreOffice\program\soffice.exe"
-if "%LO_EXE%"=="" (
-    for /f "tokens=*" %%i in ('where soffice 2^>nul') do set "LO_EXE=%%i"
-)
+if exist "%ProgramFiles%\LibreOffice\program\soffice.exe" set "LO_EXE=%ProgramFiles%\LibreOffice\program\soffice.exe"
+if not defined LO_EXE if exist "%ProgramFiles(x86)%\LibreOffice\program\soffice.exe" set "LO_EXE=%ProgramFiles(x86)%\LibreOffice\program\soffice.exe"
+if not defined LO_EXE for /f "delims=" %%i in ('where soffice 2^>nul') do if not defined LO_EXE set "LO_EXE=%%i"
+if not defined LO_EXE goto :LE_MISSING
 
-if not "%LO_EXE%"=="" (
-    echo [OK] Da tim thay LibreOffice tai: %LO_EXE%
-    echo      -^> LOCAL ENGINE DA SAN SANG: Xuat Word MathType OLE 100%% Offline!
-    if exist "%~dp0scripts\local_engine\verify_local_engine.py" (
-        %PYTHON_EXE% "%~dp0scripts\local_engine\verify_local_engine.py"
-    )
-) else (
-    echo [i] May chua co LibreOffice (dung cho MathType OLE Offline).
-    echo     He thong van hoat dong tot qua may chu Cloud Backend du phong.
-    echo     De kich hoat che do Offline 100%%, quy thay co hay chay: CAI_DAT_LOCAL_ENGINE.bat
-)
+echo [OK] Da tim thay LibreOffice: "%LO_EXE%"
+echo      LOCAL ENGINE SAN SANG: Xuat Word MathType OLE 100%% Offline!
+if exist "%~dp0scripts\local_engine\verify_local_engine.py" "%PYTHON_EXE%" "%~dp0scripts\local_engine\verify_local_engine.py"
+goto :LE_DONE
+
+:LE_MISSING
+echo [i] May chua co LibreOffice - thanh phan cua Local Engine Offline.
+echo     Skill van hoat dong binh thuong qua may chu Cloud du phong.
+echo     De bat che do Offline 100%%, Thay/Co nhap dup file: CAI_DAT_LOCAL_ENGINE.bat
+
+:LE_DONE
 echo.
 
 :: ─── BƯỚC 4: TÌM ĐƯỜNG DẪN SCRIPT LICENSE_MANAGER.PY ─────────────────

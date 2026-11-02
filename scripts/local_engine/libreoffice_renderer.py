@@ -399,9 +399,15 @@ def _extract_bins_batch(desktop, smgr, formulas, results, output_dir,
                         ["ObjectPool", name, "Equation Native"]).read()
 
                     # DEBUG: lưu raw MTEF để phân tích (lưu vào thư mục gốc)
-                    _debug_dir = os.path.dirname(os.path.abspath(__file__))
-                    with open(os.path.join(_debug_dir, f"raw_{gidx}.bin"), "wb") as _dbg:
-                        _dbg.write(eq_native_bytes)
+                    # Chi bat khi LOCAL_ENGINE_DEBUG=1 (tranh ghi rac vao thu muc skill
+                    # va tranh loi quyen ghi lam mat OLE tren may giao vien).
+                    if os.environ.get("LOCAL_ENGINE_DEBUG") == "1":
+                        try:
+                            import tempfile as _tf
+                            with open(os.path.join(_tf.gettempdir(), f"raw_{gidx}.bin"), "wb") as _dbg:
+                                _dbg.write(eq_native_bytes)
+                        except Exception:
+                            pass
 
                     # Cung tròn thuần: thay Equation Native LO bằng MTEF MathType THẬT
                     # Preview Phase 1: csup ⌢ sát chữ (không còn stack khe rộng).

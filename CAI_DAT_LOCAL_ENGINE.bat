@@ -1,119 +1,138 @@
 @echo off
 chcp 65001 >nul
-title Cai Dat Engine Xu Ly Cuc Bo (Local Engine) - MathType OLE 100%% Offline
+setlocal EnableExtensions
+title Cai Dat Local Engine - MathType OLE 100%% Offline
 
 echo.
 echo ====================================================================
-echo    CÀI ĐẶT ENGINE XỬ LÝ CỤC BỘ (LOCAL ENGINE) - 100%% OFFLINE
-echo    Xuất Word công thức chuẩn MathType OLE (Equation.DSMT4)
-echo    Không cần kết nối máy chủ Backend - Tốc độ siêu nhanh - Bảo mật
+echo    CAI DAT ENGINE XU LY CUC BO (LOCAL ENGINE) - 100%% OFFLINE
+echo    Xuat Word cong thuc chuan MathType OLE (Equation.DSMT4)
+echo    Khong can may chu Backend - Nhanh - Bao mat
 echo ====================================================================
 echo.
 
 set "PYTHON_EXE="
 
-:: ─── BƯỚC 1: TÌM PYTHON ───────────────────────────────────────────────
-echo [*] Buoc 1/3: Kiem tra moi truong Python...
-
+:: ---------------- BUOC 1: TIM PYTHON ----------------
+echo [*] Buoc 1/4: Kiem tra Python...
 py -c "import sys" >nul 2>nul
-if not errorlevel 1 (
-    set "PYTHON_EXE=py"
-    goto :PYTHON_READY
-)
+if not errorlevel 1 set "PYTHON_EXE=py"
+if defined PYTHON_EXE goto :PYTHON_READY
 
 python -c "import sys" >nul 2>nul
-if not errorlevel 1 (
-    set "PYTHON_EXE=python"
-    goto :PYTHON_READY
-)
+if not errorlevel 1 set "PYTHON_EXE=python"
+if defined PYTHON_EXE goto :PYTHON_READY
 
-for /d %%D in ("%LOCALAPPDATA%\Programs\Python\Python3*") do (
-    if exist "%%D\python.exe" (
-        set "PYTHON_EXE=%%D\python.exe"
-        goto :PYTHON_READY
-    )
-)
+for /d %%D in ("%LOCALAPPDATA%\Programs\Python\Python3*") do if exist "%%~D\python.exe" set "PYTHON_EXE=%%~D\python.exe"
+if defined PYTHON_EXE goto :PYTHON_READY
+for /d %%D in ("%ProgramFiles%\Python3*") do if exist "%%~D\python.exe" set "PYTHON_EXE=%%~D\python.exe"
+if defined PYTHON_EXE goto :PYTHON_READY
+for /d %%D in ("C:\Python3*") do if exist "%%~D\python.exe" set "PYTHON_EXE=%%~D\python.exe"
+if defined PYTHON_EXE goto :PYTHON_READY
 
-for /d %%D in ("C:\Program Files\Python3*") do (
-    if exist "%%D\python.exe" (
-        set "PYTHON_EXE=%%D\python.exe"
-        goto :PYTHON_READY
-    )
-)
-
-for /d %%D in ("C:\Python3*") do (
-    if exist "%%D\python.exe" (
-        set "PYTHON_EXE=%%D\python.exe"
-        goto :PYTHON_READY
-    )
-)
-
-echo [!] May tinh chua co Python. Vui long chay file cai_dat_tu_dong.bat truoc!
+echo [!] May tinh chua co Python.
+echo     Vui long chay file cai_dat_tu_dong.bat truoc, sau do chay lai file nay.
+echo.
 pause
 exit /b 1
 
 :PYTHON_READY
-echo [OK] Python da san sang: %PYTHON_EXE%
+echo [OK] Python: "%PYTHON_EXE%"
 echo.
 
-:: ─── BƯỚC 2: CÀI ĐẶT THƯ VIỆN CẦN THIẾT QUA PIP ──────────────────────
-echo [*] Buoc 2/3: Cai dat cac thu vien chuyen dung cho Local Engine...
-echo     (lxml, olefile, latex2mathml, python-docx, pywin32)
+:: ---------------- BUOC 2: THU VIEN PYTHON ----------------
+echo [*] Buoc 2/4: Cai thu vien cho Local Engine (lxml, olefile, latex2mathml, python-docx, pywin32)...
+"%PYTHON_EXE%" -m pip install --upgrade pip --quiet --no-warn-script-location
+"%PYTHON_EXE%" -m pip install lxml olefile latex2mathml python-docx pywin32 --no-warn-script-location
+if errorlevel 1 goto :PIP_FAILED
+echo [OK] Thu vien Python da san sang.
 echo.
+goto :CHECK_LO
 
-%PYTHON_EXE% -m pip install --upgrade pip --quiet --no-warn-script-location
-%PYTHON_EXE% -m pip install lxml olefile latex2mathml python-docx pywin32 --no-warn-script-location
-
+:PIP_FAILED
 echo.
-echo [OK] Cac thu vien Python da cai dat xong!
+echo [!] Cai thu vien qua pip chua thanh cong. Vui long kiem tra mang Internet
+echo     roi chay lai file nay.
 echo.
+pause
+exit /b 1
 
-:: ─── BƯỚC 3: KIỂM TRA & CÀI ĐẶT LIBREOFFICE HEADLESS ─────────────────
-echo [*] Buoc 3/3: Kiem tra phan mem LibreOffice (Core Engine cua Local Mode)...
-
-set "LO_EXE="
-if exist "C:\Program Files\LibreOffice\program\soffice.exe" set "LO_EXE=C:\Program Files\LibreOffice\program\soffice.exe"
-if exist "C:\Program Files (x86)\LibreOffice\program\soffice.exe" set "LO_EXE=C:\Program Files (x86)\LibreOffice\program\soffice.exe"
-if "%LO_EXE%"=="" (
-    for /f "tokens=*" %%i in ('where soffice 2^>nul') do set "LO_EXE=%%i"
-)
-
-if not "%LO_EXE%"=="" (
-    echo [OK] Da tim thay LibreOffice tai: %LO_EXE%
-    goto :VERIFY_ENGINE
-)
+:: ---------------- BUOC 3: LIBREOFFICE ----------------
+:CHECK_LO
+echo [*] Buoc 3/4: Kiem tra LibreOffice (loi xu ly cua Local Engine)...
+call :FIND_LO
+if defined LO_EXE goto :LO_FOUND
 
 echo.
-echo [!] May tinh cua ban CHUA CO LibreOffice (Thanh phan xu ly headless StarMath).
-echo     He thong se TU DONG TAI VA CAI DAT LibreOffice mien phi qua winget...
-echo     (Qua trinh nay dien ra ngam trong khoang 1 - 2 phut, khong lam anh huong den may)
+echo [!] May chua co LibreOffice (mien phi). He thong se tu dong tai va cai dat.
+echo     Neu Windows hoi quyen quan tri, Thay/Co bam "Yes" de cho phep.
+echo     Qua trinh mat khoang 2 - 5 phut tuy toc do mang.
 echo.
 
 where winget >nul 2>nul
-if not errorlevel 1 (
-    echo [*] Dang chay winget install LibreOffice...
-    winget install --id TheDocumentFoundation.LibreOffice -e --silent --accept-package-agreements --accept-source-agreements
-) else (
-    echo [!] May khong co winget. Dang mo trinh duyet de tai bo cai LibreOffice...
-    start https://www.libreoffice.org/download/download-libreoffice/
-    echo Vui long cai dat LibreOffice roi chay lai file nay!
-    pause
-    exit /b 0
-)
+if errorlevel 1 goto :NO_WINGET
 
-:VERIFY_ENGINE
+winget install --id TheDocumentFoundation.LibreOffice -e --silent --accept-package-agreements --accept-source-agreements
+call :FIND_LO
+if defined LO_EXE goto :LO_FOUND
+
 echo.
-echo ====================================================================
-echo    CHAY KIEM DINH CHUAN HOAN TAT (INTEGRITY VERIFICATION)
-echo ====================================================================
+echo [!] Chua cai duoc LibreOffice tu dong.
+goto :NO_WINGET
+
+:NO_WINGET
 echo.
-
-if exist "%~dp0scripts\local_engine\verify_local_engine.py" (
-    %PYTHON_EXE% "%~dp0scripts\local_engine\verify_local_engine.py"
-) else (
-    echo [OK] Local Engine da duoc tich hop day du!
-)
-
+echo [!] Vui long tai LibreOffice tai trang: https://www.libreoffice.org/download/
+echo     Cai dat binh thuong (Next - Next - Install), sau do chay lai file nay.
+start "" "https://www.libreoffice.org/download/download-libreoffice/"
+echo.
+echo [i] Trong luc chua co LibreOffice, Skill van xuat MathType OLE qua may chu
+echo     Cloud du phong (can mang Internet).
 echo.
 pause
+exit /b 0
+
+:LO_FOUND
+echo [OK] LibreOffice: "%LO_EXE%"
+echo.
+
+:: ---------------- BUOC 4: KIEM DINH ----------------
+echo [*] Buoc 4/4: Chay thu chuyen doi cong thuc mau sang MathType OLE...
+echo.
+if not exist "%~dp0scripts\local_engine\verify_local_engine.py" goto :NO_ENGINE_FILES
+"%PYTHON_EXE%" "%~dp0scripts\local_engine\verify_local_engine.py"
+if errorlevel 1 goto :VERIFY_FAILED
+
+echo.
+echo ====================================================================
+echo   [HOAN TAT] LOCAL ENGINE DA SAN SANG 100%%!
+echo   Tu nay Skill se uu tien xuat MathType OLE ngay tren may (Offline).
+echo ====================================================================
+echo.
+pause
+exit /b 0
+
+:VERIFY_FAILED
+echo.
+echo [!] Kiem dinh chua dat. Skill van hoat dong qua may chu Cloud du phong.
+echo     Thay/Co hay chup man hinh nay gui tac gia de duoc ho tro.
+echo.
+pause
+exit /b 1
+
+:NO_ENGINE_FILES
+echo [!] Khong tim thay thu muc scripts\local_engine trong Skill.
+echo     Vui long chay cap_nhat_tu_dong.bat de tai ban moi nhat.
+echo.
+pause
+exit /b 1
+
+:: ---------------- HAM TIM LIBREOFFICE ----------------
+:FIND_LO
+set "LO_EXE="
+if exist "%ProgramFiles%\LibreOffice\program\soffice.exe" set "LO_EXE=%ProgramFiles%\LibreOffice\program\soffice.exe"
+if defined LO_EXE exit /b 0
+if exist "%ProgramFiles(x86)%\LibreOffice\program\soffice.exe" set "LO_EXE=%ProgramFiles(x86)%\LibreOffice\program\soffice.exe"
+if defined LO_EXE exit /b 0
+for /f "delims=" %%i in ('where soffice 2^>nul') do if not defined LO_EXE set "LO_EXE=%%i"
 exit /b 0
