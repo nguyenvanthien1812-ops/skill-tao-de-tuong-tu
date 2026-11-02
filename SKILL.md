@@ -8,7 +8,7 @@ description: >-
 
   tạo đề tương tự (song song) từ đề gốc PDF/Word/ảnh; lập Ma trận & Bản đặc tả; ra đề theo ma trận có sẵn; tạo đề Tiếng Anh & xuất file nghe MP3 (Edge Neural TTS đa giọng đọc bản xứ, nhạc hiệu phòng thi, phát 2 lần, đồng bộ 100% câu hỏi); vẽ hình kỹ thuật 300-450 DPI (Matplotlib/TikZ: đồ thị, hình không gian, mạch điện, thí nghiệm hóa, bảng biến thiên);
 
-  chuyển PDF sang Word không lỗi công thức; chuẩn hóa công thức file Word; trộn bộ 4 mã đề + phiếu tô trắc nghiệm + Excel đáp án; dịch đề sang tiếng Anh/song ngữ; xuất PDF in ấn; chấm bài tự luận bằng AI; OCR ảnh đề thi; đọc file MathType OLE cũ; thẩm định & rà soát đề thi theo 44 tiêu chí chuẩn GDPT 2018 (xuất biên bản Word & Dashboard Excel + Auto-fix lỗi tự động); cài đặt môi trường 1-click; soạn Kế hoạch bài dạy / giáo án chuẩn Công văn 5512 (THCS, THPT) và Công văn 2345 (Tiểu học) tích hợp Năng lực số (Thông tư 02/2025/TT-BGDĐT), Năng lực AI (Quyết định 3439/QĐ-BGDĐT & QĐ 2422), HSKT, Tiếng Anh chuyên ngành bảo toàn 100% MathType OLE; soạn slide PowerPoint (PPTX 16:9) bài giảng dạy học chuẩn mực sư phạm từ Giáo án/SGK Native DrawingML không đè chữ; tạo kịch bản & prompt Veo 3 video khởi động bài học 60-80s đồng nhất nhân vật; tạo Video Tương Tác E-Learning từ link YouTube, Giáo án Word (.docx) hoặc Sách giáo khoa (PDF/ảnh chụp) (chống tua nhanh, 10 dạng câu hỏi nhúng chuẩn GDPT 2018, tự phân lớp Google Sheets, chuẩn đạt 80%, tối ưu di động, bảo mật & đổi mật khẩu Chế độ Thầy Cô 1-click); 
+  chuyển PDF sang Word không lỗi công thức; chuẩn hóa công thức file Word; trộn bộ 4 mã đề + phiếu tô trắc nghiệm + Excel đáp án; dịch đề sang tiếng Anh/song ngữ; xuất PDF in ấn; chấm bài tự luận bằng AI; OCR ảnh đề thi; đọc file MathType OLE cũ; thẩm định & rà soát đề thi theo 44 tiêu chí chuẩn GDPT 2018 (xuất biên bản Word & Dashboard Excel + Auto-fix lỗi tự động); cài đặt môi trường 1-click; soạn Kế hoạch bài dạy / giáo án chuẩn Công văn 5512 (THCS, THPT) và Công văn 2345 (Tiểu học) tích hợp Năng lực số (Thông tư 02/2025/TT-BGDĐT), Năng lực AI (Quyết định 3439/QĐ-BGDĐT & QĐ 2422), HSKT, Tiếng Anh chuyên ngành bảo toàn 100% MathType OLE; soạn slide PowerPoint (PPTX 16:9) bài giảng dạy học chuẩn mực sư phạm từ Giáo án/SGK Native DrawingML không đè chữ; tạo kịch bản & prompt Veo 3 video khởi động bài học 60-80s đồng nhất nhân vật; tạo Video Tương Tác E-Learning từ link YouTube, Giáo án Word (.docx) hoặc Sách giáo khoa (PDF/ảnh chụp) (chống tua nhanh, 10 dạng câu hỏi nhúng chuẩn GDPT 2018, tự phân lớp Google Sheets, chuẩn đạt 80%, tối ưu di động, bảo mật & đổi mật khẩu Chế độ Thầy Cô 1-click);
 
   Kích hoạt khi người dùng nói: "tôi muốn làm pptx", "tôi muốn tạo pptx", "tôi muốn làm slide", "tôi muốn tạo slide", "làm pptx", "tạo pptx", "làm slide", "tạo slide", "soạn slide", "tạo slide bài giảng", "làm pptx từ giáo án", "soạn bài giảng powerpoint", "slide toán omml", "thêm lời bình cho slide", "viết lời bình pptx", "tôi muốn làm video", "tạo video bài học", "làm video khởi động", "viết prompt veo 3", "tạo kịch bản video", "tạo file nghe mp3", "làm file nghe tiếng anh", "tạo audio listening", "tạo đề tiếng anh", "cập nhật tính năng mới", "cập nhật tiện ích", "cập nhật skill", "update skill", "soạn giáo án", "soạn giáo án tích hợp năng lực số", "soạn giáo án tích hợp ai", "soạn giáo án 5512", "soạn giáo án 2345", "chèn năng lực số", "chèn nls", "chèn ai vào giáo án", "tích hợp năng lực số", "kế hoạch bài dạy nls", "chèn nls vào word", "tạo đề tương tự", "nhân bản đề thi", "tạo đề toán/lý/hóa/KHTN", "tạo ma trận đặc tả", "tạo đề từ ma trận", "chưa có ma trận đặc tả", "trích xuất ma trận", "chuyển pdf sang word", "chuẩn hóa công thức word", "xuất word mathtype", "tạo bộ 4 mã đề", "trộn đề", "tạo phiếu trả lời", "dịch đề sang tiếng anh", "đề song ngữ", "xuất pdf đẹp", "chấm bài tự luận", "vẽ hình", "vẽ đồ thị", "render tikz", "ocr ảnh đề thi", "đọc file docx mathtype", "thẩm định đề thi", "rà soát đề thi", "kiểm tra đề thi", "thẩm định ma trận", "rà soát lời giải", "biên bản thẩm định", "đánh giá chất lượng đề", "thí nghiệm ảo", "mô phỏng 3d", "cài đặt môi trường", "hướng dẫn tạo đề", "tôi muốn tạo video tương tác", "tôi muốn làm video tương tác", "hướng dẫn tạo video tương tác", "làm video có câu hỏi tương tác", "video chống tua nhanh", "tạo video e-learning", "video tích hợp câu hỏi", "làm video học sinh không tua được", "tạo interactive video", "video ghi điểm vào google sheet", "làm video từ giáo án", "làm video từ giáo án word", "làm video từ sách giáo khoa", "làm video từ file sgk", "tạo video tương tác từ giáo án", "tạo video tương tác từ sách giáo khoa", "tạo video tương tác từ sgk", "làm video tương tác từ slide", "tạo video tương tác từ pptx", "tôi có file slide rồi", "tôi muốn thay đổi mật khẩu chế độ thầy cô", "thay đổi mật khẩu chế độ thầy cô", "đổi mật khẩu chế độ thầy cô", "đổi mật khẩu thầy cô", "đặt mật khẩu chế độ thầy cô".
 
@@ -75,19 +75,19 @@ Skill này tự động hóa toàn bộ quy trình biên soạn đề kiểm tra
 > [!IMPORTANT]
 > **QUY TẮC BẮT BUỘC KHI THỰC HIỆN BẤT KỲ CÔNG VIỆC NÀO LIÊN QUAN ĐẾN MATHTYPE:**
 > Khi thực hiện bất kỳ tác vụ nào (Tạo đề thi mới, Chuyển đổi PDF sang Word, Chuẩn hóa công thức file Word cũ, Soạn giáo án tích hợp NLS & AI):
-> 
+>
 > 1. **LUÔN ƯU TIÊN HÀNG ĐẦU CHO LOCAL ENGINE (100% OFFLINE):**
 >    - Nếu máy tính đã có LibreOffice và gói `scripts/local_engine/`, hệ thống **BẮT BUỘC gọi trực tiếp Local Engine** (`docx_processor.py` + `libreoffice_renderer.py` + `mathtype_ole_builder.py`).
 >    - **Tuyệt đối không gửi file lên Backend Cloud** khi Local Engine đang sẵn sàng.
 >    - Đảm bảo tốc độ biên dịch siêu tốc (5 - 15 giây cho cả đề thi 250 công thức), bảo mật dữ liệu tuyệt đối và làm việc trơn tru kể cả khi máy không có mạng Internet.
-> 
+>
 > 2. **CHỈ FALLBACK SANG CLOUD BACKEND KHI VÀ CHỈ KHI:**
 >    - Máy tính của giáo viên chưa cài đặt LibreOffice hoặc Local Engine gặp lỗi không thể phục hồi.
-> 
+>
 > 3. **BẢO ĐẢM 100% MATHTYPE OLE NGUYÊN BẢN (Equation.DSMT4):**
 >    - Toàn bộ công thức toán học phải là OLE nhúng thực thụ (`ProgID Equation.DSMT4`, font Times New Roman 13-14pt, WMF Aldus placeable header, MTEF v5 nhị phân).
 >    - Tuyệt đối không dùng Word Equation (`Cambria Math`, `m:oMath`) làm bản chính. Khi nhấp đúp chuột trong Word, bắt buộc phải mở trực tiếp phần mềm MathType 6/7.
-> 
+>
 > 4. **🎯 4 LỜI KHUYÊN VÀNG KHI SOẠN THẢO CÔNG THỨC TOÁN, LÝ, HÓA (AGENT & GIÁO VIÊN):**
 >    - **Lời khuyên 1 — Bao ngoặc nhọn `{ }` đầy đủ:** Luôn bao số mũ, chỉ số dưới và biểu thức con trong `{ }` (VD: `x_{12}`, `a^{2n+1}`, `C_n^k`, `v_0`, `^{238}_{\;92}\mathrm{U}`). Tuyệt đối không gõ `x_12` hay `a^2n+1`.
 >    - **Lời khuyên 2 — Tiếng Việt & chú thích chữ BẮT BUỘC nằm trong `\text{...}`:** Không gõ tiếng Việt trần trụi vào giữa math mode (VD: Đúng: `$S_{\text{tam giác}} = \frac{1}{2}ah$`, `$\vec{F}_{\text{hl}} = m \vec{a}$`, `$\Delta_r H_{298}^\circ = \sum E_b(\text{cđ}) - \sum E_b(\text{sp})$`, `$C\% = \frac{m_{\text{ct}}}{m_{\text{dd}}} \times 100\%$`).
@@ -175,53 +175,28 @@ Khi nhận được **BẤT KỲ YÊU CẦU NÀO** từ người dùng (tạo đ
 
 1. **Xác thực bản quyền trên máy tính (AUTHORITATIVE CHECK)**:
 
-   - **Cách 1 (Ưu tiên số 1 - Nhanh & chuẩn xác nhất)**: Dùng lệnh chạy kiểm tra qua script bản quyền:
-
+   - **Chạy lệnh kiểm tra bắt buộc qua script bản quyền**:
      Chạy lệnh terminal: `python "<ĐƯỜNG_DẪN_SKILL>/scripts/license_manager.py" --check` (hoặc kiểm tra tại `%USERPROFILE%/.gemini/config/skills/tao-de-toan-tuong-tu/scripts/license_manager.py`).
 
-     Nếu lệnh trả về mã exit code 0 (`HỢP LỆ`): License đã được kích hoạt thành công trên máy tính, **LẬP TỨC TIẾN HÀNH BƯỚC 1 VÀ TẠO ĐỀ NGAY**, tuyệt đối không chặn hay báo lỗi!
+     + **Nếu lệnh trả về mã exit code 0 (`HỢP LỆ`)**: License đã được kích hoạt thành công trên máy tính, còn hạn sử dụng hợp lệ. **LẬP TỨC TIẾN HÀNH BƯỚC 1 VÀ TẠO ĐỀ NGAY**, tuyệt đối không chặn hay báo lỗi!
+     + **Nếu lệnh trả về mã exit code khác 0 (Chưa kích hoạt, Sai mã máy, Bị thu hồi, hoặc HẾT HẠN)**: Tuyệt đối NGHIÊM CẤM tạo đề/soạn thảo! Chỉ hiển thị thông báo lỗi và yêu cầu kích hoạt lại hoặc gia hạn.
 
-   - **Cách 2 (Kiểm tra sự tồn tại của file `license.key`)**:
-
-     Kiểm tra file `license.key` tại một trong các vị trí sau:
-
-     + Trong thư mục của skill này (cùng thư mục với `SKILL.md` này).
-
-     + Thư mục toàn cục Antigravity: `%USERPROFILE%/.gemini/config/skills/tao-de-toan-tuong-tu/license.key`
-
-     + Thư mục người dùng: `%USERPROFILE%/.gemini/license.key`
-
-     + Thư mục làm việc hiện tại (workspace root hoặc thư mục con `tao-de-toan-tuong-tu/license.key`).
-
-     👉 **Nếu tìm thấy file `license.key` ở BẤT KỲ VỊ TRÍ NÀO TRÊN**, coi như đã kích hoạt thành công và tiến hành tạo đề ngay!
-
-   - **Cách 3 (Nếu người dùng dán trực tiếp mã License Key vào khung chat)**:
-
+   - **Nếu người dùng dán trực tiếp mã License Key mới vào khung chat**:
      + Kích hoạt ngay bằng lệnh: `python "<ĐƯỜNG_DẪN_SKILL>/scripts/license_manager.py" --activate "<MÃ_KEY>"`
+     + Sau đó kiểm tra lại bằng `--check`, nếu hợp lệ thì tiến hành phục vụ người dùng ngay lập tức!
 
-     + Hoặc tạo file `license.key` với nội dung chuỗi key đó tại cả thư mục skill và thư mục `%USERPROFILE%/.gemini/config/skills/tao-de-toan-tuong-tu/license.key`.
-
-     + Sau đó tiến hành tạo đề ngay cho người dùng!
-
-
-
-2. **Nếu và chỉ nếu TẤT CẢ các bước kiểm tra trên đều thất bại (hoàn toàn không có file `license.key` và lệnh --check báo lỗi):**
+2. **Nếu kiểm tra thất bại (hoàn toàn không có license hợp lệ, license hết hạn hoặc bị thu hồi):**
 
    - **TUYỆT ĐỐI NGHIÊM CẤM:** Không được sinh bất kỳ câu hỏi nào ra khung chat, không được soạn đề thi, không được giải toán, không được viết code, không được xuất file Word hay vẽ hình.
 
    - **CHỈ ĐƯỢC PHÉP TRẢ LỜI DUY NHẤT thông báo sau:**
 
-     > "⛔ **SKILL CHƯA ĐƯỢC KÍCH HOẠT BẢN QUYỀN TRÊN MÁY TÍNH NÀY!**  
-
+     > "⛔ **SKILL CHƯA ĐƯỢC KÍCH HOẠT HOẶC ĐÃ HẾT HẠN BẢN QUYỀN TRÊN MÁY TÍNH NÀY!**  
      >   
-
-     > Để sử dụng phần mềm tạo đề thi, thầy/cô vui lòng:  
-
+     > Để tiếp tục sử dụng phần mềm tạo đề thi, thầy/cô vui lòng:  
      > 1. Nhấp đúp vào file **`LAY_MA_MAY.bat`** trong thư mục phần mềm để lấy Mã máy (Machine ID).  
-
-     > 2. Gửi Mã máy cho tác giả để nhận License Key bản quyền.  
-
-     > 3. Nhấp đúp vào file **`KICH_HOAT_BAN_QUYEN.bat`** để dán Key kích hoạt và sử dụng vĩnh viễn (hoặc gửi trực tiếp mã License Key vào khung chat này để em kích hoạt giúp thầy/cô)."
+     > 2. Gửi Mã máy cho tác giả để nhận License Key bản quyền (hoặc gia hạn bản quyền 1 năm).  
+     > 3. Nhấp đúp vào file **`KICH_HOAT_BAN_QUYEN.bat`** để dán Key kích hoạt (hoặc gửi trực tiếp mã License Key vào khung chat này để em kích hoạt giúp thầy/cô)."
 
    - **DỪNG TIẾN TRÌNH NGAY LẬP TỨC!** Không trả lời thêm bất kỳ nội dung đề thi nào.
 
@@ -257,19 +232,19 @@ Khi nhận được **BẤT KỲ YÊU CẦU NÀO** từ người dùng (tạo đ
 
        * **DỪNG NGAY LẬP TỨC** và chỉ trả lời thông báo lịch sự sau:
 
-         > "🔒 **TIỆN ÍCH NÀY CHƯA NẰM TRONG GÓI BẢN QUYỀN HIỆN TẠI CỦA THẦY/CÔ!**  
+         > "🔒 **TIỆN ÍCH NÀY CHƯA NẰM TRONG GÓI BẢN QUYỀN HIỆN TẠI CỦA THẦY/CÔ!**
 
-         >   
+         >
 
-         > • **Tiện ích Thầy/Cô đang yêu cầu:** `<Tên tiện ích đang gọi>`  
+         > • **Tiện ích Thầy/Cô đang yêu cầu:** `<Tên tiện ích đang gọi>`
 
-         > • **Gói bản quyền hiện tại trên máy đang mở khóa:** `<Tên các tiện ích trong Gói mở khóa>`  
+         > • **Gói bản quyền hiện tại trên máy đang mở khóa:** `<Tên các tiện ích trong Gói mở khóa>`
 
-         >   
+         >
 
-         > 💡 **Cách mở khóa thêm tiện ích (không cần cài đặt lại phần mềm):**  
+         > 💡 **Cách mở khóa thêm tiện ích (không cần cài đặt lại phần mềm):**
 
-         > 1. Thầy/Cô vui lòng liên hệ Tác giả để đăng ký mở khóa thêm tiện ích này (hoặc nâng cấp lên gói **FULL VIP Trọn bộ 8 tiện ích**).  
+         > 1. Thầy/Cô vui lòng liên hệ Tác giả để đăng ký mở khóa thêm tiện ích này (hoặc nâng cấp lên gói **FULL VIP Trọn bộ 8 tiện ích**).
 
          > 2. Sau khi nhận Mã License Key mới từ Tác giả, Thầy/Cô chỉ cần dán trực tiếp mã đó vào khung chat này (hoặc chạy `KICH_HOAT_BAN_QUYEN.bat`) là mở khóa sử dụng được ngay!"
 
