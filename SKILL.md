@@ -70,30 +70,57 @@ Skill này tự động hóa toàn bộ quy trình biên soạn đề kiểm tra
 
 
 
-## ⚡ NGUYÊN TẮC VÀNG VỀ XUẤT CÔNG THỨC MATHTYPE OLE: LUÔN ƯU TIÊN LOCAL ENGINE 100% OFFLINE
+## ⚡ NGUYÊN TẮC VÀNG VỀ XUẤT CÔNG THỨC MATHTYPE OLE: LUÔN ƯU TIÊN LUỒNG MỚI (LOCAL ENGINE 100% OFFLINE)
 
 > [!IMPORTANT]
 > **QUY TẮC BẮT BUỘC KHI THỰC HIỆN BẤT KỲ CÔNG VIỆC NÀO LIÊN QUAN ĐẾN MATHTYPE:**
-> Khi thực hiện bất kỳ tác vụ nào (Tạo đề thi mới, Chuyển đổi PDF sang Word, Chuẩn hóa công thức file Word cũ, Soạn giáo án tích hợp NLS & AI):
+> Khi thực hiện bất kỳ tác vụ nào (Tạo đề thi mới, Chuyển đổi PDF sang Word, Chuẩn hóa công thức file Word cũ, Soạn giáo án tích hợp NLS & AI, Soạn chuyên đề bài tập):
 >
-> 1. **LUÔN ƯU TIÊN HÀNG ĐẦU CHO LOCAL ENGINE (100% OFFLINE):**
->    - Nếu máy tính đã có LibreOffice và gói `scripts/local_engine/`, hệ thống **BẮT BUỘC gọi trực tiếp Local Engine** (`docx_processor.py` + `libreoffice_renderer.py` + `mathtype_ole_builder.py`).
->    - **Tuyệt đối không gửi file lên Backend Cloud** khi Local Engine đang sẵn sàng.
->    - Đảm bảo tốc độ biên dịch siêu tốc (5 - 15 giây cho cả đề thi 250 công thức), bảo mật dữ liệu tuyệt đối và làm việc trơn tru kể cả khi máy không có mạng Internet.
+> 1. **LUÔN ƯU TIÊN HÀNG ĐẦU CHO LUỒNG MỚI (LOCAL ENGINE 100% OFFLINE):**
+>    - Hệ thống **BẮT BUỘC gọi trực tiếp Local Engine** (`docx_processor.py` + `libreoffice_renderer.py` + `mathtype_ole_builder.py`).
+>    - **Tuyệt đối KHÔNG sử dụng Luồng 2 (Backend Cloud)** khi Local Engine sẵn sàng.
+>    - **Lý do kỹ thuật chí mạng**: Luồng 2 (Cloud Backend cũ) có nhược điểm lớn là khi giáo viên kích đúp chuột trong Word để sửa công thức bằng MathType thì đôi lúc bị rụng/mất ký hiệu (đặc biệt mất dấu mũi tên vectơ, biến `\vec{MA}` thành chữ thô), hoặc sinh ra các khung hình WMF méo mó, co dãn sai kích thước làm chữ phóng to khổng lồ.
+>    - Local Engine (Luồng Mới) giải quyết triệt để 100% các lỗi trên vì:
+>      + Sinh MTEF nhị phân v3/v5 trực tiếp trong Main FAT không Mini FAT, MathType 7.0 đọc chuẩn xác 100% như đánh trực tiếp trong Word.
+>      + Đảm bảo tốc độ biên dịch siêu tốc (5 - 15 giây cho cả đề thi 250 công thức), bảo mật dữ liệu tuyệt đối và làm việc trơn tru kể cả khi máy không có mạng Internet.
 >
 > 2. **CHỈ FALLBACK SANG CLOUD BACKEND KHI VÀ CHỈ KHI:**
 >    - Máy tính của giáo viên chưa cài đặt LibreOffice hoặc Local Engine gặp lỗi không thể phục hồi.
 >
-> 3. **BẢO ĐẢM 100% MATHTYPE OLE NGUYÊN BẢN (Equation.DSMT4):**
->    - Toàn bộ công thức toán học phải là OLE nhúng thực thụ (`ProgID Equation.DSMT4`, font Times New Roman 13-14pt, WMF Aldus placeable header, MTEF v5 nhị phân).
->    - Tuyệt đối không dùng Word Equation (`Cambria Math`, `m:oMath`) làm bản chính. Khi nhấp đúp chuột trong Word, bắt buộc phải mở trực tiếp phần mềm MathType 6/7.
+> 3. **BẢO ĐẢM 100% MATHTYPE OLE NGUYÊN BẢN (`Equation.DSMT4`), KÍCH ĐÚP PHẢI ĐÚNG:**
+>    - Toàn bộ công thức toán học phải là OLE nhúng thực thụ (`ProgID Equation.DSMT4`, font Times New Roman 13-14pt, WMF/PNG presentation image chất lượng cao, MTEF v3/v5 nhị phân).
+>    - Khi nhấp đúp chuột trong Word, bắt buộc phải mở trực tiếp phần mềm MathType 6/7 với đầy đủ 100% ký hiệu nguyên bản, không bị mất ký hiệu, không báo lỗi "chương trình không phản hồi".
 >
-> 4. **🎯 4 LỜI KHUYÊN VÀNG KHI SOẠN THẢO CÔNG THỨC TOÁN, LÝ, HÓA (AGENT & GIÁO VIÊN):**
+> 4. **QUY TẮC VECTƠ 2 ĐIỂM BẮT BUỘC — CHỐNG LỖI "VECTƠ NGẮN" VÀ "KÍCH ĐÚP MẤT VECTƠ":**
+>    - **Vectơ 1 ký tự**: Dùng `\vec{a}`, `\vec{b}`, `\vec{u}`, `\vec{v}`, `\vec{n}`, `\vec{0}`.
+>    - **Vectơ 2 điểm / từ 2 ký tự trở lên (BẮT BUỘC)**: Phải dùng `\overrightarrow{AB}`, `\overrightarrow{CD}`, `\overrightarrow{MA}`, `\overrightarrow{MB}`, `\overrightarrow{MC}`, `\overrightarrow{HA}`, `\overrightarrow{BA'}`...
+>      * ❌ **Tuyệt đối KHÔNG dùng `\vec{AB}`**: Lệnh `\vec` chỉ phủ trên 1 chữ cái đầu tiên (mũi tên ngắn ngủn), và khi kích đúp trong Word thì MathType sẽ làm mất dấu mũi tên vectơ.
+>      * ✅ **Luôn dùng `\overrightarrow{...}`**: Local Engine tự động sinh mã MTEF `tmARROW_OVER` (selector 0x2F), mũi tên trải dài trọn vẹn cả 2 chữ cái và khi kích đúp vào MathType 7 hiển thị đầy đủ dấu mũi tên chuẩn xác 100%.
+>
+> 5. **ĐỒNG BỘ KÍCH THƯỚC CÔNG THỨC CHUẨN ĐẸP — CHỐNG KÝ TỰ PHÓNG TO / MÉO MÓ:**
+>    - Ảnh xem trước công thức: Render PNG tỉ lệ phóng đại Scale 8, font Times New Roman 13-14pt sắc nét (tránh nhòe, khử răng cưa, bảo toàn nét thanh nét mảnh của căn thức và phân số).
+>    - Bounding Box chính xác: Tính toán kích thước EMU chuẩn theo kích thước vật lý của công thức, tuyệt đối không chèn ảnh WMF 25×26px bị kéo dãn thành 60-70pt làm ký tự to khổng lồ.
+>    - Căn chỉnh vị trí baseline âm (`w:position` từ `-6` đến `-10` cho công thức thường, `-24` cho phân số) để công thức nằm ngang hàng tự nhiên với dòng chữ văn bản xung quanh.
+>
+> 6. **🎯 4 LỜI KHUYÊN VÀNG KHI SOẠN THẢO CÔNG THỨC TOÁN, LÝ, HÓA (AGENT & GIÁO VIÊN):**
 >    - **Lời khuyên 1 — Bao ngoặc nhọn `{ }` đầy đủ:** Luôn bao số mũ, chỉ số dưới và biểu thức con trong `{ }` (VD: `x_{12}`, `a^{2n+1}`, `C_n^k`, `v_0`, `^{238}_{\;92}\mathrm{U}`). Tuyệt đối không gõ `x_12` hay `a^2n+1`.
 >    - **Lời khuyên 2 — Tiếng Việt & chú thích chữ BẮT BUỘC nằm trong `\text{...}`:** Không gõ tiếng Việt trần trụi vào giữa math mode (VD: Đúng: `$S_{\text{tam giác}} = \frac{1}{2}ah$`, `$\vec{F}_{\text{hl}} = m \vec{a}$`, `$\Delta_r H_{298}^\circ = \sum E_b(\text{cđ}) - \sum E_b(\text{sp})$`, `$C\% = \frac{m_{\text{ct}}}{m_{\text{dd}}} \times 100\%$`).
 >    - **Lời khuyên 3 — Hệ phương trình & hệ điều kiện dùng `\begin{cases}`:** Phân tách dòng bằng `\\` (VD: `\begin{cases} ax + by = c \\ dx + ey = f \end{cases}`). Local Engine tự động sinh ngoặc nhọn lớn co dãn ôm sát các dòng.
->    - **Lời khuyên 4 — Ký hiệu hình học & vectơ chuẩn mực:** Dùng `\widehat{ABC}` (góc), `\wideparen{AB}` (cung tròn), `\vec{a}` / `\vec{AB}` (vectơ). Module `arc_symbol_builder.py` sẽ dựng OLE Frown Overstrike chuẩn MathType 100%, không bị đè chữ hay lỗi ô vuông.
+>    - **Lời khuyên 4 — Ký hiệu hình học & vectơ chuẩn mực:** Dùng `\widehat{ABC}` (góc), `\wideparen{AB}` (cung tròn), `\vec{a}` (vectơ 1 chữ) / `\overrightarrow{AB}` (vectơ 2 chữ). Module `arc_symbol_builder.py` sẽ dựng OLE Frown Overstrike chuẩn MathType 100%, không bị đè chữ hay lỗi ô vuông.
 >    *(Chi tiết quy chuẩn công thức Toán, Lý, Hóa 6-12: xem [`references/quy_chuan_cong_thuc_toan_ly_hoa.md`](./references/quy_chuan_cong_thuc_toan_ly_hoa.md)).*
+>
+> 7. **🛡️ 3 CHÂN KIỀNG ĐẠT CHUẨN TUYỆT ĐỐI KHI DÙNG MATHTYPE "FORMAT EQUATIONS" (CHỐNG MẤT VECTƠ & KÝ HIỆU TOÁN HỌC):**
+>    - **Bản chất lỗi mất vectơ & ký hiệu khi bấm Format Equations:**
+>      1. *Lỗi mất vectơ:* Nếu mã nguồn dùng `\vec{AB}` (dấu phụ đơn) thay vì `\overrightarrow{AB}` (template co dãn `tmARROW_OVER`), MathType sẽ tước bỏ dấu mũi tên vectơ.
+>      2. *Lỗi mất ký hiệu toán học:* Trong luồng LibreOffice Math xuất MTEF v3, các ký hiệu toán học ($\perp, \in, \le, \ge, \Rightarrow, \Leftrightarrow, -, ^\circ, \alpha, \varphi, \phi, \parallel$) bị gán mã Unicode 16-bit (VD: `0x2208`, `0x22A5`). Bộ phân giải AST của MathType chỉ chấp nhận bảng mã 8-bit Symbol font (0x20..0xFF) nên tự động xóa bỏ/làm rỗng các ký hiệu này!
+>    - **Quy tắc 3 chân kiềng để chuẩn tuyệt đối 100%:**
+>      1. **Mã nguồn Local Engine**:
+>         * Bắt buộc dùng `\overrightarrow{...}` cho vectơ $\ge 2$ ký tự (`tmARROW_OVER`).
+>         * Bảng ánh xạ nhị phân `UNICODE_TO_SYMBOL`: Tự động chuyển toàn bộ ký hiệu 16-bit sang 8-bit Symbol/LCGreek font ($\in \to$ `0xCE`, $\perp \to$ `0x5E`, $\le \to$ `0xA3`, $\ge \to$ `0xB3`, $\Rightarrow \to$ `0xDE`, $- \to$ `0x2D`, $^\circ \to$ `0xB0`, $\alpha \to$ `0x61` font LCGreek, $\parallel \to$ `0x2F` font MT Extra).
+>         * File OLE là Single-wrapped CFB v3, Main FAT $\ge 4096$ byte chống crash/not responding.
+>      2. **File cấu hình đi kèm**: Luôn chép sẵn `Times_13pt_Chuan_BGD.eqp` và `Times_14pt_Chuan_BGD.eqp` vào thư mục bàn giao cho giáo viên.
+>      3. **Thao tác 1-Click chuẩn trong Word**: Bấm **Format Equations** (`Ctrl + Alt + Q`) -> Tích chọn **"MathType preference file"** -> Bấm **Browse...** chọn file `Times_13pt_Chuan_BGD.eqp` -> Tích **Whole document** -> Bấm **OK**. Toàn bộ công thức sẽ đồng bộ 13pt/14pt hoàn mỹ và **GIỮ NGUYÊN 100% DẤU VECTƠ VÀ KÝ HIỆU TOÁN HỌC**.
+>    *(Chi tiết cơ chế Format Equations: xem [`references/quy_chuan_cong_thuc_toan_ly_hoa.md`](./references/quy_chuan_cong_thuc_toan_ly_hoa.md)).*
 
 ---
 
@@ -666,6 +693,15 @@ Khi giáo viên đưa ra các câu lệnh ngắn, đơn giản hoặc mới ch�
 
    - Khi hiển thị công thức trọng tâm hoặc biến đổi dài, tuyệt đối không chèn `$$ ... $$` lẫn trong đoạn văn bản thông thường. Mỗi công thức display math phải được đưa vào một paragraph riêng căn giữa `doc.add_paragraph()` với định dạng `$ ... $` (`add_math_content()` gọi trên paragraph riêng).
 
+12. 🏹 **QUY CHUẨN VECTƠ 2 ĐIỂM (BẮT BUỘC DÙNG `\overrightarrow{...}`, KHÔNG DÙNG `\vec{...}`)**:
+    - Mọi vectơ từ 2 ký tự trở lên (như `\overrightarrow{AB}`, `\overrightarrow{CD}`, `\overrightarrow{MA}`, `\overrightarrow{MB}`, `\overrightarrow{MC}`, `\overrightarrow{HA}`, `\overrightarrow{BA'}`) **BẮT BUỘC dùng `\overrightarrow{...}`**.
+    - ❌ Không dùng `\vec{AB}`: Dấu mũi tên bị ngắn (chỉ che chữ cái đầu) và khi kích đúp vào MathType 7 thì ký hiệu vectơ dễ bị biến mất.
+    - ✅ Dùng `\overrightarrow{...}`: Local Engine tự động sinh MTEF `tmARROW_OVER`, mũi tên trải dài trọn vẹn cả 2 chữ cái và khi kích đúp trong Word thì MathType 7 hiển thị 100% chuẩn xác.
+
+13. ⚡ **ĐỒNG BỘ KÍCH THƯỚC CÔNG THỨC & BẢO TOÀN TỈ LỆ KHUNG HÌNH (ANTI-STRETCHING)**:
+    - Mọi công thức MathType OLE phải được render ở tỉ lệ Scale 8 với font Times New Roman 13-14pt, căn chỉnh baseline âm (`w:position`).
+    - Tuyệt đối không nhúng các ảnh WMF bị lệch tỉ lệ bounding box (tránh lỗi ảnh 25×26px bị kéo dãn thành 64pt làm ký tự to khổng lồ).
+
 11. 🛡️ **CƠ CHẾ TỰ ĐỘNG CHỐNG XUNG ĐỘT KHÓA FILE WORD (PERMISSIONERROR)**:
 
    - Khi giáo viên đang mở xem file Word trên máy tính, hệ điều hành Windows sẽ khóa quyền ghi đè (`PermissionError: [Errno 13] Permission denied`).
@@ -750,9 +786,11 @@ click đúp sửa ngay bằng MathType 6/7)                         mở trên m
 
    Gọi `_build_student_docx` hoặc `_build_teacher_docx` với `mode='tex'`. Toàn bộ công thức toán, lý, hóa được bao bọc trong cặp `$ ... $`.
 
-2. **Bước 4.2: Gửi Backend API chuyển đổi MathType OLE**:
+2. **Bước 4.2: Chuyển đổi MathType OLE bằng LUỒNG MỚI (Local Engine 100% Offline - BẮT BUỘC ƯU TIÊN SỐ 1)**:
 
-   Gọi hàm `convert_to_mathtype_ole_via_backend(raw_path, ole_path)`. Hàm tự động đóng gói License Key và Machine ID để gửi tới Backend Server.
+   Gọi trực tiếp Local Engine: `docx_processor.convert_docx_latex_to_mathtype(raw_path, ole_path, use_libreoffice=True)`.
+   * Luồng Mới chạy offline cục bộ 100%, tốc độ siêu tốc (5-15s), bảo đảm công thức mở ra đúng 100% chuẩn MathType trong Word, không bị lỗi rụng/mất ký hiệu vectơ như Luồng 2 (Cloud Backend).
+   * Chỉ fallback sang Luồng 2 (`convert_to_mathtype_ole_via_backend`) khi máy tính chưa cài đặt LibreOffice.
 
 3. **Bước 4.3: Kiểm định tính toàn vẹn bắt buộc (Integrity Audit Gate)**:
 

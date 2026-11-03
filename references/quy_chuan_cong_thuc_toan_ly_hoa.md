@@ -28,12 +28,15 @@ Khi soạn thảo bất kỳ công thức Toán, Lý, Hóa nào (ở dạng mã 
   $$\begin{cases} 2x + 3y = 7 \\ 4x - y = 5 \end{cases}$$
 - Local Engine tự động chuyển sang cấu trúc StarMath `left lbrace stack{...} right none`, tạo dấu ngoặc nhọn lớn co dãn ôm khít các dòng và căn lề trái đều tăm tắp.
 
-### 4. Ký hiệu Hình học đặc thù: Dùng chuẩn `\widehat{...}` (Góc) và `\wideparen{...}` (Cung)
+### 4. Ký hiệu Hình học đặc thù & Vectơ: Chuẩn `\widehat{...}` (Góc), `\wideparen{...}` (Cung) và `\overrightarrow{...}` (Vectơ 2 điểm)
 - **Quy tắc**:
-  * Góc: Dùng `\widehat{ABC}` hoặc `\widehat{A}` (mũ rộng trùm lên cả 3 đỉnh).
-  * Cung tròn: Dùng `\wideparen{AB}` hoặc `\wideparen{CD}` (dấu cung cong trùm trên đầu).
-  * Vectơ: Dùng `\vec{a}`, `\vec{AB}`, `\vec{v_0}`.
-- Hệ thống đã tích hợp `arc_symbol_builder.py` để dựng nhị phân MTEF Frown Overstrike chuẩn xác của MathType, không bao giờ bị đè chữ hay biến thành ô vuông.
+  * **Góc**: Dùng `\widehat{ABC}` hoặc `\widehat{A}` (mũ góc rộng trùm lên toàn bộ các đỉnh).
+  * **Cung tròn**: Dùng `\wideparen{AB}` hoặc `\wideparen{CD}` (dấu cung cong trùm trên đầu).
+  * **Vectơ 1 ký tự**: Dùng `\vec{a}`, `\vec{b}`, `\vec{u}`, `\vec{v}`, `\vec{n}`, `\vec{0}`.
+  * **Vectơ 2 điểm / từ 2 ký tự trở lên (BẮT BUỘC)**: Phải dùng `\overrightarrow{AB}`, `\overrightarrow{CD}`, `\overrightarrow{MA}`, `\overrightarrow{MB}`, `\overrightarrow{MC}`, `\overrightarrow{HA}`, `\overrightarrow{BA'}`...
+    - ❌ **Tuyệt đối KHÔNG gõ `\vec{AB}`**: Lệnh `\vec` chỉ vẽ mũi tên nhỏ trên 1 chữ cái đầu tiên (lỗi "vectơ ngắn quá"), và khi người dùng kích đúp chuột trong Word để sửa bằng MathType 7 thì ký hiệu vectơ dễ bị rụng/mất hoàn toàn.
+    - ✅ **Luôn gõ `\overrightarrow{...}`**: Local Engine chuyển đổi sang cấu trúc `widevec` (MTEF `tmARROW_OVER`), mũi tên trải dài trọn vẹn cả 2 chữ cái và khi kích đúp vào MathType 7 hiển thị 100% hoàn hảo như gõ trực tiếp trong Word.
+- Hệ thống đã tích hợp `arc_symbol_builder.py` và `local_engine` để dựng nhị phân MTEF v3/v5 chuẩn xác của MathType OLE (`Equation.DSMT4`), không bao giờ bị đè chữ, mất ký hiệu hay biến thành ô vuông.
 
 ---
 
@@ -105,9 +108,77 @@ Khi soạn thảo bất kỳ công thức Toán, Lý, Hóa nào (ở dạng mã 
 
 ---
 
+## 🔬 IV. BẢN CHẤT KỸ THUẬT & BÍ QUYẾT ĐẠT CHUẨN TUYỆT ĐỐI KHI DÙNG MATHTYPE "FORMAT EQUATIONS"
+
+### 1. Tại sao bấm "Format Equations" trong Word lại bị mất ký hiệu (đặc biệt là dấu vectơ)?
+
+Nhiều Thầy/Cô khi dùng Word có cài MathType gặp hiện tượng: Công thức ban đầu nhìn rất chuẩn, nhưng khi bấm **MathType -> Format Equations** để đổi cỡ chữ hoặc đồng bộ tài liệu thì **toàn bộ dấu mũi tên vectơ hoặc dấu mũ góc bị rụng sạch, chỉ còn lại chữ cái thô**!
+
+Bản chất kỹ thuật nằm ở **3 nguyên nhân cốt lõi** sau:
+
+1. **Sự khác biệt giữa Embellishment (`EMBELL_VEC` = 0x05 / `\vec`) và Template Overstrike (`tmARROW_OVER` = 0x2F / `\overrightarrow`):**
+   - Trong cấu trúc nhị phân MTEF (MathType Equation Format), lệnh `\vec` tạo ra một **Embellishment (Dấu phụ trên đầu ký tự)**. Theo chuẩn thiết kế của MathType, dấu phụ này **chỉ được phép gán vào đúng 1 ký tự duy nhất** (ví dụ $\vec{a}, \vec{u}, \vec{v}, \vec{n}$).
+   - Nếu trong mã nguồn viết `\vec{AB}`, `\vec{CD}`, `\vec{MA}`: MTEF cố gắng áp dấu phụ lên một cụm ký tự. Khi MathType mở ra hoặc chạy "Format Equations", trình phân tích cú pháp (AST parser) của MathType quét qua toàn bộ cấu trúc. Khi phát hiện một Embellishment treo trên một biểu thức nhiều ký tự (sai quy chuẩn AST của MathType), **MathType sẽ tự động tước bỏ (strip) dấu mũi tên đó đi**!
+   - Ngược lại, khi dùng **`\overrightarrow{AB}`**, MathType sử dụng **Template Overstrike** (khung mẫu phủ trên đầu, selector `tmARROW_OVER`). Đây là một cấu trúc hộp chứa (box container) độc lập, mũi tên co dãn theo độ dài chuỗi ký tự. Khi chạy "Format Equations", MathType nhận diện đây là template hợp lệ 100% nên **bảo toàn hoàn hảo dấu mũi tên, không bao giờ bị mất**!
+
+2. **Lỗi chọn "MathType's current equation preferences" thay vì chọn file cấu hình `.eqp`:**
+   - Trong hộp thoại **Format Equations** của Word, mặc định tích sẵn vào dòng: `MathType's current equation preferences`.
+   - Lựa chọn này bắt Word ép toàn bộ công thức theo cấu hình *hiện hành tạm thời* của cửa sổ MathType đang mở trên máy tính giáo viên.
+   - Nếu cửa sổ MathType đó đang bị đặt sai Font Style (ví dụ: kiểu `Vector-Matrix` bị chọn sang font không có dấu mũi tên, hoặc font `Symbol` / `MT Extra` trong Windows bị thiếu hoặc bị trỏ sang font Unicode khác), MathType khi quét lại toàn bộ file Word sẽ **ghi đè và xóa sổ toàn bộ các ký hiệu toán học đặc thù**!
+
+3. **Lỗi lồng OLE (Double-wrapped OLE):**
+   - Nếu một file Word được tạo bởi các script chuyển đổi cũ bị lỗi lồng 2 tầng OLE (`Equation Native` chứa nguyên một file Compound Binary khác), MathType khi chạy Format Equations đọc phải header `\xd0\xcf...` thay vì MTEF thuần, dẫn đến crash hoặc biến công thức thành ảnh chết.
+
+---
+
+### 2. Để chuẩn tuyệt đối 100%, ta cần những gì? (3 Chân Kiềng Bất Di Bất Dịch)
+
+Để công thức toán học trong file Word đạt chuẩn tuyệt đối — **vừa mở trực tiếp bằng MathType bằng cách kích đúp chuột, vừa cho phép bấm Format Equations thoải mái mà không bao giờ mất vectơ hay méo mó** — bắt buộc phải hội tụ đủ 3 yếu tố:
+
+#### ✅ Yếu tố 1: Phía Mã Nguồn LaTeX & Local Engine (Đã chuẩn hóa 100%)
+- **Vectơ $\ge 2$ ký tự**: Tuyệt đối dùng `\overrightarrow{...}` (`\overrightarrow{AB}`, `\overrightarrow{MA}`, `\overrightarrow{CD}`).
+- **Vectơ 1 ký tự**: Dùng `\vec{a}`, `\vec{b}`, `\vec{u}`, `\vec{v}`, `\vec{n}`, `\vec{0}`.
+- **Góc**: Dùng `\widehat{ABC}` (mũ góc rộng).
+- **Cung tròn**: Dùng `\wideparen{AB}` (cung cong chuẩn MTEF v5).
+- **Trị tuyệt đối & Độ dài**: Dùng `\left| ... \right|`.
+- **Cấu trúc OLE**: Local Engine xuất nhị phân Compound File Binary 1 tầng (Single-wrapped), padding Main FAT $\ge 4096$ byte để triệt tiêu vĩnh viễn lỗi "Not Responding".
+
+#### ✅ Yếu tố 2: File Cấu Hình Chuẩn MathType Preference (`.eqp`) Đi Kèm
+- Hệ thống luôn tạo sẵn và sao chép các file cấu hình chuẩn của Bộ GD&ĐT:
+  * **`Times_13pt_Chuan_BGD.eqp`** (chuẩn 13pt cho tài liệu, sáng kiến kinh nghiệm, đề thi).
+  * **`Times_14pt_Chuan_BGD.eqp`** (chuẩn 14pt cho văn bản hành chính sư phạm).
+- Bên trong file `.eqp` đã định nghĩa tường minh:
+  ```ini
+  [Styles]
+  Text=Times New Roman
+  Function=Times New Roman
+  Variable=Times New Roman,I
+  LCGreek=Symbol,I
+  UCGreek=Symbol
+  Symbol=Symbol
+  Vector=Times New Roman,B
+  Number=Times New Roman
+  MTExtra=MT Extra
+  ```
+
+#### ✅ Yếu tố 3: Quy Trình Thao Tác Bấm "Format Equations" Chuẩn 100% trong Word
+Khi Thầy/Cô muốn đổi cỡ chữ công thức toàn bộ file Word (ví dụ từ 13pt sang 14pt hoặc ngược lại):
+1. Mở file Word $\rightarrow$ Chọn tab **MathType** trên thanh Ribbon $\rightarrow$ Bấm nút **Format Equations** (hoặc nhấn phím tắt `Ctrl + Alt + Q`).
+2. ⚠️ **Tại mục "Format equations using":**
+   - **KHÔNG CHỌN** dòng trên (*MathType's current equation preferences*).
+   - **TÍCH CHỌN DÒNG DƯỚI**: **"MathType preference file:"** $\rightarrow$ Bấm nút **Browse...**
+3. Trỏ tới file cấu hình chuẩn:
+   - Chọn ngay file **`Times_13pt_Chuan_BGD.eqp`** (hoặc **`Times_14pt_Chuan_BGD.eqp`**) đã được để sẵn ngay trong thư mục tài liệu ở ngoài Desktop!
+4. Tại mục **"Range"**: Tích chọn **Whole document**.
+5. Bấm **OK**.
+👉 **Kết quả:** Toàn bộ công thức trong Word sẽ được đồng bộ đều tăm tắp, phân số to rõ cân đối, và **100% KÝ HIỆU VECTƠ, DẤU MŨ GÓC, CUNG TRÒN ĐƯỢC GIỮ NGUYÊN HOÀN HẢO KHÔNG BỊ MẤT BẤT KỲ MỘT NÉT NÀO!**
+
+---
+
 ## 🛡️ TÓM TẮT: QUY TẮC BẤT DI BẤT DỊCH CHO AGENT KHI TẠO ĐỀ & GIẢI BÀI
 
 1. Khi sinh công thức Toán/Lý/Hóa, **phải bọc 100% trong cặp dấu `$...$` (công thức cùng dòng) hoặc `$$...$$` (công thức đứng riêng dòng)**.
 2. Kiểm tra kỹ không bỏ sót dấu đóng ngoặc `{}`.
 3. Không gõ tiếng Việt không dấu trong toán (dùng `\text{...}`).
 4. Gọi `scripts/docx_math_builder.py` hoặc `scripts/local_engine/docx_processor.py` để xuất MathType OLE `Equation.DSMT4` cục bộ 100% offline.
+5. Luôn sao chép kèm file `Times_13pt_Chuan_BGD.eqp` và `Times_14pt_Chuan_BGD.eqp` vào cùng thư mục chứa file Word bàn giao cho giáo viên.

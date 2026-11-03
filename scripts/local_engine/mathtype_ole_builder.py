@@ -59,6 +59,40 @@ _MATHTYPE_CLSID = bytes([
     0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46,
 ])
 
+# Bảng ánh xạ mã Unicode sang (typeface, char_byte) chuẩn MathType 8-bit Symbol font
+# Chống triệt để lỗi mất ký hiệu toán học khi giáo viên chạy MathType "Format Equations"
+UNICODE_TO_SYMBOL = {
+    0x2208: (0x86, 0xCE),  # \in -> Symbol 0xCE
+    0x2209: (0x86, 0xCF),  # \notin -> Symbol 0xCF
+    0x22A5: (0x86, 0x5E),  # \perp -> Symbol 0x5E
+    0x2264: (0x86, 0xA3),  # \le -> Symbol 0xA3
+    0x2265: (0x86, 0xB3),  # \ge -> Symbol 0xB3
+    0x2260: (0x86, 0xB9),  # \ne -> Symbol 0xB9
+    0x221E: (0x86, 0xA5),  # \infty -> Symbol 0xA5
+    0x00D7: (0x86, 0xB4),  # \times -> Symbol 0xB4
+    0x00F7: (0x86, 0xB8),  # \div -> Symbol 0xB8
+    0x00B1: (0x86, 0xB1),  # \pm -> Symbol 0xB1
+    0x2248: (0x86, 0xBB),  # \approx -> Symbol 0xBB
+    0x2261: (0x86, 0xBA),  # \equiv -> Symbol 0xBA
+    0x2282: (0x86, 0xCC),  # \subset -> Symbol 0xCC
+    0x2283: (0x86, 0xCD),  # \supset -> Symbol 0xCD
+    0x2229: (0x86, 0xC7),  # \cap -> Symbol 0xC7
+    0x222A: (0x86, 0xC8),  # \cup -> Symbol 0xC8
+    0x2205: (0x86, 0xC6),  # \emptyset -> Symbol 0xC6
+    0x21D2: (0x86, 0xDE),  # \Rightarrow -> Symbol 0xDE
+    0x21D4: (0x86, 0xDB),  # \Leftrightarrow -> Symbol 0xDB
+    0x2192: (0x86, 0xAE),  # \rightarrow -> Symbol 0xAE
+    0x2190: (0x86, 0xAC),  # \leftarrow -> Symbol 0xAC
+    0x2217: (0x86, 0x2A),  # \ast -> Symbol 0x2A
+    0x2220: (0x86, 0xD0),  # \angle -> Symbol 0xD0
+    0x2212: (0x86, 0x2D),  # \minus -> Symbol 0x2D ('-')
+    0x2218: (0x86, 0xB0),  # \circ (degree) -> Symbol 0xB0 ('°')
+    0x03B1: (0x85, 0x61),  # \alpha -> LCGreek 0x61 ('a')
+    0x03C6: (0x85, 0x66),  # \varphi -> LCGreek 0x66 ('f')
+    0x03D5: (0x85, 0x6A),  # \phi -> LCGreek 0x6A ('j')
+    0xEC09: (0x96, 0x2F),  # \parallel (LO private use) -> MT Extra 0x2F
+}
+
 # --- 3 stream tĩnh, trích nguyên văn từ .bin do Word/MathType 7 tạo ---
 _COMPOBJ = bytes.fromhex(
     "0100feff030a0000ffffffff03ce020000000000c000000000000046"
@@ -195,6 +229,13 @@ def _patch_mtef_right_none(eq_native: bytes) -> bytes:
                 # để vừa xóa dấu thoi đen ◆ vừa không tạo ra thanh ngoặc thừa bên phải trong MathType Editor.
                 # CẢNH BÁO CHO AI AGENTS: KHÔNG ĐƯỢC THAY THÀNH 0x01 (GÂY THỪA NGOẶC) HOẶC XÓA (GÂY ◆)!
                 buf[i:i + 4] = b'\x00\x00\x00\x00'
+            else:
+                code = (char_hi << 8) | char_lo
+                if code in UNICODE_TO_SYMBOL:
+                    new_tf, new_code = UNICODE_TO_SYMBOL[code]
+                    buf[i + 1] = new_tf
+                    buf[i + 2] = new_code
+                    buf[i + 3] = 0x00
             i += 4   # bước đúng cho wide CHAR
         else:
             i += 1

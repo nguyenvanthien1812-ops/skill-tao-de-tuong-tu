@@ -2893,7 +2893,8 @@ def convert_docx_latex_to_mathtype(input_path: str, output_path: str, template_p
                     ole_bin = latex_to_mathtype_ole_offline(latex_formula)
                 except Exception:
                     if idx in lo_ole_binaries:
-                        ole_bin = make_mathtype_ole(lo_ole_binaries[idx])
+                        _lo_b = lo_ole_binaries[idx]
+                        ole_bin = _lo_b if _lo_b.startswith(b'\xd0\xcf\x11\xe0') else make_mathtype_ole(_lo_b)
                     else:
                         native_stream = make_equation_native_stream(mtef_bytes)
                         ole_bin = make_mathtype_ole(native_stream)
@@ -3361,7 +3362,8 @@ def convert_docx_latex_to_mathtype(input_path: str, output_path: str, template_p
                     ole_bin = latex_to_mathtype_ole_offline(latex_formula)
                 except Exception:
                     if idx in lo_ole_binaries:
-                        ole_bin = make_mathtype_ole(lo_ole_binaries[idx])
+                        _lo_b = lo_ole_binaries[idx]
+                        ole_bin = _lo_b if _lo_b.startswith(b'\xd0\xcf\x11\xe0') else make_mathtype_ole(_lo_b)
                     else:
                         if mtef_bytes is None:
                             raise RuntimeError("no LO bin and no mtef_bytes")

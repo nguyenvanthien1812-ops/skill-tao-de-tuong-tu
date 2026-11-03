@@ -188,6 +188,25 @@ def normalize_with_sympy(latex_str: str) -> str:
         return latex_str
 
 
+def _normalize_vectors(s: str) -> str:
+    r"""
+    Chuẩn hóa các biểu thức vector:
+    1. Vector 2 ký tự hoa trở lên: \vec{AB} hoặc \vec AB -> \overrightarrow{AB}
+       để MathType và StarMath sinh template tmARROW_OVER (widevec) trải dài
+       toàn bộ tên đoạn thẳng, thay vì dấu phụ ngắn co cụm.
+    2. Vector 1 ký tự: \vec u -> \vec{u} (bọc ngoặc chuẩn tránh rớt ký tự).
+    """
+    if not s:
+        return s
+    # \vec AB, \vec CD, \vec SA, \vec MN -> \overrightarrow{AB}
+    s = re.sub(r'\\vec\s+([A-Z]{2,})', r'\\overrightarrow{\1}', s)
+    # \vec{AB}, \vec{CD}, \vec{SA}, \vec{MN} -> \overrightarrow{AB}
+    s = re.sub(r'\\vec\{([A-Z]{2,})\}', r'\\overrightarrow{\1}', s)
+    # \vec a, \vec u, \vec v, \vec n -> \vec{a}, \vec{u}, \vec{v}, \vec{n}
+    s = re.sub(r'\\vec\s+([a-zA-Z0-9])(?![a-zA-Z0-9])', r'\\vec{\1}', s)
+    return s
+
+
 def preprocess_latex(latex_str: str) -> str:
     """
     Hàm tiền xử lý LaTeX chính. Chạy qua các bước dọn dẹp và chuẩn hóa an toàn.
@@ -204,6 +223,9 @@ def preprocess_latex(latex_str: str) -> str:
 
     # Bước 2: Chuẩn hóa bằng SymPy nếu là biểu thức toán thuần và an toàn
     processed = normalize_with_sympy(processed)
+
+    # Bước 3: Chuẩn hóa vector (chống co cụm mũi tên và mất ký hiệu)
+    processed = _normalize_vectors(processed)
 
     return processed
 
