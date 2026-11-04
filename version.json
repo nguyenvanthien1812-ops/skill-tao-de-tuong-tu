@@ -1,11 +1,18 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.5.2",
-  "release_date": "2026-11-02",
-  "description": "Siêu Skill Toàn Năng GDPT 2018 (8-in-1): Local Engine MathType OLE 100% Offline (không cần Backend) + Tạo đề thi & thẩm định đề 44 tiêu chí + Tạo đề Tiếng Anh & xuất file nghe MP3 chuẩn khảo thí + Soạn giáo án tích hợp NLS & AI + Soạn Slide PowerPoint 16:9 + Video khởi động Veo 3 + Video Tương Tác E-Learning (chống tua nhanh, tự phân lớp Google Sheets, chuẩn đạt 80%).",
+  "version": "6.6.0",
+  "release_date": "2026-11-04",
+  "description": "Siêu Skill Toàn Năng GDPT 2018 (8-in-1): Chùm Đề Song Song Độc Lập 100% Không Trùng Lặp (đa ngữ cảnh & phân nhánh dạng con mọi môn học) + Bảng đối sánh chùm đề Excel + Local Engine MathType OLE 100% Offline + Tạo đề & thẩm định 44 tiêu chí + MP3 Tiếng Anh + Soạn giáo án NLS & AI + Slide PPTX 16:9 + Video Veo 3 + Video Tương Tác E-Learning.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
   "github_repo": "nguyenvanthien1812-ops/skill-tao-de-tuong-tu",
   "changelog": {
+    "6.6.0": [
+      "TÍCH HỢP CƠ CHẾ CHÙM ĐỀ SONG SONG ĐỘC LẬP HOÀN TOÀN (NON-OVERLAPPING PARALLEL EXAMS v6.6.0 - scripts/parallel_exam_generator.py & references/thiet_ke_va_kiem_dinh.md): Giải quyết triệt để phản ánh của giáo viên khi tạo từ 2 đến nhiều đề: xóa bỏ hoàn toàn hiện tượng chỉ đảo câu, đảo phương án trả lời hay thay số liệu cơ học.",
+      "CHUẨN HÓA 3 CHẾ ĐỘ KHẢO THÍ SƯ PHẠM GDPT 2018: (1) Chế độ 1: Đề song sinh luyện tập (Parametric Twin - đổi số đẹp); (2) Chế độ 2: Trộn bộ 4 mã đề phòng thi (Exam Shuffler - hoán vị trong 1 phòng thi); (3) Chế độ 3: Chùm đề song song độc lập hoàn toàn (Non-overlapping Parallel Exams - 100% khác biệt ngữ cảnh thực tế, hiện tượng khoa học, kênh biểu diễn dữ liệu và phân nhánh dạng bài con độc lập giữa các đề; chỉ số tương đồng liên đề <= 20%).",
+      "BẢO TOÀN 100% MA TRẬN & BẢN ĐẶC TẢ GDPT 2018: Cùng chuẩn đầu ra, cùng số lượng câu hỏi từng phần, cùng tỷ lệ NB/TH/VD/VDC, độ khó cân bằng công bằng tuyệt đối giữa các lớp (Delta độ khó <= 5%).",
+      "ÁP DỤNG TRÊN TẤT CẢ CÁC MÔN HỌC: Toán học, Vật lý, Hóa học, Sinh học, KHTN 6-9, Tiếng Anh (file nghe MP3 đọc bài nghe riêng biệt), Lịch sử, Địa lý, KTPL, Tin học, Công nghệ, Ngữ văn.",
+      "TỰ ĐỘNG XUẤT BẢNG ĐỐI SÁNH CHÙM ĐỀ (BANG_DOI_SANH_CHUM_DE.xlsx): Bảng Excel màu sắc chuyên nghiệp đối chiếu chi tiết từng câu giữa các đề nộp Tổ chuyên môn và Ban Giám Hiệu kiểm duyệt."
+    ],
     "6.5.1": [
       "CHUẨN HÓA TOÀN DIỆN CÔNG THỨC TOÁN, VẬT LÝ, HÓA HỌC LỚP 6-12 CHUẨN MATHTYPE OLE (Equation.DSMT4) & 4 LỜI KHUYÊN VÀNG: Bổ sung tài liệu tham chiếu references/quy_chuan_cong_thuc_toan_ly_hoa.md và cập nhật trực tiếp SKILL.md. Kiểm nghiệm thực tế đạt 100% thành công 101 dạng công thức phức tạp (49 công thức Toán + 52 công thức Lý - Hóa 6-12 gồm phản ứng hạt nhân đồng vị phóng xạ, phân rã, vector lực, dao động điều hòa, cân bằng hóa học có điều kiện dài, enthalpy chuẩn, pin điện hóa, phức chất).",
       "HƯỚNG DẪN 4 NGUYÊN TẮC VÀNG CHO GIÁO VIÊN KHI SOẠN THẢO CÔNG THỨC: (1) Bao ngoặc nhọn { } đầy đủ; (2) Tiếng Việt & chữ chú thích bọc trong \\text{...}; (3) Hệ phương trình & điều kiện dùng \\begin{cases}; (4) Ký hiệu hình học \\widehat{...}, \\wideparen{...} và IUPAC \\mathrm{...}."

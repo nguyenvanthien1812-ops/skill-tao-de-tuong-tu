@@ -5,69 +5,154 @@
 
 ---
 
-### Bước 2: Thiết kế bài toán tương đương & Kiểm định toán học
+### Bước 2: Thiết kế bài toán tương đương & Kiểm định toán học / khoa học
 
-#### 🎯 Bước 2.0 – Xác định mức độ khó (MANDATORY – BẮT BUỘC ĐẦU TIÊN)
+---
 
-> **QUY TẮC VÀNG**: Dạng bài / kiểu bài PHẢI GIỐNG ĐỀ GỐC 100%. Chỉ được thay đổi số liệu và độ phức tạp tính toán. KHÔNG được đổi dạng.
+#### 🎯 Bước 2.0 – Xác định Mục đích & 3 Chế Độ Biên Soạn Đề (MANDATORY – BẮT BUỘC ĐẦU TIÊN)
 
-Trước khi thiết kế số liệu, Agent PHẢI xác định `difficulty_level` từ yêu cầu người dùng:
+Trước khi bắt tay vào thiết kế câu hỏi, Agent PHẢI xác định rõ yêu cầu của Thầy/Cô thuộc chế độ nào trong **3 Chế độ Khảo thí Chuẩn**:
 
-| Người dùng nói | `difficulty_level` | Hướng dẫn thiết kế số liệu |
-|---------------|---------------------|-----------------------------|
-| (Không nói gì / mặc định) | `equivalent` | Cùng mức độ phức tạp tính toán như đề gốc |
-| "tương đương", "cùng mức", "như vậy" | `equivalent` | Cùng mức độ phức tạp tính toán như đề gốc |
-| "dễ hơn", "đơn giản hơn", "ít khó hơn" | `easier` | Giảm độ phức tạp tính toán |
-| "khó hơn", "nâng cao hơn", "thử thách hơn" | `harder` | Tăng độ phức tạp tính toán |
+```mermaid
+flowchart TD
+    Req["Yêu cầu của Giáo viên"] --> ModeSelect{"Xác định Chế độ"}
+    
+    ModeSelect -->|"Tạo đề tương tự đổi số / BTVN"| Mode1["CHẾ ĐỘ 1: Đề Song Sinh Luyện Tập<br/>(Parametric Twin)"]
+    ModeSelect -->|"Trộn đề phòng thi / Tạo 4 mã đề"| Mode2["CHẾ ĐỘ 2: Trộn Mã Đề Khảo Thí<br/>(Exam Shuffler)"]
+    ModeSelect -->|"Tạo 2, 3, 5... đề khác nhau / không trùng lặp / cho nhiều lớp / chính thức + dự phòng"| Mode3["CHẾ ĐỘ 3: Chùm Đề Song Song Độc Lập<br/>(Non-overlapping Parallel Exams) ⭐"]
 
-**Bảng điều chỉnh số liệu theo `difficulty_level`:**
+    Mode1 --> Act1["Giữ nguyên ngữ cảnh bài toán<br/>Chỉ thay số liệu nghiệm đẹp"]
+    Mode2 --> Act2["Giữ nguyên 100% câu hỏi<br/>Đảo thứ tự câu và đáp án A/B/C/D"]
+    Mode3 --> Act3["Khác 100% ngữ cảnh & dạng con<br/>CÙNG Ma trận & Bản đặc tả GDPT 2018"]
+```
 
-| Dạng bài | `easier` | `equivalent` | `harder` |
-|----------|----------|--------------|----------|
-| **Hàm bậc ba** $ax^3+bx^2+cx+d$ | $a=1$, nghiệm đạo hàm nguyên đơn giản ($x=0,\pm1$) | $a=1$, nghiệm đạo hàm nguyên đẹp | $a\in\{1,-1,2\}$, tham số có phân số gọn |
-| **Phân thức bậc 1/bậc 1** | Tiệm cận nguyên đơn giản, nghiệm = 0 | Tiệm cận nguyên, nghiệm nguyên | Tiệm cận phân số, cực trị phức tạp hơn |
-| **Tích phân định thức** | Cận $[0;1]$, $f(x)$ đơn thức | Cận $[a;b]$ nguyên, đa thức bậc ≤3 | Cận có căn thức, tích phân từng phần |
-| **Hàm lượng giác** | Biên độ 1, chu kỳ $2\pi$ | Biên độ nguyên, pha ban đầu đẹp | Pha ban đầu $\pi/6$, $\pi/4$; phép dịch |
-| **Hình học không gian** | Hộp chữ nhật, tỉ số đơn | Chóp có cạnh nguyên gọn | Chóp cụt, thiết diện chéo phức tạp |
-| **Phương trình / BPT** | Nghiệm nguyên, bậc 2 đơn | Nghiệm nguyên hoặc phân số gọn | Nghiệm vô tỉ $\sqrt{\cdot}$, ẩn phức hợp |
-| **Bài toán thực tế** | Hàm mục tiêu bậc 2, điểm dừng $x_0$ nguyên | Hàm bậc 3, điểm dừng nguyên | Hàm bậc 4 hoặc hỗn hợp, ràng buộc thực tế |
-| **Hóa học – Phản ứng** | Phân tử đơn giản, cân bằng hệ số nhỏ | Phương trình cân bằng chuẩn | Phản ứng nhiều bước, tính hiệu suất |
-| **Vật lý – Dao động / Điện** | Biên độ nguyên, tần số đẹp | Biên độ nguyên, pha ban đầu $0$ hoặc $\pi/2$ | Pha ban đầu $\pi/6$, mạch RLC phức hợp |
+| Chế độ | Mục đích sử dụng của Giáo viên | Quy tắc cốt lõi về Nội dung & Cấu trúc |
+|:---|:---|:---|
+| **Chế độ 1: Đề song sinh luyện tập** *(Parametric Twin)* | Giao bài tập về nhà sau giờ học, rèn luyện kỹ năng tính toán cùng một dạng bài. | Cùng văn cảnh, cùng dạng bài toán con, chỉ thay đổi tham số/số liệu nghiệm đẹp. |
+| **Chế độ 2: Trộn mã đề phòng thi** *(Exam Shuffler)* | Dùng trong **cùng 1 phòng thi** để chống học sinh ngồi cạnh nhìn bài nhau. | Giữ nguyên bộ câu hỏi, hoán vị vị trí câu và hoán vị phương án A/B/C/D qua `exam_shuffler.py`. |
+| **Chế độ 3: Chùm đề song song độc lập** *(Non-overlapping Parallel Exams)* ⭐ | **Kiểm tra các lớp khác nhau (12A1, 12A2...), các ca thi khác nhau, kiểm tra tuần 1/2/3/4/5, hoặc Đề chính thức + Đề dự bị.** | **KHÔNG TRÙNG LẶP 100%**: Khác biệt hoàn toàn về ngữ cảnh, câu chuyện thực tế, đối tượng khảo sát và dạng bài toán con. Tuyệt đối **KHÔNG** đảo câu, **KHÔNG** sao chép đổi số. **ĐỒNG NHẤT 100%** về Ma trận & Bản đặc tả chuẩn GDPT 2018. |
 
-**Bảng điều chỉnh tỷ lệ NB / TH / VD / VDC theo `difficulty_level`:**
+---
 
-> [!IMPORTANT]
-> Agent PHẢI điều chỉnh phân phối mức độ tư duy **toàn đề** theo bảng này. Không chỉ thay số liệu — phải thực sự phân bổ lại số câu hỏi theo từng mức.
+#### 🌟 NGUYÊN TẮC VÀNG CHO CHẾ ĐỘ 3: CHÙM ĐỀ SONG SONG ĐỘC LẬP (TẤT CẢ CÁC MÔN)
 
-| Mức độ | NB (Nhận biết) | TH (Thông hiểu) | VD (Vận dụng) | VDC (Vận dụng cao) | Ghi chú |
-|--------|---------------|-----------------|---------------|---------------------|---------|
-| `easier` | ~40% | ~40% | ~15% | ~5% | Ưu tiên câu tính tay được, không cần máy tính; bỏ câu tích hợp liên chủ đề |
-| `equivalent` | ~30% | ~40% | ~20% | ~10% | Giữ nguyên phân phối chuẩn GDPT 2018 như đề gốc |
-| `harder` | ~20% | ~30% | ~25% | ~25% | Thêm câu tích hợp liên chủ đề; phương án mồi bẫy sai tinh vi hơn |
+Khi Thầy/Cô yêu cầu tạo từ 2 đề trở lên không trùng lặp, Agent **BẮT BUỘC TUÂN THỦ 6 TIÊU CHUẨN KHẢO THÍ**:
 
-**Ví dụ áp dụng — Đề Toán 45 câu, 90 phút:**
+1. **Chuẩn hóa Đẳng cấu Ma trận (Matrix Equivalence)**:
+   - Tất cả các đề trong chùm đề đều bám sát 100% cùng một Khung Ma trận và Bản đặc tả.
+   - Cùng số lượng câu hỏi ở từng phần (Phần I trắc nghiệm nhiều lựa chọn, Phần II trắc nghiệm đúng/sai, Phần III trả lời ngắn / Tự luận).
+   - Tỷ lệ cấp độ nhận thức đồng nhất tuyệt đối: Nhận biết (~30%), Thông hiểu (~40%), Vận dụng (~20%), Vận dụng cao (~10%).
+   - Thời gian làm bài dự kiến và độ phức tạp tư duy tương đương nhau ($\Delta \text{Độ khó} \le 5\%$), đảm bảo công bằng tuyệt đối cho học sinh ở các lớp/ca thi khác nhau.
 
-| | `easier` | `equivalent` | `harder` |
-|-|----------|--------------|----------|
-| NB | 18 câu | 14 câu | 9 câu |
-| TH | 18 câu | 18 câu | 14 câu |
-| VD | 7 câu | 9 câu | 11 câu |
-| VDC | 2 câu | 4 câu | 11 câu |
-| **Tổng** | **45 câu** | **45 câu** | **45 câu** |
+2. **Đa dạng hóa Ngữ cảnh Thực tế 100% (Context & Scenario Diversity)**:
+   - **Nghiêm cấm tuyệt đối**: Dùng chung một cốt truyện bài toán rồi chỉ thay con số (ví dụ: Đề 1 "bể nước hình trụ cao 2m", Đề 2 "bể nước hình trụ cao 3m" là **VI PHẠM**).
+   - Mỗi đề phải xây dựng một bài toán với ngữ cảnh thực tiễn hoàn toàn độc lập (kinh tế, kỹ thuật, môi trường, y tế, đời sống, giao thông, công nghệ, vũ trụ...).
 
-**Ví dụ áp dụng — thay đổi số liệu câu cụ thể:**
-- Đề gốc có câu: *"Hàm $y = x^3 - 3x + 2$ có bao nhiêu cực trị?"*
-  - `easier`: $y = x^3 - 3x$ (bỏ hằng số, nghiệm đơn hơn)
-  - `equivalent`: $y = x^3 - 3x^2 + 4$ (cùng bậc, cùng số cực trị)
-  - `harder`: $y = x^3 - 3x^2 + 4x - 2$ (thêm tham số, đòi hỏi tính toán hơn)
+3. **Phân rã Ma trận thành các Nhánh con Độc lập (Sub-skill Branching)**:
+   - Trong cùng một yêu cầu cần đạt (chuẩn kiến thức), Agent luân chuyển các phân nhánh độc lập khác nhau cho từng đề.
 
-Với mỗi câu hỏi trong đề gốc:
-1. **Điều chỉnh phân phối NB/TH/VD/VDC toàn đề**: Áp dụng bảng tỷ lệ bên trên theo `difficulty_level`. Nếu `easier` → chuyển một số câu VD/VDC thành câu TH/NB cùng dạng bài nhưng đơn giản hơn. Nếu `harder` → nâng độ tư duy của một số câu NB/TH lên VD/VDC.
-2. **Giữ nguyên dạng toán & phương pháp giải**: Đổi số liệu, tham số theo bảng điều chỉnh số liệu bên trên.
-3. **Chọn số liệu nghiệm đẹp** (áp dụng bảng trên theo `difficulty_level`):
-   - Hàm bậc ba / phân thức: Chọn nghiệm đạo hàm nguyên (ví dụ $x = 0, x = 2$ hoặc $x = \pm 1$), tung độ cực trị nguyên.
-   - Bài toán thực tế / tối ưu hóa: Đảm bảo điểm dừng $x_0$ rơi vào khoảng thực tế và cho kết quả nguyên hoặc số thập phân gọn.
-4. **Lập bảng kiểm định**: Tính toán đạo hàm, cực trị, giới hạn tiệm cận để đảm bảo đáp án trắc nghiệm không bị trùng hoặc vô nghiệm.
+4. **Đa dạng hóa Kênh biểu diễn Thông tin (Representation Diversity)**:
+   - Cùng kiểm tra năng lực tư duy dữ liệu: Đề 1 dùng Đồ thị $\leftrightarrow$ Đề 2 dùng Bảng biến thiên / Bảng số liệu $\leftrightarrow$ Đề 3 dùng Mô hình hình học trực quan $\leftrightarrow$ Đề 4 dùng Diễn giải thực tế $\leftrightarrow$ Đề 5 dùng Biểu thức giải tích.
+
+5. **Chỉ số Tương đồng Liên đề $\le 20\%$ (Cross-Exam Anti-collision Index)**:
+   - Giữa câu hỏi số $i$ của Đề $A$ và Đề $B$, chỉ số giao thoa từ khóa và mô hình bài toán không được vượt quá $20\%$. Học sinh không thể áp dụng máy móc mẹo giải hay kết quả của đề này sang đề kia.
+
+6. **Lập Bảng đối sánh Chùm đề (Cross-Exam Comparison Table)**:
+   - Luôn tổng hợp bảng đối sánh chi tiết để Thầy/Cô và Tổ chuyên môn dễ dàng thẩm định sự công bằng và tính đa dạng của từng đề.
+
+---
+
+#### 📚 BẢNG HƯỚNG DẪN PHÂN NHÁNH ĐA DẠNG HÓA CHO TẤT CẢ CÁC MÔN HỌC
+
+##### 🔵 1. Môn Toán (Lớp 6 – 12):
+* **Chủ đề Khảo sát Hàm số & Đạo hàm (Lớp 12):**
+  * *Đề 1:* Đọc bảng biến thiên tìm điểm cực trị của hàm phân thức bậc 2/bậc 1.
+  * *Đề 2:* Cho đồ thị đạo hàm $y = f'(x)$, xét tính đơn điệu của hàm hợp $g(x) = f(2 - x)$.
+  * *Đề 3:* Ứng dụng thực tế: Tối ưu hóa dung tích thùng chứa hàng hình hộp chữ nhật có nắp mở.
+  * *Đề 4:* Tìm tham số $m$ để hàm số bậc ba đồng biến trên khoảng $(0; +\infty)$.
+  * *Đề 5:* Đồ thị hàm phân thức bậc nhất/bậc nhất gắn với bài toán chi phí biên trong kinh tế.
+* **Chủ đề Hình học Không gian & Tọa độ Oxyz:**
+  * *Đề 1:* Bài toán khoảng cách từ điểm đến mặt phẳng trong khối chóp có đáy là hình vuông.
+  * *Đề 2:* Góc giữa hai mặt phẳng trong khối lăng trụ đứng tam giác.
+  * *Đề 3:* Oxyz mô phỏng tọa độ trạm phát sóng radar và vị trí máy bay thương mại.
+  * *Đề 4:* Thể tích khối đa diện gắn với thiết kế mái vòm nhà thi đấu thể thao.
+  * *Đề 5:* Mặt cầu trong Oxyz gắn với quỹ đạo vệ tinh địa tĩnh quanh Trái Đất.
+* **Chủ đề Thống kê & Xác suất:**
+  * *Đề 1:* Xác suất có điều kiện trong xét nghiệm y tế chẩn đoán bệnh.
+  * *Đề 2:* Phân phối nhị thức trong kiểm định chất lượng dây chuyền sản xuất chip bán dẫn.
+  * *Đề 3:* Biến ngẫu nhiên rời rạc gắn với bài toán bảo hiểm xe cơ giới.
+  * *Đề 4:* Thống kê mẫu số liệu ghép nhóm về mức thu nhập của người lao động.
+  * *Đề 5:* Xác suất cổ điển gắn với trò chơi truyền hình có thưởng.
+
+##### 🔴 2. Môn Vật Lý (Lớp 10 – 12):
+* **Chủ đề Động lực học & Định luật bảo toàn:**
+  * *Đề 1:* Va chạm mềm giữa hai toa tàu hỏa trên đường ray vận chuyển than.
+  * *Đề 2:* Hiện tượng súng giật lùi khi bắn đạn pháo trong huấn luyện quân sự.
+  * *Đề 3:* Chuyển động phản lực của tên lửa nước trong hoạt động STEM học sinh.
+  * *Đề 4:* Người nhảy từ thuyền nhỏ lên cầu tàu làm thuyền bị đẩy dạt ra xa.
+  * *Đề 5:* Hai xe đệm khí va chạm đàn hồi trên đệm không khí trong phòng thí nghiệm.
+* **Chủ đề Dao động & Sóng:**
+  * *Đề 1:* Đồ thị li độ - thời gian của con lắc lò xo treo thẳng đứng.
+  * *Đề 2:* Bảng số liệu thực nghiệm đo gia tốc trọng trường bằng con lắc đơn.
+  * *Đề 3:* Giao thoa sóng nước từ hai nguồn kết hợp gắn với hiện tượng sóng biển ở cửa sông.
+  * *Đề 4:* Sóng âm trong ống cộng hưởng và ứng dụng chế tạo nhạc cụ sáo trúc.
+  * *Đề 5:* Dao động tắt dần của giảm xóc xe máy khi đi qua gờ giảm tốc.
+
+##### 🟢 3. Môn Hóa Học (Lớp 10 – 12):
+* **Chủ đề Hóa học Hữu cơ (Este - Lipit - Xà phòng):**
+  * *Đề 1:* Phản ứng xà phòng hóa tristearin trong mỡ bò thu được muối dùng làm xà phòng bánh.
+  * *Đề 2:* Phản ứng điều chế este benzyl axetat có mùi thơm hoa nhài dùng trong công nghiệp nước hoa.
+  * *Đề 3:* Phản ứng este hóa giữa axit béo chưa no trong dầu thực vật với methanol sản xuất nhiên liệu sinh học (biodiesel).
+  * *Đề 4:* Bài toán thủy phân hỗn hợp vinyl axetat và etyl fomat trong môi trường kiềm.
+  * *Đề 5:* Quy trình tinh chế dầu ăn và xử lý mùi hôi bằng phương pháp hóa học xanh.
+* **Chủ đề Tốc độ Phản ứng & Cân bằng Hóa học:**
+  * *Đề 1:* Ảnh hưởng của nồng độ đến tốc độ phản ứng giữa Na2S2O3 và H2SO4 (thực nghiệm đục dung dịch).
+  * *Đề 2:* Cân bằng tổng hợp amoniac (quá trình Haber-Bosch) và nguyên lý chuyển dịch Le Chatelier theo áp suất.
+  * *Đề 3:* Phản ứng phân hủy H2O2 xúc tác bởi MnO2 gắn với quá trình xử lý nước thải.
+  * *Đề 4:* Đồ thị nhiệt độ ảnh hưởng đến cân bằng tạo khí NO2 nâu đỏ từ N2O4 không màu.
+  * *Đề 5:* Tốc độ ăn mòn kim loại của vỏ tàu biển trong nước biển chứa muối.
+
+##### 🟣 4. Môn Sinh Học (Lớp 10 – 12):
+* **Chủ đề Di truyền học:**
+  * *Đề 1:* Phả hệ di truyền bệnh máu khó đông (Hemophilia) liên kết NST giới tính X ở người.
+  * *Đề 2:* Lai hai cặp tính trạng phân ly độc lập ở cây cà chua (màu quả và dạng quả).
+  * *Đề 3:* Di truyền liên kết gen hoàn toàn và hoán vị gen ở ruồi giấm (Drosophila melanogaster).
+  * *Đề 4:* Tác động đa hiệu của gen gây bệnh thiếu máu hồng cầu hình liềm.
+  * *Đề 5:* Tương tác gen bổ sung trong hình thành màu hoa ở cây đậu thơm.
+
+##### 🌍 5. Môn Khoa Học Tự Nhiên (KHTN Lớp 6 – 9):
+* Luôn bảo đảm tích hợp cân đối giữa 3 phân môn Vật lý (Chất và sự biến đổi), Hóa học (Vật chất), và Sinh học (Vật sống):
+  * *Đề 1:* Trọng tâm: Năng lượng tái tạo & Hiệu ứng nhà kính (pin mặt trời, quang hợp, khí thải CO2).
+  * *Đề 2:* Trọng tâm: Nguồn nước sạch & Quá trình lọc nước sinh hoạt (tách chất, thẩm thấu, vi sinh vật).
+  * *Đề 3:* Trọng tâm: An toàn thực phẩm & Dinh dưỡng (bảo quản thức ăn, phản ứng lên men, tiêu hóa ở người).
+  * *Đề 4:* Trọng tâm: Khí quyển & Dự báo thời tiết (áp suất khí quyển, độ ẩm, bay hơi, vòng tuần hoàn của nước).
+  * *Đề 5:* Trọng tâm: Rác thải nhựa & Kinh tế tuần hoàn (phân loại rác, phân hủy sinh học, vật liệu polyme mới).
+
+##### 🇬🇧 6. Môn Tiếng Anh (Lớp 6 – 12):
+* Cùng khung ma trận (Ngữ âm, Ngữ pháp, Từ vựng, Điền từ đoạn văn Cloze Test, Đọc hiểu Reading, Viết lại câu):
+  * *Đề 1:* Bài đọc về **Trí tuệ Nhân tạo & Tương lai của nghề nghiệp** (Artificial Intelligence in Modern Jobs).
+  * *Đề 2:* Bài đọc về **Biến đổi khí hậu & Đô thị thông minh** (Climate Change and Eco-friendly Smart Cities).
+  * *Đề 3:* Bài đọc về **Bảo tồn Di sản Văn hóa & Lối sống xanh** (Preserving Cultural Heritage in the Digital Age).
+  * *Đề 4:* Bài đọc về **Khám phá Không gian & Du hành vũ trụ** (Space Exploration and Planetary Missions).
+  * *Đề 5:* Bài đọc về **Sức khỏe Tinh thần & Cân bằng Cuộc sống** (Mental Health and Digital Detox for Teens).
+  * *(File nghe MP3 tự động đọc bài nghe riêng biệt khớp 100% từng câu hỏi của từng đề).*
+
+##### 📜 7. Các Môn Xã Hội (Ngữ văn, Lịch sử, Địa lý, KTPL, Tin học, Công nghệ):
+* **Ngữ văn:** Tuyệt đối không dùng chung ngữ liệu; mỗi đề chọn một văn bản/đoạn trích ngoài SGK hoàn toàn khác nhau cùng thể loại.
+* **Lịch sử & Địa lý:** Các bảng số liệu, biểu đồ kinh tế xã hội, lược đồ các trận đánh hoặc các giai đoạn lịch sử luân chuyển độc lập.
+* **KTPL (Kinh tế & Pháp luật):** Các tình huống tranh chấp hợp đồng, nghĩa vụ thuế, quyền tiêu dùng, pháp luật lao động khác nhau 100% về nhân vật và bối cảnh.
+
+---
+
+#### ⚖️ Điều chỉnh Độ Khó Tổng Thể (Khi Thầy/Cô yêu cầu chỉnh mức độ):
+
+Nếu Thầy/Cô có yêu cầu thêm về mức độ (dễ hơn hoặc khó hơn):
+
+| Yêu cầu của Giáo viên | Phân loại `difficulty_level` | Tỷ lệ NB : TH : VD : VDC | Hướng dẫn điều chỉnh |
+|---|---|---|---|
+| (Mặc định / Tương đương) | `equivalent` | **30% : 40% : 20% : 10%** | Giữ đúng chuẩn GDPT 2018 theo Bản đặc tả gốc. |
+| "Dễ hơn", "cho lớp cơ bản" | `easier` | **40% : 40% : 15% : 5%** | Giảm số bước tính toán, số liệu nguyên gọn, ưu tiên câu suy luận đơn bước. |
+| "Khó hơn", "cho học sinh giỏi" | `harder` | **20% : 30% : 25% : 25%** | Tăng bài toán liên môn, phương án nhiễu tinh vi, đòi hỏi tư duy phân tích sâu. |
 
 ---
 

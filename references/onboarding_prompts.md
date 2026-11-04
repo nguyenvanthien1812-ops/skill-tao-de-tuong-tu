@@ -19,7 +19,45 @@ Khi file đề thi của giáo viên đang nằm ở nơi khác (Desktop, Downlo
 
 ---
 
-### 🎯 KỊCH BẢN PHẢN HỒI MẪU THEO TỪNG CHỨC NĂNG (AGENT DÙNG ĐỂ TRẢ LỜI NGAY CHO GIÁO VIÊN):
+### 🎯 QUY TRÌNH PHÂN LUỒNG 2 BƯỚC CHO GIÁO VIÊN KHI RA ĐỀ (PROGRESSIVE TRIAGE)
+
+> [!IMPORTANT]
+> **QUY TẮC VÀNG KHI GIÁO VIÊN NÓI CÂU NGẮN VỀ RA ĐỀ:**
+> Khi giáo viên chỉ nói câu ngắn hoặc nêu ý định chung (*"tôi muốn ra đề kiểm tra"*, *"tôi muốn tạo đề"*, *"tạo đề tương tự"*, *"tạo đề từ ma trận đặc tả"*, *"tạo nhiều đề"*...):
+> 1. **BƯỚC 1 (Không nhồi nhét câu lệnh dài):** Liệt kê rõ ràng 6 trường hợp ra đề thường gặp (đánh số 1 đến 6). Giải thích ngắn gọn mục đích thực tế và mời Thầy/Cô chỉ cần gõ số lựa chọn (1, 2, 3, 4, 5, hoặc 6).
+> 2. **BƯỚC 2 (Sau khi giáo viên chọn số):** Đi sâu vào đúng trường hợp đã chọn, hướng dẫn đưa file và cung cấp duy nhất 01 câu lệnh mẫu (prompt) cụ thể đã chuẩn hóa đầy đủ tiêu chí để giáo viên chỉ việc Copy - Dán.
+
+---
+
+#### 🌟 KỊCH BẢN BƯỚC 1: PHẢN HỒI MENU 6 TRƯỜNG HỢP RA ĐỀ ĐỂ GIÁO VIÊN CHỌN
+Khi nhận câu lệnh ngắn về ra đề kiểm tra / tạo đề thi, Agent xuất ngay phản hồi:
+
+> "Dạ chào Thầy/Cô! Để hỗ trợ Thầy/Cô biên soạn đề kiểm tra nhanh nhất, đúng chuẩn GDPT 2018 (100% công thức MathType OLE 14pt nhấp đúp sửa được, vẽ hình kỹ thuật 300 DPI sắc nét, lời giải chi tiết), Thầy/Cô vui lòng xem qua **6 trường hợp ra đề phổ biến** dưới đây ạ:
+>
+> 1️⃣ **Trường hợp 1: Tạo 1 đề tương tự từ Đề mẫu có sẵn**  
+>    *(Thầy/Cô đã có 1 file PDF/Word/ảnh đề cũ, muốn tạo 1 đề mới cùng dạng toán/mức độ, số liệu mới nghiệm đẹp).*
+>
+> 2️⃣ **Trường hợp 2: Trộn bộ 4 mã đề cho 1 phòng thi (Hoán vị)**  
+>    *(Thầy/Cô đã có 1 đề hoàn chỉnh, muốn đảo câu và hoán vị đáp án A/B/C/D thành mã 101, 102, 103, 104 chống nhìn bài trong cùng 1 phòng thi, kèm phiếu tô trắc nghiệm A4).*
+>
+> 3️⃣ **Trường hợp 3: Tạo chùm đề song song độc lập (2 – 5 đề khác nhau hoàn toàn, không trùng lặp)** ⭐  
+>    *(Dành cho Thầy/Cô dạy nhiều lớp 12A1, 12A2, 12A3..., kiểm tra các tuần, hoặc Đề chính thức + Đề dự bị. Khác 100% ngữ cảnh thực tế và dạng con, tuyệt đối không đảo câu, không đổi số cơ học; cùng chuẩn ma trận và độ khó).*
+>
+> 4️⃣ **Trường hợp 4: Ra đề theo File Ma trận & Bản đặc tả có sẵn**  
+>    *(Tổ chuyên môn/nhà trường đã duyệt file Ma trận Word/Excel, cần AI bám sát 100% từng dòng yêu cầu cần đạt để sinh đề).*
+>
+> 5️⃣ **Trường hợp 5: Ra đề nhanh bằng 1 câu nói (Chưa có file, dùng kho Ma trận chuẩn GDPT 2018)**  
+>    *(Thầy/Cô chưa chuẩn bị file, chỉ cần nói Môn, Lớp, thời gian làm bài, AI tự động dùng Ma trận chuẩn để ra đề ngay).*
+>
+> 6️⃣ **Trường hợp 6: Thầy/Cô chưa có Ma trận và muốn AI lập Ma trận & Bản đặc tả chuẩn trước để nộp BGH duyệt.**
+>
+> ---
+> 👉 **Thầy/Cô đang cần làm theo Trường hợp số mấy ạ?**  
+> *(Thầy/Cô chỉ cần nhắn lại con số **1**, **2**, **3**, **4**, **5** hoặc **6**, em sẽ hướng dẫn chi tiết và gửi câu lệnh mẫu chuẩn xác nhất cho Thầy/Cô ngay nhé!)*"
+
+---
+
+### 🎯 KỊCH BẢN BƯỚC 2: CÂU LỆNH MẪU CHI TIẾT SAU KHI GIÁO VIÊN CHỌN SỐ
 
 #### 1️⃣ KHI GIÁO VIÊN NÓI: "tôi muốn chuyển pdf sang word" (hoặc câu lệnh ngắn tương tự)
 Agent xuất ngay phản hồi:
@@ -103,6 +141,56 @@ Agent xuất ngay phản hồi:
 >   2. Lập trình vẽ mới 100% hình vẽ kỹ thuật & thí nghiệm sắc nét 300 DPI.
 >   3. Xuất đồng thời 2 file Word: Bản Đề Học Sinh và Bản Lời Giải Chi Tiết, 100% công thức ở dạng MathType OLE 14pt nhấp đúp sửa được.
 >   ```"
+
+---
+
+#### 2️⃣bis KHI GIÁO VIÊN NÓI: "tạo nhiều đề không trùng lặp" (hoặc "tạo 2 đề chẵn lẻ khác nhau", "tạo 3 đề / 5 đề độc lập", "tạo đề cho các lớp khác nhau không trùng câu nào", "tạo đề chính thức và đề dự phòng"...)
+Agent xuất ngay phản hồi:
+> "Dạ chào Thầy/Cô! Em hoàn toàn hiểu rõ yêu cầu sư phạm của Thầy/Cô: Khi ra đề cho nhiều lớp khác nhau (12A1, 12A2, 12A3...), làm đề kiểm tra các tuần, hoặc tạo Đề chính thức + Đề dự bị:
+> 
+> 💡 **CAM KẾT CHỐNG TRÙNG LẶP & ĐẢM BẢO CÔNG BẰNG KHẢO THÍ (ÁP DỤNG CHO TẤT CẢ CÁC MÔN):**
+> 1. ❌ **Tuyệt đối KHÔNG đảo câu, KHÔNG đảo phương án A/B/C/D** (đó là trộn mã đề phòng thi, không phải chùm đề độc lập).
+> 2. ❌ **Tuyệt đối KHÔNG dùng chung 1 cốt truyện/mô hình rồi chỉ thay số cơ học** (học sinh sẽ nhận ra ngay và truyền cách bấm máy cho nhau).
+> 3. ✅ **ĐỘC LẬP 100% VĂN CẢNH & PHÂN NHÁNH DẠNG BÀI**: Mỗi đề sử dụng bối cảnh thực tiễn, hiện tượng thí nghiệm, câu chuyện đời sống và kênh biểu diễn dữ liệu (đồ thị / bảng số liệu / hình vẽ / bài toán kinh tế - kỹ thuật...) hoàn toàn khác biệt. Chỉ số tương đồng liên đề giữa các câu $\le 20\%$.
+> 4. ✅ **ĐỒNG NHẤT 100% VỀ MA TRẬN & ĐỘ KHÓ**: Cùng bám sát 1 Khung Ma trận & Bản đặc tả chuẩn GDPT 2018 (cùng chuẩn đầu ra, cùng số câu NB/TH/VD/VDC, cùng trọng số điểm, cùng thời gian làm bài $\Delta \text{Độ khó} \le 5\%$).
+> 
+> Dưới đây là các Mẫu câu lệnh (Prompt) đã được chuẩn hóa để Thầy/Cô chỉ việc Copy - Điền thông tin - Gửi ngay:
+> 
+> ---
+> 📝 **MẪU 1: ĐÃ CÓ 1 ĐỀ GỐC (PDF / Word / Ảnh) → TẠO CHÙM ĐỀ MỚI HOÀN TOÀN KHÁC BIỆT**
+> *(Thầy/Cô có 1 đề có sẵn và muốn tạo thêm 2, 3, 4 hoặc 5 đề song song không trùng lặp)*
+> ```text
+> Dựa vào file đề gốc: "[Dán tên file hoặc đường dẫn file đề gốc vào đây]", em hãy tạo giúp tôi chùm [2 / 3 / 4 / 5] ĐỀ KIỂM TRA SONG SONG ĐỘC LẬP HOÀN TOÀN (Đề 1, Đề 2, Đề 3...) cho môn [Toán / Lý / Hóa / Sinh / KHTN / Tiếng Anh / ...] lớp [...].
+> Yêu cầu khảo thí bắt buộc:
+> 1. KHÔNG TRÙNG LẶP: Giữa các đề tuyệt đối không dùng lại cùng một ngữ cảnh bài toán, không sao chép đổi số cơ học, không đảo thứ tự câu. Mỗi đề phải dùng câu chuyện thực tế, hiện tượng khoa học, dữ liệu và phân nhánh dạng toán con độc lập (độ tương đồng liên đề <= 20%).
+> 2. CHUẨN MA TRẬN & ĐỘ KHÓ TƯƠNG ĐƯƠNG: Tất cả các đề cùng bám sát 100% cấu trúc ma trận, bản đặc tả, tỷ lệ nhận thức (NB/TH/VD/VDC) và thời gian làm bài của đề gốc, đảm bảo độ khó cân bằng công bằng tuyệt đối giữa các lớp.
+> 3. HÌNH VẼ & CÔNG THỨC: Lập trình vẽ riêng biệt 100% hình vẽ kỹ thuật 300 DPI cho từng đề; công thức chuẩn MathType OLE 14pt (nhấp đúp sửa được).
+> 4. BỘ TÀI LIỆU XUẤT RA:
+>    - Mỗi đề gồm: File Word Đề Học Sinh + File Word Lời Giải Chi Tiết (có đáp án và thang điểm).
+>    - 01 File Excel "BANG_DOI_SANH_CHUM_DE.xlsx" đối chiếu chi tiết từng câu giữa các đề (chuẩn kiến thức, mức độ tư duy, ngữ cảnh từng đề, chỉ số tương đồng).
+> ```
+> 
+> ---
+> 📋 **MẪU 2: ĐÃ CÓ FILE MA TRẬN & BẢN ĐẶC TẢ → TẠO CHÙM ĐỀ THEO BẢN ĐẶC TẢ**
+> *(Dùng khi nhà trường/tổ bộ môn đã duyệt Ma trận và Bản đặc tả)*
+> ```text
+> Dựa vào file Ma trận & Bản đặc tả tại: "[Dán đường dẫn file Ma trận Word/Excel vào đây]", em hãy biên soạn chùm [2 / 3 / 4 / 5] ĐỀ THI ĐỘC LẬP KHÔNG TRÙNG LẶP môn [...] lớp [...] thời gian [...] phút.
+> Yêu cầu bắt buộc:
+> 1. Mỗi câu hỏi trong các đề phải ứng với đúng dòng Yêu cầu cần đạt và Mức độ nhận thức trong Bản đặc tả, nhưng giữa các đề phải luân chuyển phân nhánh dạng con và ngữ cảnh đời sống khác nhau 100%.
+> 2. Các đề có độ khó tương đương, số liệu nghiệm đẹp, định luật khoa học chuẩn xác, duy nhất 1 đáp án đúng cho câu trắc nghiệm nhiều lựa chọn.
+> 3. Xuất trọn bộ: File Word Đề Học Sinh và Lời Giải Chi Tiết MathType OLE 14pt cho từng đề + File Excel Bảng đối sánh chùm đề.
+> ```
+> 
+> ---
+> ⚡ **MẪU 3: CHƯA CÓ FILE, RA LỆNH NHANH BẰNG 1 CÂU NÓI TỰ NHIÊN**
+> *(Hệ thống tự động sử dụng Khung Ma trận chuẩn GDPT 2018 có sẵn trong kho)*
+> ```text
+> Em hãy tạo giúp tôi bộ [2 / 3 / 5] đề kiểm tra [Giữa học kỳ 1 / Cuối học kỳ 1 / Giữa kỳ 2 / Cuối kỳ 2 / 1 tiết] môn [Toán / KHTN / Vật lý / Hóa học / Tiếng Anh] lớp [...] thời gian [45 phút / 90 phút] chuẩn GDPT 2018.
+> Yêu cầu cốt lõi:
+> - Các đề hoàn toàn khác nhau về ngữ cảnh thực tế, hiện tượng mô phỏng và dạng con, tuyệt đối không trùng lặp và không đổi số cơ học.
+> - Cùng chung cấu trúc ma trận chuẩn, độ khó tương đương giữa các đề để kiểm tra các lớp song song.
+> - Xuất đủ file Word MathType OLE 14pt (Đề thi + Lời giải từng đề) và Bảng đối sánh chùm đề Excel.
+> ```"
 
 ---
 

@@ -236,55 +236,82 @@ Sau khi cài đặt xong, Thầy/Cô **mở thư mục đề thi bằng Antigrav
 
 
 
-### 🟠 NHÓM 2: Tạo bộ 4 mã đề cho phòng thi
+### 🟠 NHÓM 2: Tạo bộ 4 mã đề cho phòng thi (Hoán vị chống nhìn bài)
 
+> **Mục đích:** Dùng trong **cùng một phòng thi** để các học sinh ngồi cạnh nhau có mã đề khác nhau, chống nhìn bài nhau. Bộ câu hỏi được giữ nguyên nhưng đảo thứ tự câu và hoán vị đáp án A/B/C/D.
 
-
-```
-
+```text
 "Tạo bộ 4 mã đề phòng thi (mã 201, 202, 203, 204) từ Đề 301"
-
 "Tạo 4 mã đề hoán vị từ đề này, kèm phiếu trả lời để in"
-
 "Tạo bộ đề phòng thi có thể chụp ảnh chấm thi"
-
 ```
-
-
 
 **Kết quả AI xuất ra:**
-
-```
-
+```text
 📁 BO_DE_PHONG_THI/
-
 ├── 📁 MA_DE_201/
-
 │   ├── 201_DE_HOC_SINH_OLE.docx
-
 │   ├── 201_LOI_GIAI_GV_OLE.docx
-
 │   ├── 🖼️  phieu_hoc_sinh_201.png      ← In ra phát cho học sinh tô bong bóng
-
 │   └── 🖼️  dap_an_giao_vien_201.png    ← Bản đáp án GV (bong bóng tô đen ●)
-
 ├── 📁 MA_DE_202/  ...
-
 ├── 📁 MA_DE_203/  ...
-
 ├── 📁 MA_DE_204/  ...
-
 ├── 📊 DAP_AN_TONG_HOP_4_MA_DE.xlsx    ← Excel 4 sheet, mỗi mã đề 1 sheet màu sắc
-
 └── 🗜️  BO_4_MA_DE_PHONG_THI.zip       ← Nén sẵn sàng gửi Zalo/GDrive
-
 ```
-
-
 
 ---
 
+### 🌟 NHÓM 2bis: Tạo Chùm Đề Song Song Độc Lập (2 – 5 Đề Khác Nhau Hoàn Toàn, Không Trùng Lặp)
 
+> [!IMPORTANT]
+> **Dành riêng cho tình huống Thầy/Cô cần:**
+> - Ra đề kiểm tra cho **nhiều lớp khác nhau** (Lớp 12A1, 12A2, 12A3...) để các lớp không thể truyền đề hay mách cách giải cho nhau.
+> - Tạo **Đề thi chính thức + Đề thi dự bị**.
+> - Tạo bộ đề kiểm tra thường xuyên các đợt/các tuần khác nhau.
+> 
+> 💡 **Khác biệt hoàn toàn với Nhóm 2:**
+> - ❌ **Không đảo câu hỏi hay phương án**: Mỗi đề sở hữu bộ câu hỏi độc lập.
+> - ❌ **Không chỉ thay số cơ học**: Không dùng chung một câu chuyện/mô hình rồi chỉ đổi con số.
+> - ✅ **Khác 100% ngữ cảnh & dạng con**: Mỗi đề dùng một câu chuyện đời sống, hiện tượng khoa học, kênh biểu diễn (đồ thị / bảng số liệu / hình học) và dạng toán con độc lập (độ tương đồng liên đề $\le 20\%$).
+> - ✅ **Cùng 1 Ma trận & Bản đặc tả GDPT 2018**: Đảm bảo công bằng tuyệt đối về thời gian làm bài, tỷ lệ nhận thức (NB/TH/VD/VDC) và độ khó tương đương giữa các lớp ($\Delta 	ext{Độ khó} \le 5\%$).
+> - ✅ **Áp dụng cho TẤT CẢ các môn học**: Toán, Lý, Hóa, Sinh, KHTN 6–9, Tiếng Anh (file nghe MP3 riêng biệt), Sử, Địa, KTPL, Tin học, Công nghệ, Ngữ văn.
+
+**Mẫu câu lệnh (Prompt) chuẩn Thầy/Cô chỉ cần copy và gửi vào khung chat:**
+
+```text
+Dựa vào file đề gốc: "[Dán đường dẫn hoặc tên file đề vào đây]", em hãy tạo giúp tôi chùm [2 / 3 / 4 / 5] ĐỀ KIỂM TRA SONG SONG ĐỘC LẬP HOÀN TOÀN (Đề 1, Đề 2, Đề 3...) cho môn [...] lớp [...].
+Yêu cầu khảo thí bắt buộc:
+1. KHÔNG TRÙNG LẶP: Giữa các đề tuyệt đối không dùng lại cùng một ngữ cảnh bài toán, không đổi số cơ học, không đảo thứ tự câu. Mỗi đề phải dùng câu chuyện thực tế, hiện tượng khoa học, dữ liệu và phân nhánh dạng bài con độc lập (độ tương đồng liên đề <= 20%).
+2. CHUẨN MA TRẬN & ĐỘ KHÓ TƯƠNG ĐƯƠNG: Tất cả các đề cùng bám sát 100% cấu trúc ma trận, bản đặc tả, tỷ lệ nhận thức (NB/TH/VD/VDC) và thời gian làm bài của đề gốc, đảm bảo công bằng tuyệt đối giữa các lớp.
+3. HÌNH VẼ & CÔNG THỨC: Lập trình vẽ riêng biệt 100% hình vẽ kỹ thuật 300 DPI cho từng đề; công thức chuẩn MathType OLE 14pt (nhấp đúp sửa được).
+4. BỘ TÀI LIỆU XUẤT RA:
+   - Mỗi đề gồm: File Word Đề Học Sinh + File Word Lời Giải Chi Tiết (có đáp án và thang điểm).
+   - 01 File Excel "BANG_DOI_SANH_CHUM_DE.xlsx" đối chiếu chi tiết từng câu giữa các đề (chuẩn kiến thức, mức độ tư duy, ngữ cảnh từng đề, chỉ số tương đồng).
+```
+
+*(Hoặc nếu đã có sẵn file Ma trận & Bản đặc tả, Thầy/Cô chỉ cần dán đường dẫn file Ma trận và ra lệnh: `"Dựa vào file Ma trận tại [đường dẫn], tạo giúp tôi 3 đề song song độc lập không trùng lặp môn Toán 12, xuất đủ Word MathType OLE và Bảng đối sánh chùm đề Excel"`).*
+
+**Kết quả AI xuất ra:**
+```text
+📁 CHUM_DE_SONG_SONG_DOC_LAP/
+├── 📁 DE_01/
+│   ├── DE_01_HOC_SINH_OLE.docx
+│   ├── DE_01_LOI_GIAI_GV_OLE.docx
+│   └── 📁 hinh_ve_de_01/               ← Hình vẽ kỹ thuật riêng của Đề 1
+├── 📁 DE_02/
+│   ├── DE_02_HOC_SINH_OLE.docx
+│   ├── DE_02_LOI_GIAI_GV_OLE.docx
+│   └── 📁 hinh_ve_de_02/               ← Hình vẽ kỹ thuật riêng của Đề 2
+├── 📁 DE_03/
+│   ├── DE_03_HOC_SINH_OLE.docx
+│   ├── DE_03_LOI_GIAI_GV_OLE.docx
+│   └── 📁 hinh_ve_de_03/               ← Hình vẽ kỹ thuật riêng của Đề 3
+└── 📊 BANG_DOI_SANH_CHUM_DE.xlsx       ← Bảng đối chiếu ma trận & dạng bài từng đề
+```
+
+---
 
 ### 🟢 NHÓM 3: Chỉ tạo phiếu trả lời
 
