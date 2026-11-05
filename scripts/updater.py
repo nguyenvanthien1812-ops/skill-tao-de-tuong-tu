@@ -262,57 +262,53 @@ def main():
     # Thực hiện cập nhật
     updated_files, skipped_files = download_zip_and_update(zip_url, SKILL_DIR)
     print(f"\n[✓] Đã cập nhật thành công {len(updated_files)} tệp mã nguồn và tài liệu.")
-    # ─── KIEM TRA THU HOI BAN QUYEN TU DONG SAU KHI CAP NHAT ────────────────
-    # Sau khi cap nhat, license_manager.py moi da co HARDCODED_REVOKED_IDS.
-    # Reload de kiem tra: neu ban quyen bi thu hoi HOAC thoi han > 400 ngay
-    # tinh tu ngay cap (dau hieu key VIP ro ri) → tu dong xoa & bao loi.
+    # ─── KIEM TRA THU HOI BAN QUYEN SAU KHI CAP NHAT (AN TOAN) ─────────────
+    # Chi thu hoi neu license_id nam chinh xac trong danh sach den cung (HARDCODED).
+    # TUYET DOI KHONG tu dong xoa file license.key vi bat ky ly do nao khac
+    # (ket noi mang cham, mac dinh ho, reload loi, card mang doi) de tranh
+    # mat ban quyen cua giao vien sau khi ho cap nhat tinh nang moi.
     try:
         import importlib as _importlib
         _lm_name = "license_manager"
         if _lm_name in sys.modules:
             _importlib.reload(sys.modules[_lm_name])
         import license_manager as _lm_mod
-        _ok_lm, _pay_lm, _err_lm = _lm_mod.check_current_license()
-        _revoke_reason = None
-        if not _ok_lm and _err_lm:
-            _revoke_reason = _err_lm
-        elif _ok_lm:
-            _issued_s = _pay_lm.get("issued", "")
-            _expiry_s = _pay_lm.get("expiry", "")
-            if _issued_s and _expiry_s:
-                from datetime import datetime, timezone as _tz
-                _d_i = datetime.strptime(_issued_s, "%Y-%m-%d").replace(tzinfo=_tz.utc)
-                _d_e = datetime.strptime(_expiry_s, "%Y-%m-%d").replace(tzinfo=_tz.utc)
-                _days_dur = (_d_e - _d_i).days
-                if _days_dur > 400:
-                    _revoke_reason = (
-                        f"Thoi han ban quyen ({_days_dur} ngay) vuot qua gioi han "
-                        f"toi da (365 ngay). Ban quyen nay khong hop le."
-                    )
-        if _revoke_reason:
-            print("\n" + "=" * 66)
-            print("  *** BAN QUYEN KHONG CON HOP LE ***")
-            print("=" * 66)
-            print(f"  {_revoke_reason}")
-            print("  He thong da tu dong xoa ban quyen.")
-            print("  Vui long lien he Tac gia de duoc cap ban quyen chinh thuc.")
-            print("=" * 66)
-            for _lp in _lm_mod.get_all_license_paths():
-                try:
-                    _ps = str(_lp)
-                    if hasattr(_lp, "unlink"):
-                        if _lp.exists():
-                            _lp.unlink(missing_ok=True)
-                    elif os.path.exists(_ps):
-                        os.remove(_ps)
-                except Exception:
-                    pass
-            sys.exit(1)
-    except SystemExit:
+        import base64 as _b64, json as _json
+        for _lp in _lm_mod.get_all_license_paths():
+            try:
+                if not _lp.exists():
+                    continue
+                _raw = _lp.read_text(encoding="utf-8").strip()
+                if not _raw:
+                    continue
+                _parts = _raw.split(".")
+                if len(_parts) == 2:
+                    _payload_dec = _json.loads(_b64.urlsafe_b64decode(_parts[0] + "==").decode("utf-8"))
+                    _lid = _payload_dec.get("license_id", "")
+                    if _lid and _lid in _lm_mod.HARDCODED_REVOKED_IDS:
+                        print("\n" + "=" * 66)
+                        print("  *** BAN QUYEN NAY DA BI TAC GIA THU HOI VINH VIEN ***")
+                        print("=" * 66)
+                        print(f"  License ID: {_lid}")
+                        print("  Vui long lien he Tac gia de duoc cap ban quyen chinh thuc.")
+                        print("=" * 66)
+                        for _lp2 in _lm_mod.get_all_license_paths():
+                            try:
+                                if _lp2.exists():
+                                    _lp2.unlink(missing_ok=True)
+                            except Exception:
+                                pass
+                        sys.exit(1)
+                break
+            except (SystemExit, KeyboardInterrupt):
+                raise
+            except Exception:
+                break
+    except (SystemExit, KeyboardInterrupt):
         raise
     except Exception:
         pass  # Khong de loi phu lam hong qua trinh cap nhat chinh
-    # ─────────────────────────────────────────────────────────────────────────
+    # ─────────────────────────────────────────────────────────────────────────────
 
     # Tự động triển khai bộ 3 file cấu hình MathType ra Desktop của giáo viên
     try:
