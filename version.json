@@ -1,6 +1,6 @@
 {
   "name": "tao-de-toan-tuong-tu",
-  "version": "6.6.1",
+  "version": "6.6.2",
   "release_date": "2026-11-06",
   "description": "Siêu Skill Toàn Năng GDPT 2018 (8-in-1): Chùm Đề Song Song Độc Lập 100% Không Trùng Lặp (đa ngữ cảnh & phân nhánh dạng con mọi môn học) + Bảng đối sánh chùm đề Excel + Local Engine MathType OLE 100% Offline + Tạo đề & thẩm định 44 tiêu chí + MP3 Tiếng Anh + Soạn giáo án NLS & AI + Slide PPTX 16:9 + Video Veo 3 + Video Tương Tác E-Learning.",
   "author": "Antigravity Assistant & Thầy Cô Giáo",
@@ -301,6 +301,11 @@
     "6.6.1": [
       "SUA LỖI NGHIÊM TRỌNG (updater.py): Đã loại bỏ hoàn toàn cơ chế tự động xóa file license.key của giáo viên khi cập nhật tính năng mới. Chỉ thu hồi khi license_id nằm đích danh trong danh sách đen (HARDCODED). Giáo viên sẽ KHÔNG BAO GIỜ bị mất bản quyền chỉ vì cập nhật tính năng mới nữa!",
       "NÂNG CẤP CÔNG CỤ CẤP KEY (cap_key_nhanh.py + cap_license.py): Tích hợp tra cứu thông minh theo Mã Máy - Dán mã máy của giáo viên vào, hệ thống tự động hiển thị tên, ngày mua, hạn gốc, số ngày còn lại. Chọn 1 nút để cấp lại giữ nguyên hạn cũ trong 3 giây - không cần nhớ ngày!"
+    ],
+    "6.6.2": [
+      "HOÀN THIỆN CƠ CHẾ BẢN QUYỀN ĐA CARD MẠNG: Tự động quét và nhận diện danh sách Machine ID dự phòng (Wi-Fi, LAN, v.v.), loại bỏ hoàn toàn hiện tượng báo sai máy khi giáo viên đổi mạng hoặc mang laptop về nhà.",
+      "LOẠI BỎ HOÀN TOÀN BẪY THỜI HẠN > 400 NGÀY: Cho phép cấp bản quyền nhiều năm, gói vĩnh viễn hoặc gia hạn sớm mà không lo bị hệ thống hiểu lầm là key VIP rò rỉ.",
+      "HỖ TRỢ CLONE & TỰ ĐỘNG CÀI ĐẶT TRÊN DỰ ÁN MỚI CHO AI AGENT: Người dùng chỉ cần nói 'tôi muốn clone repo này... và sử dụng trên dự án này', AI Agent sẽ tự động clone vào .agents/skills, cài đặt thư viện và nhận diện bản quyền."
     ]
   }
 }

@@ -237,6 +237,35 @@ def get_machine_id() -> str:
     return hashlib.sha256(raw.encode()).hexdigest()[:32]
 
 
+def get_candidate_machine_ids() -> list[str]:
+    """Lấy danh sách các Machine ID khả dĩ tương ứng với các card mạng (Wi-Fi, LAN, v.v.) trên máy tính."""
+    mids = [get_machine_id()]
+    try:
+        parts_base = [socket.gethostname().lower()]
+        try:
+            import winreg
+            key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Cryptography")
+            guid, _ = winreg.QueryValueEx(key, "MachineGuid")
+            parts_base.append(guid)
+        except Exception:
+            parts_base.append(platform.node())
+
+        import subprocess
+        output = subprocess.check_output(['getmac', '/fo', 'csv', '/nh'], stderr=subprocess.DEVNULL).decode('utf-8', errors='ignore')
+        for line in output.strip().splitlines():
+            parts_line = [p.strip().strip('"') for p in line.split(',')]
+            if parts_line and parts_line[0]:
+                mac_clean = parts_line[0].replace('-', '').replace(':', '').lower()
+                if len(mac_clean) == 12 and mac_clean != 'ffffffffffff':
+                    raw = "|".join([mac_clean] + parts_base)
+                    h = hashlib.sha256(raw.encode()).hexdigest()[:32]
+                    if h not in mids:
+                        mids.append(h)
+    except Exception:
+        pass
+    return mids
+
+
 # ─── XÁC MINH LICENSE ────────────────────────────────────────────────────────
 
 def verify_license_key(license_key: str) -> tuple[bool, dict, str]:
@@ -283,12 +312,14 @@ def verify_license_key(license_key: str) -> tuple[bool, dict, str]:
         if machine_id != "ANY":
             current_mid = get_machine_id()
             if current_mid != machine_id:
-                return False, payload, (
-                    f"License key này được cấp cho máy khác!\n"
-                    f"  Machine ID của máy bạn : {current_mid}\n"
-                    f"  Machine ID trong key    : {machine_id}\n"
-                    f"  → Liên hệ tác giả để được cấp key mới cho máy này."
-                )
+                candidate_mids = get_candidate_machine_ids()
+                if machine_id not in candidate_mids:
+                    return False, payload, (
+                        f"License key này được cấp cho máy khác!\n"
+                        f"  Machine ID của máy bạn : {current_mid}\n"
+                        f"  Machine ID trong key    : {machine_id}\n"
+                        f"  → Liên hệ tác giả để được cấp key mới cho máy này."
+                    )
 
         # Kiểm tra hạn sử dụng
         expiry = datetime.strptime(payload["expiry"], "%Y-%m-%d").replace(tzinfo=timezone.utc)
@@ -431,7 +462,7 @@ def check_current_license() -> tuple[bool, dict, str]:
                     lid = payload.get("license_id", "")
 
                     # 1. Thu hồi tức thì nếu key nằm trong danh sách đen cứng hoặc online
-                    is_revoked = (lid in HARDCODED_REVOKED_IDS) or (bool(lid) and check_revocation(lid)) or ("thu hồi" in (err or "").lower())
+                    is_revoked = (lid in HARDCODED_REVOKED_IDS) or (bool(lid) and check_revocation(lid))
                     if is_revoked:
                         for p_del in get_all_license_paths():
                             try:
@@ -442,27 +473,6 @@ def check_current_license() -> tuple[bool, dict, str]:
                             except Exception:
                                 pass
                         return False, payload, "License key này đã bị Tác giả thu hồi vĩnh viễn! Vui lòng liên hệ Tác giả để được cấp bản quyền mới."
-
-                    # 2. Thu hồi tự động nếu thời hạn > 400 ngày trên máy không phải Tác giả (key VIP rò rỉ)
-                    issued_s = payload.get("issued", "")
-                    expiry_s = payload.get("expiry", "")
-                    if issued_s and expiry_s:
-                        try:
-                            from datetime import datetime as _dt, timezone as _tz
-                            _di = _dt.strptime(issued_s, "%Y-%m-%d").replace(tzinfo=_tz.utc)
-                            _de = _dt.strptime(expiry_s, "%Y-%m-%d").replace(tzinfo=_tz.utc)
-                            if (_de - _di).days > 400 and get_machine_id() != "4f0d356462e1ea6c9cb3de5b7d1e38ca":
-                                for p_del in get_all_license_paths():
-                                    try:
-                                        if hasattr(p_del, "unlink"):
-                                            p_del.unlink(missing_ok=True)
-                                        elif os.path.exists(str(p_del)):
-                                            os.remove(str(p_del))
-                                    except Exception:
-                                        pass
-                                return False, payload, "Thời hạn bản quyền không hợp lệ (vượt quá 365 ngày). Bản quyền đã tự động bị thu hồi. Vui lòng liên hệ Tác giả."
-                        except Exception:
-                            pass
 
                     if is_valid:
                         found_key = content

@@ -23,7 +23,29 @@
 
 ---
 
-## ⚡ Hướng Dẫn Cài Đặt Cho Giáo Viên (3 Bước Cực Dễ)
+## 🤖 Dành Cho Người Dùng & AI Agent Khi Yêu Cầu Clone Repo Vào Dự Án
+Khi người dùng nhắn tin trong khung chat Google Antigravity:
+> *"tôi muốn clone repo này https://github.com/nguyenvanthien1812-ops/skill-tao-de-tuong-tu và sử dụng trên dự án này"*
+
+**AI Agent sẽ tự động thực hiện 3 bước:**
+1. **Clone vào thư mục Skill của workspace:**
+   ```bash
+   git clone https://github.com/nguyenvanthien1812-ops/skill-tao-de-tuong-tu.git .agents/skills/tao-de-toan-tuong-tu
+   ```
+2. **Cài đặt thư viện tự động (nếu máy chưa có):**
+   ```bash
+   pip install -r .agents/skills/tao-de-toan-tuong-tu/requirements.txt
+   ```
+3. **Kiểm tra bản quyền (Tự động nhận diện):**
+   ```bash
+   python .agents/skills/tao-de-toan-tuong-tu/scripts/license_manager.py --check
+   ```
+   - *Nếu máy đã từng kích hoạt bản quyền trước đó:* Hệ thống tự động đồng bộ key và sẵn sàng sử dụng 100%!
+   - *Nếu là máy mới chưa kích hoạt:* Chạy `python .agents/skills/tao-de-toan-tuong-tu/scripts/license_manager.py --machine-id` để lấy Mã máy và hướng dẫn người dùng gửi cho Thầy Nguyễn Thiện để nhận mã bản quyền.
+
+---
+
+## ⚡ Hướng Dẫn Cài Đặt Thủ Công Cho Giáo Viên (3 Bước Cực Dễ)
 
 ### Bước 1: Tải bộ công cụ
 - Nhấn nút xanh **Code ➔ Download ZIP** trên GitHub, sau đó giải nén thư mục `tao-de-toan-tuong-tu`.
