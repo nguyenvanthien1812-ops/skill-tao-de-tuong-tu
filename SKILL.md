@@ -16,7 +16,7 @@ description: >-
 
 ---
 
-## 📌 QUY TẮC TOÀN CỤC BẮT BUỘC — MATHTYPE OLE ƯU TIÊN SỐ 1
+## 📌 QUY TẮC TOÀN CỤC BẮT BUỘC — MATHTYPE OLE ƯU TIÊN SỐ 1 (LOCAL ENGINE TRƯỚC HẾT)
 
 > [!IMPORTANT]
 > **ÁP DỤNG CHO MỌI CUỘC TRÒ CHUYỆN, MỌI THƯ MỤC LÀM VIỆC TRÊN ANTIGRAVITY**
@@ -24,14 +24,18 @@ description: >-
 > Bất cứ khi nào công việc liên quan đến **công thức toán học / khoa học** và cần xuất file **Word (.docx)**:
 >
 > 1. **LUÔN XUẤT CÔNG THỨC DƯỚI DẠNG MATHTYPE OLE (Equation.DSMT4)** — đây là ưu tiên số 1, không thỏa hiệp.
-> 2. **TUYỆT ĐỐI KHÔNG XUẤT** công thức theo các dạng sau (trừ khi giáo viên chủ động yêu cầu rõ ràng):
+> 2. **LUÔN ƯU TIÊN XỬ LÝ CỤC BỘ (LOCAL ENGINE 100% OFFLINE) TRƯỚC TIÊN**:
+>    - Bắt buộc gọi trực tiếp Local Engine (docx_processor.py + libreoffice_renderer.py + mathtype_ole_builder.py).
+>    - Đảm bảo tốc độ siêu tốc (5–15s cho đề 250 công thức), bảo mật 100%, chạy offline không cần mạng, chống mất dấu vectơ (\overrightarrow{...}) và chống méo mó/phóng to khung hình WMF.
+>    - **Chỉ fallback sang Cloud Backend khi và chỉ khi:** Máy tính chưa cài đặt/cấu hình LibreOffice hoặc Local Engine gặp sự cố không thể tự phục hồi.
+> 3. **TUYỆT ĐỐI KHÔNG XUẤT** công thức theo các dạng sau (trừ khi giáo viên chủ động yêu cầu rõ ràng):
 >    - OMML (Word Equation / <m:oMath>) — chỉ được xuất song song thêm bản dự phòng, không thay thế MathType OLE
->    - LaTeX dạng text thuần
+>    - LaTeX dạng text thuần (\frac{}{}, $...$)
 >    - Unicode/plain text (ví dụ: x² + y²)
 >    - Ảnh công thức (PNG/SVG nhúng vào Word)
-> 3. Kỹ thuật chèn MathType OLE vào Word phải dùng **XML Injection bảo toàn OLE object** (Equation.DSMT4) đúng chuẩn, không làm biến dạng file gốc.
-> 4. Nếu file Word gốc đã có công thức MathType OLE → **bảo toàn 100%**, không chuyển đổi sang định dạng khác khi chỉnh sửa.
-> 5. Nếu không thể xuất MathType OLE → **báo lỗi rõ ràng cho giáo viên** và hỏi cách xử lý, không tự ý thay thế bằng định dạng khác.
+> 4. Kỹ thuật chèn MathType OLE vào Word phải dùng **XML Injection bảo toàn OLE object** (Equation.DSMT4) đúng chuẩn, không làm biến dạng file gốc.
+> 5. Nếu file Word gốc đã có công thức MathType OLE → **bảo toàn 100%**, không chuyển đổi sang định dạng khác khi chỉnh sửa.
+> 6. Nếu không thể xuất MathType OLE → **báo lỗi rõ ràng cho giáo viên** và hỏi cách xử lý, không tự ý thay thế bằng định dạng khác.
 
 ---
 
