@@ -16,6 +16,27 @@ description: >-
 
 ---
 
+## 📌 QUY TẮC TOÀN CỤC BẮT BUỘC — MATHTYPE OLE ƯU TIÊN SỐ 1
+
+> [!IMPORTANT]
+> **ÁP DỤNG CHO MỌI CUỘC TRÒ CHUYỆN, MỌI THƯ MỤC LÀM VIỆC TRÊN ANTIGRAVITY**
+>
+> Bất cứ khi nào công việc liên quan đến **công thức toán học / khoa học** và cần xuất file **Word (.docx)**:
+>
+> 1. **LUÔN XUẤT CÔNG THỨC DƯỚI DẠNG MATHTYPE OLE (Equation.DSMT4)** — đây là ưu tiên số 1, không thỏa hiệp.
+> 2. **TUYỆT ĐỐI KHÔNG XUẤT** công thức theo các dạng sau (trừ khi giáo viên chủ động yêu cầu rõ ràng):
+>    - OMML (Word Equation / <m:oMath>) — chỉ được xuất song song thêm bản dự phòng, không thay thế MathType OLE
+>    - LaTeX dạng text thuần
+>    - Unicode/plain text (ví dụ: x² + y²)
+>    - Ảnh công thức (PNG/SVG nhúng vào Word)
+> 3. Kỹ thuật chèn MathType OLE vào Word phải dùng **XML Injection bảo toàn OLE object** (Equation.DSMT4) đúng chuẩn, không làm biến dạng file gốc.
+> 4. Nếu file Word gốc đã có công thức MathType OLE → **bảo toàn 100%**, không chuyển đổi sang định dạng khác khi chỉnh sửa.
+> 5. Nếu không thể xuất MathType OLE → **báo lỗi rõ ràng cho giáo viên** và hỏi cách xử lý, không tự ý thay thế bằng định dạng khác.
+
+---
+
+
+
 
 
 
